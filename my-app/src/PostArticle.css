@@ -1,0 +1,141 @@
+html,body,#root,.PostArticle{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    /* The image used */
+    background-image: url("img/background.PNG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.articleFormPosition{
+    min-width: match-parent;
+    display: flex;
+    justify-content: center;
+}
+
+.articleFormPosition > .articleForm{
+    background-color: white;
+    width: 500px;
+    border: 2px solid rgba(0, 0, 0, 0.125);
+    border-radius: 5px;
+}
+
+.inputFormPosition{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+.articleForm > .selectType{
+    margin-top: 20px;
+    margin-left: 20px;
+    padding: 5px;
+}
+
+/*美食發文*/
+.articleFoodForm{
+    padding-top: 10px;
+    padding-left: 8px;
+    /*border: 1px solid black;*/
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.articleFoodForm > .articleFoodFormAddress > input,
+.articleFoodForm > .articleFoodFormInfo > input,
+.articleFoodForm > .articleFoodFormTime > input,
+.articleFoodForm > .articleFoodFormTitle > input,
+.articleFoodForm > .articleFoodFormGoogleRate > input,
+.articleFoodForm > .articleFoodFormSchoolRate > input{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    margin-left: 15px;
+    width: 200px;
+    margin-bottom: 15px;
+}
+
+/*換課發文*/
+.articleChangeClassForm{
+    padding-top: 10px;
+    padding-left: 8px;
+    /*border: 1px solid black;*/
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.articleChangeClassForm > .articleChangeClassFormTitle > .articleChangeClassFormTitleInput{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    margin-left: 15px;
+    width: 200px;
+}
+
+.articleChangeClassForm > .articleChangeClassFormText > .articleChangeClassFormTextInput{
+    width: 250px;
+    height: 200px;
+    margin-left: 65px;
+
+}
+
+/*租屋發文*/
+.articleRentForm{
+    padding-top: 10px;
+    padding-left: 8px;
+    /*border: 1px solid black;*/
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.articleRentForm > .articleRentFormTitle > .articleRentFormTitleInput{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    margin-left: 15px;
+    width: 200px;
+}
+
+.articleRentForm > .articleRentFormTitle > input,
+.articleRentForm > .articleRentFormAddress > input,
+.articleRentForm > .articleFoodRentMoney > input,
+.articleRentForm > .articleRentFormPeople > input,
+.articleRentForm > .articleRentFormType > input,
+.articleRentForm > .articleRentFormPower > input,
+.articleRentForm > .articleRentFormWater > input,
+.articleRentForm > .articleRentFormFloor > input,
+.articleRentForm > .articleRentFormDate > input{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    margin-left: 15px;
+    width: 200px;
+}
+
+.articleRentForm > .articleRentFormCar > input,
+.articleRentForm > .articleRentFormGender > input,
+.articleRentForm > .articleRentFormRegion > select{
+    margin-left: 15px;
+}
+
+
+.articleRentForm > .articleRentFormText > .articleRentFormTextInput{
+    width: 250px;
+    height: 200px;
+    margin-left: 50px;
+    margin-top: 5px;
+}
+
+.articleFoodFormBtn{
+    text-align: center;
+}
