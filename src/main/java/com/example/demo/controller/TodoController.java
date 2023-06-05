@@ -55,7 +55,7 @@ public class TodoController {
         System.out.println("加密:"+encryptedpwd);
         System.out.println("original:"+decryptedpwd);
 
-        //sID = account;
+        sID = studentID;
     }
     @GetMapping("/hello")
     public String hello() {
