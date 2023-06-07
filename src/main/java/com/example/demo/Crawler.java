@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import net.sourceforge.tess4j.*;
@@ -28,6 +29,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Crawler {
     static ChromeOptions options;
     static WebDriver driver;
+    public static String loginMessage = "";
     public static void CrawlerHandle(String userAccount, String userPassword) throws IOException, TesseractException, InterruptedException {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
@@ -39,7 +41,7 @@ public class Crawler {
 
         ChromeOptions options = new ChromeOptions();
 
-        options = new ChromeOptions();
+        //options = new ChromeOptions();
 
         options.addArguments("–incognito");
         options.addArguments("remote-allow-origins=*");
@@ -95,11 +97,20 @@ public class Crawler {
             try {
                 new WebDriverWait(driver, Duration.ofSeconds(1)).until(ExpectedConditions.alertIsPresent());
                 alert = driver.switchTo().alert();
-                if (alert != null)
+                if (alert != null) {
+                    System.out.println(alert.getText() + "1");
+                    if (Objects.equals(alert.getText(), "帳號或密碼錯誤，請查明後再登入，若您不確定密碼，請執行忘記密碼，取得新密碼後再登入!")) {
+                        System.out.println(alert.getText() + "2");
+                        loginMessage = "帳號或密碼錯誤";
+                        //driver.close();
+                        break;
+                    }
                     alert.accept();
+                }
                 System.out.println("驗證碼錯誤，重新登入\n");
             } catch (Exception e) {
                 System.out.println("登入成功!!!\n");
+                loginMessage = "登入成功";
                 break;
             }
         }
@@ -226,18 +237,36 @@ public class Crawler {
             System.out.println("教室 : " + classroom);
 
         }
-
     }
-
+    public static void getAllGeneralClass() throws InterruptedException{
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        Thread.sleep(3000);
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        //select
+        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='090M-共同教育中心博雅教育組']")).click();
+        //開課單位查詢
+        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click();
+        //顯示300筆
+        Thread.sleep(3000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = '300';", driver.findElement(By.id("PC_PageSize")));
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
+        Thread.sleep(5000);
+    }
 
     public static void main(String[] args) throws Exception {
 
-        String account = "00957025";
-        String password = "98586979";
-        CrawlerHandle(account,password);
+        CrawlerHandle("12345","98586979");
         //getBasicData(account,password);
-        getMyClass(account,password);
-
+        //getMyClass(account,password);
+        getAllGeneralClass();
     }
 }
 

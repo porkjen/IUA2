@@ -10,7 +10,9 @@ import com.example.demo.service.TodoService;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,26 +38,41 @@ public class TodoController {
     String secretKey = "au4a83";
 
 
-    @PostMapping("/login")
-    public void login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
+        System.out.println("/login");
+        //Custom Postback Status
+        HttpStatus customStatus = HttpStatus.valueOf(101);
+        String customMessage = "Account or password error";
+        //password encrypt
         AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
         String studentID = basic.getStudentID();
         String password = basic.getPassword();
         System.out.println(studentID);
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
         String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
+        //account is not in database
         if(basicRepository.findByStudentID(studentID)==null){
             Crawler crawler = new Crawler();
             crawler.CrawlerHandle(studentID,password);
+            System.out.println("login message " +Crawler.loginMessage);
+            if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
+
+                return ResponseEntity.status(customStatus).body(customMessage); // 回傳狀態碼 101
+            }
             basic = crawler.getBasicData(studentID,password);
             basic.setPassword(encryptedpwd);
+            basic.setEmail(studentID + "@mail.ntou.edu.tw");
             basicRepository.save(basic);
+            System.out.println("New user!");
         }
-        else System.out.println("This account has login before!");
+        else {
+            System.out.println("This account has login before!");
+        }
         System.out.println("加密:"+encryptedpwd);
         System.out.println("original:"+decryptedpwd);
-
+        return ResponseEntity.ok("Success"); // 回傳狀態碼 200
         //sID = account;
     }
     @GetMapping("/hello")
