@@ -37,6 +37,8 @@ public class TodoController {
     HouseRepository houseRepository;
     String secretKey = "au4a83";
 
+    Crawler crawler = new Crawler();
+
 
 
     @PostMapping("/login")
@@ -54,7 +56,7 @@ public class TodoController {
         String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
         //account is not in database
         if(basicRepository.findByStudentID(studentID)==null){
-            Crawler crawler = new Crawler();
+            // Crawler crawler = new Crawler();
             crawler.CrawlerHandle(studentID,password);
             System.out.println("login message " +Crawler.loginMessage);
             if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
@@ -72,8 +74,10 @@ public class TodoController {
         }
         System.out.println("加密:"+encryptedpwd);
         System.out.println("original:"+decryptedpwd);
+
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
         //sID = account;
+
     }
     @GetMapping("/hello")
     public String hello() {
@@ -122,8 +126,13 @@ public class TodoController {
     }
 
     @PostMapping("/remained_credits")
-    public void postRemainCredits (@RequestBody FinishedCourse finished)throws TesseractException, IOException, InterruptedException{
-        FinishedCourse finishedCourse = new FinishedCourse(sID);
+    public FinishedCourseList postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
+        ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
+        FinishedCourseList fc = new FinishedCourseList(finished.getStudentID());
+        finishedCourse = crawler.getCredict();
+        fc.setFinishedCourses(finishedCourse);
+        fRepository.save(fc);
+        return fc;
     }
 
     @GetMapping("/rent_load")

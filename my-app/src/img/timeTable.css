@@ -1,0 +1,108 @@
+
+
+html,body,#root,.TimeTable{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body{
+ background-image: url("img/background.PNG");
+ background-position: center;
+ background-repeat: repeat-y;
+ background-size: cover;
+}
+
+/*dialog position*/
+.TimeTable_draw >.TimeTabledialog{
+    position: absolute;
+    z-index: 2;
+    text-align: center;
+    width: 100%;
+}
+
+/*cookie position*/
+.TimeTable_draw > .TimeTablecookie{
+    position: absolute;
+    z-index: 4;
+    width: 70px;
+    height: 70px;
+    margin-top: 25px;
+    margin-left: 25px;
+}
+
+/*toast position*/
+.TimeTable_draw > .TimeTabletoast{
+    position: absolute;
+    z-index: 5;
+    width: 70px;
+    height: 70px;
+    margin-left: 270px;
+    margin-top: 65px;
+}
+
+.TimeTablecookie > img{
+    max-height: 70px;  
+    max-width: 70px;
+    z-index: 4; 
+    
+}
+
+.TimeTabletoast > img{
+    max-height: 70px;  
+    max-width: 70px;
+    z-index: 4; 
+    
+}
+
+.TimeTabledialog > img{
+    max-height: 150px;  
+    max-width: 250px;
+    z-index: 2; 
+    text-align: center;
+}
+
+
+/*課表查詢 position*/
+.TimeTable_title{
+    position: absolute;
+    z-index: 3;
+    text-align: center;
+    width: 100%;
+    margin-top: 55px;
+    
+}
+
+.TimeTable_title > label{
+    z-index: 3;
+    font-family: 'Noto Serif TC', serif;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+/*table position*/
+.timeTable_info_place{
+    display: flex;
+    justify-content: center;    
+    flex-wrap: wrap;
+    z-index: 2;
+    margin-top: 140px;
+    
+}
+
+.timeTable_info{
+    font-family: 'Noto Serif TC', serif;
+    z-index: 2;
+}
+
+.timeTable_info > tr{
+    font-size: 13px;
+}
+
+.timeTable_info > tr > .break{
+    font-size: 13px;
+    text-align: center;
+}

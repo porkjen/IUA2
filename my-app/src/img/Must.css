@@ -1,0 +1,44 @@
+html,body,#root,.Must{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.must_bg {
+    /* The image used */
+    background-image: url("img/background.PNG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.must_backicon{
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+}
+
+.must_title{
+    text-align: center;
+    padding-top: 0px;
+}
+
+label{
+    font-size: 18px;
+    font-family: 'Noto Serif TC', serif;
+}
+
+.mustLable{
+    margin-top: 30px;
+    width: 300px;
+    height: 450px;
+    background-color: white;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}

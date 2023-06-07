@@ -1,0 +1,63 @@
+html,body,#root,.Core{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.core_bg {
+    /* The image used */
+    background-image: url("img/background.PNG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.core_backicon{
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+}
+
+.core_title{
+    text-align: center;
+    padding-top: 0px;
+}
+
+label{
+    font-size: 18px;
+    font-family: 'Noto Serif TC', serif;
+}
+
+.coreLable{
+    margin-top: 30px;
+    width: 230px;
+    height: 350px;
+    background-color: white;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.orangefox img{
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    left: -75px;
+    bottom: 0px;
+    z-index: 1;
+}
+
+.whitefox img{
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    z-index: 1;
+    right: -90px;
+    bottom: -44px;
+}
