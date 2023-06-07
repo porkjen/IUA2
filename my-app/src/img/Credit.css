@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap');
+
+.credit_bg {
+
+    /* The image used */
+    background-image: url("img/background2.JPG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.credit_backicon{
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+}
+
+.text{
+    padding-left: 40px;
+    float: left;
+}
+
+.pencil img{
+    height: 70px;
+    width: 70px;
+}
+
+.allcBtn{
+    padding-top: 30px;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.allcBtn button{
+    height: 130px;
+    width: 130px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    border: none;
+}
+
+.creditpic{
+    position: relative;
+    height: 130px;
+    width: 130px;
+}
+
+.remainBtn{
+    padding-left: 40px;
+}
+
+.mustclassBtn{
+    padding-left: 40px;
+}
+
+.coreclassBtn{
+    padding-top: 30px;
+    padding-left: 40px;
+}
+
+.graduationBtn{
+    padding-top: 30px;
+    padding-left: 40px;
+}
+
+.dogpic{
+    position: fixed;
+    padding-top: 0px;
+    height: 350px;
+    width: 350px;
+}

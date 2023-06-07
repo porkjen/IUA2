@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=PT+Serif&family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=EB+Garamond:wght@500&family=PT+Serif&family=Permanent+Marker&display=swap');
+
+html,body,#root,.Remain{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  
+}
+
+body {
+    /* The image used */
+    background-image: url("img/background.PNG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+.title{
+    
+    text-align: center;
+    padding-top: 50px;
+    
+}
+
+.titleText{
+    font-size: 24px;
+    font-family: 'Noto Serif TC', serif;
+}
+
+label{
+    font-size: 18px;
+    font-family: 'Noto Serif TC', serif;
+}
+
+.Course{
+    width: 230px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.g_Course, .e_Course, .c_Course{
+    z-index: 2;
+    margin-top: 40px;
+    width: 230px;
+    height: 50px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.bee img{
+    position: absolute;
+    max-width: 200px;
+    max-height: 200px;
+    left: -30px;
+    bottom: 80px;
+    z-index: 1;
+}
+
+.bear img{
+    position: absolute;
+    max-width: 280px;
+    max-height: 280px;
+    z-index: 1;
+    right: -115px;
+    bottom: 0px;
+}
