@@ -29,23 +29,23 @@ public class FinishedCourse{
         this.teacher = teacher;
     }
 
-    public String setName(){
+    public String getName(){
         return courseName;
     }
 
-    public String setCredit(){
+    public String getCredit(){
         return credit;
     }
 
-    public String setCategory(){
+    public String getCategory(){
         return category;
     }
 
-    public String setTime(){
+    public String getTime(){
         return time;
     }
 
-    public String setTeacher(){
+    public String getTeacher(){
         return teacher;
     }
 }
