@@ -1,5 +1,5 @@
 package com.example.demo;
-import com.example.demo.FinishedCourse;
+import com.example.demo.FinishedCourseList;
 
 import com.example.demo.dao.BasicEntity;
 import com.example.demo.dao.TimeTableEntity;
@@ -174,7 +174,7 @@ public class Crawler {
         return personalInformation;
     }
 
-    public ArrayList<FinishedCourse> getCredict(String studentID) throws InterruptedException{
+    public ArrayList<FinishedCourse> getCredict() throws InterruptedException{
         //已完成課程
         ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
 
@@ -201,7 +201,7 @@ public class Crawler {
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
         for(WebElement row:trList){
             List<WebElement> cols= row.findElements(By.tagName("td"));
-            FinishedCourse fc = new FinishedCourse(studentID);
+            FinishedCourse fc = new FinishedCourse();
             fc.setCredit(cols.get(3).getText());
             fc.setCategory(cols.get(4).getText());
             fc.setName(cols.get(5).getText());

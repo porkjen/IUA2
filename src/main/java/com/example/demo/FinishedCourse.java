@@ -1,18 +1,13 @@
 package com.example.demo;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "F_CourseCollection")
 public class FinishedCourse{
-    private String studentID;
     private String courseName;
     private String credit;
     private String category;
     private String time;
     private String teacher;
 
-    public FinishedCourse(String id){
-        this.studentID = id;
-    }
+    public FinishedCourse(){}
 
     public void setName(String name){
         this.courseName = name;
@@ -32,10 +27,6 @@ public class FinishedCourse{
 
     public void setTeacher(String teacher){
         this.teacher = teacher;
-    }
-
-    public String setId(){
-        return studentID;
     }
 
     public String setName(){
