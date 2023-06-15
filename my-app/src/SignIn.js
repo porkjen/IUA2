@@ -13,6 +13,9 @@ import {useState} from "react";
 import { onLogin } from "./cookie.js";
 
 const SignIn=()=> {
+
+    let navigate = useNavigate();
+
     function SignIn() {
       const [student_id, setStudent_id] = useState("");
       const [password, setPassword] = useState("");
@@ -26,7 +29,7 @@ const SignIn=()=> {
       };
       const handleSubmit = (e) => {
         e.preventDefault();
-        alert(`The name you entered was: ${student_id}`);
+        /*alert(`The name you entered was: ${student_id}`);
         const formData = {
                         studentID: student_id,
                         password: password,
@@ -47,7 +50,9 @@ const SignIn=()=> {
                           .catch(error => {
                             console.error(error);
                           });
+        */
                      	//Form submission happens here
+        navigate("/homePage");
       }
       return (
         <div className="SignIn">    
@@ -76,11 +81,9 @@ const SignIn=()=> {
                         <br/>
                         <br/>
                         <div className="SignIn_submitButton_place">
-                            <Link to='/homePage'>
-                                <button type="submit" className="SignIn_submitButton" >
-                                    <span className="button_text">登入</span>
-                                </button>
-                            </Link>
+                            <button type="submit" className="SignIn_submitButton" >
+                                <span className="button_text">登入</span>
+                            </button>
                         </div>
                     </form>
                 </div>

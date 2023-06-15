@@ -1,45 +1,72 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap');
+.home_bg {
+    /* The image used */
+    background-image: url("img/background2.JPG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.home_backicon{
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+}
 
 .allBtn{
-    min-width: 100vw;
-    min-height: 100vh;
-    padding-top: 150px;
+    padding-top: 140px;
 }
 
-button{
-    font-family: 'Noto Serif TC', serif;
-    height: 50px;
-    width: 100px;
-    border-radius: 3px;
-    cursor: pointer;
+.flex {
+    display: flex;
+    flex-direction: row;
+  }
+
+.allBtn button{
+    height: 125px;
+    width: 125px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    border: none;
 }
 
+.allBtn button:hover{
+    background-color: rgba(196, 200, 201, 0.833);
+}
+
+.pic{
+    position: relative;
+    height: 120px;
+    width: 120px;
+}
 .creditBtn{
     padding-left: 50px;
 }
 
 .graduateBtn{
-    padding-left: 220px;
-    padding-top: 10px;
+    padding-left: 40px;
 }
 
-.othersBtn{
+.courseSelectBtn{
     padding-left: 50px;
-    padding-top: 10px;
-}
+    padding-top: 30px;
+} 
 
 .socialBtn{
-    padding-left: 220px;
-    padding-top: 10px;
+    padding-left: 40px;
+    padding-top: 30px;
 }
 
 .chatRoomBtn{
     padding-left: 50px;
-    padding-top: 10px;
+    padding-top: 30px;
 }
 
-.courseSelectBtn{
-    padding-left: 220px;
-    padding-top: 10px;
+.othersBtn{
+    padding-left: 40px;
+    padding-top: 30px;
 }
-
