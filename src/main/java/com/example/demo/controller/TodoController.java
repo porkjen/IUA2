@@ -7,7 +7,6 @@ import com.example.demo.dao.HouseDTO;
 import com.example.demo.dao.HouseEntity;
 
 import com.example.demo.service.TodoService;
-import jakarta.servlet.http.HttpServletResponse;
 import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,9 +35,7 @@ public class TodoController {
     @Autowired
     HouseRepository houseRepository;
     String secretKey = "au4a83";
-
     Crawler crawler = new Crawler();
-
 
 
     @PostMapping("/login")
@@ -60,7 +57,6 @@ public class TodoController {
             crawler.CrawlerHandle(studentID,password);
             System.out.println("login message " +Crawler.loginMessage);
             if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
-
                 return ResponseEntity.status(customStatus).body(customMessage); // 回傳狀態碼 101
             }
             basic = crawler.getBasicData(studentID,password);
@@ -85,7 +81,7 @@ public class TodoController {
     }
 
     @PostMapping("/nickname")
-    public void postnickname (@RequestBody BasicEntity basic, HttpServletResponse response)throws TesseractException, IOException, InterruptedException  {
+    public void postnickname (@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
         System.out.println(basic.getStudentID());
         BasicEntity oldProduct = basicRepository.findByStudentID(basic.getStudentID());
         oldProduct.setNickname(basic.getNickname());
@@ -94,7 +90,7 @@ public class TodoController {
     @PostMapping("/rent_post")
     public HouseEntity rentPost(@RequestBody HouseEntity house){
         System.out.println("/rent_post");
-        String dateTime = DateTimeFormatter.ofPattern("yyyy MM dd")//date today
+        String dateTime = DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
                 .format(LocalDateTime.now());
         String post_id; //get new post_id
         NextPostId nextPostId = new NextPostId();
@@ -135,7 +131,7 @@ public class TodoController {
         return fc;
     }
 
-    @GetMapping("/rent_load")
+    @GetMapping("/rent_load") //list all posts
     public List<HouseDTO> rentLoad(){
         List<HouseEntity> housePostList = houseRepository.findAll();
         List<HouseDTO> SimpleHousePostList = new ArrayList<>();
@@ -146,9 +142,27 @@ public class TodoController {
         return SimpleHousePostList;
     }
 
-    @GetMapping("/rent_full_post")
+    @GetMapping("/rent_full_post") //get entire post
     public HouseEntity rentFullPost(@RequestBody HouseEntity houseEntity){
         return houseRepository.findByPostId(houseEntity.getPostId());
+    }
+    @DeleteMapping("/rent_post_delete")
+    public ResponseEntity<String> rentPostDelete(@RequestBody String postid){
+        if(houseRepository.deleteByPostId(postid) !=null){
+            //200
+            return ResponseEntity.ok("Success");
+        }
+        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+
+    }
+    @PutMapping("/rent_post_modify")
+    public ResponseEntity<String> rentPostModify(@RequestBody HouseEntity houseEntity){
+        if(houseRepository.save(houseEntity) !=null){
+            //200
+            return ResponseEntity.ok("Success");
+        }
+        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+
     }
 }
 

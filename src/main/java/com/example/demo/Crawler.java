@@ -35,9 +35,6 @@ public class Crawler {
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
 
-
-        
-
         ChromeOptions options = new ChromeOptions();
 
         //options = new ChromeOptions();
@@ -248,6 +245,8 @@ public class Crawler {
         driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
         Thread.sleep(3000);
         //已選課程表格
+        int size = driver.findElements(By.tagName("iframe")).size();
+        System.out.println("iframe : "+ size);
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
         for(int i = 1;i< trList.size();i++){
             WebElement row = trList.get(i);
@@ -256,9 +255,12 @@ public class Crawler {
             System.out.println("課號 : " + cols.get(2).getText());
             driver.findElement(By.linkText(cols.get(2).getText())).click();
 
-            if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
-            else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
+            //if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
+            //else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
             //switch iframe
+            //Thread.sleep(5000);
+            WebElement parentElement = driver.findElement(By.id("AjaxPanel")).findElement(By.id("frameInner"));
+
             driver.findElement(By.xpath("/html/body/form/div[3]/div/table[2]"));
             List<WebElement> classNumbertrList = driver.findElements(By.cssSelector("tbody > tr"));
 
@@ -300,10 +302,10 @@ public class Crawler {
 
     public static void main(String[] args) throws Exception {
 
-        CrawlerHandle("12345","98586979");
+        CrawlerHandle("00957025","20230607");
         //getBasicData(account,password);
-        //getMyClass(account,password);
-        getAllGeneralClass();
+        getMyClass("00957025","20230607"); //not complete
+        //getAllGeneralClass(); //not complete
     }
 }
 
