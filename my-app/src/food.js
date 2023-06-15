@@ -34,8 +34,8 @@ const Food=()=> {
                   <PostArticleBtn >我要發文</PostArticleBtn>
                 </Link>
                 <ArticleList>
-                    <Articleinfo author={"singyi"} text={"I love you"}></Articleinfo>
-                    <Articleinfo author={"vvvvvvvv"} text={"I love you soooo such"}></Articleinfo>
+                    <Articleinfo author={"singyi"} text={"好時機"}></Articleinfo>
+                    <Articleinfo author={"vvvvvvvv"} text={"頂咖哩"}></Articleinfo>
                 </ArticleList>
             </Pagebg>
         </Page>
