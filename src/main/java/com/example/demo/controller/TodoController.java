@@ -125,7 +125,7 @@ public class TodoController {
     public FinishedCourseList postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
         FinishedCourseList fc = new FinishedCourseList(finished.getStudentID());
-        finishedCourse = crawler.getCredict();
+        finishedCourse = crawler.getFinishedCredict();
         fc.setFinishedCourses(finishedCourse);
         fRepository.save(fc);
         return fc;
