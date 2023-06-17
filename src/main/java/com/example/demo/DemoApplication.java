@@ -31,7 +31,7 @@ public class DemoApplication {
 		@Override
 		public void onApplicationEvent(ContextStartedEvent event) {
 			System.out.println("run");
-			getData gd = new getData();
+			/*getData gd = new getData();
 			NextPostId nextPostId = new NextPostId();
 			List<FoodEntity> restaurantList = gd.getRData("25.151030,121.772286");//中心點
 			for(FoodEntity r: restaurantList){
@@ -83,7 +83,7 @@ public class DemoApplication {
 					foodRepository.save(r);
 				}
 			}
-			System.out.println("finish!");
+			System.out.println("finish!");*/
 		}
 	}
 
