@@ -3,6 +3,8 @@ import com.example.demo.FinishedCourseList;
 
 import com.example.demo.dao.BasicEntity;
 import com.example.demo.dao.TimeTableEntity;
+import com.google.common.base.Splitter;
+
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Point;
@@ -182,7 +184,7 @@ public class Crawler {
         return personalInformation;
     }
 
-    public ArrayList<FinishedCourse> getCredict() throws InterruptedException{
+    public ArrayList<FinishedCourse> getFinishedCredict() throws InterruptedException{
         //已完成課程
         ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
 
@@ -207,14 +209,39 @@ public class Crawler {
 
         //獲取scoretable
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        List<String> cTime = new ArrayList<String>();   //學期
+        List<String> cID = new ArrayList<String>();     //課號
+        List<FinishedCourse> fcList = new ArrayList<FinishedCourse>();
         for(WebElement row:trList){
             List<WebElement> cols= row.findElements(By.tagName("td"));
             FinishedCourse fc = new FinishedCourse();
+            cTime.add(cols.get(0).getText());
+            cID.add(cols.get(1).getText());
             fc.setCredit(cols.get(3).getText());
             fc.setCategory(cols.get(4).getText());
             fc.setName(cols.get(5).getText());
             fc.setTeacher(cols.get(6).getText());
-            fCourses.add(fc);
+            fcList.add(fc);
+        }
+        //取得開課單位
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("歷年課程課表查詢")).click();
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        for(int i = 0; i <= cID.size(); i++){
+            String[] semester = cTime.get(i).split("(?<=\\G.{3})");
+            driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
+            driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
+            driver.findElement(By.id("radioButtonClass_0")).click();
+            driver.findElement(By.id("Q_CH_LESSON")).sendKeys(cID.get(i));
+            List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+            List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
+            fcList.get(i).setDepartment(col.get(4).getText());
+            fCourses.add(fcList.get(i));
         }
 
         return fCourses;
