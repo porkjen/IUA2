@@ -11,6 +11,7 @@ import ChangeClass from './changeClass';
 import Food from './food';
 import Rent from './rent';
 import PostArticle from './postArticle';
+import RentArticle from './rentArticle';
 import ChangeClassArticle from './changeClassArticle';
 import HomePage from './homePage';
 import Credit from './Credit';
@@ -18,6 +19,7 @@ import Core from './Core';
 import Must from './Must';
 import Graduation from './Graduation';
 import Search from './Search';
+import Choose from './choose';
 
 const App=()=> {
    
@@ -29,9 +31,11 @@ const App=()=> {
                     <Route path="/remain" element={<Remain/>} />
                     <Route path="/nickName" element={<NickName/>} />
                     <Route path="/timeTable" element={<TimeTable/>} />
+                    <Route path="/choose" element={<Choose />} />
                     <Route path="/changeClass" element={<ChangeClass/>} />
                     <Route path="/food" element={<Food/>} />
-                    <Route path="/rent" element={<Rent/>} />
+                    <Route path="/rent/*" element={<Rent/>} />
+                    <Route path="/rentArticle/*" element={<RentArticle/>} />
                     <Route path="/postArticle" element={<PostArticle/>} />
                     <Route path="/changeClassArticle" element={<ChangeClassArticle/>} />
                     <Route path="/changeClassArticle" element={<ChangeClassArticle/>} />

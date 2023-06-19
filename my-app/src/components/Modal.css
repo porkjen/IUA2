@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+html,body,#root,.modalBackground{
+    
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(249, 236, 207, 0.951);
+}
+
+.modalClose{
+    background-color: transparent;
+    border: 0;
+}
+
+.modalContainer{
+    
+    background-color: white;
+    width:300px;
+    margin-top: 100px;
+    position: relative;
+    top: 30%;  
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal_tilte{
+    font-family: 'Noto Serif TC', serif;
+    text-align: center;
+}
+
+.modalBodyText{
+    text-align: center;
+    padding-bottom: 60px;
+
+}
+
+.ModalFoodStoreText{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+}

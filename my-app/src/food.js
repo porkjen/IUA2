@@ -1,10 +1,13 @@
 //import './changeClass.css';
 import React from 'react';
-import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody}  from './components/ArticleStyle.js';
+import Modal from "./components/Modal";
+import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link } from 'react-router-dom';
 import {useState} from "react";
 
 const Food=()=> {
+
+  const [openModal, setOpenModal] = useState(false);
     function Articleinfo({ author, text }) {
         return (
           <ArticleContainer>
@@ -15,6 +18,25 @@ const Food=()=> {
           </ArticleContainer>
         );
       }
+
+      function Food_all(){
+        return(
+          <Page>
+              <Pagebg>
+                <Title>美食板</Title>
+                <Link to='/postArticle'>
+                  <PostArticleBtn >我要發文</PostArticleBtn>
+                </Link>
+                <ChooseArticleBtn onClick={()=> setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
+                <ArticleList>
+                    <Articleinfo author={"singyi"} text={"好時機"}></Articleinfo>
+                    <Articleinfo author={"vvvvvvvv"} text={"頂咖哩"}></Articleinfo>
+                </ArticleList>
+            </Pagebg>
+          </Page>
+        );
+      }
+  
 
 
     function Food() {
@@ -28,16 +50,8 @@ const Food=()=> {
       }*/
       return (
         <Page>
-            <Pagebg>
-                <Title>美食板</Title>
-                <Link to='/postArticle'>
-                  <PostArticleBtn >我要發文</PostArticleBtn>
-                </Link>
-                <ArticleList>
-                    <Articleinfo author={"singyi"} text={"I love you"}></Articleinfo>
-                    <Articleinfo author={"vvvvvvvv"} text={"I love you soooo such"}></Articleinfo>
-                </ArticleList>
-            </Pagebg>
+          {openModal && <Modal closeModal={setOpenModal} type={"food"}/>}
+          {!openModal && < Food_all/>}
         </Page>
       );
     }

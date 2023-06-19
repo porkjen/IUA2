@@ -26,9 +26,10 @@ const CommentContainer = styled.div`
     min-width: match-parent;
     text-align: center;
     border: transparent;
-    padding: 5px;
+    padding: 10px;
     border-radius: 4px;
-    margin-top: 10px;
+    margin-top: 15px;
+    min-height:50px;
 
 `;
 
@@ -36,8 +37,9 @@ const CommentText = styled.button`
     border-radius: 5px;
     width: 350px;
     border: 1px solid rgba(0, 0, 0, 0.125);
-    padding: 16px;
+    padding: 13px;
     background-color: white;
+    min-height:70px;
 
 `;
 

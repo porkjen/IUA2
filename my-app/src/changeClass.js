@@ -34,8 +34,8 @@ const ChangeClass=()=> {
                   <PostArticleBtn>我要發文</PostArticleBtn>
                 </Link>
                 <ArticleList>
-                    <Articleinfo author={"evelyn"} text={"I love you"}></Articleinfo>
-                    <Articleinfo author={"vvvvvvvvv"} text={"I love you"}>hiiiii</Articleinfo>
+                    <Articleinfo author={"evelyn"} text={"球球排球課"}></Articleinfo>
+                    <Articleinfo author={"vvvvvvvvv"} text={"我要涼課"}>hiiiii</Articleinfo>
                 </ArticleList>
             </Pagebg>
         </Page>

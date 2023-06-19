@@ -34,6 +34,8 @@ public class TodoController {
     HouseRepository houseRepository;
     String secretKey = "au4a83";
 
+    Crawler crawler = new Crawler();
+
 
     @PostMapping("/login")
     public void login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
@@ -45,7 +47,7 @@ public class TodoController {
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
         String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
         if(basicRepository.findByStudentID(studentID)==null){
-            Crawler crawler = new Crawler();
+            // Crawler crawler = new Crawler();
             crawler.CrawlerHandle(studentID,password);
             basic = crawler.getBasicData(studentID,password);
             basic.setPassword(encryptedpwd);
@@ -55,7 +57,7 @@ public class TodoController {
         System.out.println("加密:"+encryptedpwd);
         System.out.println("original:"+decryptedpwd);
 
-        //sID = account;
+        sID = studentID;
     }
     @GetMapping("/hello")
     public String hello() {
@@ -104,8 +106,13 @@ public class TodoController {
     }
 
     @PostMapping("/remained_credits")
-    public void postRemainCredits (@RequestBody FinishedCourse finished)throws TesseractException, IOException, InterruptedException{
-        FinishedCourse finishedCourse = new FinishedCourse(sID);
+    public FinishedCourseList postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
+        ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
+        FinishedCourseList fc = new FinishedCourseList(finished.getStudentID());
+        finishedCourse = crawler.getCredict();
+        fc.setFinishedCourses(finishedCourse);
+        fRepository.save(fc);
+        return fc;
     }
 
     @GetMapping("/rent_load")
@@ -119,7 +126,7 @@ public class TodoController {
         return SimpleHousePostList;
     }
 
-    @GetMapping("/rent_full_post")
+    @PostMapping("/rent_full_post")
     public HouseEntity rentFullPost(@RequestBody HouseEntity houseEntity){
         return houseRepository.findByPostId(houseEntity.getPostId());
     }

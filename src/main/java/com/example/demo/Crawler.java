@@ -1,5 +1,5 @@
 package com.example.demo;
-import com.example.demo.FinishedCourse;
+import com.example.demo.FinishedCourseList;
 
 import com.example.demo.dao.BasicEntity;
 import com.example.demo.dao.TimeTableEntity;
@@ -34,8 +34,7 @@ public class Crawler {
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
 
 
-        //已完成課程
-        ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
+        
 
         ChromeOptions options = new ChromeOptions();
 
@@ -173,6 +172,44 @@ public class Crawler {
         personalInformation.setTeam(team);
         personalInformation.setBirth(birth);
         return personalInformation;
+    }
+
+    public ArrayList<FinishedCourse> getCredict() throws InterruptedException{
+        //已完成課程
+        ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
+
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("成績系統")).click(); //成績系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("查詢各式成績")).click(); //查詢各式成績
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        driver.findElement(By.xpath("//*[@id=\"RB_TYPE_3\"]")).click(); //歷年成績
+        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click(); //查詢
+
+
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("viewFrame");
+        Thread.sleep(3000);
+
+        // 添加等待
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        //獲取scoretable
+        List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        for(WebElement row:trList){
+            List<WebElement> cols= row.findElements(By.tagName("td"));
+            FinishedCourse fc = new FinishedCourse();
+            fc.setCredit(cols.get(3).getText());
+            fc.setCategory(cols.get(4).getText());
+            fc.setName(cols.get(5).getText());
+            fc.setTeacher(cols.get(6).getText());
+            fCourses.add(fc);
+        }
+
+        return fCourses;
     }
 
     public static /*TimeTableEntity*/void getMyClass(String studentID, String password) throws InterruptedException{

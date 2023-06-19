@@ -1,26 +1,25 @@
-html,body,#root,.PostArticle{
+html,#root,.PostArticle{
     height: 100%;
     padding: 0;
     margin: 0;
+    height: 100vh;
+    overflow: auto;
 }
 
 body {
-    /* The image used */
     background-image: url("img/background.PNG");
-  
-    /* Full height */
     height: 100%;
-  
-    /* Center and scale the image nicely */
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
+
 .articleFormPosition{
     min-width: match-parent;
     display: flex;
     justify-content: center;
+    margin-top: 30%;
 }
 
 .articleFormPosition > .articleForm{
@@ -44,11 +43,10 @@ body {
 
 /*美食發文*/
 .articleFoodForm{
-    padding-top: 10px;
+    padding-top: 30px;
     padding-left: 8px;
     /*border: 1px solid black;*/
     border-radius: 5px;
-    margin-top: 20px;
 }
 
 .articleFoodForm > .articleFoodFormAddress > input,
@@ -67,14 +65,16 @@ body {
 
 /*換課發文*/
 .articleChangeClassForm{
-    padding-top: 10px;
+    padding-top: 30px;
     padding-left: 8px;
     /*border: 1px solid black;*/
     border-radius: 5px;
-    margin-top: 20px;
 }
 
-.articleChangeClassForm > .articleChangeClassFormTitle > .articleChangeClassFormTitleInput{
+.articleChangeClassForm > .articleChangeClassFormTitle > .articleChangeClassFormTitleInput,
+.articleChangeClassForm > .articleChangeClassFormCategory > .articleChangeClassFormCategoryInput,
+.articleChangeClassForm > .articleChangeClassFormTime > .articleChangeClassFormTimeInput,
+.articleChangeClassForm > .articleChangeClassFormTeacher > .articleChangeClassFormTeacherInput{
     border: none;
     border-bottom: 1px solid rgb(35, 35, 35);
     border-radius: 0px;
@@ -91,11 +91,10 @@ body {
 
 /*租屋發文*/
 .articleRentForm{
-    padding-top: 10px;
+    padding-top: 30px;
     padding-left: 8px;
     /*border: 1px solid black;*/
     border-radius: 5px;
-    margin-top: 20px;
 }
 
 .articleRentForm > .articleRentFormTitle > .articleRentFormTitleInput{

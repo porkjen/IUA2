@@ -1,43 +1,74 @@
 import './homePage.css';
 import React from 'react';
+import back from './img/back.png';
+import creditImg from "./img/credit.png";
+import graduateImg from "./img/graduate.png";
+import courseSelectImg from "./img/selectcourse.png";
+import socialImg from "./img/social.png";
+import chatroomImg from "./img/chatroom.png";
+import calendarImg from "./img/calendar.png";
+import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
+import { Routes ,Route } from 'react-router-dom';
 
-function HomePage(){
+const HomePage=()=> {
+    function HomePage(){
         return(
-            <div className="allBtn">
-                <div className="creditBtn">
-                    <button className="creditButton">
-                        <span className="text-credit">學分</span>
-                    </button>
+            <div className="home_bg">
+                <div>
+                    <Link to='/SignIn'>
+                        <img src={back} alt="回上一頁" className="home_backicon"/>
+                    </Link>
                 </div>
-                <div className="graduateBtn">
-                    <button className="graduateButton">
-                        <span className="text-graduate">升學</span>
-                    </button>
+                <div className="allBtn">
+                    <div class="flex">
+                        <div className="creditBtn">
+                            <Link to='/Credit'>
+                                <button className="creditButton" >
+                                    <img src={creditImg} className='pic'/>
+                                </button>
+                            </Link>
+                        </div>
+                        <div className="graduateBtn">
+                            <button className="graduateButton">
+                                <img src={graduateImg} className='pic'/>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div className="courseSelectBtn">
+                            <button className="courseSelectButton">
+                                <img src={courseSelectImg} className='pic'/>
+                            </button>
+                        </div>
+                        <div className="socialBtn">
+                            <Link to="/choose">
+                                <button className="socialButton">
+                                    <img src={socialImg} className='pic'/>
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div className="chatRoomBtn">
+                            <button className="chatRoomButton">
+                                <img src={chatroomImg} className='pic'/>
+                            </button>
+                        </div>
+                        <div className="othersBtn">
+                            <button className="othersButton">
+                                <img src={calendarImg} className='pic'/>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div className="othersBtn">
-                    <button className="othersButton">
-                        <span className="text-others">其他</span>
-                    </button>
-                </div>
-                <div className="socialBtn">
-                    <button className="socialButton">
-                        <span className="text-social">社群</span>
-                    </button>
-                </div>
-                <div className="chatRoomBtn">
-                    <button className="chatRoomButton">
-                        <span className="text-chatRoom">聊天室</span>
-                    </button>
-                </div>
-                <div className="courseSelectBtn">
-                    <button className="courseSelectButton">
-                        <span className="text-courseSelect">選課</span>
-                    </button>
-                </div>
-                
-            
             </div>
-
         );
+    }
+    return (    
+        <Routes>
+            <Route path="/" element={<HomePage />}/>
+        </Routes>
+
+    );
 }
 export default HomePage;
