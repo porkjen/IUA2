@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dao.ChangeCourseHaveEntity;
 import com.example.demo.dao.FoodEntity;
 import com.example.demo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class DemoApplication {
 		private TodoService service;
 		@Autowired
 		FoodRepository foodRepository;
+		@Autowired
+		ChangeCourseHaveRepository changeCourseHaveRepository;
 
 		@Override
 		public void onApplicationEvent(ContextStartedEvent event) {
@@ -84,6 +87,11 @@ public class DemoApplication {
 				}
 			}
 			System.out.println("finish!");*/
+			/*ChangeCourseHaveEntity changeCourseHaveEntity = new ChangeCourseHaveEntity();
+			for(ChangeCourseHaveEntity c : changeCourseHaveEntity.initialization()){
+				System.out.println(c.getTime()+" : "+c.getHave());
+				changeCourseHaveRepository.save(c);
+			}*/
 		}
 	}
 
