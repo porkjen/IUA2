@@ -35,9 +35,6 @@ public class TodoController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
-        //Custom Postback Status
-        HttpStatus customStatus = HttpStatus.valueOf(101);
-        String customMessage = "Account or password error";
         //password encrypt
         AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
         String studentID = basic.getStudentID();
@@ -47,11 +44,10 @@ public class TodoController {
         String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
         //account is not in database
         if(basicRepository.findByStudentID(studentID)==null){
-            // Crawler crawler = new Crawler();
             crawler.CrawlerHandle(studentID,password);
             System.out.println("login message " +Crawler.loginMessage);
             if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
-                return ResponseEntity.status(customStatus).body(customMessage); // 回傳狀態碼 101
+                return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
             }
             basic = crawler.getBasicData(studentID,password);
             basic.setPassword(encryptedpwd);
@@ -60,6 +56,10 @@ public class TodoController {
             System.out.println("New user!");
         }
         else {
+            if(!Objects.equals(basicRepository.findByStudentID(studentID).getPassword(), encryptedpwd)){
+                System.out.println("password error");
+                return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
+            }
             basicRepository.findByStudentID(studentID).setPassword(encryptedpwd); //user may change password, update password everytime
             System.out.println("This account has login before!");
         }
@@ -118,7 +118,7 @@ public class TodoController {
         return SimpleHousePostList;
     }
 
-    @GetMapping("/rent_full_post") //get entire post
+    @PostMapping("/rent_full_post") //get entire post
     public HouseEntity rentFullPost(@RequestBody HouseEntity houseEntity){
         return houseRepository.findByPostId(houseEntity.getPostId());
     }

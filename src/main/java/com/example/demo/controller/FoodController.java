@@ -66,6 +66,7 @@ public class FoodController {
     }
     @PutMapping("/food_modify")
     public FoodEntity foodModify(@RequestBody FoodEntity food){
+        System.out.println("/food_modify");
         FoodEntity newFoodPost = foodRepository.findByPostId(food.getPostId());
         newFoodPost.setStore(food.getStore());
         for(int i=0;i<7;i++){
@@ -78,6 +79,7 @@ public class FoodController {
 
     @DeleteMapping("/food_post_delete")
     public ResponseEntity<String> foodPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
+        System.out.println("/food_post_delete");
         if(foodRepository.deleteByPostId(postId) !=null){//200
             return ResponseEntity.ok("Success");
         }
@@ -85,30 +87,42 @@ public class FoodController {
     }
 
     @PutMapping("/food_review_modify")
-    public FoodEntity foodReviewModify(@RequestBody Map<String, String> requestData) {
+    public FoodEntity.p foodReviewModify(@RequestBody Map<String, String> requestData) {
         System.out.println("/food_review_modify");
         int originalRate = 0;
+        //find the post by postId
         FoodEntity thisPost = foodRepository.findByPostId(requestData.get("postId"));
-        FoodEntity.p thisReview = new FoodEntity.p();
-        for(FoodEntity.p review : thisPost.getReview()){
-            if(Objects.equals(review.getP_studentID(), requestData.get("studentID"))){
-                originalRate = review.getP_rate();
-                review.setP_review(requestData.get("p_review"));
-                review.setP_rate(Integer.parseInt(requestData.get("p_rate")));
-                review.setP_time(DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
+        //find the review want to modify by studentID
+        FoodEntity.p newReview = new FoodEntity.p();
+        for(int i=0; i<thisPost.getReview().size(); i++){
+            if(Objects.equals(thisPost.getReview().get(i).getP_studentID(), requestData.get("studentID"))){
+                //user modify rating
+                if(!Objects.equals(requestData.get("p_rate"), "")){
+                    originalRate = thisPost.getReview().get(i).getP_rate();
+                    thisPost.getReview().get(i).setP_rate(Integer.parseInt(requestData.get("p_rate")));
+                }
+                //user modify review content
+                if(!Objects.equals(requestData.get("p_review"), "")){
+                    thisPost.getReview().get(i).setP_review(requestData.get("p_review"));
+                }
+                thisPost.getReview().get(i).setP_time(DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
                         .format(LocalDateTime.now()));
-                thisReview = review;
+                newReview = thisPost.getReview().get(i);
             }
         }
         //Post rate update
-        thisPost.setRating((thisPost.getRating()*thisPost.getRating_num()-originalRate+Integer.parseInt(requestData.get("p_rate")))/thisPost.getRating_num());
+        if(originalRate!=0)
+            thisPost.setRating((thisPost.getRating()*thisPost.getRating_num()-originalRate+Integer.parseInt(requestData.get("p_rate")))/thisPost.getRating_num());
         foodRepository.save(thisPost);
-        return thisPost;
+        return newReview;
     }
 
     @DeleteMapping("/food_review_delete")
     public ResponseEntity<String> foodReviewDelete(@RequestBody Map<String, String> requestData){
+        System.out.println("/food_review_delete");
+        //find the post by postId
         FoodEntity thisPost = foodRepository.deleteByPostId(requestData.get("postId"));
+        //find the review by studentID
         FoodEntity.p thisReview = new FoodEntity.p();
         if(thisPost !=null){
             for(FoodEntity.p review : thisPost.getReview()){
@@ -116,9 +130,11 @@ public class FoodController {
                     thisReview = review;
                 }
             }
-            thisPost.setRating((thisPost.getRating()*thisPost.getRating_num()-thisReview.getP_rate())/(thisPost.getRating_num()-1));
-            thisPost.setRating_num(thisPost.getRating_num()-1);
-            thisPost.getReview().remove(thisReview);
+            if(thisReview.getP_rate()!=0) { //this review has rating
+                thisPost.setRating((thisPost.getRating() * thisPost.getRating_num() - thisReview.getP_rate()) / (thisPost.getRating_num() - 1));
+                thisPost.setRating_num(thisPost.getRating_num() - 1);
+            }
+            thisPost.removeReview(thisReview);
             foodRepository.save(thisPost);
             //200
             return ResponseEntity.ok("Success");
@@ -128,17 +144,24 @@ public class FoodController {
 
     @PostMapping("/food_review_add")
     public FoodEntity.p foodReviewAdd(@RequestBody Map<String, String> requestData){
+        System.out.println("/food_review_add");
+        //find the post by postId
         FoodEntity thisPost = foodRepository.findByPostId(requestData.get("postId"));
+        //create a review structure, and add to the post
         FoodEntity.p newReview = new FoodEntity.p();
         newReview.setP_studentID(requestData.get("studentID"));
         newReview.setP_name(basicRepository.findByStudentID(requestData.get("studentID")).getNickname());
         newReview.setP_review(requestData.get("p_review"));
         newReview.setP_time(DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
                 .format(LocalDateTime.now()));
-        newReview.setP_rate(Integer.parseInt(requestData.get("p_rate")));
-        thisPost.getReview().add(newReview);
-        thisPost.setRating((thisPost.getRating()*thisPost.getRating_num()+Integer.parseInt(requestData.get("p_rate")))/(thisPost.getRating_num()+1));
-        thisPost.setRating_num(thisPost.getRating_num()+1);
+        if(Objects.equals(requestData.get("p_rate"), ""))newReview.setP_rate(0);
+        else newReview.setP_rate(Integer.parseInt(requestData.get("p_rate")));
+        thisPost.setReview(newReview);
+        //if user has rate, post : rate_num+1, rate adjust
+        if(!Objects.equals(requestData.get("p_rate"), "")) {
+            thisPost.setRating((thisPost.getRating() * thisPost.getRating_num() + Integer.parseInt(requestData.get("p_rate"))) / (thisPost.getRating_num() + 1));
+            thisPost.setRating_num(thisPost.getRating_num() + 1);
+        }
         foodRepository.save(thisPost);
         return newReview;
     }

@@ -67,7 +67,7 @@ public class ChangeCourseController {
         return course;
     }
 
-    @PutMapping("course_post_modify")
+    @PutMapping("/course_post_modify")
     public ChangeCourseEntity coursePostModify(@RequestBody ChangeCourseEntity modifyCourse){
         ChangeCourseEntity original = changeCourseRepository.findByPostId(modifyCourse.getPostId());
         original.setCourse(modifyCourse.getCourse());

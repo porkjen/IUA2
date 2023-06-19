@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import backgroundImg from '../img/background.PNG';
 
@@ -9,7 +8,7 @@ const Page = styled.div`
 `;
 
 const Pagebg = styled.div`
-    background-image: url(${backgroundImg});    
+    background-image: url(${backgroundImg});
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -26,9 +25,10 @@ const CommentContainer = styled.div`
     min-width: match-parent;
     text-align: center;
     border: transparent;
-    padding: 5px;
+    padding: 10px;
     border-radius: 4px;
-    margin-top: 10px;
+    margin-top: 15px;
+    min-height:50px;
 
 `;
 
@@ -36,8 +36,9 @@ const CommentText = styled.button`
     border-radius: 5px;
     width: 350px;
     border: 1px solid rgba(0, 0, 0, 0.125);
-    padding: 16px;
+    padding: 13px;
     background-color: white;
+    min-height:70px;
 
 `;
 

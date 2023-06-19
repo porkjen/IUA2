@@ -6,6 +6,7 @@ import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, 
 import { Routes ,Route,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
+
 const RentArticle=()=> {
 
     const location = useLocation();
