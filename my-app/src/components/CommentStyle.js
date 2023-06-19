@@ -33,6 +33,8 @@ const CommentContainer = styled.div`
 `;
 
 const CommentText = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
     border-radius: 5px;
     width: 350px;
     border: 1px solid rgba(0, 0, 0, 0.125);
@@ -56,7 +58,21 @@ const CommentBody = styled.div`
 
 `;
 
+const CommentTimeRating = styled.div`
+    margin-top: 8px;
+    word-break: break-all;
+    white-space: pre-line;
+    text-align: right;
+`;
+
+const CommentRating = styled.div`
+    margin-top: 8px;
+    word-break: break-all;
+    white-space: pre-line;
+`;
 
 
 
-export {Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody};
+
+
+export {Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating};
