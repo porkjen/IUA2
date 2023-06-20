@@ -3,11 +3,13 @@ import React from 'react';
 import {Title}  from './components/ArticleStyle.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
-import { Routes ,Route } from 'react-router-dom';
+import { Routes ,Route, useNavigate } from 'react-router-dom';
 import {useState} from "react";
 import { loginUser } from "./cookie.js";
 
 const PostArticle=()=> {
+    let navigate = useNavigate();
+
     function ArticleFoodInput() {
         const [Ftitle, setFtitle] = useState("");
         const [Ftime, setFtime] = useState("");
@@ -40,12 +42,13 @@ const PostArticle=()=> {
           const student_id = loginUser();
           const formData = {
                           studentID: "00957025",
-                          title : Ftitle,
-                          money : Ftime,
-                          people : Faddress,
-                          address : Finfo,
-                          area : FgoogleRate,
-                          gender : Frate,
+                          store : Ftitle,
+                          weekday_text : [Ftime],
+                          address : Faddress,
+                          review: {
+                            p_review: Finfo,
+                            p_rate: Frate
+                          }
                         };
                         fetch('/food_posts', {
                               method: 'POST',
@@ -62,6 +65,7 @@ const PostArticle=()=> {
                               console.error(error);
                             });
                          //Form submission happens here
+                         navigate("/food")
         }
        
         return (
@@ -78,17 +82,13 @@ const PostArticle=()=> {
               <label>店家地址:&emsp;</label>
               <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress}></input>
             </div><br/>
-            <div className='articleFoodFormInfo'>
-              <label>店家資訊:&emsp;</label>
-              <input type='text' name = 'Finfo' onChange={handleFinfoChange} value={Finfo}></input>
-            </div><br/>
-            <div className='articleFoodFormGoogleRate'>
-              <label>google評分:</label>
-              <input type='text' name = 'FgoogleRate' onChange={handleFgoogleRateChange} value={FgoogleRate}></input>
-            </div><br/>
             <div className='articleFoodFormSchoolRate'>
-              <label>校內評分:&emsp;</label>
-              <input type='text' name = 'Frate' onChange={handleFrateChange} value={Frate}></input>
+              <label>我的評分(1-5):&emsp;</label>
+              <input type='number' name = 'Frate' onChange={handleFrateChange} value={Frate}></input>
+            </div><br/>
+            <div className='articleFoodFormInfo'>
+              <label>我的評論:&emsp;</label>
+              <input type='text' name = 'Finfo' onChange={handleFinfoChange} value={Finfo}></input>
             </div><br/>
               <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn type="submit">確認發文</ArticleSubmitBtn>
@@ -184,6 +184,7 @@ const PostArticle=()=> {
                       .catch(error => {
                         console.error(error);
                       });
+                      navigate("/rent")
                    //Form submission happens here
   }
         return (
@@ -293,9 +294,12 @@ const PostArticle=()=> {
           const formData = {
                           studentID: "00957025",
                           course : Ctitle,
+                          category:CCategory,
+                          time:[Ctime],
+                          teacher:Cteacher,
                           content : Ctext,
                         };
-                        fetch('/rent_post', {
+                        fetch('/exchange_course_post', {
                               method: 'POST',
                               headers: {
                                 'Content-Type': 'application/json'
@@ -309,6 +313,7 @@ const PostArticle=()=> {
                             .catch(error => {
                               console.error(error);
                             });
+                            navigate("/changeClass")
                          //Form submission happens here
         }
 

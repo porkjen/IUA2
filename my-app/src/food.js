@@ -1,19 +1,50 @@
-//import './changeClass.css';
+import './food.css';
 import React from 'react';
 import Modal from "./components/Modal";
-import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody}  from './components/ArticleStyle.js';
-import { Routes ,Route,Link } from 'react-router-dom';
-import {useState} from "react";
+import yolk from './img/yolk.PNG';
+import redBall from './img/redBall.PNG';
+import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody}  from './components/ArticleStyle.js';
+import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
+import {useEffect,useState} from "react";
 
 const Food=()=> {
 
-  const [openModal, setOpenModal] = useState(false);
-    function Articleinfo({ author, text }) {
+    const [data, setData] = useState(null);
+    const [openModal, setOpenModal] = useState(false);
+    let navigate = useNavigate();
+
+    function Articleinfo({ author, post_time, store, rating, postID }) {
+
+      const handleShowFoodSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        const formData = {
+                        studentID: "00957025",
+                        postId : postID,
+                      };
+          fetch('/food_full_post', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)})
+                  .then(response => response.json())
+                  .then(data => {
+                        console.log(data);})
+                  .catch(error => {
+                        console.error(error);});
+                       //Form submission happens here
+            navigate("/foodArticle", {
+              state: {
+                studentID: "00957025",
+                postId : postID,},});
+      }
+
+
         return (
           <ArticleContainer>
-            <ArticleText>
+            <ArticleText onClick={handleShowFoodSubmit}>
                 <ArticleAuthor>{author}</ArticleAuthor>
-                <ArticleBody>{text}</ArticleBody>
+                <ArticleBody>{store}</ArticleBody>
+                <ArticlePostTime>{rating+"顆星 " + post_time}</ArticlePostTime>
             </ArticleText>
           </ArticleContainer>
         );
@@ -24,13 +55,16 @@ const Food=()=> {
           <Page>
               <Pagebg>
                 <Title>美食板</Title>
+                <img className='food_yolk' src={yolk}/>
+                <img className='food_redBall' src={redBall}/>
                 <Link to='/postArticle'>
                   <PostArticleBtn >我要發文</PostArticleBtn>
                 </Link>
                 <ChooseArticleBtn onClick={()=> setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
                 <ArticleList>
-                    <Articleinfo author={"singyi"} text={"好時機"}></Articleinfo>
-                    <Articleinfo author={"vvvvvvvv"} text={"頂咖哩"}></Articleinfo>
+                    {data.map(item => (
+                      <Articleinfo key={item.postId} author={item.nickname} post_time={item.post_time} store={item.store} rating={item.rating} postID={item.postId}></Articleinfo>
+                    ))}
                 </ArticleList>
             </Pagebg>
           </Page>
@@ -40,14 +74,21 @@ const Food=()=> {
 
 
     function Food() {
-      /*const [nickName_id, setNickName_id] = useState("");
-      const handleChange = event => {
-        setNickName_id(event.target.nickName_id);
-      };
-      const handleSubmit = (event) => {
-        event.preventDefault();
-        alert(`The nickName you entered was: ${nickName_id}`)
-      }*/
+      useEffect(() => {
+        if (!data) {
+          fetch('/food_load')
+            .then(response => response.json())
+            .then(data => setData(data))
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+      }, [data]); // 添加依賴項data
+
+      if (!data) {
+        return <div>Loading...</div>;
+      }
+
       return (
         <Page>
           {openModal && <Modal closeModal={setOpenModal} type={"food"}/>}

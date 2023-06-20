@@ -6,6 +6,7 @@ public class FinishedCourse{
     private String category;
     private String time;
     private String teacher;
+    private String department;
 
     public FinishedCourse(){}
 
@@ -29,6 +30,11 @@ public class FinishedCourse{
         this.teacher = teacher;
     }
 
+
+    public void setDepartment(String dept){
+        this.department = dept;
+    }
+
     public String getName(){
         return courseName;
     }
@@ -47,5 +53,9 @@ public class FinishedCourse{
 
     public String getTeacher(){
         return teacher;
+    }
+
+    public String getDepartment(){
+        return department;
     }
 }

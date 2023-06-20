@@ -3,7 +3,7 @@ import React from 'react';
 import Modal from "./components/Modal";
 import house from './img/house.png';
 import connection from './img/connection.png';
-import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticlePostTime, ArticleBody}  from './components/ArticleStyle.js';
+import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleRentContainer, ArticleAuthor, ArticlePostTime, ArticleBody}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link ,useNavigate} from 'react-router-dom';
 import {useEffect,useState} from "react";
 
@@ -40,13 +40,11 @@ const Rent=()=> {
 
         return (
           <ArticleContainer>
-            
               <ArticleText onClick={handleShowHouseSubmit}>
                   <ArticleAuthor>{author}</ArticleAuthor>
                   <ArticlePostTime>{time}</ArticlePostTime>
                   <ArticleBody>{text}</ArticleBody>
               </ArticleText>
-            
           </ArticleContainer>
         );
     }

@@ -19,14 +19,28 @@ body {
     min-width: match-parent;
     display: flex;
     justify-content: center;
-    margin-top: 30%;
+    padding-top: 30%;
 }
+
+@media screen and (min-width:500px){ 
+    .articleFormPosition{
+        padding-top: 15%;
+    }
+   }
 
 .articleFormPosition > .articleForm{
     background-color: white;
-    width: 500px;
-    border: 2px solid rgba(0, 0, 0, 0.125);
-    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 15%;
+    overflow: auto;
+    height: 82%;
+    width: 95%;
+    will-change: transform;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .inputFormPosition{
@@ -35,10 +49,12 @@ body {
     margin-bottom: 20px;
 }
 
+
 .articleForm > .selectType{
     margin-top: 20px;
     margin-left: 20px;
     padding: 5px;
+    width: 28%;
 }
 
 /*美食發文*/
@@ -52,14 +68,22 @@ body {
 .articleFoodForm > .articleFoodFormAddress > input,
 .articleFoodForm > .articleFoodFormInfo > input,
 .articleFoodForm > .articleFoodFormTime > input,
-.articleFoodForm > .articleFoodFormTitle > input,
-.articleFoodForm > .articleFoodFormGoogleRate > input,
+.articleFoodForm > .articleFoodFormTitle > input
+{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    margin-left: 15px;
+    width: 60%;
+    margin-bottom: 15px;
+}
+
 .articleFoodForm > .articleFoodFormSchoolRate > input{
     border: none;
     border-bottom: 1px solid rgb(35, 35, 35);
     border-radius: 0px;
     margin-left: 15px;
-    width: 200px;
+    width: 50%;
     margin-bottom: 15px;
 }
 
@@ -107,7 +131,7 @@ body {
 
 .articleRentForm > .articleRentFormTitle > input,
 .articleRentForm > .articleRentFormAddress > input,
-.articleRentForm > .articleFoodRentMoney > input,
+.articleRentForm > .articleRentMoney > input,
 .articleRentForm > .articleRentFormPeople > input,
 .articleRentForm > .articleRentFormType > input,
 .articleRentForm > .articleRentFormPower > input,

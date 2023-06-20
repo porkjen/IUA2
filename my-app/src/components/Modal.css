@@ -34,8 +34,9 @@ html,body,#root,.modalBackground{
 
 }
 
-.ModalFoodStoreText{
+.ModalFoodStoreText,.ModalFoodRating {
     border: none;
     border-bottom: 1px solid rgb(35, 35, 35);
     border-radius: 0px;
 }
+

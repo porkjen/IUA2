@@ -7,8 +7,9 @@ public class RemainCredit{
     int general;        //通識
     int kernal;         //核心
     int pe;             //體育
-    boolean eng;
-    boolean swimming;
+
+    boolean eng = false;
+    boolean swimming = false;
 
     public RemainCredit(){}
 

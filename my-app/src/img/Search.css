@@ -1,0 +1,85 @@
+html,body,#root,.Search{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.search_bg {
+    /* The image used */
+    background-image: url("img/background2.JPG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.search_backicon{
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+}
+
+.search_title{
+    text-align: center;
+    padding-top: 0px;
+}
+
+.selectDiv{
+    padding-left: 85px;
+    padding-top: 85px;
+}
+
+.selectMust{
+    width: 200px;
+    font-size: 30px; 
+    color: #afc2f8;
+    border-radius: 10px;
+    border: none;
+}
+
+.selectMust option {
+    font-size: 25px;
+}
+
+.selectDiv2{
+    padding-left: 85px;
+    padding-top: 45px;
+}
+
+.selectGrade{
+    width: 200px;
+    font-size: 30px; 
+    color: #afc2f8;
+    border-radius: 10px;
+    border: none;
+}
+
+.selectGrade option {
+    font-size: 25px;
+}
+
+.searchDiv{
+    padding-left: 150px;
+    padding-top: 45px;
+}
+
+.search_btn{
+    font-size: 18px;
+    color: #afc2f8;
+    font-weight:bold;
+    height: 40px;
+    width: 60px;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+.duckpic{
+    position: fixed;
+    height: 400px;
+    width: 400px;
+}

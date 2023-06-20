@@ -2,23 +2,20 @@ package com.example.demo.controller;
 
 import com.example.demo.*;
 
-import com.example.demo.dao.BasicEntity;
-import com.example.demo.dao.HouseDTO;
-import com.example.demo.dao.HouseEntity;
+import com.example.demo.dao.*;
 
 import com.example.demo.service.TodoService;
-import jakarta.servlet.http.HttpServletResponse;
 import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,85 +34,82 @@ public class TodoController {
     Crawler crawler = new Crawler();
 
 
-    @PostMapping("/login")
-    public void login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
+        System.out.println("/login");
+        //Custom Postback Status
+        HttpStatus customStatus = HttpStatus.valueOf(101);
+        String customMessage = "Account or password error";
+        //password encrypt
         AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
         String studentID = basic.getStudentID();
         String password = basic.getPassword();
         System.out.println(studentID);
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
         String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
+        //account is not in database
         if(basicRepository.findByStudentID(studentID)==null){
             // Crawler crawler = new Crawler();
             crawler.CrawlerHandle(studentID,password);
+            System.out.println("login message " +Crawler.loginMessage);
+            if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
+                return ResponseEntity.status(customStatus).body(customMessage); // 回傳狀態碼 101
+            }
             basic = crawler.getBasicData(studentID,password);
             basic.setPassword(encryptedpwd);
+            basic.setEmail(studentID + "@mail.ntou.edu.tw");
             basicRepository.save(basic);
+            System.out.println("New user!");
         }
-        else System.out.println("This account has login before!");
+        else {
+            basicRepository.findByStudentID(studentID).setPassword(encryptedpwd); //user may change password, update password everytime
+            System.out.println("This account has login before!");
+        }
         System.out.println("加密:"+encryptedpwd);
         System.out.println("original:"+decryptedpwd);
 
-        sID = studentID;
-    }
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello, the time at the server is now " + new Date() + "\n";
+        return ResponseEntity.ok("Success"); // 回傳狀態碼 200
+        //sID = account;
     }
 
     @PostMapping("/nickname")
-    public void postnickname (@RequestBody BasicEntity basic, HttpServletResponse response)throws TesseractException, IOException, InterruptedException  {
+    public void postnickname (@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
         System.out.println(basic.getStudentID());
         BasicEntity oldProduct = basicRepository.findByStudentID(basic.getStudentID());
         oldProduct.setNickname(basic.getNickname());
         basicRepository.save(oldProduct);
     }
+
     @PostMapping("/rent_post")
     public HouseEntity rentPost(@RequestBody HouseEntity house){
         System.out.println("/rent_post");
-        String dateTime = DateTimeFormatter.ofPattern("yyyy MM dd")//date today
+        String dateTime = DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
                 .format(LocalDateTime.now());
+        house.setPost_time(dateTime);
         String post_id; //get new post_id
         NextPostId nextPostId = new NextPostId();
         if(houseRepository.findFirstByOrderByIdDesc()==null){post_id = "H00001";}
         else{
             post_id = nextPostId.getNextHouseString(houseRepository.findFirstByOrderByIdDesc().getPostId());
         }
-        HouseEntity h = new HouseEntity();
-        h.setPostId(post_id);
-        h.setStudentID(house.getStudentID());
-        h.setName(basicRepository.findByStudentID(house.getStudentID()).getName());//real name
-        //h.setName(house.getName());
-        h.setTitle(house.getTitle());
-        h.setMoney(house.getMoney());
-        h.setPeople(house.getPeople());
-        h.setAddress(house.getAddress());
-        h.setArea(house.getArea());
-        h.setGender(house.getGender());
-        h.setStyle(house.getStyle());
-        h.setWater(house.getWater());
-        h.setPower(house.getPower());
-        h.setCar(house.getCar());
-        h.setFloor(house.getFloor());
-        h.setRent_date(house.getRent_date());
-        h.setNote(house.getNote());
-        h.setPost_time(dateTime);
-        houseRepository.save(h);
-        return h;
+        house.setPostId(post_id);
+        house.setName(basicRepository.findByStudentID(house.getStudentID()).getName());//real name
+        houseRepository.save(house);
+        return house;
     }
 
     @PostMapping("/remained_credits")
     public FinishedCourseList postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
         FinishedCourseList fc = new FinishedCourseList(finished.getStudentID());
-        finishedCourse = crawler.getCredict();
+        finishedCourse = crawler.getFinishedCredict();
         fc.setFinishedCourses(finishedCourse);
         fRepository.save(fc);
         return fc;
     }
 
-    @GetMapping("/rent_load")
+    @GetMapping("/rent_load") //list all house posts
     public List<HouseDTO> rentLoad(){
         List<HouseEntity> housePostList = houseRepository.findAll();
         List<HouseDTO> SimpleHousePostList = new ArrayList<>();
@@ -126,10 +120,30 @@ public class TodoController {
         return SimpleHousePostList;
     }
 
-    @PostMapping("/rent_full_post")
+    @PostMapping("/rent_full_post") //get entire post
     public HouseEntity rentFullPost(@RequestBody HouseEntity houseEntity){
         return houseRepository.findByPostId(houseEntity.getPostId());
     }
+
+    @DeleteMapping("/rent_post_delete")
+    public ResponseEntity<String> rentPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
+        if(houseRepository.deleteByPostId(postId) !=null){
+            //200
+            return ResponseEntity.ok("Success");
+        }
+        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+
+    }
+
+    @PutMapping("/rent_post_modify")
+    public ResponseEntity<String> rentPostModify(@RequestBody HouseEntity houseEntity){
+        if(houseRepository.save(houseEntity) !=null){
+            //200
+            return ResponseEntity.ok("Success");
+        }
+        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+    }
+
 }
 
 

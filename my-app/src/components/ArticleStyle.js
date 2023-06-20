@@ -11,7 +11,7 @@ const Page = styled.div`
 `;
 /*background-image: url(${backgroundImg});   */
 const Pagebg = styled.div`
-    background-color: rgba(249, 236, 207, 0.951);  
+    background-color: rgba(249, 236, 207);  
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -28,6 +28,7 @@ const Title = styled.h1`
     transform: translate(-50%, -50%);
 `;
 
+
 /*我要發文按鈕*/
 const PostArticleBtn = styled.button`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
@@ -40,6 +41,7 @@ const PostArticleBtn = styled.button`
     margin-left: 5%;
     position: absolute;
     margin-top: 30%;
+    z-index: 2;
 `;
 
 /*篩選條件按鈕*/
@@ -54,7 +56,7 @@ const ChooseArticleBtn = styled.button`
     margin-left: 70%;
     position: absolute;
     margin-top: 30%;
-
+    z-index: 2;
 `;
 
 const ArticleList = styled.div`
@@ -74,10 +76,30 @@ const ArticleContainer = styled.div`
     min-width: match-parent;
     text-align: center;
     border: transparent;
-    padding: 10px;
+    padding: 5px;
     border-radius: 4px;
-    margin-top: 20px;
-    min-height:50px;
+    margin-bottom: 5px;
+    
+`;
+
+const ArticleRentContainer = styled.div`
+    min-width: match-parent;
+    text-align: center;
+    border: transparent;
+    padding: 5px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    
+`;
+
+const ArticleFoodContainer = styled.div`
+    min-width: match-parent;
+    text-align: center;
+    border: transparent;
+    padding: 5px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    
 `;
 
 const ArticleText = styled.button`
@@ -96,18 +118,25 @@ const ArticleAuthor = styled.div`
     color: #232323;
 `;
 
+
 const ArticlePostTime = styled.div`
-    margin-top: 8px;
+    margin-top: 4px;
     word-break: break-all;
     white-space: pre-line;
+    text-align :right;
+`;
 
+const ArticlePostRating = styled.div`
+    margin-top: 4px;
+    word-break: break-all;
+    white-space: pre-line;
+    margin-right: -200px;
 `;
 
 const ArticleBody = styled.div`
     margin-top: 8px;
     word-break: break-all;
     white-space: pre-line;
-
 `;
 
 
@@ -119,9 +148,20 @@ const ArticleSubmitBtn = styled.button`
     width: 100px;
 `;
 
+const ModalSubmitBtn = styled.button`
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: transparent; 
+    padding: 10px;
+    width: 100px;
+    margin-left:33%;
+    margin-bottom:5%;
+`;
+
+
 const ArticleSubmitBtnPosition = styled.div`
     text-align: center;
 `;
 
 
-export {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleAuthor, ArticleBody, ArticleSubmitBtn, ArticleSubmitBtnPosition};
+export {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleAuthor, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition};

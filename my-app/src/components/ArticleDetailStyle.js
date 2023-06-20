@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import backgroundImg from '../img/background.PNG';
 
 const ArticleDetailPage = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
     height: 100%;
     padding: 0;
     margin: 0;
@@ -34,11 +36,27 @@ const ArticleDetailText = styled.h3`
 `;
 
 const ArticleDetailSavedBtn = styled.button`
-    background-color:green;
+    background-color: rgba(249, 231, 193, 0.951);
     width:60px;
     text-align:center;
     height:30px;
-    margin-left:300px;
+    margin-left:20px;
+`;
+
+const ArticleDetailRatingdBtn = styled.button`
+    background-color: rgba(249, 231, 193, 0.951);
+    width:60px;
+    text-align:center;
+    height:30px;
+    margin-left:60%;
+`;
+
+const ArticleDetailContactdBtn = styled.button`
+    background-color: rgba(249, 231, 193, 0.951);
+    width:60px;
+    text-align:center;
+    height:30px;
+    margin-left:60%;
 `;
 
 const ArticleDetailComment = styled.div`
@@ -47,8 +65,16 @@ const ArticleDetailComment = styled.div`
 
 const ArticleDetailPostCommentPosition = styled.div`
     background-color:white;
-    display: flex;
-    flex-direction: row;
+    
+`;
+
+const ArticleDetailCommentArea = styled.img`
+    width: 40px; /* 設定頭像的寬度和高度 */
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left: 20px;
+    padding-top: 25px;
 `;
 
 const ArticleDetailCommentImg = styled.img`
@@ -65,13 +91,19 @@ const ArticleDetailPostComment = styled.input`
     border: none;
     border-bottom: 1px solid rgb(35, 35, 35);
     border-radius: 0px;
-    margin-left: 35px;
-    width: 250px;
-    padding-top:30px;
+    width: 60%;
+    margin-right:20px;
+    padding-top:35px;
     &:focus {
         outline: none;
       }
 `
 
+const ArticleDetailPostBtn = styled.button`
+    background-color: rgba(249, 231, 193, 0.951);  
+    height:40%;
+    margin-top: 10%;
+`
 
-export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment};
+
+export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};

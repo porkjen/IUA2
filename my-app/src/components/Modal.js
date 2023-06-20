@@ -1,11 +1,14 @@
 import './Modal.css';
 import React from "react";
-import {ArticleSubmitBtn} from './ArticleStyle.js';
+import {ArticleSubmitBtn, ModalSubmitBtn} from './ArticleStyle.js';
 import {useState,useEffect} from "react";
+import { Routes ,Route, useNavigate } from 'react-router-dom';
+
 
 function ModalRent(){
     return(
             <form>
+                <h2 className='modal_tilte'>篩選貼文</h2>
                 <div className='modalBodyText'>
                     <div className='ModalRentFormRegion'>
                         <label>地區: </label>
@@ -56,7 +59,7 @@ function ModalRent(){
                         <label for="no">無</label>
                     </div><br/>
                 </div>
-                <ArticleSubmitBtn>確認</ArticleSubmitBtn>
+                <ModalSubmitBtn>確認</ModalSubmitBtn>
             </form>
     );
 }
@@ -64,6 +67,7 @@ function ModalRent(){
 function ModalChangeClass(){
     return(
             <form>
+                <h2 className='modal_tilte'>篩選貼文</h2>
                 <div className='modalBodyText'>
                     <div className='ModalRentFormRegion'>
                         <label>地區: </label>
@@ -71,7 +75,8 @@ function ModalChangeClass(){
                             <option>請選擇區域</option>
                             <option value='Zhongzheng'>中正區</option>
                             <option value='Xinyi'>信義區</option>
-                            <option value='Renai'>仁愛區</option>                                    <option value='Zhongshan'>中山區</option>
+                            <option value='Renai'>仁愛區</option>                                    
+                            <option value='Zhongshan'>中山區</option>
                             <option value='Anle'>安樂區</option>
                             <option value='Nuannuan'>暖暖區</option>
                             <option value='Qidu'>七堵區</option>
@@ -113,7 +118,7 @@ function ModalChangeClass(){
                         <label for="no">無</label>
                     </div><br/>
                 </div>
-                <ArticleSubmitBtn>確認</ArticleSubmitBtn>
+                <ModalSubmitBtn>確認</ModalSubmitBtn>
             </form>
     );
 }
@@ -121,6 +126,7 @@ function ModalChangeClass(){
 function ModalFood(){
     return(
             <form>
+                <h2 className='modal_tilte'>篩選貼文</h2>
                 <div className='modalBodyText'>
                     <div className='ModalFoodFormRegion'>
                         <label>地區: </label>
@@ -128,7 +134,8 @@ function ModalFood(){
                             <option>請選擇區域</option>
                             <option value='Zhongzheng'>中正區</option>
                             <option value='Xinyi'>信義區</option>
-                            <option value='Renai'>仁愛區</option>                                    <option value='Zhongshan'>中山區</option>
+                            <option value='Renai'>仁愛區</option>                                    
+                            <option value='Zhongshan'>中山區</option>
                             <option value='Anle'>安樂區</option>
                             <option value='Nuannuan'>暖暖區</option>
                             <option value='Qidu'>七堵區</option>
@@ -139,44 +146,108 @@ function ModalFood(){
                         <input className='ModalFoodStoreText' type="text"></input>
                     </div><br/>
                 </div>
-                <ArticleSubmitBtn>確認</ArticleSubmitBtn>
+                <ModalSubmitBtn>確認</ModalSubmitBtn>
             </form>
     );
 }
 
 
-function Modal({closeModal,type}){
 
+function Modal({closeModal,type, postId}){
+
+    let navigate = useNavigate();
     const [isModalFood, setisModalFood] = useState(true);
     const [isModalRent, setIsModalRent] = useState(false);
     const [isModalChangeClass, setisModalChangeClass] = useState(false);
+    const [isRating, setisRating] = useState(false);
+    const [isPostId, setisPostId] = useState(false);
   
     useEffect(() => {
       if (type === "rent") {
         setisModalFood(false);
         setIsModalRent(true);
         setisModalChangeClass(false);
+        setisRating(false);
       } else if (type === "food") {
         setisModalFood(true);
         setIsModalRent(false);
         setisModalChangeClass(false);
+        setisRating(false);
       } else if (type === "changeClass") {
         setisModalFood(false);
         setIsModalRent(false);
         setisModalChangeClass(true);
+        setisRating(false);
+      }
+      else if (type === "rating") {
+        setisModalFood(false);
+        setIsModalRent(false);
+        setisModalChangeClass(false);
+        setisRating(true);
+        setisPostId(postId)
       }
     }, [type]);
+
+    function ModalRating(){
+        const [Frating, setFrating] = useState("");
+        const handleFratingChange = event => {
+            setFrating(event.target.value);
+        };
+    
+        const handleRatingSubmit = (e) => {
+            e.preventDefault();
+            //const student_id = loginUser();
+            const formData = {
+                            postId:isPostId,
+                            studentID: "00957025",
+                            p_review : "",
+                            p_rate : Frating,
+                          };
+                          fetch('/food_review_add', {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(formData)
+                              })
+                              .then(response => response.json())
+                              .then(data => {
+                                console.log(data);
+                              })
+                              .catch(error => {
+                                console.error(error);
+                              });
+                              navigate("/food")
+                              
+                           //Form submission happens here
+          }
+    
+        return(
+                <form onSubmit={handleRatingSubmit}>
+                    <h2 className='modal_tilte'>評分</h2>
+                    <div className='modalBodyText'>
+                    <div className='ModalFoodRatingArea'>
+                        <label>評分一下吧(1-5):</label>
+                        <input className='ModalFoodRating' type="number" onChange={handleFratingChange} value={Frating}></input>
+                        </div><br/>
+                    </div>
+                    <ModalSubmitBtn>確認</ModalSubmitBtn>
+                </form>
+        );
+    
+    }
+    
 
     return(
         <div className="modalBackground">
             <div className="modalContainer">
                 <button className='modalClose' onClick={() => closeModal(false)}>X</button>
                 <div className="modalTitle">
-                    <h2 className='modal_tilte'>篩選貼文</h2>
                     <div className="modalBody">
                         {isModalFood && <ModalFood/>}
                         {isModalRent && <ModalRent/>}
                         {isModalChangeClass && <ModalChangeClass/>}
+                        {isRating && <ModalRating/>}
                     </div>
                 </div>
             </div>

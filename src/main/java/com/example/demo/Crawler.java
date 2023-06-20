@@ -3,6 +3,8 @@ import com.example.demo.FinishedCourseList;
 
 import com.example.demo.dao.BasicEntity;
 import com.example.demo.dao.TimeTableEntity;
+import com.google.common.base.Splitter;
+
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Point;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import net.sourceforge.tess4j.*;
@@ -28,17 +31,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Crawler {
     static ChromeOptions options;
     static WebDriver driver;
+    public static String loginMessage = "";
     public static void CrawlerHandle(String userAccount, String userPassword) throws IOException, TesseractException, InterruptedException {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
 
-
-        
-
         ChromeOptions options = new ChromeOptions();
 
-        options = new ChromeOptions();
+        //options = new ChromeOptions();
 
         options.addArguments("–incognito");
         options.addArguments("remote-allow-origins=*");
@@ -94,11 +95,20 @@ public class Crawler {
             try {
                 new WebDriverWait(driver, Duration.ofSeconds(1)).until(ExpectedConditions.alertIsPresent());
                 alert = driver.switchTo().alert();
-                if (alert != null)
+                if (alert != null) {
+                    System.out.println(alert.getText() + "1");
+                    if (Objects.equals(alert.getText(), "帳號或密碼錯誤，請查明後再登入，若您不確定密碼，請執行忘記密碼，取得新密碼後再登入!")) {
+                        System.out.println(alert.getText() + "2");
+                        loginMessage = "帳號或密碼錯誤";
+                        //driver.close();
+                        break;
+                    }
                     alert.accept();
+                }
                 System.out.println("驗證碼錯誤，重新登入\n");
             } catch (Exception e) {
                 System.out.println("登入成功!!!\n");
+                loginMessage = "登入成功";
                 break;
             }
         }
@@ -174,7 +184,8 @@ public class Crawler {
         return personalInformation;
     }
 
-    public ArrayList<FinishedCourse> getCredict() throws InterruptedException{
+
+    public ArrayList<FinishedCourse> getFinishedCredict() throws InterruptedException{
         //已完成課程
         ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
 
@@ -199,14 +210,39 @@ public class Crawler {
 
         //獲取scoretable
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        List<String> cTime = new ArrayList<String>();   //學期
+        List<String> cID = new ArrayList<String>();     //課號
+        List<FinishedCourse> fcList = new ArrayList<FinishedCourse>();
         for(WebElement row:trList){
             List<WebElement> cols= row.findElements(By.tagName("td"));
             FinishedCourse fc = new FinishedCourse();
+            cTime.add(cols.get(0).getText());
+            cID.add(cols.get(1).getText());
             fc.setCredit(cols.get(3).getText());
             fc.setCategory(cols.get(4).getText());
             fc.setName(cols.get(5).getText());
             fc.setTeacher(cols.get(6).getText());
-            fCourses.add(fc);
+            fcList.add(fc);
+        }
+        //取得開課單位
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("歷年課程課表查詢")).click();
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        for(int i = 0; i <= cID.size(); i++){
+            String[] semester = cTime.get(i).split("(?<=\\G.{3})");
+            driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
+            driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
+            driver.findElement(By.id("radioButtonClass_0")).click();
+            driver.findElement(By.id("Q_CH_LESSON")).sendKeys(cID.get(i));
+            List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+            List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
+            fcList.get(i).setDepartment(col.get(4).getText());
+            fCourses.add(fcList.get(i));
         }
 
         return fCourses;
@@ -237,6 +273,8 @@ public class Crawler {
         driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
         Thread.sleep(3000);
         //已選課程表格
+        int size = driver.findElements(By.tagName("iframe")).size();
+        System.out.println("iframe : "+ size);
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
         for(int i = 1;i< trList.size();i++){
             WebElement row = trList.get(i);
@@ -245,9 +283,12 @@ public class Crawler {
             System.out.println("課號 : " + cols.get(2).getText());
             driver.findElement(By.linkText(cols.get(2).getText())).click();
 
-            if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
-            else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
+            //if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
+            //else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
             //switch iframe
+            //Thread.sleep(5000);
+            WebElement parentElement = driver.findElement(By.id("AjaxPanel")).findElement(By.id("frameInner"));
+
             driver.findElement(By.xpath("/html/body/form/div[3]/div/table[2]"));
             List<WebElement> classNumbertrList = driver.findElements(By.cssSelector("tbody > tr"));
 
@@ -263,18 +304,36 @@ public class Crawler {
             System.out.println("教室 : " + classroom);
 
         }
-
     }
-
+    public static void getAllGeneralClass() throws InterruptedException{
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        Thread.sleep(3000);
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        //select
+        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='090M-共同教育中心博雅教育組']")).click();
+        //開課單位查詢
+        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click();
+        //顯示300筆
+        Thread.sleep(3000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = '300';", driver.findElement(By.id("PC_PageSize")));
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
+        Thread.sleep(5000);
+    }
 
     public static void main(String[] args) throws Exception {
 
-        String account = "00957025";
-        String password = "98586979";
-        CrawlerHandle(account,password);
+        CrawlerHandle("00957025","20230607");
         //getBasicData(account,password);
-        getMyClass(account,password);
-
+        getMyClass("00957025","20230607"); //not complete
+        //getAllGeneralClass(); //not complete
     }
 }
 
