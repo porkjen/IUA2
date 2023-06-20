@@ -5,7 +5,7 @@ import com.example.demo.*;
 import com.example.demo.dao.BasicEntity;
 import com.example.demo.dao.HouseDTO;
 import com.example.demo.dao.HouseEntity;
-
+import com.example.demo.service.RemainedService;
 import com.example.demo.service.TodoService;
 import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +25,10 @@ import java.util.Objects;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class TodoController {
-    private String sID;
     @Autowired
     TodoService todoService;//取得Service物件
+    @Autowired
+    RemainedService remainedService;
     @Autowired
     FinishedRepository fRepository;
     @Autowired
