@@ -12,6 +12,7 @@ public class FoodEntity {
     private String id;
     private String postId = ""; //F12345
     private String studentID = "";
+    private String nickname = "";
     private String store = "";
     private double rating ;
     private int rating_num ; //number of rating people
@@ -94,6 +95,14 @@ public class FoodEntity {
         this.studentID = studentID;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public String getStore() {
         return store;
     }
@@ -157,4 +166,7 @@ public class FoodEntity {
     public void setReview(p review) {
         this.review.add(review);
     }
+
+    public void removeReview(p review){ this.review.remove(review); }
+
 }

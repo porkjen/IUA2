@@ -13,7 +13,7 @@ html,body,#root,.Choose{
 
 body {
     /* The image used */
-    background-image: url("img/background.PNG");
+    background-color: rgba(249, 236, 207, 0.951);
   
     /* Full height */
     height: 100%;

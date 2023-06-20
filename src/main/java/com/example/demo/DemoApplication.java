@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dao.ChangeCourseHaveEntity;
 import com.example.demo.dao.FoodEntity;
 import com.example.demo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,15 @@ public class DemoApplication {
 		private TodoService service;
 		@Autowired
 		FoodRepository foodRepository;
+		@Autowired
+		ChangeCourseHaveRepository changeCourseHaveRepository;
 
 		@Override
 		public void onApplicationEvent(ContextStartedEvent event) {
 			System.out.println("run");
-			getData gd = new getData();
+			/*getData gd = new getData();
 			NextPostId nextPostId = new NextPostId();
-			List<FoodEntity> restaurantList = gd.getRData("25.151030,121.772286");//中心點
+			List<FoodEntity> restaurantList = gd.getRData("25.131736,121.782001");//深溪路
 			for(FoodEntity r: restaurantList){
 				if(foodRepository.findFirstByOrderByIdDesc()==null){r.setPostId("F00001");}
 				else{
@@ -43,7 +46,7 @@ public class DemoApplication {
 				}
 				foodRepository.save(r);
 			}
-			restaurantList = gd.getRData("25.144637,121.767681");//祥豐街
+			restaurantList = gd.getRData("25.136418,121.787990");//新豐街
 			for(FoodEntity r: restaurantList){
 				if(foodRepository.findByStore(r.getStore())==null){
 					if(foodRepository.findFirstByOrderByIdDesc()==null){r.setPostId("F00001");}
@@ -63,7 +66,7 @@ public class DemoApplication {
 					foodRepository.save(r);
 				}
 			}
-			restaurantList = gd.getRData("25.136418,121.787990");//新豐街
+			restaurantList = gd.getRData("25.144637,121.767681");//祥豐街
 			for(FoodEntity r: restaurantList){
 				if(foodRepository.findByStore(r.getStore())==null){
 					if(foodRepository.findFirstByOrderByIdDesc()==null){r.setPostId("F00001");}
@@ -73,7 +76,7 @@ public class DemoApplication {
 					foodRepository.save(r);
 				}
 			}
-			restaurantList = gd.getRData("25.131736,121.782001");//深溪路
+			restaurantList = gd.getRData("25.151030,121.772286");//海大
 			for(FoodEntity r: restaurantList){
 				if(foodRepository.findByStore(r.getStore())==null){
 					if(foodRepository.findFirstByOrderByIdDesc()==null){r.setPostId("F00001");}
@@ -83,7 +86,13 @@ public class DemoApplication {
 					foodRepository.save(r);
 				}
 			}
-			System.out.println("finish!");
+			System.out.println("finish!");*/
+			/*ChangeCourseHaveEntity changeCourseHaveEntity = new ChangeCourseHaveEntity();
+			for(ChangeCourseHaveEntity c : changeCourseHaveEntity.initialization()){
+				System.out.println(c.getTime()+" : "+c.getHave());
+				changeCourseHaveRepository.save(c);
+			}*/
+
 		}
 	}
 

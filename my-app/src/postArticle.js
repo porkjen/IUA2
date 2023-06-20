@@ -3,37 +3,92 @@ import React from 'react';
 import {Title}  from './components/ArticleStyle.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
-import { Routes ,Route } from 'react-router-dom';
+import { Routes ,Route, useNavigate } from 'react-router-dom';
 import {useState} from "react";
 import { loginUser } from "./cookie.js";
 
 const PostArticle=()=> {
+    let navigate = useNavigate();
+
     function ArticleFoodInput() {
+        const [Ftitle, setFtitle] = useState("");
+        const [Ftime, setFtime] = useState("");
+        const [Faddress, setFaddress] = useState("");
+        const [Finfo, setFinfo] = useState("");
+        const [FgoogleRate, setFgoogleRate] = useState("");
+        const [Frate, setFrate] = useState("");
+
+        const handleFtitleChange = event => {
+          setFtitle(event.target.value);
+        };
+        const handleFtimeChange = event => {
+          setFtime(event.target.value);
+        };
+        const handleFaddressChange = event => {
+          setFaddress(event.target.value);
+        };
+        const handleFinfoChange = event => {
+          setFinfo(event.target.value);
+        };
+        const handleFgoogleRateChange = event => {
+          setFgoogleRate(event.target.value);
+        };
+        const handleFrateChange = event => {
+          setFrate(event.target.value);
+        };
+
+        const handleFoodSubmit = (e) => {
+          e.preventDefault();
+          const student_id = loginUser();
+          const formData = {
+                          studentID: "00957025",
+                          store : Ftitle,
+                          weekday_text : [Ftime],
+                          address : Faddress,
+                          review: {
+                            p_review: Finfo,
+                            p_rate: Frate
+                          }
+                        };
+                        fetch('/food_posts', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify(formData)
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                              console.log(data);
+                            })
+                            .catch(error => {
+                              console.error(error);
+                            });
+                         //Form submission happens here
+                         navigate("/food")
+        }
+       
         return (
-          <form className='articleFoodForm' >
+          <form className='articleFoodForm' onSubmit={handleFoodSubmit}>
             <div className='articleFoodFormTitle'>
               <label>標題:&emsp;&emsp;&emsp;</label>
-              <input type='text'></input>
+              <input type='text' name = 'Ftitle' onChange={handleFtitleChange} value={Ftitle}></input>
             </div><br/>
             <div className='articleFoodFormTime'>
               <label>營業時間:&emsp;</label>
-              <input type='text'></input>
+              <input type='text' name = 'Ftime' onChange={handleFtimeChange} value={Ftime}></input>
             </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家地址:&emsp;</label>
-              <input type='text'></input>
-            </div><br/>
-            <div className='articleFoodFormInfo'>
-              <label>店家資訊:&emsp;</label>
-              <input type='text'></input>
-            </div><br/>
-            <div className='articleFoodFormGoogleRate'>
-              <label>google評分:</label>
-              <input type='text'></input>
+              <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress}></input>
             </div><br/>
             <div className='articleFoodFormSchoolRate'>
-              <label>校內評分:&emsp;</label>
-              <input type='text'></input>
+              <label>我的評分(1-5):&emsp;</label>
+              <input type='number' name = 'Frate' onChange={handleFrateChange} value={Frate}></input>
+            </div><br/>
+            <div className='articleFoodFormInfo'>
+              <label>我的評論:&emsp;</label>
+              <input type='text' name = 'Finfo' onChange={handleFinfoChange} value={Finfo}></input>
             </div><br/>
               <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn type="submit">確認發文</ArticleSubmitBtn>
@@ -129,6 +184,7 @@ const PostArticle=()=> {
                       .catch(error => {
                         console.error(error);
                       });
+                      navigate("/rent")
                    //Form submission happens here
   }
         return (
@@ -141,7 +197,7 @@ const PostArticle=()=> {
               <label>地址:</label>
               <input type='text' name = 'Haddress' onChange={handleHaddressChange} value={Haddress}></input>
             </div><br/>
-            <div className='articleFoodRentMoney'>
+            <div className='articleRentMoney'>
               <label>租金:</label>
               <input type='text' name = 'Hmoney' onChange={handleHmoneyChange} value={Hmoney}></input>
             </div><br/>
@@ -210,15 +266,78 @@ const PostArticle=()=> {
       }
 
       function ArticleChangeClassInput() {
+
+        const [Ctitle, setCtitle] = useState("");
+        const [Ctext, setCtext] = useState("");
+        const [CCategory, setCCategory] = useState("");
+        const [Ctime, setCtime] = useState("");
+        const [Cteacher, setCteacher] = useState("");
+
+        const handleCtitleChange = event => {
+          setCtitle(event.target.value);
+        };
+        const handleCCategoryChange = event => {
+          setCCategory(event.target.value);
+        };
+        const handleCtimeChange = event => {
+          setCtime(event.target.value);
+        };
+        const handleCteacherChange = event => {
+          setCteacher(event.target.value);
+        };
+        const handleCtextChange = event => {
+          setCtext(event.target.value);
+        };
+        const handleChangeClassSubmit = (e) => {
+          e.preventDefault();
+          const student_id = loginUser();
+          const formData = {
+                          studentID: "00957025",
+                          course : Ctitle,
+                          category:CCategory,
+                          time:[Ctime],
+                          teacher:Cteacher,
+                          content : Ctext,
+                        };
+                        fetch('/exchange_course_post', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify(formData)
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                              console.log(data);
+                            })
+                            .catch(error => {
+                              console.error(error);
+                            });
+                            navigate("/changeClass")
+                         //Form submission happens here
+        }
+
         return (
-          <form className='articleChangeClassForm'>
+          <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
             <div className='articleChangeClassFormTitle'>
               <label>標題:</label>
-              <input type='text' className='articleChangeClassFormTitleInput'></input>
+              <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle}></input>
+            </div><br/>
+            <div className='articleChangeClassFormCategory'>
+              <label>分類:</label>
+              <input type='text' className='articleChangeClassFormCategoryInput' onChange={handleCCategoryChange} value={CCategory}></input>
+            </div><br/>
+            <div className='articleChangeClassFormTime'>
+              <label>時間:</label>
+              <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime}></input>
+            </div><br/>
+            <div className='articleChangeClassFormTeacher'>
+              <label>老師:</label>
+              <input type='text' className='articleChangeClassFormTeacherInput' onChange={handleCteacherChange} value={Cteacher}></input>
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
-              <textarea type='text' className='articleChangeClassFormTextInput'></textarea>
+              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange} value={Ctext}></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn>確認發文</ArticleSubmitBtn>

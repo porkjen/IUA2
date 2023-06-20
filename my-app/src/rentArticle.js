@@ -1,10 +1,11 @@
 //import './changeClass.css';
 import React from 'react';
 import dog from './img/dog.png';
-import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment}  from './components/ArticleDetailStyle.js';
-import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody} from './components/CommentStyle.js';
+import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
+import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
+
 
 const RentArticle=()=> {
 
@@ -60,6 +61,15 @@ const RentArticle=()=> {
             postId : postId,
           };
 
+        const [RComment, setRComment] = useState("");
+        const handleRCommentChange = event => {
+            setRComment(event.target.value);
+        };
+
+        const commentData = {
+
+        };
+
         useEffect(() => {
             if (!data) {
                 fetch('/rent_full_post', {
@@ -85,17 +95,10 @@ const RentArticle=()=> {
                 <hr></hr>
                 <ArticleDetailInfo  address={data.address} area={data.area} car={data.car} floor={data.floor} gender={data.gender} money={data.money} people={data.people} power={data.power} water={data.water} style={data.style} rent_date={data.rent_date} note={data.note} >拜託跟我換課，我請你吃雞排</ArticleDetailInfo>
                 <hr></hr>
+                <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
                 <ArticleDetailSavedBtn>收藏</ArticleDetailSavedBtn>
                 <hr></hr>
-                <ArticleDetailComment>
-                    <Commentinfo author={"evelyn"} text={"已私訊"}></Commentinfo>
-                    <Commentinfo author={"vvvvvv"} text={"想問"}></Commentinfo>
-                    <Commentinfo author={"v123"} text={"會潮濕嗎"}></Commentinfo>
-                    <Commentinfo author={"v"} text={"好餓"}></Commentinfo>
-                </ArticleDetailComment>
             </ArticleDetailPosition>
-            <ArticleDetailCommentImg src={dog}/>
-            <ArticleDetailPostComment></ArticleDetailPostComment>
         </ArticleDetailPage>
       );
     }

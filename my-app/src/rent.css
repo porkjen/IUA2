@@ -1,0 +1,15 @@
+.rent_house{
+    max-width: 20%;
+    padding-left: 10%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 5%;
+}
+
+.rent_connection{
+    max-width: 20%;
+    padding-left: 70%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 5%;
+}

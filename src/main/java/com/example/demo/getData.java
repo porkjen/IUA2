@@ -101,6 +101,7 @@ public class getData {
                 }
             }
             restaurant.setStudentID("IUA");
+            restaurant.setNickname("IUA");
             restaurant.setPost_time(DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()));
             restaurant.setRating_num(5);
             arrayList.add(restaurant);

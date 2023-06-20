@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import backgroundImg from '../img/background.PNG';
 
@@ -9,7 +8,7 @@ const Page = styled.div`
 `;
 
 const Pagebg = styled.div`
-    background-image: url(${backgroundImg});    
+    background-image: url(${backgroundImg});
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -26,18 +25,22 @@ const CommentContainer = styled.div`
     min-width: match-parent;
     text-align: center;
     border: transparent;
-    padding: 5px;
+    padding: 10px;
     border-radius: 4px;
-    margin-top: 10px;
+    margin-top: 15px;
+    min-height:50px;
 
 `;
 
 const CommentText = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
     border-radius: 5px;
     width: 350px;
     border: 1px solid rgba(0, 0, 0, 0.125);
-    padding: 16px;
+    padding: 13px;
     background-color: white;
+    min-height:70px;
 
 `;
 
@@ -55,7 +58,21 @@ const CommentBody = styled.div`
 
 `;
 
+const CommentTimeRating = styled.div`
+    margin-top: 8px;
+    word-break: break-all;
+    white-space: pre-line;
+    text-align: right;
+`;
+
+const CommentRating = styled.div`
+    margin-top: 8px;
+    word-break: break-all;
+    white-space: pre-line;
+`;
 
 
 
-export {Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody};
+
+
+export {Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating};
