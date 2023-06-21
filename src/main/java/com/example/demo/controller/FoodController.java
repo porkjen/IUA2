@@ -184,4 +184,34 @@ public class FoodController {
         return newReview;
     }
 
+    @GetMapping("/food_search")
+    public List<FoodDTO> foodSearch(@RequestParam(value = "area", required = false) String area, @RequestParam(value = "store", required = false) String store){
+        System.out.println("/food_search");
+        List<FoodDTO> resultList = new ArrayList<>();
+        for(FoodEntity food : foodRepository.findAll()){
+            //search for both
+            if((store!=null && !store.equals(""))&&(area!=null && !area.equals(""))){
+                if(food.getStore().toLowerCase().contains(store.toLowerCase()) && food.getAddress().contains(area)){
+                    FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                    resultList.add(result);
+                }
+            }
+            //search for store key word
+            else if(store!=null && !store.equals("")){
+                if(food.getStore().toLowerCase().contains(store.toLowerCase())){
+                    FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                    resultList.add(result);
+                }
+            }
+            //search for area
+            else if(area!=null && !area.equals("")){
+                if(food.getAddress().contains(area)){
+                    FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                    resultList.add(result);
+                }
+            }
+        }
+        return resultList;
+    }
+
 }
