@@ -143,6 +143,26 @@ public class TodoController {
         else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
     }
 
+    @GetMapping("rent_search")
+    public List<HouseDTO> rentSearch(@RequestParam(value = "area", required = false) String area,
+                                     @RequestParam(value = "gender", required = false) String gender,
+                                     @RequestParam(value = "people", required = false) String people,
+                                     @RequestParam(value = "style", required = false) String style,
+                                     @RequestParam(value = "car", required = false) String car){
+        List<HouseDTO> resultList = new ArrayList<>();
+        for(HouseEntity house : houseRepository.findAll()){
+            if ((Objects.equals(area, "") || house.getArea().equals(area))
+                    && (Objects.equals(gender, "") || house.getGender().equals(gender))
+                    && (Objects.equals(people, "") || house.getPeople().equals(people))
+                    && (Objects.equals(style, "") || house.getStyle().contains(style))
+                    && (Objects.equals(car, "") || house.getCar().equals(car))) {
+                HouseDTO result = new HouseDTO(house.getPostId(), house.getName(), house.getTitle());
+                resultList.add(result);
+            }
+        }
+        return resultList;
+    }
+
 }
 
 
