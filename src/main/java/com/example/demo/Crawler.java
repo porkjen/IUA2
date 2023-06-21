@@ -254,7 +254,7 @@ public class Crawler {
             if(cID.get(i) != null && Integer.parseInt(semester[0]) <= ny && Integer.parseInt(semester[1]) <= ns){
                 driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
                 driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
-                //driver.findElement(By.id("radioButtonClass_0")).click();
+                driver.findElement(By.id("radioButtonClass_0")).click();
                 driver.findElement(By.id("Q_CH_LESSON")).clear();
                 driver.findElement(By.id("Q_CH_LESSON")).sendKeys(cID.get(i));
                 driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢

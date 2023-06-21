@@ -68,8 +68,6 @@ public class TodoController {
         System.out.println("original:"+decryptedpwd);
 
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
-        //sID = account;
-
     }
 
     @PostMapping("/nickname")
@@ -99,13 +97,19 @@ public class TodoController {
     }
 
     @PostMapping("/remained_credits")
-    public FinishedCourseList postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
+    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
-        FinishedCourseList fc = new FinishedCourseList(finished.getStudentID());
+        if(fRepository.existsByStudentID(finished.getStudentID())){
+            finished = fRepository.findByStudentID(finished.getStudentID());
+        }
+        else{
+            finished = new FinishedCourseList(finished.getStudentID());
+        }
         finishedCourse = crawler.getFinishedCredict();
-        fc.setFinishedCourses(finishedCourse);
-        fRepository.save(fc);
-        return fc;
+        finished.setFinishedCourses(finishedCourse);
+        fRepository.save(finished);
+        RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
+        return remainCredit;
     }
 
     @GetMapping("/rent_load") //list all house posts
