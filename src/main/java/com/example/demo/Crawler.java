@@ -191,7 +191,7 @@ public class Crawler {
 
         driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        //driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
         Thread.sleep(3000);
         driver.findElement(By.linkText("成績系統")).click(); //成績系統
         Thread.sleep(3000);
@@ -251,7 +251,7 @@ public class Crawler {
             int ns = Integer.parseInt(nowSemester);
 
             String[] semester = cTime.get(i).split("(?<=\\G.{3})");
-            if(cID.get(i) != null && Integer.parseInt(semester[0]) <= ny && Integer.parseInt(semester[1]) <= ns){
+            if(Integer.parseInt(semester[0]) <= ny && Integer.parseInt(semester[1]) <= ns){
                 driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
                 driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
                 driver.findElement(By.id("radioButtonClass_0")).click();
@@ -259,16 +259,19 @@ public class Crawler {
                 driver.findElement(By.id("Q_CH_LESSON")).sendKeys(cID.get(i));
                 driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢
 
+                Thread.sleep(500);
                 List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
                 if(trList2.size() > 1){
                     List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
                     fcList.get(i).setDepartment(col.get(4).getText());
+                    System.out.println("**********course ID(" + i + ") " + cID.get(i));
                     System.out.println("**********department(" + i + ") " + fcList.get(i).getDepartment());
                     fCourses.add(fcList.get(i));
                 }
                 else{
-                    fcList.get(i).setDepartment(null);
+                    fcList.get(i).setDepartment("");
                     fCourses.add(fcList.get(i));
+                    System.out.println("**********course ID(" + i + ") " + cID.get(i));
                     System.out.println("**********department: " + fcList.get(i).getDepartment());
                 }
             }
