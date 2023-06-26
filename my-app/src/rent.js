@@ -64,8 +64,6 @@ const Rent=()=> {
                     {data.map(item => (
                       <Articleinfo key={item.postId} author={item.name} time={item.post_time} text={item.title} postID={item.postId}></Articleinfo>
                     ))}
-                    <Articleinfo author={"evelyn"} text={"I love you"}></Articleinfo>
-                    <Articleinfo author={"vvvvvvvv"} text={"I love you soooo such"}></Articleinfo>
                 </ArticleList>
             </Pagebg>
         </Page>

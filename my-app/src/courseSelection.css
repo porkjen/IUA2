@@ -1,0 +1,87 @@
+html,body,#root,.CourseSelection{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.courseSelection_bg {
+
+    /* The image used */
+    background-image: url("img/background2.JPG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.courseSelection_backicon{
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+}
+
+.text{
+    padding-left: 40px;
+    float: left;
+}
+
+.finger img{
+    height: 80px;
+    width: 80px;
+}
+
+.courseSelection_allBtn{
+    padding-top: 30px;
+}
+
+.courseSelection_allBtn button:hover{
+    background-color: rgba(196, 200, 201, 0.833);
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.courseSelection_allBtn button{
+    height: 130px;
+    width: 130px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    border: none;
+}
+
+.courseSelectionpic{
+    position: relative;
+    height: 130px;
+    width: 130px;
+}
+
+.searchScheduleBtn{
+    padding-left: 40px;
+}
+
+.rulesBtn{
+    padding-left: 40px;
+}
+
+.recommendedCourseBtn{
+    padding-top: 30px;
+    padding-left: 40px;
+}
+
+.detectionCourseBtn{
+    padding-top: 30px;
+    padding-left: 40px;
+}
+
+.dogpic{
+    position: fixed;
+    padding-top: 0px;
+    height: 350px;
+    width: 350px;
+}
