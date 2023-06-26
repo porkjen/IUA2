@@ -3,20 +3,22 @@ package com.example.demo.dao;
 import org.apache.poi.ss.formula.eval.UnaryMinusEval;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document("timeTableCollection") //collection name
 public class TimeTableEntity {
     private String id;
     private String studentID;
-    private List<Info> info;
-    private List<Pre_Info> pre_info;
+    private List<Info> info = new ArrayList<>();
+    private List<Pre_Info> pre_info = new ArrayList<>();;
+
 
     // Nested class for the taken coursed
     public static class Info {
         private String name = "";
         private String classNum = "";
-        private String time = "";
+        private String[] time;
         private String classroom = "";
 
         public String getName() {
@@ -35,11 +37,11 @@ public class TimeTableEntity {
             this.classNum = classNum;
         }
 
-        public String getTime() {
+        public String[] getTime() {
             return time;
         }
 
-        public void setTime(String time) {
+        public void setTime(String[] time) {
             this.time = time;
         }
 
@@ -110,8 +112,8 @@ public class TimeTableEntity {
         return info;
     }
 
-    public void setInfo(List<Info> info) {
-        this.info = info;
+    public void setInfo(Info info) {
+        this.info.add(info);
     }
 
     public List<Pre_Info> getPre_info() {

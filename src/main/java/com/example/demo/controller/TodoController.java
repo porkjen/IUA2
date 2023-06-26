@@ -30,14 +30,16 @@ public class TodoController {
     BasicRepository basicRepository;
     @Autowired
     HouseRepository houseRepository;
+    @Autowired
+    TimeTableRepository timeTableRepository;
     String secretKey = "au4a83";
     Crawler crawler = new Crawler();
+    AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
         //password encrypt
-        AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
         String studentID = basic.getStudentID();
         String password = basic.getPassword();
         System.out.println(studentID);
@@ -147,7 +149,7 @@ public class TodoController {
         else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
     }
 
-    @GetMapping("rent_search")
+    @GetMapping("/rent_search")
     public List<HouseDTO> rentSearch(@RequestParam(value = "area", required = false) String area,
                                      @RequestParam(value = "gender", required = false) String gender,
                                      @RequestParam(value = "people", required = false) String people,
@@ -167,6 +169,27 @@ public class TodoController {
         return resultList;
     }
 
+    @GetMapping("/curriculum_search")
+    public List<TimeTableEntity.Info> curriculumSearch(@RequestParam("studentID") String studentID) throws TesseractException, IOException, InterruptedException {
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        if(timeTable!=null){
+            return timeTable.getInfo();
+        }
+        else{
+            String password = basicRepository.findByStudentID(studentID).getPassword();
+            password = aesEncryptionDecryption.decrypt(password, secretKey);
+            crawler.CrawlerHandle(studentID,password);
+            List<TimeTableEntity.Info> myClassList = crawler.getMyClass(studentID,password);
+            TimeTableEntity table = new TimeTableEntity();
+            table.setStudentID(studentID);
+            for(TimeTableEntity.Info i : myClassList){
+                System.out.println(i.getName());
+                table.setInfo(i);
+            }
+            timeTableRepository.save(table);
+            return myClassList;
+        }
+    }
 }
 
 
