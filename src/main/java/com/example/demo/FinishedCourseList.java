@@ -8,7 +8,10 @@ public class FinishedCourseList{
     private String studentID;
     private ArrayList<FinishedCourse> fCourse;
 
-    public FinishedCourseList(String id){
+    public FinishedCourseList(){
+    }
+
+    public void setStudentID(String id){
         this.studentID = id;
     }
 
@@ -23,4 +26,5 @@ public class FinishedCourseList{
     public String getStudentID() {
         return studentID;
     }
+
 }

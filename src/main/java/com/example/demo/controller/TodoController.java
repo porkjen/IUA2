@@ -71,7 +71,7 @@ public class TodoController {
         System.out.println("original:"+decryptedpwd);
 
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
-        //sID = account;
+
     }
 
     @PostMapping("/nickname")
@@ -101,13 +101,18 @@ public class TodoController {
     }
 
     @PostMapping("/remained_credits")
-    public FinishedCourseList postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
+    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
-        FinishedCourseList fc = new FinishedCourseList(finished.getStudentID());
+        System.out.println("*********student ID: " + finished.getStudentID());
+        if(fRepository.existsByStudentID(finished.getStudentID())){
+            System.out.println("found.");
+            finished = fRepository.findByStudentID(finished.getStudentID());
+        }
         finishedCourse = crawler.getFinishedCredict();
-        fc.setFinishedCourses(finishedCourse);
-        fRepository.save(fc);
-        return fc;
+        finished.setFinishedCourses(finishedCourse);
+        fRepository.save(finished);
+        RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
+        return remainCredit;
     }
 
     @GetMapping("/rent_load") //list all house posts
@@ -143,6 +148,26 @@ public class TodoController {
             return ResponseEntity.ok("Success");
         }
         else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+    }
+
+    @GetMapping("rent_search")
+    public List<HouseDTO> rentSearch(@RequestParam(value = "area", required = false) String area,
+                                     @RequestParam(value = "gender", required = false) String gender,
+                                     @RequestParam(value = "people", required = false) String people,
+                                     @RequestParam(value = "style", required = false) String style,
+                                     @RequestParam(value = "car", required = false) String car){
+        List<HouseDTO> resultList = new ArrayList<>();
+        for(HouseEntity house : houseRepository.findAll()){
+            if ((Objects.equals(area, "") || house.getArea().equals(area))
+                    && (Objects.equals(gender, "") || house.getGender().equals(gender))
+                    && (Objects.equals(people, "") || house.getPeople().equals(people))
+                    && (Objects.equals(style, "") || house.getStyle().contains(style))
+                    && (Objects.equals(car, "") || house.getCar().equals(car))) {
+                HouseDTO result = new HouseDTO(house.getPostId(), house.getName(), house.getTitle());
+                resultList.add(result);
+            }
+        }
+        return resultList;
     }
 
 }
