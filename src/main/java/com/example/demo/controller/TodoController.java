@@ -101,11 +101,10 @@ public class TodoController {
     @PostMapping("/remained_credits")
     public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
+        System.out.println("*********student ID: " + finished.getStudentID());
         if(fRepository.existsByStudentID(finished.getStudentID())){
+            System.out.println("found.");
             finished = fRepository.findByStudentID(finished.getStudentID());
-        }
-        else{
-            finished = new FinishedCourseList(finished.getStudentID());
         }
         finishedCourse = crawler.getFinishedCredict();
         finished.setFinishedCourses(finishedCourse);
