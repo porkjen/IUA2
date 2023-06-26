@@ -42,7 +42,7 @@ const FoodArticle=()=> {
                 <div>地址: {address}</div>
                 <div>營業時間: 
                     {weekday_text.map(item => (
-                        <div>{item+"\n"}</div>))}</div>
+                        <div>&emsp;{item+"\n"}</div>))}</div>
                 <div>評分: {rating}</div>
                 <div>連結: {URL}</div>
             </div>

@@ -5,6 +5,7 @@ html,body,#root,.modalBackground{
     padding: 0;
     margin: 0;
     background-color: rgba(249, 236, 207, 0.951);
+    overflow: auto;
 }
 
 .modalClose{
@@ -40,3 +41,53 @@ html,body,#root,.modalBackground{
     border-radius: 0px;
 }
 
+
+
+.modal_sandwich{
+    max-width: 23%;
+    padding-left: 1%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 90%;
+}
+
+.modal_pizza{
+    max-width: 20%;
+    margin-left: 80%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 30%;
+    
+}
+
+.modal_cookiemonster{
+    max-width: 40%;
+    padding-left: 8%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 140%;
+}
+
+.modal_cookiem{
+    max-width: 20%;
+    padding-left: 50%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 130%;
+}
+
+.modal_minion{
+    max-width: 40%;
+    padding-left: 55%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 133%;
+}
+
+.modal_banana{
+    max-width: 35%;
+    padding-left: 12%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 160%;
+}

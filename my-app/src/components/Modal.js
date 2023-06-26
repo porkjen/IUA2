@@ -1,5 +1,12 @@
 import './Modal.css';
 import React from "react";
+import sandwich from '../img/sandwich.png';
+import pizza from '../img/pizza.png';
+import taco from '../img/taco.png';
+import cookiem from '../img/cookiem.png';
+import cookiemonster from '../img/cookiemonster.png';
+import minion from '../img/minion.png';
+import banana from '../img/banana.png';
 import {ArticleSubmitBtn, ModalSubmitBtn} from './ArticleStyle.js';
 import {useState,useEffect} from "react";
 import { Routes ,Route, useNavigate } from 'react-router-dom';
@@ -151,6 +158,29 @@ function ModalFood(){
     );
 }
 
+function RatingFood(){
+    return(
+        <div>
+            <img className='modal_sandwich' src={sandwich}/>
+            <img className='modal_pizza' src={pizza}/>
+            <img className='modal_cookiemonster' src={cookiemonster}/>
+            <img className='modal_cookiem' src={cookiem}/>
+        </div>
+
+    );
+}
+
+function ChooseArticle(){
+    return(
+        <div>
+            <img className='modal_minion' src={minion}/>
+            <img className='modal_banana' src={banana}/>
+        </div>
+
+    );
+}
+
+
 
 
 function Modal({closeModal,type, postId}){
@@ -240,6 +270,8 @@ function Modal({closeModal,type, postId}){
 
     return(
         <div className="modalBackground">
+            {isRating && <RatingFood/>}
+            {!isRating && <ChooseArticle/>}
             <div className="modalContainer">
                 <button className='modalClose' onClick={() => closeModal(false)}>X</button>
                 <div className="modalTitle">

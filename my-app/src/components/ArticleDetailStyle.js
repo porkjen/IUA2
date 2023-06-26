@@ -20,15 +20,18 @@ const ArticleDetailPosition = styled.div`
 
 const ArticleDetailAuthor = styled.h4`
     padding-top:10px;
-    padding-left:20px
+    padding-left:20px;
+    margin:5px;
 `;
 
 const ArticleDetailTitle = styled.h2`
     text-align:center;
+    margin:5px;
 `;
 
 const ArticleDetailPostDate = styled.h4`
     padding-left:280px;
+    margin:5px;
 `;
 
 const ArticleDetailText = styled.h3`

@@ -166,4 +166,7 @@ public class FoodEntity {
     public void setReview(p review) {
         this.review.add(review);
     }
+
+    public void removeReview(p review){ this.review.remove(review); }
+
 }
