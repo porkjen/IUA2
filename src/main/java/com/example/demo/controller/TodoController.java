@@ -32,6 +32,10 @@ public class TodoController {
     HouseRepository houseRepository;
     @Autowired
     TimeTableRepository timeTableRepository;
+    @Autowired
+    SavedRepository savedRepository;
+    @Autowired
+    FoodRepository foodRepository;
     String secretKey = "au4a83";
     Crawler crawler = new Crawler();
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
@@ -189,6 +193,55 @@ public class TodoController {
             return myClassList;
         }
     }
+
+    @PutMapping("/favourites")
+    public ResponseEntity<String> favourites(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
+        SavedEntity savedEntity = savedRepository.findByStudentID(studentID);
+        if (savedEntity == null) {
+            savedEntity = new SavedEntity();
+            savedEntity.setStudentID(studentID);
+        }
+        savedEntity.setPostId(postId);
+        savedRepository.save(savedEntity);
+        return ResponseEntity.ok("Success");
+    }
+
+    @PutMapping("/favourites_load")
+    public SavedDTO favouritesLoad(@RequestBody Map<String, String> requestData){
+        SavedDTO savedDTO = new SavedDTO();
+        SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
+        if (savedEntity==null)return savedDTO;
+        else{
+            for(String post : savedEntity.getPostId()){
+                if(post.startsWith("F")){
+                    FoodEntity food = foodRepository.findByPostId(post);
+                    FoodDTO foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                    savedDTO.setSavedFood(foodDTO);
+                }else if(post.startsWith("H")){
+                    HouseEntity house = houseRepository.findByPostId(post);
+                    HouseDTO houseDTO = new HouseDTO(post, house.getName(), house.getTitle());
+                    savedDTO.setSavedHouse(houseDTO);
+                }
+            }
+            return savedDTO;
+        }
+    }
+
+    @DeleteMapping("/favorites_delete")
+    public ResponseEntity<String> favouritesDelete(@RequestBody Map<String, String> requestData){
+        System.out.println("/favorites_delete");
+        SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
+        for(String postId : savedEntity.getPostId()){
+            if(Objects.equals(postId, requestData.get("postId"))){
+                savedEntity.removePostId(postId);
+                savedRepository.save(savedEntity);
+                return ResponseEntity.ok("Success");
+            }
+        }
+        return ResponseEntity.badRequest().body("Invalid request");
+    }
+
+    
 }
 
 
