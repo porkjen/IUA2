@@ -12,7 +12,7 @@ html,body,#root,.Remain{
   
 }
 
-body {
+.Remain {
     /* The image used */
     background-image: url("img/background.PNG");
   
@@ -25,32 +25,27 @@ body {
     background-size: cover;
   }
 
-.title{
-    
+.Remain_title{
     text-align: center;
     padding-top: 50px;
-    
 }
 
-.titleText{
-    font-size: 24px;
-    font-family: 'Noto Serif TC', serif;
+.RemainTitle_position{
+    padding-top: 10px;
+    margin-left: 8px;
 }
 
-label{
-    font-size: 18px;
-    font-family: 'Noto Serif TC', serif;
-}
 
-.Course{
+.Remain_Course{
     width: 230px;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 20%;
 }
 
-.g_Course, .e_Course, .c_Course{
+.c_Course, .ie_Course, .oe_Course, .g_Course, .core_Course, .pe_Course, .eng_Course, .swim_Course{
     z-index: 2;
-    margin-top: 40px;
+    margin-top: 15px;
     width: 230px;
     height: 50px;
     background-color: white;
@@ -61,7 +56,7 @@ label{
     position: absolute;
     max-width: 200px;
     max-height: 200px;
-    left: -30px;
+    left: -60px;
     bottom: 80px;
     z-index: 1;
 }

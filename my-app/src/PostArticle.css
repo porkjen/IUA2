@@ -162,3 +162,19 @@ body {
 .articleFoodFormBtn{
     text-align: center;
 }
+
+.post_elmo{
+    max-width: 23%;
+    padding-left: 10%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 20%;
+}
+
+.post_conversation{
+    max-width: 29%;
+    padding-left: 35%;
+    position: absolute;
+    z-index: 1;
+    margin-top: 3.5%;
+}

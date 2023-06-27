@@ -26,6 +26,7 @@ const Title = styled.h1`
     left: 50%;
     top: 5%;
     transform: translate(-50%, -50%);
+    z-index:2;
 `;
 
 
@@ -137,6 +138,11 @@ const ArticleBody = styled.div`
     margin-top: 8px;
     word-break: break-all;
     white-space: pre-line;
+    position: absolute;
+    left: 50%;
+    margin-top:6%;
+    margin-bottom:6%;
+    transform: translate(-50%, -50%);
 `;
 
 
@@ -163,5 +169,14 @@ const ArticleSubmitBtnPosition = styled.div`
     text-align: center;
 `;
 
+const PerChangeClassBtn = styled.button`
+    width:53px;
+    height:50px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 5px;
+    background-color: white; 
+    padding: 10px;
+`;
 
-export {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleAuthor, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition};
+
+export {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleAuthor, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn};

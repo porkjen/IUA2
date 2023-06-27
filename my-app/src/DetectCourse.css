@@ -1,0 +1,57 @@
+html,body,#root,.DetectCourse{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  
+}
+
+.DetectCourse_bg {
+    /* The image used */
+    background-image: url("img/background.PNG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+.DetectCourse_search_position{
+    text-align: center;
+}
+
+.DetectCourse_search{
+    width:200px;
+    height:30px;
+    margin-top: 30%;
+}
+
+.DetectCourse_searchBtn, .DetectCourse_delete{
+    color: #0099CC; 
+    background: transparent; 
+    border: 2px solid #0099CC;
+    border-radius: 6px; 
+    color: black;
+    padding: 8px 16px;
+    text-align: center;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-left: 8px;
+}
+
+.DetectCourse_searchBtn:hover {
+    background-color: #008CBA;
+    color: white;
+}
+
+.DetectCourse_delete{
+    margin-left: 80%;
+}

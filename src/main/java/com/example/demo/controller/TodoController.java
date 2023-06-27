@@ -110,9 +110,9 @@ public class TodoController {
             System.out.println("found.");
             finished = fRepository.findByStudentID(finished.getStudentID());
         }
-        finishedCourse = crawler.getFinishedCredict();
-        finished.setFinishedCourses(finishedCourse);
-        fRepository.save(finished);
+//       finishedCourse = crawler.getFinishedCredict();
+//       finished.setFinishedCourses(finishedCourse);
+//       fRepository.save(finished);
         RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
         return remainCredit;
     }

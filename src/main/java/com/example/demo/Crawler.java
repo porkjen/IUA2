@@ -193,10 +193,9 @@ public class Crawler {
 
         driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
-        //driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
-        Thread.sleep(3000);
+        Thread.sleep(1000);
         driver.findElement(By.linkText("成績系統")).click(); //成績系統
-        Thread.sleep(3000);
+        Thread.sleep(1000);
         driver.findElement(By.linkText("查詢各式成績")).click(); //查詢各式成績
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");

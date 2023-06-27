@@ -92,8 +92,8 @@ public class RemainedService {
                     }
                 }
                 else if(f.getCategory().equals("抵")){
-                    if(f.getName().equals("游泳畢業門檻"))  remainCredit.setSwimming(true);
-                    if(f.getCategory().equals("英文畢業門檻")) remainCredit.setEng(true);
+                    if(f.getName().equals("游泳畢業門檻"))  remainCredit.setSwimming("通過");
+                    if(f.getName().equals("英文畢業門檻")) remainCredit.setEng("通過");
                 }
             }
 
