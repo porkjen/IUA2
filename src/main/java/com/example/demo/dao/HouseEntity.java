@@ -2,6 +2,9 @@ package com.example.demo.dao;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Document("houseCollection") //collection name
 public class HouseEntity {
 
@@ -23,6 +26,7 @@ public class HouseEntity {
     private String rent_date = "";
     private String note = "";
     private String post_time = "";
+    private List<String> saved = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -165,5 +169,18 @@ public class HouseEntity {
 
     public void setPost_time(String post_time) {
         this.post_time = post_time;
+    }
+
+    public List<String> getSaved() {
+        return saved;
+    }
+    public void setSaved(String saved) {
+        this.saved.add(saved);
+    }
+    public void removeSaved(String saved) {
+        this.saved.remove(saved);
+    }
+    public void savefirst(String saved) {
+        this.saved.add(0, saved);
     }
 }
