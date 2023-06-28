@@ -194,7 +194,7 @@ public class TodoController {
         }
     }
 
-    @PutMapping("/favorites")
+    @PostMapping("/favorites")
     public ResponseEntity<String> favourites(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
         SavedEntity savedEntity = savedRepository.findByStudentID(studentID);
         if (savedEntity == null) {
@@ -206,7 +206,7 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
-    @PutMapping("/favorites_load")
+    @PostMapping("/favorites_load")
     public SavedDTO favouritesLoad(@RequestBody Map<String, String> requestData){
         SavedDTO savedDTO = new SavedDTO();
         SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
