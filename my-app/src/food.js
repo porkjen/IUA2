@@ -3,7 +3,8 @@ import React from 'react';
 import Modal from "./components/Modal";
 import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
-import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody}  from './components/ArticleStyle.js';
+import logo from './img/IUAlogo.png';
+import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
@@ -42,7 +43,10 @@ const Food=()=> {
         return (
           <ArticleContainer>
             <ArticleText onClick={handleShowFoodSubmit}>
+              <ArticleAuthorArea>
+                <ArticleAuthorImg src={logo}></ArticleAuthorImg>
                 <ArticleAuthor>{author}</ArticleAuthor>
+              </ArticleAuthorArea>
                 <ArticleBody>{store}</ArticleBody>
                 <ArticlePostTime>{rating+"顆星 " + post_time}</ArticlePostTime>
             </ArticleText>

@@ -2,7 +2,8 @@
 import React from 'react';
 import dog from './img/dog.png';
 import Modal from "./components/Modal";
-import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailRatingdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
+import logo from './img/IUAlogo.png';
+import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailRatingdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
@@ -29,7 +30,10 @@ const FoodArticle=()=> {
     function ArticleTitleinfo({ author, title, post_time }) {
         return (
             <div>
+              <ArticleDetailAuthorArea>
+                <ArticleDetailAuthorImg src={logo}></ArticleDetailAuthorImg>
                 <ArticleDetailAuthor>{author}</ArticleDetailAuthor>
+              </ArticleDetailAuthorArea>
                 <ArticleDetailTitle>{title}</ArticleDetailTitle>
                 <ArticleDetailPostDate>{post_time}</ArticleDetailPostDate>
             </div>

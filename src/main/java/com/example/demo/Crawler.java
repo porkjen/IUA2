@@ -261,7 +261,7 @@ public class Crawler {
                 driver.findElement(By.id("Q_CH_LESSON")).sendKeys(cID.get(i));
                 driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢
 
-                Thread.sleep(500);
+                Thread.sleep(700);
                 List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
                 if(trList2.size() > 1){
                     List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));

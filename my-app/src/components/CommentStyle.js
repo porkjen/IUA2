@@ -30,7 +30,6 @@ const CommentContainer = styled.div`
     border-radius: 4px;
     margin-top: 15px;
     min-height:50px;
-
 `;
 
 const CommentText = styled.button`
@@ -38,11 +37,11 @@ const CommentText = styled.button`
     font-family: 'Noto Serif TC', serif;
     border-radius: 5px;
     width: 350px;
-    border: 1px solid rgba(0, 0, 0, 0.125);
     padding: 13px;
     background-color: white;
     min-height:70px;
-
+    border: 1px solid #FFA500;
+    background-color: transparent; 
 `;
 
 

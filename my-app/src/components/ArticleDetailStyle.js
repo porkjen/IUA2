@@ -17,10 +17,21 @@ const ArticleDetailPosition = styled.div`
     overflow: auto;
 `;
 
+const ArticleDetailAuthorArea= styled.div`
+    display: flex;
+    flex-direction: row ;
+`;
+
+const ArticleDetailAuthorImg = styled.img`
+    width: 50px; /* 設定頭像的寬度和高度 */
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+`;
 
 const ArticleDetailAuthor = styled.h4`
     padding-top:10px;
-    padding-left:20px;
+    padding-left:5px;
     margin:5px;
 `;
 
@@ -38,28 +49,34 @@ const ArticleDetailText = styled.h3`
     background-color:white;
 `;
 
+/*收藏 */
 const ArticleDetailSavedBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);
     width:60px;
     text-align:center;
     height:30px;
     margin-left:20px;
+    border-radius: 6px; 
 `;
 
+/*評分*/
 const ArticleDetailRatingdBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);
     width:60px;
     text-align:center;
     height:30px;
     margin-left:60%;
+    border-radius: 6px; 
 `;
 
+/*送出 */
 const ArticleDetailContactdBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);
     width:60px;
     text-align:center;
     height:30px;
     margin-left:60%;
+    border-radius: 6px; 
 `;
 
 const ArticleDetailComment = styled.div`
@@ -79,6 +96,7 @@ const ArticleDetailCommentArea = styled.img`
     margin-left: 20px;
     padding-top: 25px;
 `;
+
 
 const ArticleDetailCommentImg = styled.img`
     width: 40px; /* 設定頭像的寬度和高度 */
@@ -106,7 +124,8 @@ const ArticleDetailPostBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);  
     height:40%;
     margin-top: 10%;
+    border-radius: 6px; 
 `
 
 
-export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};
+export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};

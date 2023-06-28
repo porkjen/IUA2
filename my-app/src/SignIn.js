@@ -29,7 +29,7 @@ const SignIn=()=> {
       };
       const handleSubmit = (e) => {
         e.preventDefault();
-        /*alert(`The name you entered was: ${student_id}`);
+        alert(`The name you entered was: ${student_id}`);
         const formData = {
                         studentID: student_id,
                         password: password,
@@ -50,7 +50,7 @@ const SignIn=()=> {
                           .catch(error => {
                             console.error(error);
                           });
-        */
+        
                      	//Form submission happens here
         navigate("/homePage");
       }

@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
-<<<<<<< HEAD
 
-=======
 import org.apache.commons.lang3.math.NumberUtils;
->>>>>>> 9087421b3076d4cf7ed9b54cf1ad2df9701939ee
 import org.apache.poi.hpsf.Array;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
