@@ -59,6 +59,16 @@ const ArticleDetailSavedBtn = styled.button`
     border-radius: 6px; 
 `;
 
+/*已收藏 */
+const ArticleDetailAlreadySavedBtn = styled.button`
+    background-color: rgba(223, 223, 223);
+    width:60px;
+    text-align:center;
+    height:30px;
+    margin-left:20px;
+    border-radius: 6px; 
+`;
+
 /*評分*/
 const ArticleDetailRatingdBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);
@@ -128,4 +138,4 @@ const ArticleDetailPostBtn = styled.button`
 `
 
 
-export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};
+export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};

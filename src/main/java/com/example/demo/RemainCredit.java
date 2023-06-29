@@ -8,8 +8,8 @@ public class RemainCredit{
     int kernal;         //核心
     int pe;             //體育
 
-    boolean eng = false;
-    boolean swimming = false;
+    String eng = "未通過";
+    String swimming = "未通過";
 
     public RemainCredit(){}
 
@@ -37,11 +37,11 @@ public class RemainCredit{
         this.pe = pe;
     }
 
-    public void setEng(boolean eng){
+    public void setEng(String eng){
         this.eng = eng;
     }
 
-    public void setSwimming(boolean swimming){
+    public void setSwimming(String swimming){
         this.swimming = swimming;
     }
 
@@ -69,11 +69,11 @@ public class RemainCredit{
         return pe;
     }
 
-    public boolean getEng(){
+    public String getEng(){
         return eng;
     }
 
-    public boolean getSwimming(){
+    public String getSwimming(){
         return swimming;
     }
 }

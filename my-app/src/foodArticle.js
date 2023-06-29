@@ -3,7 +3,7 @@ import React from 'react';
 import dog from './img/dog.png';
 import Modal from "./components/Modal";
 import logo from './img/IUAlogo.png';
-import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailRatingdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
+import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailRatingdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
@@ -14,6 +14,8 @@ const FoodArticle=()=> {
     const [data, setData] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const { studentID, postId } = location.state;
+    const [isFoodSaved, setIsFoodSaved] = useState(false);
+    const [responseStatus, setResponseStatus] = useState(null);
 
     function Commentinfo({ author, text, commentTime, commentRating }) {
         return (
@@ -48,7 +50,7 @@ const FoodArticle=()=> {
                     {weekday_text.map(item => (
                         <div>&emsp;{item+"\n"}</div>))}</div>
                 <div>評分: {rating}</div>
-                <div>連結: {URL}</div>
+                <div>連結: <a href={URL} target="_blank" style={{ fontSize: '10px' }}>{URL}</a></div>
             </div>
         );
       }
@@ -86,6 +88,53 @@ const FoodArticle=()=> {
                        //Form submission happens here
       }
 
+      const handleAddFoodSavedSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        const savedFormData = {
+                        studentID: "00957025",
+                        postId:postId,
+                      };
+                      fetch('/favorites', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(savedFormData)
+                          })
+                          .then(response => response.status)
+                          .then(data => {
+                            console.log(data);
+                          })
+                          .catch(error => {
+                            console.error(error);
+                          });
+                          setIsFoodSaved(true);
+                       //Form submission happens here
+      }
+
+      const handleRemovedFoodSavedSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        const savedFormData = {
+                        studentID: "00957025",
+                        postId:postId,
+                      };
+                      fetch('/favorites_delete', {
+                            method: 'DELETE',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(savedFormData)
+                          })
+                          .then(response => response.status)
+                          .catch(error => {
+                            console.error(error);
+                          });
+                          setIsFoodSaved(false);
+                       //Form submission happens here
+      }
+
       return (
         <ArticleDetailPage>
             <ArticleDetailPosition>
@@ -94,7 +143,8 @@ const FoodArticle=()=> {
                 <ArticleDetailInfo  address={data.address} rating={data.rating} weekday_text={data.weekday_text} URL={data.url}  ></ArticleDetailInfo>
                 <hr></hr>
                 <ArticleDetailRatingdBtn onClick={()=> setOpenModal(true)}>評分</ArticleDetailRatingdBtn>
-                <ArticleDetailSavedBtn>收藏</ArticleDetailSavedBtn>
+                {isFoodSaved && <ArticleDetailAlreadySavedBtn onClick={handleRemovedFoodSavedSubmit}>已收藏</ArticleDetailAlreadySavedBtn>}
+                {!isFoodSaved && <ArticleDetailSavedBtn onClick={handleAddFoodSavedSubmit}>收藏</ArticleDetailSavedBtn>}
                 <hr></hr>
                 <ArticleDetailComment>
                     {data.review.map(item => (
@@ -121,8 +171,6 @@ const FoodArticle=()=> {
             postId : postId,
           };
 
-        
-
         useEffect(() => {
             if (!data) {
                 fetch('/food_full_post', {
@@ -130,7 +178,10 @@ const FoodArticle=()=> {
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(formData)})
                 .then(response => response.json())
-                .then(data => setData(data))
+                .then(data => {
+                  setData(data);
+                  
+                })
                 .catch(error => {
                   console.error('Error:', error);
                 });

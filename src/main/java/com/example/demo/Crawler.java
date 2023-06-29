@@ -25,13 +25,15 @@ import net.sourceforge.tess4j.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class Crawler {
     static ChromeOptions options;
     static WebDriver driver;
     public static String loginMessage = "";
+    @Autowired
+    TimeTableRepository timeTableRepository;
     public static void CrawlerHandle(String userAccount, String userPassword) throws IOException, TesseractException, InterruptedException {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
@@ -193,10 +195,9 @@ public class Crawler {
 
         driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
-        //driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
-        Thread.sleep(3000);
+        Thread.sleep(1000);
         driver.findElement(By.linkText("成績系統")).click(); //成績系統
-        Thread.sleep(3000);
+        Thread.sleep(1000);
         driver.findElement(By.linkText("查詢各式成績")).click(); //查詢各式成績
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
@@ -282,7 +283,8 @@ public class Crawler {
         return fCourses;
     }
 
-    public static /*TimeTableEntity*/void getMyClass(String studentID, String password) throws InterruptedException{
+    public static List<TimeTableEntity.Info> getMyClass(String studentID, String password) throws InterruptedException{
+        List<TimeTableEntity.Info> myClassList = new ArrayList<>();
         driver.switchTo().frame("menuFrame");
         driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
         Thread.sleep(3000);
@@ -307,37 +309,46 @@ public class Crawler {
         driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
         Thread.sleep(3000);
         //已選課程表格
-        int size = driver.findElements(By.tagName("iframe")).size();
-        System.out.println("iframe : "+ size);
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
         for(int i = 1;i< trList.size();i++){
+            TimeTableEntity.Info myClass = new TimeTableEntity.Info();
+            trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
             WebElement row = trList.get(i);
             List<WebElement> cols= row.findElements(By.tagName("td"));
+            Thread.sleep(1000);
             System.out.println("課名 : " + cols.get(3).getText());
+            myClass.setName(cols.get(3).getText());
             System.out.println("課號 : " + cols.get(2).getText());
+            myClass.setClassNum(cols.get(2).getText());
             driver.findElement(By.linkText(cols.get(2).getText())).click();
 
-            //if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
-            //else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
+            if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
+            else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
             //switch iframe
-            //Thread.sleep(5000);
-            WebElement parentElement = driver.findElement(By.id("AjaxPanel")).findElement(By.id("frameInner"));
-
-            driver.findElement(By.xpath("/html/body/form/div[3]/div/table[2]"));
-            List<WebElement> classNumbertrList = driver.findElements(By.cssSelector("tbody > tr"));
-
-            row = classNumbertrList.get(1);
-            cols= row.findElements(By.tagName("td"));
-            //String time2 = classNumbertrList.getText();
-            //System.out.println("時間2 : " + time2);
-
-            String time = cols.get(1).findElements(By.tagName("table")).get(0).findElements(By.tagName("tbody")).get(0).findElements(By.tagName("tr")).get(11).findElements(By.tagName("td")).get(1).getText();
-            String classroom = cols.get(1).findElements(By.tagName("table")).get(0).findElements(By.tagName("tbody")).get(0).findElements(By.tagName("tr")).get(11).findElements(By.tagName("td")).get(3).getText();
-
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            WebElement iframe = driver.findElement(By.tagName("iframe"));
+            driver.switchTo().frame(iframe);
+            driver.switchTo().frame("mainFrame");
+            List<WebElement> tr = driver.findElements(By.cssSelector("#QTable2 > tbody > tr"));
+            String time = tr.get(1).findElements(By.tagName("td")).get(1).findElement(By.tagName("table")).findElements(By.tagName("tr")).get(11).findElement(By.id("M_SEG")).getText();
             System.out.println("時間 : " + time);
+            String[] timeArray = time.split(",");
+            myClass.setTime(timeArray);
+            String classroom = tr.get(1).findElements(By.tagName("td")).get(1).findElement(By.tagName("table")).findElements(By.tagName("tr")).get(11).findElement(By.id("M_CLSSRM_ID")).getText();
             System.out.println("教室 : " + classroom);
-
+            if(classroom.indexOf(',')!=-1)classroom = classroom.substring(0, classroom.indexOf(','));
+            myClass.setClassroom(classroom);
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            myClassList.add(myClass);
         }
+
+        return myClassList;
     }
     public static void getAllGeneralClass() throws InterruptedException{
         driver.switchTo().frame("menuFrame");
@@ -363,12 +374,13 @@ public class Crawler {
     }
 
     public static void main(String[] args) throws Exception {
-
-        CrawlerHandle("00957025","20230607");
+        String account = "00957025";
+        String password = "20230607";
+        CrawlerHandle(account,password);
         //getBasicData(account,password);
-        getMyClass("00957025","20230607"); //not complete
+        getMyClass(account,password); //not complete
         //getAllGeneralClass(); //not complete
-        getFinishedCredict();
+        //getFinishedCredict();
     }
 }
 

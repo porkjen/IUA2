@@ -19,6 +19,7 @@ const SignIn=()=> {
     function SignIn() {
       const [student_id, setStudent_id] = useState("");
       const [password, setPassword] = useState("");
+      const [responseStatus, setResponseStatus] = useState("");
       const navigate = useNavigate();
       const handleStudent_idChange = (event) => {
         setStudent_id(event.target.value);
@@ -41,18 +42,31 @@ const SignIn=()=> {
                             },
                             body: JSON.stringify(formData)
                           })
-                          .then(response => response.json())
+                          .then(response => {
+                            console.log(response.status);
+                            if(response.status==200){
+                              navigate("/homePage"); 
+                            }
+                            else if(response.status==400){
+                              alert("輸入錯誤");
+                            }
+                            else if(response.status==201){
+                              navigate('/nickName', {
+                                state: {
+                                  studentID: student_id,
+                                }
+                              });
+                            }
+                          })
                           .then(data => {
                             onLogin(student_id);
                             console.log(data);
-                            navigate('/nickName');
                           })
                           .catch(error => {
                             console.error(error);
                           });
         
-                     	//Form submission happens here
-        navigate("/homePage");
+         
       }
       return (
         <div className="SignIn">    
