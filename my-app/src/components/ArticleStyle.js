@@ -138,6 +138,11 @@ const ArticleBody = styled.div`
     margin-top: 8px;
     word-break: break-all;
     white-space: pre-line;
+    position: absolute;
+    left: 50%;
+    margin-top:6%;
+    margin-bottom:6%;
+    transform: translate(-50%, -50%);
 `;
 
 

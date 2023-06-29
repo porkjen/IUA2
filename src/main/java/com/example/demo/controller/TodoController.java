@@ -12,10 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,14 +32,20 @@ public class TodoController {
     BasicRepository basicRepository;
     @Autowired
     HouseRepository houseRepository;
+    @Autowired
+    TimeTableRepository timeTableRepository;
+    @Autowired
+    SavedRepository savedRepository;
+    @Autowired
+    FoodRepository foodRepository;
     String secretKey = "au4a83";
     Crawler crawler = new Crawler();
+    AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
         //password encrypt
-        AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
         String studentID = basic.getStudentID();
         String password = basic.getPassword();
         System.out.println(studentID);
@@ -55,6 +63,7 @@ public class TodoController {
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
             basicRepository.save(basic);
             System.out.println("New user!");
+            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");//201
         }
         else {
             if(!Objects.equals(basicRepository.findByStudentID(studentID).getPassword(), encryptedpwd)){
@@ -104,9 +113,9 @@ public class TodoController {
             System.out.println("found.");
             finished = fRepository.findByStudentID(finished.getStudentID());
         }
-        finishedCourse = crawler.getFinishedCredict();
-        finished.setFinishedCourses(finishedCourse);
-        fRepository.save(finished);
+//       finishedCourse = crawler.getFinishedCredict();
+//       finished.setFinishedCourses(finishedCourse);
+//       fRepository.save(finished);
         RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
         return remainCredit;
     }
@@ -124,7 +133,18 @@ public class TodoController {
 
     @PostMapping("/rent_full_post") //get entire post
     public HouseEntity rentFullPost(@RequestBody HouseEntity houseEntity){
-        return houseRepository.findByPostId(houseEntity.getPostId());
+        System.out.println("/rent_full_post");
+        HouseEntity houseEntity1 = houseRepository.findByPostId(houseEntity.getPostId());
+        if(Objects.equals(houseEntity1.getSaved().get(0), houseEntity.getStudentID())){
+            houseEntity1.savefirst("true");
+            return houseEntity1;
+        }
+        else houseEntity1.savefirst("false");
+        for(String user : houseEntity1.getSaved()){
+            if(Objects.equals(user, houseEntity.getStudentID()))
+                houseEntity1.savefirst("true");
+        }
+        return houseEntity1;
     }
 
     @DeleteMapping("/rent_post_delete")
@@ -146,7 +166,7 @@ public class TodoController {
         else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
     }
 
-    @GetMapping("rent_search")
+    @GetMapping("/rent_search")
     public List<HouseDTO> rentSearch(@RequestParam(value = "area", required = false) String area,
                                      @RequestParam(value = "gender", required = false) String gender,
                                      @RequestParam(value = "people", required = false) String people,
@@ -166,6 +186,101 @@ public class TodoController {
         return resultList;
     }
 
+    @GetMapping("/curriculum_search")
+    public List<TimeTableEntity.Info> curriculumSearch(@RequestParam("studentID") String studentID) throws TesseractException, IOException, InterruptedException {
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        if(timeTable!=null){
+            return timeTable.getInfo();
+        }
+        else{
+            String password = basicRepository.findByStudentID(studentID).getPassword();
+            password = aesEncryptionDecryption.decrypt(password, secretKey);
+            crawler.CrawlerHandle(studentID,password);
+            List<TimeTableEntity.Info> myClassList = crawler.getMyClass(studentID,password);
+            TimeTableEntity table = new TimeTableEntity();
+            table.setStudentID(studentID);
+            for(TimeTableEntity.Info i : myClassList){
+                System.out.println(i.getName());
+                table.setInfo(i);
+            }
+            timeTableRepository.save(table);
+            return myClassList;
+        }
+    }
+
+    @PostMapping("/favorites")
+    public ResponseEntity<String> favorites(@RequestBody Map<String, String> requestData){
+        SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
+        if (savedEntity == null) {
+            savedEntity = new SavedEntity();
+            savedEntity.setStudentID(requestData.get("studentID"));
+        }
+        else {
+            for (String post : savedEntity.getPostId()){
+                if (Objects.equals(requestData.get("postId"), post))
+                    return ResponseEntity.badRequest().body("Invalid request");
+            }
+        }
+        savedEntity.setPostId(requestData.get("postId"));
+        savedRepository.save(savedEntity);
+        if(requestData.get("postId").startsWith("F")){
+            FoodEntity food = foodRepository.findByPostId(requestData.get("postId"));
+            food.setSaved(requestData.get("studentID"));
+            foodRepository.save(food);
+        } else if (requestData.get("postId").startsWith("H")) {
+            HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
+            house.setSaved(requestData.get("studentID"));
+            houseRepository.save(house);
+        }
+        return ResponseEntity.ok("Success");
+    }
+
+    @PostMapping("/favorites_load")
+    public SavedDTO favoritesLoad(@RequestBody Map<String, String> requestData){
+        System.out.println("/favorites_load");
+        SavedDTO savedDTO = new SavedDTO();
+        SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
+        if(savedEntity==null)return savedDTO;
+        else{
+            for(String post : savedEntity.getPostId()){
+                if(post.startsWith("F")){
+                    FoodEntity food = foodRepository.findByPostId(post);
+                    FoodDTO foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                    savedDTO.setSavedFood(foodDTO);
+                }else if(post.startsWith("H")){
+                    HouseEntity house = houseRepository.findByPostId(post);
+                    HouseDTO houseDTO = new HouseDTO(post, house.getName(), house.getTitle());
+                    savedDTO.setSavedHouse(houseDTO);
+                }
+            }
+            return savedDTO;
+        }
+    }
+
+    @DeleteMapping("/favorites_delete")
+    public ResponseEntity<String> favoritesDelete(@RequestBody Map<String, String> requestData){
+        System.out.println("/favorites_delete");
+        SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
+        for(String postId : savedEntity.getPostId()){
+            if(Objects.equals(postId, requestData.get("postId"))){
+                savedEntity.removePostId(postId);
+                savedRepository.save(savedEntity);
+                if(requestData.get("postId").startsWith("F")){
+                    FoodEntity food = foodRepository.findByPostId(requestData.get("postId"));
+                    food.removeSaved(requestData.get("studentID"));
+                    foodRepository.save(food);
+                } else if (requestData.get("postId").startsWith("H")) {
+                    HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
+                    house.removeSaved(requestData.get("studentID"));
+                    houseRepository.save(house);
+                }
+                return ResponseEntity.ok("Success");
+            }
+        }
+        return ResponseEntity.badRequest().body("Invalid request");
+    }
+
+    
 }
 
 

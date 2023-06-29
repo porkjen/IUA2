@@ -21,6 +21,7 @@ public class FoodEntity {
     private String address = "";
     private String URL = "";
     private List<p> review = new ArrayList<>();
+    private List<String> saved = new ArrayList<>();
 
 
     public static class p {
@@ -169,4 +170,16 @@ public class FoodEntity {
 
     public void removeReview(p review){ this.review.remove(review); }
 
+    public List<String> getSaved() {
+        return saved;
+    }
+    public void setSaved(String saved) {
+        this.saved.add(saved);
+    }
+    public void removeSaved(String saved) {
+        this.saved.remove(saved);
+    }
+    public void savefirst(String saved) {
+        this.saved.add(0, saved);
+    }
 }
