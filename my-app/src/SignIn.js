@@ -29,7 +29,7 @@ const SignIn=()=> {
       };
       const handleSubmit = (e) => {
         e.preventDefault();
-        alert(`The name you entered was: ${student_id}`);
+        /*alert(`The name you entered was: ${student_id}`);
         const formData = {
                         studentID: student_id,
                         password: password,
@@ -41,7 +41,7 @@ const SignIn=()=> {
                             },
                             body: JSON.stringify(formData)
                           })
-                          /*.then(response => response.json())
+                          .then(response => response.json())
                           .then(data => {
                             onLogin(student_id);
                             console.log(data);
@@ -49,30 +49,10 @@ const SignIn=()=> {
                           })
                           .catch(error => {
                             console.error(error);
-                          });*/
-                          .then(response => {
-                              if (response.status === 200) {
-                                navigate('/nickName');
-                                return response.text(); // 返回消息体
-                              } else if (response.status === 400) {
-                                alert('帳號或密碼錯誤')
-                                navigate('/signIn');
-                                throw new Error('Account or password error');
-                              } else {
-                                throw new Error('Unexpected response status');
-                              }
-                            })
-                            .then(data => {
-                              // 处理消息体
-                              console.log(data); // "Success" 或者其他自定义消息
-                            })
-                            .catch(error => {
-                              console.error(error);
-                            });
-
-
+                          });
+        */
                      	//Form submission happens here
-        //navigate("/homePage");
+        navigate("/homePage");
       }
       return (
         <div className="SignIn">    

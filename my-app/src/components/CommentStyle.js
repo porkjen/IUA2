@@ -1,3 +1,4 @@
+
 import styled from 'styled-components';
 import backgroundImg from '../img/background.PNG';
 
@@ -8,7 +9,7 @@ const Page = styled.div`
 `;
 
 const Pagebg = styled.div`
-    background-image: url(${backgroundImg});
+    background-image: url(${backgroundImg});    
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;

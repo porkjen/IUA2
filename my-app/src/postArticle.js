@@ -1,5 +1,7 @@
 import './PostArticle.css';
 import React from 'react';
+import elmo from './img/elmo.png';
+import conversation from './img/conversation.png';
 import {Title}  from './components/ArticleStyle.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
@@ -13,10 +15,19 @@ const PostArticle=()=> {
     function ArticleFoodInput() {
         const [Ftitle, setFtitle] = useState("");
         const [Ftime, setFtime] = useState("");
+        const [FtimeMonday, setFtimeMonday] = useState("");
+        const [FtimeTuesday, setFtimeTuesday] = useState("");
+        const [FtimeWednesday, setFtimeWednesday] = useState("");
+        const [FtimeThursday, setFtimeThursdaye] = useState("");
+        const [FtimeFriday, setFtimeFriday] = useState("");
+        const [FtimeSaturday, setFtimeSaturday] = useState("");
+        const [FtimeSunday, setFtimeSunday] = useState("");
         const [Faddress, setFaddress] = useState("");
         const [Finfo, setFinfo] = useState("");
-        const [FgoogleRate, setFgoogleRate] = useState("");
+        const [FLink, setFLink] = useState("");
         const [Frate, setFrate] = useState("");
+
+        const openTime = ["星期一:"+FtimeMonday,"星期二:"+FtimeTuesday,"星期三:"+FtimeWednesday,"星期四:"+FtimeThursday,"星期五:"+FtimeFriday,"星期六:"+FtimeSaturday,"星期日:"+FtimeSunday];
 
         const handleFtitleChange = event => {
           setFtitle(event.target.value);
@@ -24,14 +35,36 @@ const PostArticle=()=> {
         const handleFtimeChange = event => {
           setFtime(event.target.value);
         };
+        const handleFtimeMondayChange = event => {
+          setFtimeMonday(event.target.value);
+        };
+        const handleFtimeTuesdayChange = event => {
+          setFtimeTuesday(event.target.value);
+        };
+        const handleFtimeWednesdayChange = event => {
+          setFtimeWednesday(event.target.value);
+        };
+        const handleFtimeThursdayChange = event => {
+          setFtimeThursdaye(event.target.value);
+        };
+        const handleFtimeFridayChange = event => {
+          setFtimeFriday(event.target.value);
+        };
+        const handleFtimeSaturdayChange = event => {
+          setFtimeSaturday(event.target.value);
+        };
+        const handleFtimeSundayChange = event => {
+          setFtimeSunday(event.target.value);
+        };
+
         const handleFaddressChange = event => {
           setFaddress(event.target.value);
         };
         const handleFinfoChange = event => {
           setFinfo(event.target.value);
         };
-        const handleFgoogleRateChange = event => {
-          setFgoogleRate(event.target.value);
+        const handleFLinkChange = event => {
+          setFLink(event.target.value);
         };
         const handleFrateChange = event => {
           setFrate(event.target.value);
@@ -43,8 +76,9 @@ const PostArticle=()=> {
           const formData = {
                           studentID: "00957025",
                           store : Ftitle,
-                          weekday_text : [Ftime],
+                          weekday_text : openTime,
                           address : Faddress,
+                          url : FLink,
                           review: {
                             p_review: Finfo,
                             p_rate: Frate
@@ -75,12 +109,29 @@ const PostArticle=()=> {
               <input type='text' name = 'Ftitle' onChange={handleFtitleChange} value={Ftitle}></input>
             </div><br/>
             <div className='articleFoodFormTime'>
-              <label>營業時間:&emsp;</label>
-              <input type='text' name = 'Ftime' onChange={handleFtimeChange} value={Ftime}></input>
+              <label>營業時間&emsp;</label><br/>
+              <label>&emsp;星期一:&emsp;</label>
+              <input type='text' name = 'FtimeMonday' onChange={handleFtimeMondayChange} value={FtimeMonday}></input><br/>
+              <label>&emsp;星期二:&emsp;</label>
+              <input type='text' name = 'FtimeTuesday' onChange={handleFtimeTuesdayChange} value={FtimeTuesday}></input><br/>
+              <label>&emsp;星期三:&emsp;</label>
+              <input type='text' name = 'FtimeWednesday' onChange={handleFtimeWednesdayChange} value={FtimeWednesday}></input><br/>
+              <label>&emsp;星期四:&emsp;</label>
+              <input type='text' name = 'FtimeThursday' onChange={handleFtimeThursdayChange} value={FtimeThursday}></input><br/>
+              <label>&emsp;星期五:&emsp;</label>
+              <input type='text' name = 'FtimeFriday' onChange={handleFtimeFridayChange} value={FtimeFriday}></input><br/>
+              <label>&emsp;星期六:&emsp;</label>
+              <input type='text' name = 'FtimeSaturday' onChange={handleFtimeSaturdayChange} value={FtimeSaturday}></input><br/>
+              <label>&emsp;星期日:&emsp;</label>
+              <input type='text' name = 'FtimeSunday' onChange={handleFtimeSundayChange} value={FtimeSunday}></input>
             </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家地址:&emsp;</label>
               <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress}></input>
+            </div><br/>
+            <div className='articleFoodFormAddress'>
+              <label>店家連結:&emsp;</label>
+              <input type='text' name = 'FLink' onChange={handleFLinkChange} value={FLink}></input>
             </div><br/>
             <div className='articleFoodFormSchoolRate'>
               <label>我的評分(1-5):&emsp;</label>
@@ -203,11 +254,11 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormGender'>
               <label>性別:</label>
-              <input type="radio" id='girl' value='girl' name='rentGender' checked={rentGender === 'girl'} onChange={handlerentGenderChange} ></input>
+              <input type="radio" id='girl' value='女' name='rentGender' checked={rentGender === '女'} onChange={handlerentGenderChange} ></input>
               <label for="girl">女</label>
-              <input type="radio" id='boy' value='boy' name='rentGender' checked={rentGender === 'boy'} onChange={handlerentGenderChange}></input>
+              <input type="radio" id='boy' value='男' name='rentGender' checked={rentGender === '男'} onChange={handlerentGenderChange}></input>
               <label for="boy">男</label>
-              <input type="radio" id='both' value='both' name='rentGender' checked={rentGender === 'both'} onChange={handlerentGenderChange}></input>
+              <input type="radio" id='both' value='不限' name='rentGender' checked={rentGender === '不限'} onChange={handlerentGenderChange}></input>
               <label for="both">無限制</label>
             </div><br/>
             <div className='articleRentFormPeople'>
@@ -222,13 +273,13 @@ const PostArticle=()=> {
               <label>地區:</label>
               <select name = 'Harea' value={Harea} onChange={handleHareaChange}>
                   <option>請選擇區域</option>
-                  <option value='Zhongzheng'>中正區</option>
-                  <option value='Xinyi'>信義區</option>
-                  <option value='Renai'>仁愛區</option>
-                  <option value='Zhongshan'>中山區</option>
-                  <option value='Anle'>安樂區</option>
-                  <option value='Nuannuan'>暖暖區</option>
-                  <option value='Qidu'>七堵區</option>
+                  <option value='中正區'>中正區</option>
+                  <option value='信義區'>信義區</option>
+                  <option value='仁愛區'>仁愛區</option>
+                  <option value='中山區'>中山區</option>
+                  <option value='安樂區'>安樂區</option>
+                  <option value='暖暖區'>暖暖區</option>
+                  <option value='七堵區'>七堵區</option>
               </select>
             </div><br/>
             <div className='articleRentFormFloor'>
@@ -237,9 +288,9 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormCar'>
               <label>車位:</label>
-              <input type="radio" id='yes' value='yes' name='haveCar' checked={haveCar === 'yes'} onChange={handlehaveCarChange}></input>
+              <input type="radio" id='yes' value='有' name='haveCar' checked={haveCar === '有'} onChange={handlehaveCarChange}></input>
               <label for="yes">有</label>
-              <input type="radio" id='no' value='no' name='haveCar' checked={haveCar === 'no'} onChange={handlehaveCarChange}></input>
+              <input type="radio" id='no' value='無' name='haveCar' checked={haveCar === '無'} onChange={handlehaveCarChange}></input>
               <label for="no">無</label>
             </div><br/>
             <div className='articleRentFormWater'>
@@ -399,6 +450,8 @@ const PostArticle=()=> {
         <div className="PostArticle">   
             <div className='PostArticle_bg'>
                 <Title>發文</Title>
+                <img className='post_elmo' src={elmo}/>
+                <img className='post_conversation' src={conversation}/>
                 <div className='articleFormPosition'>
                     <div className='articleForm' >
                         <select className='selectType' onChange={handleSelectChange}>

@@ -11,7 +11,7 @@ html,body,#root,.SignIn{
     margin: 0;
 }
 
-body {
+.SignIn {
     /* The image used */
     background-image: url("img/background.PNG");
   
@@ -22,6 +22,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+
   }
 
 .SignIn_title{

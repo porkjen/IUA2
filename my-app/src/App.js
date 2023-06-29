@@ -8,6 +8,7 @@ import Remain from './remain.js';
 import NickName from './nickName';
 import TimeTable from './timeTable';
 import ChangeClass from './changeClass';
+import ChangeClassList from './changeClassList';
 import Food from './food';
 import Rent from './rent';
 import PostArticle from './postArticle';
@@ -21,6 +22,9 @@ import Must from './Must';
 import Graduation from './Graduation';
 import Search from './Search';
 import Choose from './choose';
+import CourseSelection from './courseSelection';
+import GeneralEducaton from './generalEducation';
+import Favorite from './favorite';
 
 const App=()=> {
    
@@ -34,6 +38,7 @@ const App=()=> {
                     <Route path="/timeTable" element={<TimeTable/>} />
                     <Route path="/choose" element={<Choose />} />
                     <Route path="/changeClass" element={<ChangeClass/>} />
+                    <Route path="/changeClassList" element={<ChangeClassList/>} />
                     <Route path="/food" element={<Food/>} />
                     <Route path="/foodArticle/*" element={<FoodArticle/>} />
                     <Route path="/rent/*" element={<Rent/>} />
@@ -47,6 +52,9 @@ const App=()=> {
                     <Route path="/Must" element={<Must />} />
                     <Route path="/Graduation" element={<Graduation />} />
                     <Route path="/Search" element={<Search />} />
+                    <Route path="/CourseSelection" element={<CourseSelection />} />
+                    <Route path="/generalEducation" element={<GeneralEducaton />} />
+                    <Route path="/favorite" element={<Favorite />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
              

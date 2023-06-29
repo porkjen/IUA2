@@ -1,0 +1,60 @@
+html,body,#root,.GeneralEducaton{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    
+}
+
+.g_education {
+    /* The image used */
+    background-image: url("img/background.PNG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+
+.g_education .g_backicon{
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+}
+
+.g_education .g_title{
+    text-align: center;
+    padding-top: 0px;
+}
+
+.g_education .selectDiv{
+    padding-left: 95px;
+    padding-top: 20px;
+}
+
+.g_education .selectMust{
+    width: 180px;
+    font-size: 25px; 
+    color: #afc2f8;
+    border-radius: 10px;
+    border: none;
+}
+
+
+.g_Lable label{
+    font-size: 18px;
+    font-family: 'Noto Serif TC', serif;
+}
+
+.g_education .g_Lable{
+    margin-top: 30px;
+    width: 300px;
+    height: 450px;
+    background-color: white;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
