@@ -12,10 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,6 +66,7 @@ public class TodoController {
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
             basicRepository.save(basic);
             System.out.println("New user!");
+
             return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
         }
         else {
@@ -135,7 +138,23 @@ public class TodoController {
 
     @PostMapping("/rent_full_post") //get entire post
     public HouseEntity rentFullPost(@RequestBody HouseEntity houseEntity){
-        return houseRepository.findByPostId(houseEntity.getPostId());
+        System.out.println("/rent_full_post");
+        HouseEntity houseEntity1 = houseRepository.findByPostId(houseEntity.getPostId());
+        //no one save this post
+        if(houseEntity1.getSaved().size()==0){
+            houseEntity1.savefirst("false");
+            return houseEntity1;
+        }
+        for(String user : houseEntity1.getSaved()){
+            //user saved this post
+            if(Objects.equals(user, houseEntity.getStudentID())) {
+                houseEntity1.savefirst("true");
+                return houseEntity1;
+            }
+        }
+        //user doesn't save this post
+        houseEntity1.savefirst("false");
+        return houseEntity1;
     }
 
     @DeleteMapping("/rent_post_delete")
@@ -214,14 +233,25 @@ public class TodoController {
         }
         savedEntity.setPostId(requestData.get("postId"));
         savedRepository.save(savedEntity);
+        if(requestData.get("postId").startsWith("F")){
+            FoodEntity food = foodRepository.findByPostId(requestData.get("postId"));
+            food.setSaved(requestData.get("studentID"));
+            foodRepository.save(food);
+        } else if (requestData.get("postId").startsWith("H")) {
+            HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
+            house.setSaved(requestData.get("studentID"));
+            houseRepository.save(house);
+        }
         return ResponseEntity.ok("Success");
     }
 
-    @PutMapping("/favorites_load")
-    public SavedDTO favouritesLoad(@RequestBody Map<String, String> requestData){
+
+    @PostMapping("/favorites_load")
+    public SavedDTO favoritesLoad(@RequestBody Map<String, String> requestData){
+        System.out.println("/favorites_load");
         SavedDTO savedDTO = new SavedDTO();
         SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
-        if (savedEntity==null)return savedDTO;
+        if(savedEntity==null)return savedDTO;
         else{
             for(String post : savedEntity.getPostId()){
                 if(post.startsWith("F")){
@@ -239,13 +269,22 @@ public class TodoController {
     }
 
     @DeleteMapping("/favorites_delete")
-    public ResponseEntity<String> favouritesDelete(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<String> favoritesDelete(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites_delete");
         SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
         for(String postId : savedEntity.getPostId()){
             if(Objects.equals(postId, requestData.get("postId"))){
                 savedEntity.removePostId(postId);
                 savedRepository.save(savedEntity);
+                if(requestData.get("postId").startsWith("F")){
+                    FoodEntity food = foodRepository.findByPostId(requestData.get("postId"));
+                    food.removeSaved(requestData.get("studentID"));
+                    foodRepository.save(food);
+                } else if (requestData.get("postId").startsWith("H")) {
+                    HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
+                    house.removeSaved(requestData.get("studentID"));
+                    houseRepository.save(house);
+                }
                 return ResponseEntity.ok("Success");
             }
         }

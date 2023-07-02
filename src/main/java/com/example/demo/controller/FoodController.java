@@ -52,7 +52,19 @@ public class FoodController {
     @PostMapping("/food_full_post")
     public FoodEntity foodFullPost(@RequestBody Map<String, String> requestData){
         System.out.println("/food_full_post");
-        return foodRepository.findByPostId(requestData.get("postId"));
+        FoodEntity foodEntity = foodRepository.findByPostId(requestData.get("postId"));
+        if(foodEntity.getSaved().size()==0){
+            foodEntity.savefirst("false");
+            return foodEntity;
+        }
+        for(String user : foodEntity.getSaved()){
+            if(Objects.equals(user, requestData.get("studentID"))) {
+                foodEntity.savefirst("true");
+                return foodEntity;
+            }
+        }
+        foodEntity.savefirst("false");
+        return foodEntity;
     }
 
     @GetMapping("/food_load") //load all food posts

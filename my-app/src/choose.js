@@ -12,7 +12,9 @@ const Choose=()=> {
     let navigate = useNavigate();
     const toRent = (e) => {
         e.preventDefault();
-         navigate("/rent")
+        navigate("/rent", {
+          state: {
+            fromSearch:false,},});
       }
 
     const toChangeClass = (e) => {
@@ -22,7 +24,9 @@ const Choose=()=> {
 
     const toFood = (e) => {
         e.preventDefault();
-         navigate("/food")
+        navigate("/food", {
+          state: {
+            fromSearch:false,},});
       }
 
     function Choose() {

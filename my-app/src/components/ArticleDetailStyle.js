@@ -40,6 +40,10 @@ const ArticleDetailTitle = styled.h2`
     margin:5px;
 `;
 
+const ArticleDetailStar = styled.div`
+    display:inline
+`
+
 const ArticleDetailPostDate = styled.h4`
     padding-left:280px;
     margin:5px;
@@ -55,7 +59,7 @@ const ArticleDetailSavedBtn = styled.button`
     width:60px;
     text-align:center;
     height:30px;
-    margin-left:20px;
+    margin-right:20px;
     border-radius: 6px; 
 `;
 
@@ -65,7 +69,23 @@ const ArticleDetailAlreadySavedBtn = styled.button`
     width:60px;
     text-align:center;
     height:30px;
-    margin-left:20px;
+    margin-right:20px;
+    border-radius: 6px; 
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+`;
+
+
+const ArticleDetailNormalBtn = styled.button`
+    background-color: rgba(249, 231, 193, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    margin-right:20px;
     border-radius: 6px; 
 `;
 
@@ -75,7 +95,7 @@ const ArticleDetailRatingdBtn = styled.button`
     width:60px;
     text-align:center;
     height:30px;
-    margin-left:60%;
+    margin-right:20px;
     border-radius: 6px; 
 `;
 
@@ -138,4 +158,4 @@ const ArticleDetailPostBtn = styled.button`
 `
 
 
-export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};
+export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn,  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};

@@ -6,8 +6,8 @@ import star from './img/star.png';
 import redBall from './img/redBall.PNG';
 import logo from './img/IUAlogo.png';
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody } from './components/ArticleStyle.js';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState, useRef } from "react";
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState, useRef,  } from "react";
 
 const Food = () => {
 
@@ -17,6 +17,8 @@ const Food = () => {
   const [isLoading, setIsLoading] = useState(false);
   let navigate = useNavigate();
   const articleListRef = useRef(null);
+  const location = useLocation();
+  const { fromSearch, FArea, FName } = location.state;
 
   function RatingFood({ rating }) {
     const stars = [];
@@ -93,11 +95,31 @@ const Food = () => {
   }
 
   useEffect(() => {
-    if (!data) {
-      setIsLoading(true);
-      fetch('/food_load')
+    if(fromSearch==false){
+      if (!data) {
+        setIsLoading(true);
+        fetch('/food_load')
+          .then(response => response.json())
+          .then(data => {
+            console.log("NOTsearchIn");
+            setData(data);
+            setVisibleData(data.slice(0, 50));
+            setIsLoading(false);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            setIsLoading(false); 
+          });
+      }
+    }
+    else{
+      if (!data) {
+        setIsLoading(true);
+        fetch(`/food_search?area=${FArea}&store=${FName}`)
         .then(response => response.json())
         .then(data => {
+          console.log("searchIn");
+          console.log(FArea);
           setData(data);
           setVisibleData(data.slice(0, 50));
           setIsLoading(false);
@@ -106,25 +128,29 @@ const Food = () => {
           console.error('Error:', error);
           setIsLoading(false); 
         });
-    }
+
+      }
+    }   
   }, [data]);
 
   const handleScroll = () => {
-    const scrollPosition = articleListRef.current.scrollTop;
-    const listHeight = articleListRef.current.clientHeight;
-    const scrollThreshold = articleListRef.current.scrollHeight * 0.8 - listHeight;
-
-    if (scrollPosition >= scrollThreshold && !isLoading) {
-      const nextBatch = data.slice(visibleData.length, visibleData.length + 50);
-      setVisibleData(prevData => [...prevData, ...nextBatch]);
+    if (articleListRef.current) {
+      const scrollPosition = articleListRef.current.scrollTop;
+      const listHeight = articleListRef.current.clientHeight;
+      const scrollThreshold = articleListRef.current.scrollHeight / 2 - listHeight / 2;
+  
+      if (scrollPosition >= scrollThreshold && !isLoading) {
+        const nextBatch = data.slice(visibleData.length, visibleData.length + 50);
+        setVisibleData(prevData => [...prevData, ...nextBatch]);
+      }
     }
   };
-
+  
   useEffect(() => {
-    articleListRef.current.addEventListener("scroll", handleScroll);
-
+    window.addEventListener("scroll", handleScroll);
+  
     return () => {
-      articleListRef.current.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [visibleData, isLoading]);
 

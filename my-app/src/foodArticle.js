@@ -3,19 +3,34 @@ import React from 'react';
 import dog from './img/dog.png';
 import Modal from "./components/Modal";
 import logo from './img/IUAlogo.png';
-import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailRatingdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
+import star from './img/star.png';
+import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, 
+  ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn, ArticleDetailAlreadySavedBtn, ArticleDetailRatingdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
-import { Routes ,Route,useLocation } from 'react-router-dom';
+import { Routes ,Route,useLocation, useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
 const FoodArticle=()=> {
 
+    let navigate = useNavigate();
     const location = useLocation();
     const [data, setData] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const { studentID, postId } = location.state;
+    const [isCreator, setIsCreator] = useState(false);
     const [isFoodSaved, setIsFoodSaved] = useState(false);
     const [responseStatus, setResponseStatus] = useState(null);
+
+    function RatingFood({ rating, commentStar }) {
+      const stars = [];
+      for (let i = 1; i <= rating; i++) {
+        stars.push(<img key={i} className="rating_star" src={star} alt="star" />);
+      }
+      if(commentStar)
+        return <div>{stars}</div>;
+      else
+        return <ArticleDetailStar>{stars}</ArticleDetailStar>;
+    }
 
     function Commentinfo({ author, text, commentTime, commentRating }) {
         return (
@@ -23,7 +38,7 @@ const FoodArticle=()=> {
             <CommentText>
                 <CommentAuthor>{author}</CommentAuthor>
                 <CommentBody>{text}</CommentBody>
-                <CommentTimeRating>{commentRating + "顆星 " + commentTime}</CommentTimeRating>
+                <CommentTimeRating><RatingFood rating={commentRating} commentStar={true}></RatingFood>{commentTime}</CommentTimeRating>
             </CommentText>
           </CommentContainer>
         );
@@ -49,13 +64,13 @@ const FoodArticle=()=> {
                 <div>營業時間: 
                     {weekday_text.map(item => (
                         <div>&emsp;{item+"\n"}</div>))}</div>
-                <div>評分: {rating}</div>
+                <div>評分: <RatingFood rating={rating} commentStar={false}></RatingFood></div>
                 <div>連結: <a href={URL} target="_blank" style={{ fontSize: '10px' }}>{URL}</a></div>
             </div>
         );
       }
 
-    function FoodDetailInfo(){
+    function FoodDetailInfo(){ 
       const [FComment, setFComment] = useState("");
       const handleFCommentChange = event => {
           setFComment(event.target.value);
@@ -135,16 +150,71 @@ const FoodArticle=()=> {
                        //Form submission happens here
       }
 
+      const handleRemovedFoodPostSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        const savedFormData = {
+                        studentID: "00957025",
+                        postId:postId,
+                      };
+                      fetch(`/food_post_delete?studentID=${studentID}&postId=${postId}`, {
+                            method: 'DELETE',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(savedFormData)
+                          })
+                          .then(response => response.status)
+                          .catch(error => {
+                            console.error(error);
+                          });
+                          navigate("/food", {
+                            state: {
+                              studentID:"00957025",
+                              fromSearch:false},});
+                       //Form submission happens here
+      }
+
+      const handleModifyFoodPostSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+                          navigate("/modifyPost", {
+                            state: {
+                              studentID:"00957025",
+                              postId:postId,
+                              fromSearch:false,
+                              ModifyType:"food",
+                               },});
+                       //Form submission happens here
+      }
+
       return (
         <ArticleDetailPage>
             <ArticleDetailPosition>
-                <ArticleTitleinfo author={data.nickname} title={data.store} post_time={data.post_time}></ArticleTitleinfo>
+                <ArticleTitleinfo key={data.postId} author={data.nickname} title={data.store} post_time={data.post_time}></ArticleTitleinfo>
                 <hr></hr>
-                <ArticleDetailInfo  address={data.address} rating={data.rating} weekday_text={data.weekday_text} URL={data.url}  ></ArticleDetailInfo>
+                <ArticleDetailInfo key={data.postId}   address={data.address} rating={data.rating} weekday_text={data.weekday_text} URL={data.url}  ></ArticleDetailInfo>
                 <hr></hr>
-                <ArticleDetailRatingdBtn onClick={()=> setOpenModal(true)}>評分</ArticleDetailRatingdBtn>
-                {isFoodSaved && <ArticleDetailAlreadySavedBtn onClick={handleRemovedFoodSavedSubmit}>已收藏</ArticleDetailAlreadySavedBtn>}
-                {!isFoodSaved && <ArticleDetailSavedBtn onClick={handleAddFoodSavedSubmit}>收藏</ArticleDetailSavedBtn>}
+                {isCreator && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyFoodPostSubmit}>修改貼文</ArticleDetailNormalBtn>
+                    <ArticleDetailNormalBtn onClick={handleRemovedFoodPostSubmit}>刪除貼文</ArticleDetailNormalBtn>
+                </ButtonContainer>)}
+                {!isCreator && (
+                  <ButtonContainer>
+                    <ArticleDetailRatingdBtn onClick={() => setOpenModal(true)}>
+                      評分
+                    </ArticleDetailRatingdBtn>
+                    
+                    {isFoodSaved ? (
+                      <ArticleDetailAlreadySavedBtn onClick={handleRemovedFoodSavedSubmit}>
+                        已收藏
+                      </ArticleDetailAlreadySavedBtn>
+                    ) : (
+                      <ArticleDetailSavedBtn onClick={handleAddFoodSavedSubmit}>
+                        收藏
+                      </ArticleDetailSavedBtn>
+                    )}
+                  </ButtonContainer>
+                )}
                 <hr></hr>
                 <ArticleDetailComment>
                     {data.review.map(item => (
@@ -179,8 +249,23 @@ const FoodArticle=()=> {
                     body: JSON.stringify(formData)})
                 .then(response => response.json())
                 .then(data => {
+                  if(data.studentID==studentID){
+                    console.log("same");
+                    setIsCreator(true);
+                  }
+                  else{
+                    setIsCreator(false);
+                    if(data.saved[0]=='true'){
+                      console.log(data.saved[0]);
+                      setIsFoodSaved(true);
+                    }
+                    else {
+                      console.log(data.saved[0]);
+                      setIsFoodSaved(false);
+                    }
+                  }
                   setData(data);
-                  
+
                 })
                 .catch(error => {
                   console.error('Error:', error);

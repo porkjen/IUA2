@@ -119,8 +119,8 @@ const ArticleAuthorArea= styled.div`
 
 
 const ArticleAuthorImg = styled.img`
-    width: 40px; /* 設定頭像的寬度和高度 */
-    height: 40px;
+    width: 13%; /* 設定頭像的寬度和高度 */
+    height: 13%;
     border-radius: 50%;
     overflow: hidden;
 `;

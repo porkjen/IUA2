@@ -18,7 +18,7 @@ const PostArticle=()=> {
         const [FtimeMonday, setFtimeMonday] = useState("");
         const [FtimeTuesday, setFtimeTuesday] = useState("");
         const [FtimeWednesday, setFtimeWednesday] = useState("");
-        const [FtimeThursday, setFtimeThursdaye] = useState("");
+        const [FtimeThursday, setFtimeThursday] = useState("");
         const [FtimeFriday, setFtimeFriday] = useState("");
         const [FtimeSaturday, setFtimeSaturday] = useState("");
         const [FtimeSunday, setFtimeSunday] = useState("");
@@ -45,7 +45,7 @@ const PostArticle=()=> {
           setFtimeWednesday(event.target.value);
         };
         const handleFtimeThursdayChange = event => {
-          setFtimeThursdaye(event.target.value);
+          setFtimeThursday(event.target.value);
         };
         const handleFtimeFridayChange = event => {
           setFtimeFriday(event.target.value);
@@ -99,7 +99,9 @@ const PostArticle=()=> {
                               console.error(error);
                             });
                          //Form submission happens here
-                         navigate("/food")
+                         navigate("/food", {
+                          state: {
+                            fromSearch:false,},});
         }
        
         return (
@@ -235,7 +237,9 @@ const PostArticle=()=> {
                       .catch(error => {
                         console.error(error);
                       });
-                      navigate("/rent")
+                      navigate("/rent", {
+                        state: {
+                          fromSearch:false,},});
                    //Form submission happens here
   }
         return (
