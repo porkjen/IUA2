@@ -11,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.List;
 
 @SpringBootApplication
@@ -34,6 +35,8 @@ public class DemoApplication {
 		@Override
 		public void onApplicationEvent(ContextStartedEvent event) {
 			System.out.println("run");
+			//Calendar calendar = Calendar.getInstance();
+			//System.out.println(calendar);
 			/*getData gd = new getData();
 			NextPostId nextPostId = new NextPostId();
 			List<FoodEntity> restaurantList = gd.getRData("25.131736,121.782001");//深溪路
