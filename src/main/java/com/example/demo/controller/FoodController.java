@@ -173,12 +173,17 @@ public class FoodController {
     }
 
     @PostMapping("/food_review_add")
-    public FoodEntity.p foodReviewAdd(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<String> foodReviewAdd(@RequestBody Map<String, String> requestData){
         System.out.println("/food_review_add");
         double newRate = 0;
         DecimalFormat decimalFormat = new DecimalFormat("#.0");
         //find the post by postId
         FoodEntity thisPost = foodRepository.findByPostId(requestData.get("postId"));
+        //find out if the user has commented on the post
+        for(FoodEntity.p review : thisPost.getReview()){
+            if(Objects.equals(review.getP_studentID(), requestData.get("studentID")))
+                return ResponseEntity.badRequest().body("Invalid request : user has commented on the post"); //400
+        }
         //create a review structure, and add to the post
         FoodEntity.p newReview = new FoodEntity.p();
         newReview.setP_studentID(requestData.get("studentID"));
@@ -196,7 +201,7 @@ public class FoodController {
             thisPost.setRating_num(thisPost.getRating_num() + 1);
         }
         foodRepository.save(thisPost);
-        return newReview;
+        return ResponseEntity.ok("Success");
     }
 
     @GetMapping("/food_search")
