@@ -18,9 +18,21 @@ const ArticleDetailPosition = styled.div`
 `;
 
 
+const ArticleDetailAuthorArea= styled.div`
+    display: flex;
+    flex-direction: row ;
+`;
+
+const ArticleDetailAuthorImg = styled.img`
+    width: 50px; /* 設定頭像的寬度和高度 */
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+`;
+
 const ArticleDetailAuthor = styled.h4`
     padding-top:10px;
-    padding-left:20px;
+    padding-left:5px;
     margin:5px;
 `;
 
@@ -28,6 +40,10 @@ const ArticleDetailTitle = styled.h2`
     text-align:center;
     margin:5px;
 `;
+
+const ArticleDetailStar = styled.div`
+    display:inline
+`
 
 const ArticleDetailPostDate = styled.h4`
     padding-left:280px;
@@ -38,28 +54,78 @@ const ArticleDetailText = styled.h3`
     background-color:white;
 `;
 
+/*收藏 */
 const ArticleDetailSavedBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);
     width:60px;
     text-align:center;
     height:30px;
-    margin-left:20px;
+    margin-right:20px;
+    border-radius: 6px; 
 `;
 
+/*已收藏 */
+const ArticleDetailAlreadySavedBtn = styled.button`
+    background-color: rgba(223, 223, 223);
+    width:60px;
+    text-align:center;
+    height:30px;
+    margin-right:20px;
+    border-radius: 6px; 
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+`;
+
+
+const ArticleDetailNormalBtn = styled.button`
+    background-color: rgba(249, 231, 193, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    margin-right:20px;
+    border-radius: 6px; 
+`;
+
+/*評分*/
 const ArticleDetailRatingdBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);
     width:60px;
     text-align:center;
     height:30px;
-    margin-left:60%;
+    margin-right:20px;
+    border-radius: 6px; 
 `;
 
+/*送出 */
 const ArticleDetailContactdBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);
     width:60px;
     text-align:center;
     height:30px;
     margin-left:60%;
+    border-radius: 6px; 
+`;
+
+/*刪除留言 */
+const ArticleDetailCommentDeleteBtn = styled.button`
+    color: rgba(249, 231, 193, 0.951);
+    background: transparent; 
+    border: 2px solid  rgba(249, 231, 193);
+    border-radius: 6px; 
+    color: black;
+    padding: 8px 16px;
+    font-size: 8px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-left:70%;
 `;
 
 const ArticleDetailComment = styled.div`
@@ -79,6 +145,7 @@ const ArticleDetailCommentArea = styled.img`
     margin-left: 20px;
     padding-top: 25px;
 `;
+
 
 const ArticleDetailCommentImg = styled.img`
     width: 40px; /* 設定頭像的寬度和高度 */
@@ -106,7 +173,8 @@ const ArticleDetailPostBtn = styled.button`
     background-color: rgba(249, 231, 193, 0.951);  
     height:40%;
     margin-top: 10%;
+    border-radius: 6px; 
 `
 
 
-export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};
+export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn,  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn, ArticleDetailCommentDeleteBtn};
