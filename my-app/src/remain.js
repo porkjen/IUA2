@@ -46,42 +46,42 @@ const Remain=()=> {
                             <div className='Remain_Course'>
                                 <div className='c_Course'>
                                     <div className='RemainTitle_position'>
-                                    {data && <RemainTitle>必修{data.required}</RemainTitle>}
+                                    {data && <RemainTitle>必修&emsp;{data.required}學分</RemainTitle>}
                                     </div>
                                 </div>
                                 <div className='ie_Course'>
                                     <div className='RemainTitle_position'>
-                                    {data && <RemainTitle>系內選修{data.deptOptional}</RemainTitle>}
+                                    {data && <RemainTitle>系內選修&emsp;{data.deptOptional}學分</RemainTitle>}
                                     </div>
                                 </div>
                                 <div className='oe_Course'>
                                     <div className='RemainTitle_position'>
-                                    {data && <RemainTitle>系外選修{data.optional}</RemainTitle>}
+                                    {data && <RemainTitle>系外選修&emsp;{data.optional}學分</RemainTitle>}
                                     </div>
                                 </div>
                                 <div className='g_Course'>
                                     <div className='RemainTitle_position'>
-                                        {data && <RemainTitle>通識{data.general}</RemainTitle>}
+                                        {data && <RemainTitle>通識&emsp;{data.general}學分</RemainTitle>}
                                     </div>
                                 </div>
                                 <div className='core_Course'>
                                     <div className='RemainTitle_position'>
-                                        {data && <RemainTitle>核心選修{data.kernal}</RemainTitle>}
+                                        {data && <RemainTitle>核心選修&emsp;{data.kernal}學分</RemainTitle>}
                                     </div>
                                 </div>
                                 <div className='pe_Course'>
                                     <div className='RemainTitle_position'>
-                                        {data && <RemainTitle>體育{data.pe}</RemainTitle>}
+                                        {data && <RemainTitle>體育&emsp;{data.pe}學分</RemainTitle>}
                                     </div>
                                 </div>
                                 <div className='eng_Course'>
                                     <div className='RemainTitle_position'>
-                                        {data && <RemainTitle>門檻-英文{data.eng}</RemainTitle>}
+                                        {data && <RemainTitle>門檻-英文&emsp;{data.eng}</RemainTitle>}
                                     </div>
                                 </div>
                                 <div className='swim_Course'>
                                     <div className='RemainTitle_position'>
-                                        {data && <RemainTitle>門檻-游泳{data.swimming}</RemainTitle>}
+                                        {data && <RemainTitle>門檻-游泳&emsp;{data.swimming}</RemainTitle>}
                                     </div>
                                 </div>
                             </div>

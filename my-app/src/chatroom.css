@@ -1,0 +1,76 @@
+.ChatRoom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+.Chatroom{
+    background-color: rgb(249, 236, 207);
+}
+
+.Chatroom .chatroom-header {
+    background-color: #ecbd77;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.Chatroom h1 {
+    margin-bottom: 20px;
+}
+
+.Chatroom .message-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.Chatroom .sent {
+    background-color: #f9f5eb;
+    color: #333;
+    align-self: flex-end;
+}
+  
+.Chatroom  .received {
+    background-color: #f6dfad;
+    color: #333;
+    align-self: flex-start;
+}
+
+.Chatroom .message-list div {
+    align-items: flex-end;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* 自動換行 */
+    word-break: break-all; /* 長單詞斷開換行 */
+}
+
+.Chatroom form {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    width: 95%;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.Chatroom input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 10px;
+}
+
+.Chatroom button[type="submit"] {
+    background-color: #e7ac55;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
