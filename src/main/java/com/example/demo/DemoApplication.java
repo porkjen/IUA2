@@ -11,7 +11,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -35,8 +38,9 @@ public class DemoApplication {
 		@Override
 		public void onApplicationEvent(ContextStartedEvent event) {
 			System.out.println("run");
-			//Calendar calendar = Calendar.getInstance();
-			//System.out.println(calendar);
+			/*TaskConfiguration taskConfiguration = new TaskConfiguration();
+			LocalDateTime localDateTime = LocalDateTime.now();
+			taskConfiguration.timeTableTiming(0);*/
 			/*getData gd = new getData();
 			NextPostId nextPostId = new NextPostId();
 			List<FoodEntity> restaurantList = gd.getRData("25.131736,121.782001");//深溪路
