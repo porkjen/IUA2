@@ -34,9 +34,9 @@ const Title = styled.h1`
 const PostArticleBtn = styled.button`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid #FFA500;
     border-radius: 5px;
-    background-color: white; 
+    background-color: transparent; 
     padding: 10px;
     width: 100px;
     margin-left: 5%;
@@ -49,9 +49,9 @@ const PostArticleBtn = styled.button`
 const ChooseArticleBtn = styled.button`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid #FF8C00;
     border-radius: 5px;
-    background-color: white; 
+    background-color: transparent; 
     padding: 10px;
     width: 100px;
     margin-left: 70%;
@@ -75,7 +75,6 @@ const ArticleList = styled.div`
 
 const ArticleContainer = styled.div`
     min-width: match-parent;
-    text-align: center;
     border: transparent;
     padding: 5px;
     border-radius: 4px;
@@ -95,7 +94,6 @@ const ArticleRentContainer = styled.div`
 
 const ArticleFoodContainer = styled.div`
     min-width: match-parent;
-    text-align: center;
     border: transparent;
     padding: 5px;
     border-radius: 4px;
@@ -114,9 +112,38 @@ const ArticleText = styled.button`
     min-height:70px;
 `;
 
+const ArticleDCText = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    width: 350px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 16px;
+    background-color: white;
+    min-height:70px;
+    margin-top:2%;
+    margin-left:7px;
+`;
+
+
+const ArticleAuthorArea= styled.div`
+    display: flex;
+    flex-direction: row ;
+`;
+
+
+const ArticleAuthorImg = styled.img`
+    width: 13%; /* 設定頭像的寬度和高度 */
+    height: 13%;
+    border-radius: 50%;
+    overflow: hidden;
+`;
+
 const ArticleAuthor = styled.div`
-    margin-right: 250px;
+    width:100px;
     color: #232323;
+    margin-left:-30px;
+    margin-top:10px;
 `;
 
 
@@ -135,14 +162,9 @@ const ArticlePostRating = styled.div`
 `;
 
 const ArticleBody = styled.div`
-    margin-top: 8px;
+    margin-top: -5px;
     word-break: break-all;
     white-space: pre-line;
-    position: absolute;
-    left: 50%;
-    margin-top:6%;
-    margin-bottom:6%;
-    transform: translate(-50%, -50%);
 `;
 
 
@@ -162,6 +184,7 @@ const ModalSubmitBtn = styled.button`
     width: 100px;
     margin-left:33%;
     margin-bottom:5%;
+    border: 1px solid #FFA500;
 `;
 
 
@@ -179,4 +202,4 @@ const PerChangeClassBtn = styled.button`
 `;
 
 
-export {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleAuthor, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn};
+export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn};

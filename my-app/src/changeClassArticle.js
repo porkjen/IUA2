@@ -1,6 +1,6 @@
 //import './changeClass.css';
 import React from 'react';
-import {ArticleDetailPage, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailComment}  from './components/ArticleDetailStyle.js';
+import {ArticleDetailPage, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailText, ArticleDetailNormalBtn, ArticleDetailComment}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody} from './components/CommentStyle.js';
 import { Routes ,Route,Link } from 'react-router-dom';
 import {useState} from "react";
@@ -34,7 +34,7 @@ const ChangeClassArticle=()=> {
             <hr></hr>
             <ArticleDetailText>拜託跟我換課，我請你吃雞排</ArticleDetailText>
             <hr></hr>
-            <ArticleDetailSavedBtn>收藏</ArticleDetailSavedBtn>
+            <ArticleDetailNormalBtn>收藏</ArticleDetailNormalBtn>
             <hr></hr>
             <ArticleDetailComment>
                 <Commentinfo author={"evelyn"} text={"I love you"}></Commentinfo>
