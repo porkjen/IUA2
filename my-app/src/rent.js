@@ -51,8 +51,8 @@ const Rent=()=> {
                 <ArticleDetailAuthorImg src={dog}></ArticleDetailAuthorImg>
                 <ArticleDetailAuthor>{author}</ArticleDetailAuthor>
               </ArticleDetailAuthorArea>
-                  <ArticlePostTime>{time}</ArticlePostTime>
                   <ArticleBody>{text}</ArticleBody>
+                  <ArticlePostTime>{time}</ArticlePostTime>
               </ArticleText>
           </ArticleContainer>
         );
@@ -71,7 +71,7 @@ const Rent=()=> {
                   <ChooseArticleBtn onClick={()=> setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
                 <ArticleList>
                     {data.map(item => (
-                      <Articleinfo key={item.postId} author={item.name} time={item.post_time} text={item.title} postID={item.postId}></Articleinfo>
+                      <Articleinfo key={item.title} author={item.name} time={item.postTime} text={item.title} postID={item.postId}></Articleinfo>
                     ))}
                 </ArticleList>
             </Pagebg>

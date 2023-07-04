@@ -47,8 +47,9 @@ const CommentText = styled.button`
 
 
 const CommentAuthor = styled.div`
-    margin-right: 250px;
     color: #232323;
+    width: fit-content;
+    
 `;
 
 const CommentBody = styled.div`
@@ -71,8 +72,12 @@ const CommentRating = styled.div`
     white-space: pre-line;
 `;
 
+const CommentAuthorBtn = styled.div`
+    display: flex;
+    justifyContent: space-between; 
+    
+`;
 
 
 
-
-export {Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating};
+export {Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentAuthorBtn, CommentBody, CommentTimeRating, CommentRating};

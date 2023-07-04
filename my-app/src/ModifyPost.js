@@ -335,7 +335,7 @@ const ModifyPost=()=> {
               <textarea type='text' className='articleRentFormTextInput' name = 'Hnote' onChange={handleHnoteChange} value={Hnote}></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
-                <ArticleSubmitBtn type="submit">確認發文</ArticleSubmitBtn>
+                <ArticleSubmitBtn type="submit">確認修改</ArticleSubmitBtn>
             </ArticleSubmitBtnPosition>
           </form>  
         );

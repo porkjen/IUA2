@@ -4,6 +4,7 @@ public class HouseDTO {
     private String postId = "";
     private String name = "";
     private String title = "";
+    private String postTime = "";
 
     public String getPostId() {
         return postId;
@@ -29,9 +30,18 @@ public class HouseDTO {
         this.title = title;
     }
 
-    public HouseDTO(String post_id, String name, String title) {
+    public String getPostTime() {
+        return postTime;
+    }
+
+    public void setPostTime(String postTime) {
+        this.postTime = postTime;
+    }
+
+    public HouseDTO(String post_id, String name, String title, String postTime) {
         this.postId = post_id;
         this.name = name;
         this.title = title;
+        this.postTime = postTime;
     }
 }

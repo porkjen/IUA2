@@ -19,6 +19,7 @@ const Food = () => {
   const articleListRef = useRef(null);
   const location = useLocation();
   const { fromSearch, FArea, FName } = location.state;
+  const scrollPositionRef = useRef(0);
 
   function RatingFood({ rating }) {
     const stars = [];
@@ -95,7 +96,7 @@ const Food = () => {
   }
 
   useEffect(() => {
-    if(fromSearch==false){
+    if(fromSearch===false){
       if (!data) {
         setIsLoading(true);
         fetch('/food_load')
@@ -134,24 +135,26 @@ const Food = () => {
   }, [data]);
 
   const handleScroll = () => {
-    if (articleListRef.current) {
-      const scrollPosition = articleListRef.current.scrollTop;
-      const listHeight = articleListRef.current.clientHeight;
-      const scrollThreshold = articleListRef.current.scrollHeight / 2 - listHeight / 2;
-  
-      if (scrollPosition >= scrollThreshold && !isLoading) {
-        const nextBatch = data.slice(visibleData.length, visibleData.length + 50);
-        setVisibleData(prevData => [...prevData, ...nextBatch]);
-      }
+    const scrollPosition = articleListRef.current.scrollTop;
+    const listHeight = articleListRef.current.clientHeight;
+    const scrollThreshold = articleListRef.current.scrollHeight * 0.8 - listHeight;
+
+    if (scrollPosition >= scrollThreshold && !isLoading) {
+      const nextBatch = data.slice(visibleData.length, visibleData.length + 50);
+      setVisibleData(prevData => [...prevData, ...nextBatch]);
     }
+    scrollPositionRef.current = scrollPosition;
   };
-  
+
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-  
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+
+    articleListRef.current.scrollTop = scrollPositionRef.current;
+    articleListRef.current.addEventListener("scroll", handleScroll);
+
+   return () => {
+    // 移除滚动事件监听器
+    articleListRef.current?.removeEventListener("scroll", handleScroll);
+  };
   }, [visibleData, isLoading]);
 
   return (

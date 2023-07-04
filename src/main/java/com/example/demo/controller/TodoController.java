@@ -130,7 +130,7 @@ public class TodoController {
         List<HouseEntity> housePostList = houseRepository.findAll();
         List<HouseDTO> SimpleHousePostList = new ArrayList<>();
         for (HouseEntity post : housePostList) {
-            HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle());
+            HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle(), post.getPost_time());
             SimpleHousePostList.add(dto);
         }
         return SimpleHousePostList;
@@ -169,11 +169,15 @@ public class TodoController {
 
     @PutMapping("/rent_post_modify")
     public ResponseEntity<String> rentPostModify(@RequestBody HouseEntity houseEntity){
-        if(houseRepository.save(houseEntity) !=null){
-            //200
-            return ResponseEntity.ok("Success");
+        HouseEntity thisHouse = houseRepository.findByPostId(houseEntity.getPostId());
+        houseEntity.setId(thisHouse.getId());
+        houseEntity.setPost_time(thisHouse.getPost_time());
+        houseEntity.setName(thisHouse.getName());
+        if(thisHouse.getSaved().size()!=0){
+            for(String save : thisHouse.getSaved())houseEntity.setSaved(save);
         }
-        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+        houseRepository.save(houseEntity);
+        return ResponseEntity.ok("Success");
     }
 
     @GetMapping("/rent_search")
@@ -189,7 +193,7 @@ public class TodoController {
                     && (Objects.equals(people, "") || house.getPeople().equals(people))
                     && (Objects.equals(style, "") || house.getStyle().contains(style))
                     && (Objects.equals(car, "") || house.getCar().equals(car))) {
-                HouseDTO result = new HouseDTO(house.getPostId(), house.getName(), house.getTitle());
+                HouseDTO result = new HouseDTO(house.getPostId(), house.getName(), house.getTitle(), house.getPost_time());
                 resultList.add(result);
             }
         }
@@ -220,7 +224,10 @@ public class TodoController {
 
     @PostMapping("/favorites")
     public ResponseEntity<String> favorites(@RequestBody Map<String, String> requestData){
+        System.out.println("/favorites");
+        //get user's favorites
         SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
+        //user haven't create
         if (savedEntity == null) {
             savedEntity = new SavedEntity();
             savedEntity.setStudentID(requestData.get("studentID"));
@@ -228,7 +235,7 @@ public class TodoController {
         else {
             for (String post : savedEntity.getPostId()){
                 if (Objects.equals(requestData.get("postId"), post))
-                    return ResponseEntity.badRequest().body("Invalid request");
+                    return ResponseEntity.badRequest().body("Invalid request");//400
             }
         }
         savedEntity.setPostId(requestData.get("postId"));
@@ -260,7 +267,7 @@ public class TodoController {
                     savedDTO.setSavedFood(foodDTO);
                 }else if(post.startsWith("H")){
                     HouseEntity house = houseRepository.findByPostId(post);
-                    HouseDTO houseDTO = new HouseDTO(post, house.getName(), house.getTitle());
+                    HouseDTO houseDTO = new HouseDTO(post, house.getName(), house.getTitle(), house.getPost_time());
                     savedDTO.setSavedHouse(houseDTO);
                 }
             }

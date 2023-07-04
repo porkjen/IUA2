@@ -5,8 +5,11 @@ import Modal from "./components/Modal";
 import logo from './img/IUAlogo.png';
 import star from './img/star.png';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, 
-  ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn, ArticleDetailAlreadySavedBtn, ArticleDetailRatingdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
-import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
+  ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, 
+  ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn, ArticleDetailAlreadySavedBtn, ArticleDetailRatingdBtn, 
+  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, 
+  ArticleDetailPostBtn, ArticleDetailContactdBtn, ArticleDetailCommentDeleteBtn}  from './components/ArticleDetailStyle.js';
+import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating, CommentAuthorBtn} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation, useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
@@ -18,6 +21,7 @@ const FoodArticle=()=> {
     const [openModal, setOpenModal] = useState(false);
     const { studentID, postId } = location.state;
     const [isCreator, setIsCreator] = useState(false);
+    const [isReviewCreator, setIsReviewCreator] = useState(false);
     const [isFoodSaved, setIsFoodSaved] = useState(false);
     const [responseStatus, setResponseStatus] = useState(null);
 
@@ -32,7 +36,48 @@ const FoodArticle=()=> {
         return <ArticleDetailStar>{stars}</ArticleDetailStar>;
     }
 
-    function Commentinfo({ author, text, commentTime, commentRating }) {
+    function Commentinfo({ author, text, commentTime, commentRating, commentCreator }) {
+
+      const handleCommentDeleteSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        const formData = {
+                        postId:postId,
+                        studentID: "00957025",
+                      };
+                      fetch('/food_review_delete', {
+                            method: 'DELETE',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                          })
+                          .then(response => response.status)
+                          .then(data => {
+                            console.log(data);
+                          })
+                          .catch(error => {
+                            console.error(error);
+                          });
+                          window.location.reload();
+                       //Form submission happens here
+      }
+
+      if(commentCreator===true){
+        return (
+          <CommentContainer>
+            <CommentText>
+            <CommentAuthorBtn>
+                <CommentAuthor>{author}</CommentAuthor>
+                <ArticleDetailCommentDeleteBtn onClick={handleCommentDeleteSubmit}>刪除</ArticleDetailCommentDeleteBtn>
+              </CommentAuthorBtn>
+                <CommentBody>{text}</CommentBody>
+                <CommentTimeRating><RatingFood rating={commentRating} commentStar={true}></RatingFood>{commentTime}</CommentTimeRating>
+            </CommentText>
+          </CommentContainer>
+        );
+      }
+      else{
         return (
           <CommentContainer>
             <CommentText>
@@ -43,6 +88,8 @@ const FoodArticle=()=> {
           </CommentContainer>
         );
       }
+        
+    }
 
     function ArticleTitleinfo({ author, title, post_time }) {
         return (
@@ -59,14 +106,17 @@ const FoodArticle=()=> {
 
       function ArticleDetailInfo({ address, rating, weekday_text, URL}) {
         return (
+          <div>
+            <div>地址: {address}</div>
             <div>
-                <div>地址: {address}</div>
-                <div>營業時間: 
-                    {weekday_text.map(item => (
-                        <div>&emsp;{item+"\n"}</div>))}</div>
-                <div>評分: <RatingFood rating={rating} commentStar={false}></RatingFood></div>
-                <div>連結: <a href={URL} target="_blank" style={{ fontSize: '10px' }}>{URL}</a></div>
+              營業時間: 
+              {weekday_text.map((item, index) => (
+                <div key={index}>&emsp;{item}</div>
+              ))}
             </div>
+            <div>評分: <RatingFood rating={rating} commentStar={false}></RatingFood></div>
+            <div>連結: <a href={URL} target="_blank" style={{ fontSize: '10px' }}>{URL}</a></div>
+          </div>
         );
       }
 
@@ -102,6 +152,7 @@ const FoodArticle=()=> {
                           
                        //Form submission happens here
       }
+
 
       const handleAddFoodSavedSubmit = (e) => {
         e.preventDefault();
@@ -191,7 +242,7 @@ const FoodArticle=()=> {
       return (
         <ArticleDetailPage>
             <ArticleDetailPosition>
-                <ArticleTitleinfo key={data.postId} author={data.nickname} title={data.store} post_time={data.post_time}></ArticleTitleinfo>
+                <ArticleTitleinfo key={data.store} author={data.nickname} title={data.store} post_time={data.post_time}></ArticleTitleinfo>
                 <hr></hr>
                 <ArticleDetailInfo key={data.postId}   address={data.address} rating={data.rating} weekday_text={data.weekday_text} URL={data.url}  ></ArticleDetailInfo>
                 <hr></hr>
@@ -217,9 +268,35 @@ const FoodArticle=()=> {
                 )}
                 <hr></hr>
                 <ArticleDetailComment>
-                    {data.review.map(item => (
-                      <Commentinfo key={item.p_name} author={item.p_name} text={item.p_review} commentTime={item.p_time} commentRating={item.p_rate}></Commentinfo>
-                    ))}
+                {data.review.map(item => {
+                    if (item.p_review) {
+                      if(item.p_studentID===studentID){
+                        return (
+                          <Commentinfo
+                            key={item.p_name}
+                            author={item.p_name}
+                            text={item.p_review}
+                            commentTime={item.p_time}
+                            commentRating={item.p_rate}
+                            commentCreator={true}
+                          />
+                        );
+                      }
+                      else{
+                        return (
+                          <Commentinfo
+                            key={item.p_name}
+                            author={item.p_name}
+                            text={item.p_review}
+                            commentTime={item.p_time}
+                            commentRating={item.p_rate}
+                            commentCreator={false}
+                          />
+                        );
+                      }
+                      
+                    }
+                  })}
                 </ArticleDetailComment>
             </ArticleDetailPosition>
             <ArticleDetailPostCommentPosition>
@@ -265,7 +342,7 @@ const FoodArticle=()=> {
                     }
                   }
                   setData(data);
-
+                  console.log(data);
                 })
                 .catch(error => {
                   console.error('Error:', error);

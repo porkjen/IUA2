@@ -53,16 +53,19 @@ public class FoodController {
     public FoodEntity foodFullPost(@RequestBody Map<String, String> requestData){
         System.out.println("/food_full_post");
         FoodEntity foodEntity = foodRepository.findByPostId(requestData.get("postId"));
+        //no one save this post
         if(foodEntity.getSaved().size()==0){
             foodEntity.savefirst("false");
             return foodEntity;
         }
         for(String user : foodEntity.getSaved()){
+            //user saved this post
             if(Objects.equals(user, requestData.get("studentID"))) {
                 foodEntity.savefirst("true");
                 return foodEntity;
             }
         }
+        //user doesn't save this post
         foodEntity.savefirst("false");
         return foodEntity;
     }

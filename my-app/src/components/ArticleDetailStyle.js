@@ -17,6 +17,7 @@ const ArticleDetailPosition = styled.div`
     overflow: auto;
 `;
 
+
 const ArticleDetailAuthorArea= styled.div`
     display: flex;
     flex-direction: row ;
@@ -109,6 +110,24 @@ const ArticleDetailContactdBtn = styled.button`
     border-radius: 6px; 
 `;
 
+/*刪除留言 */
+const ArticleDetailCommentDeleteBtn = styled.button`
+    color: rgba(249, 231, 193, 0.951);
+    background: transparent; 
+    border: 2px solid  rgba(249, 231, 193);
+    border-radius: 6px; 
+    color: black;
+    padding: 8px 16px;
+    font-size: 8px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-left:70%;
+`;
+
 const ArticleDetailComment = styled.div`
     background-color:white;
 `;
@@ -158,4 +177,4 @@ const ArticleDetailPostBtn = styled.button`
 `
 
 
-export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn,  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn};
+export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn,  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn, ArticleDetailCommentDeleteBtn};

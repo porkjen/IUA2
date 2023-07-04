@@ -112,6 +112,20 @@ const ArticleText = styled.button`
     min-height:70px;
 `;
 
+const ArticleDCText = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    width: 350px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 16px;
+    background-color: white;
+    min-height:70px;
+    margin-top:2%;
+    margin-left:7px;
+`;
+
+
 const ArticleAuthorArea= styled.div`
     display: flex;
     flex-direction: row ;
@@ -187,4 +201,4 @@ const PerChangeClassBtn = styled.button`
 `;
 
 
-export {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn};
+export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn};

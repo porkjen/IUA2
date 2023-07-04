@@ -314,10 +314,12 @@ function Modal({closeModal,type, postId}){
                               .catch(error => {
                                 console.error(error);
                               });
-                              navigate("/food", {
+                              navigate("/foodArticle", {
                                 state: {
                                   studentID:"00957025",
+                                  postId,postId,
                                   fromSearch:false},});
+                                  window.location.reload();
                               
                            //Form submission happens here
           }
