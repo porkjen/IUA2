@@ -163,7 +163,7 @@ public class TodoController {
             //200
             return ResponseEntity.ok("Success");
         }
-        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+        else return ResponseEntity.badRequest().body("Invalid request"); // 400
 
     }
 
@@ -186,6 +186,7 @@ public class TodoController {
                                      @RequestParam(value = "people", required = false) String people,
                                      @RequestParam(value = "style", required = false) String style,
                                      @RequestParam(value = "car", required = false) String car){
+        System.out.println("/rent_search");
         List<HouseDTO> resultList = new ArrayList<>();
         for(HouseEntity house : houseRepository.findAll()){
             if ((Objects.equals(area, "") || house.getArea().equals(area))
@@ -203,7 +204,7 @@ public class TodoController {
     @GetMapping("/curriculum_search")
     public List<TimeTableEntity.Info> curriculumSearch(@RequestParam("studentID") String studentID) throws TesseractException, IOException, InterruptedException {
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
-        if(timeTable!=null){
+        if(timeTable!=null && timeTable.getInfo().size()!=0){
             return timeTable.getInfo();
         }
         else{
@@ -212,7 +213,12 @@ public class TodoController {
             crawler.CrawlerHandle(studentID,password);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(studentID,password);
             TimeTableEntity table = new TimeTableEntity();
-            table.setStudentID(studentID);
+            if (timeTable != null) { //copy to new
+                table.setId(timeTable.getId());
+                table.setStudentID(timeTable.getStudentID());
+                table.setWholePre_info(timeTable.getPre_info());
+            }
+            else table.setStudentID(studentID); //create a new one
             for(TimeTableEntity.Info i : myClassList){
                 System.out.println(i.getName());
                 table.setInfo(i);
@@ -298,7 +304,58 @@ public class TodoController {
         return ResponseEntity.badRequest().body("Invalid request");
     }
 
-    
+    @PostMapping("/pre_curriculum_search")
+    public List<TimeTableEntity.Pre_Info> preCurriculumSearch(@RequestBody Map<String, String> requestData){
+        System.out.println("/pre_curriculum_search");
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
+        if(timeTable==null){
+            /*timeTable = new TimeTableEntity();
+            timeTable.setStudentID(requestData.get("studentID"));
+            timeTableRepository.save(timeTable);*/
+            List<TimeTableEntity.Pre_Info> list = new ArrayList<>();
+            return list; //empty
+        }
+        return timeTable.getPre_info();
+    }
+
+    @PostMapping("/pre_curriculum")
+    public ResponseEntity<String> preCurriculum(@RequestBody Map<String, String> requestData){
+        System.out.println("/pre_curriculum");
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
+        TimeTableEntity.Pre_Info pre_info = new TimeTableEntity.Pre_Info();
+        pre_info.setP_class(requestData.get("p_class"));
+        pre_info.setP_classNum(requestData.get("p_classNum"));
+        String[] timeArray = requestData.get("p_time").split(",");
+        pre_info.setP_time(timeArray);
+        pre_info.setP_classroom(requestData.get("p_classroom"));
+        if (timeTable == null) {
+            timeTable = new TimeTableEntity();
+            timeTable.setStudentID(requestData.get("studentID"));
+            timeTable.setPre_info(pre_info);
+        }
+        else{timeTable.setPre_info(pre_info);}
+        timeTableRepository.save(timeTable);
+        return ResponseEntity.ok("Success"); // 200
+    }
+
+    @DeleteMapping("/cancel_pre_curriculum")
+    public ResponseEntity<String> cancelPreCurriculum(@RequestParam("studentID") String studentID, @RequestParam("p_classNum") String p_classNum){
+        System.out.println("/cancel_pre_curriculum");
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        boolean deleted = false;
+        if(timeTable == null)return ResponseEntity.badRequest().body("Invalid request : Entity not found"); //400
+        for(TimeTableEntity.Pre_Info pre : timeTable.getPre_info()){
+            if(Objects.equals(pre.getP_classNum(), p_classNum)){
+                timeTable.removePre_info(pre);
+                timeTableRepository.save(timeTable);
+                deleted=true;
+                break;
+            }
+        }
+        if(deleted)return ResponseEntity.ok("Success"); //400
+        else return ResponseEntity.badRequest().body("Invalid request : Class not found"); //400
+    }
+
 }
 
 

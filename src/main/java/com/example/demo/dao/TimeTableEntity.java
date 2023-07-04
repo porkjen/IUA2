@@ -56,7 +56,7 @@ public class TimeTableEntity {
     public static class Pre_Info {
         private String p_class = "";
         private String p_classNum = "";
-        private String p_time = "";
+        private String[] p_time = new String[3];
         private String p_classroom = "";
 
         public String getP_class() {
@@ -75,11 +75,11 @@ public class TimeTableEntity {
             this.p_classNum = p_classNum;
         }
 
-        public String getP_time() {
+        public String[] getP_time() {
             return p_time;
         }
 
-        public void setP_time(String p_time) {
+        public void setP_time(String[] p_time) {
             this.p_time = p_time;
         }
 
@@ -111,7 +111,7 @@ public class TimeTableEntity {
     public List<Info> getInfo() {
         return info;
     }
-
+    public void setWholeInfo(List<Info> info){this.info = info;}
     public void setInfo(Info info) {
         this.info.add(info);
     }
@@ -119,9 +119,12 @@ public class TimeTableEntity {
     public List<Pre_Info> getPre_info() {
         return pre_info;
     }
-
-    public void setPre_info(List<Pre_Info> pre_info) {
-        this.pre_info = pre_info;
+    public void setWholePre_info(List<Pre_Info> pre_info){this.pre_info = pre_info;}
+    public void setPre_info(Pre_Info pre_info) {
+        this.pre_info.add(pre_info);
+    }
+    public void removePre_info(Pre_Info pre_info) {
+        this.pre_info.remove(pre_info);
     }
 
 }
