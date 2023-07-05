@@ -1,15 +1,20 @@
 //import './changeClass.css';
 import React from 'react';
 import dog from './img/dog.png';
-import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
+import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, 
+  ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailNormalBtn, ArticleDetailSavedBtn, 
+  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
-import { Routes ,Route,useLocation } from 'react-router-dom';
+import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
 const RentArticle=()=> {
 
+    let navigate = useNavigate();
     const location = useLocation();
     const [data, setData] = useState(null);
+    const [isCreator, setIsCreator] = useState(false);
+    const [isRentSaved, setIsRentSaved] = useState(false);
     const { studentID, postId } = location.state;
 
     function Commentinfo({ author, text }) {
@@ -26,7 +31,10 @@ const RentArticle=()=> {
     function ArticleTitleinfo({ author, title, post_time }) {
         return (
             <div>
+                <ArticleDetailAuthorArea>
+                <ArticleDetailAuthorImg src={dog}></ArticleDetailAuthorImg>
                 <ArticleDetailAuthor>{author}</ArticleDetailAuthor>
+              </ArticleDetailAuthorArea>
                 <ArticleDetailTitle>{title}</ArticleDetailTitle>
                 <ArticleDetailPostDate>{post_time}</ArticleDetailPostDate>
             </div>
@@ -56,7 +64,7 @@ const RentArticle=()=> {
     function RentArticle() {
 
         const formData = {
-            studentID:  studentID,
+            studentID:  '00957025',
             postId : postId,
           };
 
@@ -76,12 +84,113 @@ const RentArticle=()=> {
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(formData)})
                 .then(response => response.json())
-                .then(data => setData(data))
+                .then(data => {
+                  setData(data);
+                  if(data.studentID==studentID){
+                    console.log("same");
+                    setIsCreator(true);
+                  }
+                  else{
+                    setIsCreator(false);
+                    if(data.saved[0]=='true'){
+                      setIsRentSaved(true);
+                    }
+                    else{
+                      setIsRentSaved(false);
+                    }
+                  }
+                })
                 .catch(error => {
                   console.error('Error:', error);
                 });
             }
           }, [data]); // 添加依賴項data
+
+          const handleAddRentSavedSubmit = (e) => {
+            e.preventDefault();
+            //const student_id = loginUser();
+            const savedFormData = {
+                            studentID: "00957025",
+                            postId:postId,
+                          };
+                          fetch('/favorites', {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(savedFormData)
+                              })
+                              .then(response => response.status)
+                              .then(data => {
+                                console.log(data);
+                              })
+                              .catch(error => {
+                                console.error(error);
+                              });
+                              setIsRentSaved(true);
+                           //Form submission happens here
+          }
+
+          const handleRemovedRentSavedSubmit = (e) => {
+            e.preventDefault();
+            //const student_id = loginUser();
+            const savedFormData = {
+                            studentID: "00957025",
+                            postId:postId,
+                          };
+                          fetch('/favorites_delete', {
+                                method: 'DELETE',
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(savedFormData)
+                              })
+                              .then(response => response.status)
+                              .catch(error => {
+                                console.error(error);
+                              });
+                              setIsRentSaved(false);
+                           //Form submission happens here
+          }
+
+          const handleRemovedRentPostSubmit = (e) => {
+            e.preventDefault();
+            //const student_id = loginUser();
+            const savedFormData = {
+                            studentID: "00957025",
+                            postId:postId,
+                          };
+                          fetch(`/rent_post_delete?studentID=${studentID}&postId=${postId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(savedFormData)
+                              })
+                              .then(response => response.status)
+                              .catch(error => {
+                                console.error(error);
+                              });
+                              navigate("/rent", {
+                                state: {
+                                  studentID:"00957025",
+                                  fromSearch:false},});
+                           //Form submission happens here
+          }
+
+          const handleModifyRentPostSubmit = (e) => {
+            e.preventDefault();
+            //const student_id = loginUser();
+                              navigate("/modifyPost", {
+                                state: {
+                                  studentID:"00957025",
+                                  postId:postId,
+                                  fromSearch:false,
+                                  ModifyType:"rent",
+                                   },});
+                           //Form submission happens here
+          }
+    
     
           if (!data) {
             return <div>Loading...</div>;
@@ -94,8 +203,24 @@ const RentArticle=()=> {
                 <hr></hr>
                 <ArticleDetailInfo  address={data.address} area={data.area} car={data.car} floor={data.floor} gender={data.gender} money={data.money} people={data.people} power={data.power} water={data.water} style={data.style} rent_date={data.rent_date} note={data.note} >拜託跟我換課，我請你吃雞排</ArticleDetailInfo>
                 <hr></hr>
-                <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
-                <ArticleDetailSavedBtn>收藏</ArticleDetailSavedBtn>
+                {isCreator && (<ButtonContainer>
+                  <ArticleDetailNormalBtn onClick={handleModifyRentPostSubmit}>修改貼文</ArticleDetailNormalBtn>
+                  <ArticleDetailNormalBtn onClick={handleRemovedRentPostSubmit}>刪除貼文</ArticleDetailNormalBtn>
+                  </ButtonContainer>)}
+                {!isCreator && (
+                  <ButtonContainer>
+                    <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    {isRentSaved ? (
+                      <ArticleDetailAlreadySavedBtn onClick={handleRemovedRentSavedSubmit}>
+                        已收藏
+                      </ArticleDetailAlreadySavedBtn>
+                    ) : (
+                      <ArticleDetailSavedBtn onClick={handleAddRentSavedSubmit}>
+                        收藏
+                      </ArticleDetailSavedBtn>
+                    )}
+                  </ButtonContainer>
+                )}
                 <hr></hr>
             </ArticleDetailPosition>
         </ArticleDetailPage>

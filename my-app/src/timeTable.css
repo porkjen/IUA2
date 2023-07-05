@@ -81,6 +81,7 @@ body{
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
+    
 }
 
 /*table position*/
@@ -96,7 +97,10 @@ table, th, td {
 .timeTable_info{
     font-family: 'Noto Serif TC', serif;
     z-index: 2;
+    margin-left: 13%;
+    position: absolute;
 }
+
 
 .timeTable_info > tr{
     font-size: 13px;

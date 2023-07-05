@@ -169,6 +169,7 @@ public class FoodEntity {
     }
 
     public void removeReview(p review){ this.review.remove(review); }
+    public void reviewFirst(p review){ this.review.add(0, review); }
 
     public List<String> getSaved() {
         return saved;
@@ -179,7 +180,7 @@ public class FoodEntity {
     public void removeSaved(String saved) {
         this.saved.remove(saved);
     }
-    public void savefirst(String saved) {
+    public void saveFirst(String saved) {
         this.saved.add(0, saved);
     }
 }

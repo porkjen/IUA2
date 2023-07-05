@@ -405,8 +405,8 @@ public class Crawler {
     }
 
     public static void main(String[] args) throws Exception {
-        String account = "00957025";
-        String password = "20230607";
+        String account = "";
+        String password = "";
         CrawlerHandle(account,password);
         //getBasicData(account,password);
         //getMyClass(account,password); //not complete
