@@ -102,12 +102,12 @@ public class TodoController {
             ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
             String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
 
-            finishedCourse = crawler.getFinishedCredict(sem);
+            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
             oriList.setFinishedCourses(finishedCourse);
             fRepository.save(oriList);
         }
         else{
-            finishedCourse = crawler.getFinishedCredict("");
+            finishedCourse = crawler.getFinishedCredict(finishedCourse, "");
             finished.setFinishedCourses(finishedCourse);
             fRepository.save(finished);
         }

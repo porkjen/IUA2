@@ -189,7 +189,7 @@ public class Crawler {
         return personalInformation;
     }
 
-    public static ArrayList<FinishedCourse> getFinishedCredict(String sem) throws InterruptedException{
+    public static ArrayList<FinishedCourse> getFinishedCredict(ArrayList<FinishedCourse> ori, String sem) throws InterruptedException{
         //已完成課程
         ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
 
@@ -221,7 +221,7 @@ public class Crawler {
                 List<WebElement> cols= row.findElements(By.tagName("td"));
                 if(j > 0){
                     FinishedCourse fc = new FinishedCourse();
-                    fc.setSemester(col.get(0).getText());
+                    fc.setSemester(cols.get(0).getText());
                     //cTime.add(cols.get(0).getText());
                     System.out.println("**********Time: " + cols.get(0).getText());
                     cID.add(cols.get(1).getText());
@@ -236,8 +236,8 @@ public class Crawler {
         }
         
         System.out.println("*********cID size: " + cID.size());
-        if(sem.equals(fcList.get(fcList.size()-1)).getSemester){
-            return;
+        if(sem.equals(fcList.get(cID.size()-1).getSemester())){
+            return ori;
         }
 
         //取得開課單位
