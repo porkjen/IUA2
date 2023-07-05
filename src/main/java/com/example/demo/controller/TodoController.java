@@ -39,8 +39,11 @@ public class TodoController {
     @Autowired
     FoodRepository foodRepository;
     String secretKey = "au4a83";
+
     Crawler crawler = new Crawler();
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
+
+
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
@@ -63,7 +66,8 @@ public class TodoController {
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
             basicRepository.save(basic);
             System.out.println("New user!");
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");//201
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
         }
         else {
             if(!Objects.equals(basicRepository.findByStudentID(studentID).getPassword(), encryptedpwd)){
@@ -77,6 +81,7 @@ public class TodoController {
         System.out.println("original:"+decryptedpwd);
 
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
+
     }
 
     @PostMapping("/nickname")
@@ -252,6 +257,7 @@ public class TodoController {
         }
         return ResponseEntity.ok("Success");
     }
+
 
     @PostMapping("/favorites_load")
     public SavedDTO favoritesLoad(@RequestBody Map<String, String> requestData){
