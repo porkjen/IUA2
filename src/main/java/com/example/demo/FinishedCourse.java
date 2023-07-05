@@ -2,6 +2,7 @@ package com.example.demo;
 
 public class FinishedCourse{
     private String courseName;
+    private String semester;
     private String credit;
     private String category;
     private String time;
@@ -12,6 +13,10 @@ public class FinishedCourse{
 
     public void setName(String name){
         this.courseName = name;
+    }
+
+    public void setSemester(String semester){
+        this.semester = semester;
     }
 
     public void setCredit(String credit){
@@ -36,6 +41,10 @@ public class FinishedCourse{
 
     public String getName(){
         return courseName;
+    }
+
+    public String getSemester(){
+        return semester;
     }
 
     public String getCredit(){

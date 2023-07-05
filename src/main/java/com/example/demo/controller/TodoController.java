@@ -87,6 +87,41 @@ public class TodoController {
         basicRepository.save(oldProduct);
     }
 
+    @PostMapping("/remained_credits")
+    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
+        ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
+        System.out.println("*********student ID: " + finished.getStudentID());
+        if(fRepository.existsByStudentID(finished.getStudentID())){
+            System.out.println("found.");
+            FinishedCourseList oriList = fRepository.findByStudentID(finished.getStudentID());
+            ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
+            String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
+
+            finishedCourse = crawler.getFinishedCredict(sem);
+            oriList.setFinishedCourses(finishedCourse);
+            fRepository.save(oriList);
+        }
+        else{
+            finishedCourse = crawler.getFinishedCredict("");
+            finished.setFinishedCourses(finishedCourse);
+            fRepository.save(finished);
+        }
+
+        RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
+        return remainCredit;
+    }
+
+    @PostMapping("/add_detect_course")
+    public void addDetectCourse()throws TesseractException, IOException, InterruptedException{
+        crawler.detectCoureses();
+    }
+    
+    @PostMapping("/detect_course")
+    public void detectCourse()throws TesseractException, IOException, InterruptedException{
+
+    }
+
+
     @PostMapping("/rent_post")
     public HouseEntity rentPost(@RequestBody HouseEntity house){
         System.out.println("/rent_post");
@@ -103,21 +138,6 @@ public class TodoController {
         house.setName(basicRepository.findByStudentID(house.getStudentID()).getName());//real name
         houseRepository.save(house);
         return house;
-    }
-
-    @PostMapping("/remained_credits")
-    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
-        ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
-        System.out.println("*********student ID: " + finished.getStudentID());
-        if(fRepository.existsByStudentID(finished.getStudentID())){
-            System.out.println("found.");
-            finished = fRepository.findByStudentID(finished.getStudentID());
-        }
-//       finishedCourse = crawler.getFinishedCredict();
-//       finished.setFinishedCourses(finishedCourse);
-//       fRepository.save(finished);
-        RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
-        return remainCredit;
     }
 
     @GetMapping("/rent_load") //list all house posts

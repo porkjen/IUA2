@@ -40,10 +40,12 @@ public class RemainedService {
                 int credit = Integer.parseInt(f.getCredit());
                 String dept = f.getDepartment();
                 System.out.println("course: " + f.getName() + "\ncredit: " + f.getCredit());
-                if(f.getCategory().equals("必修")){
+                if(f.getCategory().equals("必修") && dept.equals("資訊工程學系")){
                     required -= credit;
                     if(dept.equals("體育室"))
                         pe -= 1;
+                    if(required < 0)
+                        required = 0;
                 }
                 else if(f.getCategory().equals("選修")){
                     if(!dept.isEmpty()){
@@ -55,7 +57,7 @@ public class RemainedService {
                             }
                             else{
                                 if(dept.equals("電機工程學系") || dept.equals("電機資訊學院")){
-                                    eecse -= credit;
+                                    eecse += credit;
                                     if(eecse > 6)
                                         eecse = 6;
                                     deptOptional -= eecse;
@@ -87,8 +89,11 @@ public class RemainedService {
                     if(general < 0){
                         general = 0;
                         optOffset += credit;
-                        if(optOffset < 8)
+                        if(optOffset < 8){
                             optional -= optOffset;
+                            if(optional < 0)
+                                optional = 0;
+                        }
                     }
                 }
                 else if(f.getCategory().equals("抵")){
