@@ -18,7 +18,7 @@ const PostArticle=()=> {
         const [FtimeMonday, setFtimeMonday] = useState("");
         const [FtimeTuesday, setFtimeTuesday] = useState("");
         const [FtimeWednesday, setFtimeWednesday] = useState("");
-        const [FtimeThursday, setFtimeThursdaye] = useState("");
+        const [FtimeThursday, setFtimeThursday] = useState("");
         const [FtimeFriday, setFtimeFriday] = useState("");
         const [FtimeSaturday, setFtimeSaturday] = useState("");
         const [FtimeSunday, setFtimeSunday] = useState("");
@@ -45,7 +45,7 @@ const PostArticle=()=> {
           setFtimeWednesday(event.target.value);
         };
         const handleFtimeThursdayChange = event => {
-          setFtimeThursdaye(event.target.value);
+          setFtimeThursday(event.target.value);
         };
         const handleFtimeFridayChange = event => {
           setFtimeFriday(event.target.value);
@@ -99,7 +99,9 @@ const PostArticle=()=> {
                               console.error(error);
                             });
                          //Form submission happens here
-                         navigate("/food")
+                         navigate("/food", {
+                          state: {
+                            fromSearch:false,},});
         }
        
         return (
@@ -134,8 +136,15 @@ const PostArticle=()=> {
               <input type='text' name = 'FLink' onChange={handleFLinkChange} value={FLink}></input>
             </div><br/>
             <div className='articleFoodFormSchoolRate'>
-              <label>我的評分(1-5):&emsp;</label>
-              <input type='number' name = 'Frate' onChange={handleFrateChange} value={Frate}></input>
+              <label>我的評分:&emsp;</label>
+              <select name = 'Frate' value={Frate} onChange={handleFrateChange}>
+                  <option>請選擇評分</option>
+                  <option value='1'>1</option>
+                  <option value='2'>2</option>
+                  <option value='3'>3</option>
+                  <option value='4'>4</option>
+                  <option value='5'>5</option>
+              </select>
             </div><br/>
             <div className='articleFoodFormInfo'>
               <label>我的評論:&emsp;</label>
@@ -235,7 +244,10 @@ const PostArticle=()=> {
                       .catch(error => {
                         console.error(error);
                       });
-                      navigate("/rent")
+                      navigate("/rent", {
+                        state: {
+                          fromSearch:false,},});
+                          window.location.reload();
                    //Form submission happens here
   }
         return (
@@ -267,7 +279,12 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormType'>
               <label>房型:</label>
-              <input type='text' name = 'Htype' onChange={handleHtypeChange} value={Htype}></input>
+              <select name = 'Htype' value={Htype} onChange={handleHtypeChange}>
+                  <option>請選擇區域</option>
+                  <option value='套房'>套房</option>
+                  <option value='雅房'>雅房</option>
+                  <option value='家庭式'>家庭式</option>
+              </select>
             </div><br/>
             <div className='articleRentFormRegion'>
               <label>地區:</label>

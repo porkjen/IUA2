@@ -21,7 +21,7 @@ html,body,#root,.Favorite{
     margin-top: 5%;
 }
 
-.Favorite .star{
+.Favorite .stars{
     max-width: 20%;
     padding-left: 75%;
     position: absolute;

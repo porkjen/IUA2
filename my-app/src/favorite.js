@@ -1,9 +1,13 @@
 import './favorite.css';
-import star from './img/stars.png';
+import stars from './img/stars.png';
 import heart from './img/heart.png';
-import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody, ArticlePostTime}  from './components/ArticleStyle.js';
-import {useEffect,useState} from "react";
-import {useNavigate} from 'react-router-dom';
+import star from './img/star.png';
+import logo from './img/IUAlogo.png';
+import dog from './img/dog.png';
+import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
+import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody } from './components/ArticleStyle.js';
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState, useRef,  } from "react";
 
 function Favorite() {
     const [FoodData, setFoodData] = useState([]);
@@ -15,39 +19,56 @@ function Favorite() {
     const [isChangeClassShown, setIsChangeClassShown] = useState(false);
     let navigate = useNavigate();
     
-    function SavedFinfo({ author, time, text, postID }) {
+    function RatingFood({ rating }) {
+      const stars = [];
+      for (let i = 1; i <= rating; i++) {
+        stars.push(<img key={i} className="rating_star" src={star} alt="star" />);
+      }
+  
+      return <div>{stars}</div>;
+    }
+
+    function SavedFinfo({ author, post_time, store, rating, postID }) {
       const handleShowFoodSubmit = (e) => {
         e.preventDefault();
-        //const student_id = loginUser();
         const formData = {
-                        studentID: "00957025",
-                        postId : postID,
-                      };
-          fetch('/food_full_post', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(formData)})
-                  .then(response => response.json())
-                  .then(data => {
-                        console.log(data);})
-                  .catch(error => {
-                        console.error(error);});
-                       //Form submission happens here
+          studentID: "00957025",
+          postId: postID,
+        };
+        fetch('/food_full_post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
             navigate("/foodArticle", {
               state: {
                 studentID: "00957025",
-                postId : postID,},});
+                postId: postID
+              }
+            });
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
 
 
       return (
         <ArticleContainer>
-          <ArticleText onClick={handleShowFoodSubmit}>
+        <ArticleText onClick={handleShowFoodSubmit}>
+          <ArticleAuthorArea>
+            <ArticleAuthorImg src={logo}></ArticleAuthorImg>
             <ArticleAuthor>{author}</ArticleAuthor>
-            <ArticlePostTime>{time}</ArticlePostTime>
-            <ArticleBody>{text}</ArticleBody>
-          </ArticleText>
-        </ArticleContainer>
+          </ArticleAuthorArea>
+          <ArticleBody>{store}</ArticleBody>
+          <ArticlePostTime>
+            <RatingFood rating={rating}></RatingFood>{post_time}
+          </ArticlePostTime>
+        </ArticleText>
+      </ArticleContainer>
       );
     }
 
@@ -75,16 +96,18 @@ function Favorite() {
                 postId : postID,},});
       }
 
-
-      return (
-        <ArticleContainer>
-          <ArticleText onClick={handleShowHouseSubmit}>
-            <ArticleAuthor>{author}</ArticleAuthor>
-            <ArticlePostTime>{time}</ArticlePostTime>
-            <ArticleBody>{text}</ArticleBody>
-          </ArticleText>
-        </ArticleContainer>
-      );
+        return (
+          <ArticleContainer>
+              <ArticleText onClick={handleShowHouseSubmit}>
+              <ArticleDetailAuthorArea>
+                <ArticleDetailAuthorImg src={dog}></ArticleDetailAuthorImg>
+                <ArticleDetailAuthor>{author}</ArticleDetailAuthor>
+              </ArticleDetailAuthorArea>
+                  <ArticleBody>{text}</ArticleBody>
+                  <ArticlePostTime>{time}</ArticlePostTime>
+              </ArticleText>
+          </ArticleContainer>
+        );
     }
   
     useEffect(() => {
@@ -156,7 +179,7 @@ function Favorite() {
         <div>
           <Title>我的收藏</Title>
           <img className='heart' src={heart}/>
-          <img className='star' src={star}/>
+          <img className='stars' src={stars}/>
         </div>
         <div>
           <select className='selectType' onChange={handleSelectChange}> 
@@ -170,8 +193,10 @@ function Favorite() {
             <SavedFinfo
               key={index}
               author={item.nickname}
-              time={item.post_time}
-              text={item.store}
+              post_time={item.post_time}
+              store={item.store} 
+              rating={item.rating} 
+              postID={item.postId}
             />
           ))}
         </ArticleList>}
@@ -179,8 +204,10 @@ function Favorite() {
           {RentData.map((item, index) => (
             <SavedHinfo
               key={index}
-              author={item.name}
-              text={item.title}
+              author={item.name} 
+              time={item.postTime} 
+              text={item.title} 
+              postID={item.postId}
             />
           ))}
         </ArticleList>}

@@ -53,15 +53,30 @@ public class FoodController {
     public FoodEntity foodFullPost(@RequestBody Map<String, String> requestData){
         System.out.println("/food_full_post");
         FoodEntity foodEntity = foodRepository.findByPostId(requestData.get("postId"));
-        if(Objects.equals(foodEntity.getSaved().get(0), requestData.get("studentID"))){
-            foodEntity.savefirst("true");
+        //find out if the user has commented on the post
+        for(FoodEntity.p review : foodEntity.getReview()){
+            if(Objects.equals(review.getP_studentID(), requestData.get("studentID"))) {
+                //remove the review and add to the start
+                foodEntity.removeReview(review);
+                foodEntity.reviewFirst(review);
+                break;
+            }
+        }
+
+        //no one save this post
+        if(foodEntity.getSaved().size()==0){
+            foodEntity.saveFirst("false");
             return foodEntity;
         }
-        else foodEntity.savefirst("false");
         for(String user : foodEntity.getSaved()){
-            if(Objects.equals(user, requestData.get("studentID")))
-                foodEntity.savefirst("true");
+            //user saved this post
+            if(Objects.equals(user, requestData.get("studentID"))) {
+                foodEntity.saveFirst("true");
+                return foodEntity;
+            }
         }
+        //user doesn't save this post
+        foodEntity.saveFirst("false");
         return foodEntity;
     }
 
@@ -168,12 +183,17 @@ public class FoodController {
     }
 
     @PostMapping("/food_review_add")
-    public FoodEntity.p foodReviewAdd(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<String> foodReviewAdd(@RequestBody Map<String, String> requestData){
         System.out.println("/food_review_add");
         double newRate = 0;
         DecimalFormat decimalFormat = new DecimalFormat("#.0");
         //find the post by postId
         FoodEntity thisPost = foodRepository.findByPostId(requestData.get("postId"));
+        //find out if the user has commented on the post
+        for(FoodEntity.p review : thisPost.getReview()){
+            if(Objects.equals(review.getP_studentID(), requestData.get("studentID")))
+                return ResponseEntity.badRequest().body("Invalid request : user has commented on the post"); //400
+        }
         //create a review structure, and add to the post
         FoodEntity.p newReview = new FoodEntity.p();
         newReview.setP_studentID(requestData.get("studentID"));
@@ -191,7 +211,7 @@ public class FoodController {
             thisPost.setRating_num(thisPost.getRating_num() + 1);
         }
         foodRepository.save(thisPost);
-        return newReview;
+        return ResponseEntity.ok("Success");
     }
 
     @GetMapping("/food_search")

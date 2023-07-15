@@ -7,7 +7,6 @@ import com.google.common.base.Splitter;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import javax.imageio.ImageIO;
@@ -26,8 +25,11 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 
+@EnableScheduling
 public class Crawler {
     static ChromeOptions options;
     static WebDriver driver;
@@ -187,7 +189,7 @@ public class Crawler {
         return personalInformation;
     }
 
-    public static ArrayList<FinishedCourse> getFinishedCredict() throws InterruptedException{
+    public static ArrayList<FinishedCourse> getFinishedCredict(ArrayList<FinishedCourse> ori, String sem) throws InterruptedException{
         //已完成課程
         ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
 
@@ -211,7 +213,7 @@ public class Crawler {
 
         //獲取scoretable
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
-        ArrayList<String> cTime = new ArrayList<String>();   //學期
+        //ArrayList<String> cTime = new ArrayList<String>();   //學期
         ArrayList<String> cID = new ArrayList<String>();     //課號
         ArrayList<FinishedCourse> fcList = new ArrayList<FinishedCourse>();
         int j = 0;
@@ -219,7 +221,8 @@ public class Crawler {
                 List<WebElement> cols= row.findElements(By.tagName("td"));
                 if(j > 0){
                     FinishedCourse fc = new FinishedCourse();
-                    cTime.add(cols.get(0).getText());
+                    fc.setSemester(cols.get(0).getText());
+                    //cTime.add(cols.get(0).getText());
                     System.out.println("**********Time: " + cols.get(0).getText());
                     cID.add(cols.get(1).getText());
                     System.out.println("**********ID: " + cols.get(1).getText());
@@ -231,7 +234,11 @@ public class Crawler {
                 }
                 else j++;
         }
+        
         System.out.println("*********cID size: " + cID.size());
+        if(sem.equals(fcList.get(cID.size()-1).getSemester())){
+            return ori;
+        }
 
         //取得開課單位
         driver.switchTo().defaultContent();
@@ -251,7 +258,7 @@ public class Crawler {
             int ny = Integer.parseInt(nowYear);
             int ns = Integer.parseInt(nowSemester);
 
-            String[] semester = cTime.get(i).split("(?<=\\G.{3})");
+            String[] semester = fcList.get(i).getSemester().split("(?<=\\G.{3})");
             if(Integer.parseInt(semester[0]) <= ny && Integer.parseInt(semester[1]) <= ns){
                 driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
                 driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
@@ -279,6 +286,32 @@ public class Crawler {
 
         }
         return fCourses;
+    }
+
+    @Scheduled(fixedRate = 5000)    //間隔5秒
+    public static void detectCoureses() throws InterruptedException{
+        String tDate = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()); //today
+
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("menuFrame");
+        Thread.sleep(1000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("歷年課程課表查詢")).click();
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+
+        driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='111']")).click();
+        driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='1']")).click();
+        driver.findElement(By.id("radioButtonClass_0")).click();
+        driver.findElement(By.id("Q_CH_LESSON")).clear();
+        driver.findElement(By.id("Q_CH_LESSON")).sendKeys("B5703N54");
+        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢
+
+        Thread.sleep(500);
+        List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
+        System.out.println("***" + col.get(2) + "***");
     }
 
     public static List<TimeTableEntity.Info> getMyClass(String studentID, String password) throws InterruptedException{
@@ -372,13 +405,14 @@ public class Crawler {
     }
 
     public static void main(String[] args) throws Exception {
-        String account = "00957025";
-        String password = "20230607";
+        String account = "";
+        String password = "";
         CrawlerHandle(account,password);
         //getBasicData(account,password);
-        getMyClass(account,password); //not complete
+        //getMyClass(account,password); //not complete
         //getAllGeneralClass(); //not complete
         //getFinishedCredict();
+        detectCoureses();
     }
 }
 

@@ -1,7 +1,7 @@
 import './DetectCourse.css';
 import React from 'react';
 import logo from './img/IUAlogo.png';
-import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody}  from './components/ArticleStyle.js';
+import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleDCText, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route } from 'react-router-dom';
 
@@ -29,18 +29,21 @@ const DetectCourse=()=> {
                     <input type='text' className='DetectCourse_search' placeholder="請輸入課號"></input>
                     <button className='DetectCourse_searchBtn'>加入課程</button>
                 </div>
-                <ArticleContainer>
-                    <ArticleText>
-                        <ArticleAuthor>V19951230</ArticleAuthor>
-                        <ArticleBody>軟體工程</ArticleBody>
-                        <button className='DetectCourse_delete'>刪除</button>
-                    </ArticleText>
-                    <ArticleText>
-                        <ArticleAuthor>V19970901</ArticleAuthor>
-                        <ArticleBody>物聯網技術與應用</ArticleBody>
-                        <button className='DetectCourse_delete'>刪除</button>
-                    </ArticleText>
-                </ArticleContainer>
+                <ArticleList>
+                    <ArticleContainer>
+                        <ArticleDCText>
+                            <ArticleAuthor>&emsp;V19951230</ArticleAuthor>
+                            <ArticleBody>軟體工程</ArticleBody>
+                            <button className='DetectCourse_delete'>刪除</button>
+                        </ArticleDCText>
+                        <ArticleDCText>
+                            <ArticleAuthor>&emsp;V19970901</ArticleAuthor>
+                            <ArticleBody>物聯網技術與應用</ArticleBody>
+                            <button className='DetectCourse_delete'>刪除</button>
+                        </ArticleDCText>
+                    </ArticleContainer>
+                </ArticleList>
+                
             </div>
         </div>
       );

@@ -39,8 +39,11 @@ public class TodoController {
     @Autowired
     FoodRepository foodRepository;
     String secretKey = "au4a83";
+
     Crawler crawler = new Crawler();
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
+
+
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
@@ -63,7 +66,8 @@ public class TodoController {
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
             basicRepository.save(basic);
             System.out.println("New user!");
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");//201
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
         }
         else {
             if(!Objects.equals(basicRepository.findByStudentID(studentID).getPassword(), encryptedpwd)){
@@ -77,6 +81,7 @@ public class TodoController {
         System.out.println("original:"+decryptedpwd);
 
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
+
     }
 
     @PostMapping("/nickname")
@@ -86,6 +91,41 @@ public class TodoController {
         oldProduct.setNickname(basic.getNickname());
         basicRepository.save(oldProduct);
     }
+
+    @PostMapping("/remained_credits")
+    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
+        ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
+        System.out.println("*********student ID: " + finished.getStudentID());
+        if(fRepository.existsByStudentID(finished.getStudentID())){
+            System.out.println("found.");
+            FinishedCourseList oriList = fRepository.findByStudentID(finished.getStudentID());
+            ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
+            String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
+
+            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
+            oriList.setFinishedCourses(finishedCourse);
+            fRepository.save(oriList);
+        }
+        else{
+            finishedCourse = crawler.getFinishedCredict(finishedCourse, "");
+            finished.setFinishedCourses(finishedCourse);
+            fRepository.save(finished);
+        }
+
+        RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
+        return remainCredit;
+    }
+
+    @PostMapping("/add_detect_course")
+    public void addDetectCourse()throws TesseractException, IOException, InterruptedException{
+        crawler.detectCoureses();
+    }
+    
+    @PostMapping("/detect_course")
+    public void detectCourse()throws TesseractException, IOException, InterruptedException{
+
+    }
+
 
     @PostMapping("/rent_post")
     public HouseEntity rentPost(@RequestBody HouseEntity house){
@@ -105,27 +145,12 @@ public class TodoController {
         return house;
     }
 
-    @PostMapping("/remained_credits")
-    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
-        ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
-        System.out.println("*********student ID: " + finished.getStudentID());
-        if(fRepository.existsByStudentID(finished.getStudentID())){
-            System.out.println("found.");
-            finished = fRepository.findByStudentID(finished.getStudentID());
-        }
-//       finishedCourse = crawler.getFinishedCredict();
-//       finished.setFinishedCourses(finishedCourse);
-//       fRepository.save(finished);
-        RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
-        return remainCredit;
-    }
-
     @GetMapping("/rent_load") //list all house posts
     public List<HouseDTO> rentLoad(){
         List<HouseEntity> housePostList = houseRepository.findAll();
         List<HouseDTO> SimpleHousePostList = new ArrayList<>();
         for (HouseEntity post : housePostList) {
-            HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle());
+            HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle(), post.getPost_time());
             SimpleHousePostList.add(dto);
         }
         return SimpleHousePostList;
@@ -135,15 +160,20 @@ public class TodoController {
     public HouseEntity rentFullPost(@RequestBody HouseEntity houseEntity){
         System.out.println("/rent_full_post");
         HouseEntity houseEntity1 = houseRepository.findByPostId(houseEntity.getPostId());
-        if(Objects.equals(houseEntity1.getSaved().get(0), houseEntity.getStudentID())){
-            houseEntity1.savefirst("true");
+        //no one save this post
+        if(houseEntity1.getSaved().size()==0){
+            houseEntity1.savefirst("false");
             return houseEntity1;
         }
-        else houseEntity1.savefirst("false");
         for(String user : houseEntity1.getSaved()){
-            if(Objects.equals(user, houseEntity.getStudentID()))
+            //user saved this post
+            if(Objects.equals(user, houseEntity.getStudentID())) {
                 houseEntity1.savefirst("true");
+                return houseEntity1;
+            }
         }
+        //user doesn't save this post
+        houseEntity1.savefirst("false");
         return houseEntity1;
     }
 
@@ -153,17 +183,21 @@ public class TodoController {
             //200
             return ResponseEntity.ok("Success");
         }
-        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+        else return ResponseEntity.badRequest().body("Invalid request"); // 400
 
     }
 
     @PutMapping("/rent_post_modify")
     public ResponseEntity<String> rentPostModify(@RequestBody HouseEntity houseEntity){
-        if(houseRepository.save(houseEntity) !=null){
-            //200
-            return ResponseEntity.ok("Success");
+        HouseEntity thisHouse = houseRepository.findByPostId(houseEntity.getPostId());
+        houseEntity.setId(thisHouse.getId());
+        houseEntity.setPost_time(thisHouse.getPost_time());
+        houseEntity.setName(thisHouse.getName());
+        if(thisHouse.getSaved().size()!=0){
+            for(String save : thisHouse.getSaved())houseEntity.setSaved(save);
         }
-        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+        houseRepository.save(houseEntity);
+        return ResponseEntity.ok("Success");
     }
 
     @GetMapping("/rent_search")
@@ -172,6 +206,7 @@ public class TodoController {
                                      @RequestParam(value = "people", required = false) String people,
                                      @RequestParam(value = "style", required = false) String style,
                                      @RequestParam(value = "car", required = false) String car){
+        System.out.println("/rent_search");
         List<HouseDTO> resultList = new ArrayList<>();
         for(HouseEntity house : houseRepository.findAll()){
             if ((Objects.equals(area, "") || house.getArea().equals(area))
@@ -179,7 +214,7 @@ public class TodoController {
                     && (Objects.equals(people, "") || house.getPeople().equals(people))
                     && (Objects.equals(style, "") || house.getStyle().contains(style))
                     && (Objects.equals(car, "") || house.getCar().equals(car))) {
-                HouseDTO result = new HouseDTO(house.getPostId(), house.getName(), house.getTitle());
+                HouseDTO result = new HouseDTO(house.getPostId(), house.getName(), house.getTitle(), house.getPost_time());
                 resultList.add(result);
             }
         }
@@ -189,7 +224,7 @@ public class TodoController {
     @GetMapping("/curriculum_search")
     public List<TimeTableEntity.Info> curriculumSearch(@RequestParam("studentID") String studentID) throws TesseractException, IOException, InterruptedException {
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
-        if(timeTable!=null){
+        if(timeTable!=null && timeTable.getInfo().size()!=0){
             return timeTable.getInfo();
         }
         else{
@@ -198,7 +233,12 @@ public class TodoController {
             crawler.CrawlerHandle(studentID,password);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(studentID,password);
             TimeTableEntity table = new TimeTableEntity();
-            table.setStudentID(studentID);
+            if (timeTable != null) { //copy to new
+                table.setId(timeTable.getId());
+                table.setStudentID(timeTable.getStudentID());
+                table.setWholePre_info(timeTable.getPre_info());
+            }
+            else table.setStudentID(studentID); //create a new one
             for(TimeTableEntity.Info i : myClassList){
                 System.out.println(i.getName());
                 table.setInfo(i);
@@ -210,7 +250,10 @@ public class TodoController {
 
     @PostMapping("/favorites")
     public ResponseEntity<String> favorites(@RequestBody Map<String, String> requestData){
+        System.out.println("/favorites");
+        //get user's favorites
         SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
+        //user haven't create
         if (savedEntity == null) {
             savedEntity = new SavedEntity();
             savedEntity.setStudentID(requestData.get("studentID"));
@@ -218,7 +261,7 @@ public class TodoController {
         else {
             for (String post : savedEntity.getPostId()){
                 if (Objects.equals(requestData.get("postId"), post))
-                    return ResponseEntity.badRequest().body("Invalid request");
+                    return ResponseEntity.badRequest().body("Invalid request");//400
             }
         }
         savedEntity.setPostId(requestData.get("postId"));
@@ -235,6 +278,7 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
+
     @PostMapping("/favorites_load")
     public SavedDTO favoritesLoad(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites_load");
@@ -249,7 +293,7 @@ public class TodoController {
                     savedDTO.setSavedFood(foodDTO);
                 }else if(post.startsWith("H")){
                     HouseEntity house = houseRepository.findByPostId(post);
-                    HouseDTO houseDTO = new HouseDTO(post, house.getName(), house.getTitle());
+                    HouseDTO houseDTO = new HouseDTO(post, house.getName(), house.getTitle(), house.getPost_time());
                     savedDTO.setSavedHouse(houseDTO);
                 }
             }
@@ -280,7 +324,58 @@ public class TodoController {
         return ResponseEntity.badRequest().body("Invalid request");
     }
 
-    
+    @PostMapping("/pre_curriculum_search")
+    public List<TimeTableEntity.Pre_Info> preCurriculumSearch(@RequestBody Map<String, String> requestData){
+        System.out.println("/pre_curriculum_search");
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
+        if(timeTable==null){
+            /*timeTable = new TimeTableEntity();
+            timeTable.setStudentID(requestData.get("studentID"));
+            timeTableRepository.save(timeTable);*/
+            List<TimeTableEntity.Pre_Info> list = new ArrayList<>();
+            return list; //empty
+        }
+        return timeTable.getPre_info();
+    }
+
+    @PostMapping("/pre_curriculum")
+    public ResponseEntity<String> preCurriculum(@RequestBody Map<String, String> requestData){
+        System.out.println("/pre_curriculum");
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
+        TimeTableEntity.Pre_Info pre_info = new TimeTableEntity.Pre_Info();
+        pre_info.setP_class(requestData.get("p_class"));
+        pre_info.setP_classNum(requestData.get("p_classNum"));
+        String[] timeArray = requestData.get("p_time").split(",");
+        pre_info.setP_time(timeArray);
+        pre_info.setP_classroom(requestData.get("p_classroom"));
+        if (timeTable == null) {
+            timeTable = new TimeTableEntity();
+            timeTable.setStudentID(requestData.get("studentID"));
+            timeTable.setPre_info(pre_info);
+        }
+        else{timeTable.setPre_info(pre_info);}
+        timeTableRepository.save(timeTable);
+        return ResponseEntity.ok("Success"); // 200
+    }
+
+    @DeleteMapping("/cancel_pre_curriculum")
+    public ResponseEntity<String> cancelPreCurriculum(@RequestParam("studentID") String studentID, @RequestParam("p_classNum") String p_classNum){
+        System.out.println("/cancel_pre_curriculum");
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        boolean deleted = false;
+        if(timeTable == null)return ResponseEntity.badRequest().body("Invalid request : Entity not found"); //400
+        for(TimeTableEntity.Pre_Info pre : timeTable.getPre_info()){
+            if(Objects.equals(pre.getP_classNum(), p_classNum)){
+                timeTable.removePre_info(pre);
+                timeTableRepository.save(timeTable);
+                deleted=true;
+                break;
+            }
+        }
+        if(deleted)return ResponseEntity.ok("Success"); //400
+        else return ResponseEntity.badRequest().body("Invalid request : Class not found"); //400
+    }
+
 }
 
 

@@ -6,13 +6,16 @@ import cat2 from './img/SignIn2.PNG';
 import cat3 from './img/SignIn3.PNG';
 import cat4 from './img/SignIn4.PNG';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
-import { Routes ,Route } from 'react-router-dom';
+import { Routes ,Route,useLocation, useNavigate } from 'react-router-dom';
 import {useState} from "react";
 import { loginUser } from "./cookie.js";
 
 const NickName=()=> {
     function NickName() {
+      let navigate = useNavigate();
+      const location = useLocation();
       const [nickName_id, setNickName_id] = useState("");
+      const { studentID } = location.state;
       const handleNickName_idChange = event => {
         setNickName_id(event.target.value);
       };
@@ -21,7 +24,7 @@ const NickName=()=> {
         const student_id = loginUser();
         alert(`The nickName you entered was: ${nickName_id}`)
         const formData = {
-                        "studentID": "00957025",
+                        "studentID": studentID,
                         "nickname": nickName_id
                       };
                       fetch('/nickname', {
@@ -38,7 +41,7 @@ const NickName=()=> {
                           .catch(error => 
                             console.error(error)
                           );
-                     	//Form submission happens here
+                          navigate("/homePage"); 
       }
       return (
         <div className="NickName">    
