@@ -26,6 +26,7 @@ import CourseSelection from './courseSelection';
 import GeneralEducaton from './generalEducation';
 import Favorite from './favorite';
 import DetectCourse from './DetectCourse';
+import Chatroom from './chatroom';
 
 const App=()=> {
    
@@ -57,6 +58,7 @@ const App=()=> {
                     <Route path="/generalEducation" element={<GeneralEducaton />} />
                     <Route path="/favorite" element={<Favorite />} />
                     <Route path="/DetectCourse" element={<DetectCourse />} />
+                    <Route path="/Chatroom" element={<Chatroom />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
              
