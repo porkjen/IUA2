@@ -54,42 +54,38 @@ public class TodoController {
         System.out.println(studentID);
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
         String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
+        //sign in
+        crawler.CrawlerHandle(studentID,password);
+        System.out.println("login message " +Crawler.loginMessage);
+        if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
+            return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
+        }
         //account is not in database
         if(basicRepository.findByStudentID(studentID)==null){
-            crawler.CrawlerHandle(studentID,password);
-            System.out.println("login message " +Crawler.loginMessage);
-            if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
-                return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
-            }
             basic = crawler.getBasicData(studentID,password);
             basic.setPassword(encryptedpwd);
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
             basicRepository.save(basic);
             System.out.println("New user!");
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");//201
         }
         else {
-            if(!Objects.equals(basicRepository.findByStudentID(studentID).getPassword(), encryptedpwd)){
-                System.out.println("password error");
-                return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
-            }
             basicRepository.findByStudentID(studentID).setPassword(encryptedpwd); //user may change password, update password everytime
-            System.out.println("This account has login before!");
+            System.out.println("Old user!");
         }
         System.out.println("加密:"+encryptedpwd);
         System.out.println("original:"+decryptedpwd);
 
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
-
     }
 
     @PostMapping("/nickname")
-    public void postnickname (@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
+    public ResponseEntity<String> postnickname (@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
         System.out.println(basic.getStudentID());
         BasicEntity oldProduct = basicRepository.findByStudentID(basic.getStudentID());
         oldProduct.setNickname(basic.getNickname());
         basicRepository.save(oldProduct);
+        return ResponseEntity.ok("Success"); // 回傳狀態碼 200
     }
 
     @PostMapping("/remained_credits")
@@ -125,7 +121,6 @@ public class TodoController {
     public void detectCourse()throws TesseractException, IOException, InterruptedException{
 
     }
-
 
     @PostMapping("/rent_post")
     public HouseEntity rentPost(@RequestBody HouseEntity house){
@@ -278,7 +273,6 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
-
     @PostMapping("/favorites_load")
     public SavedDTO favoritesLoad(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites_load");
@@ -321,7 +315,7 @@ public class TodoController {
                 return ResponseEntity.ok("Success");
             }
         }
-        return ResponseEntity.badRequest().body("Invalid request");
+        return ResponseEntity.badRequest().body("Invalid request");//400
     }
 
     @PostMapping("/pre_curriculum_search")

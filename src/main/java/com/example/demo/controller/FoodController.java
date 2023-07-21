@@ -6,6 +6,7 @@ import com.example.demo.NextPostId;
 import com.example.demo.dao.FoodDTO;
 import com.example.demo.dao.FoodEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,8 +82,14 @@ public class FoodController {
     }
 
     @GetMapping("/food_load") //load all food posts
-    public List<FoodDTO> foodLoad(){
-        List<FoodEntity> foodPostList = foodRepository.findAllByOrderByIdDesc();
+    public List<FoodDTO> foodLoad(@RequestParam("sort") String sort){
+        System.out.println("/food_load");
+        List<FoodEntity> foodPostList;
+        if(Objects.equals(sort, "PostTimeNtoF"))foodPostList = foodRepository.findAllByOrderByIdDesc();
+        else if (Objects.equals(sort, "PostTimeFtoN")) foodPostList = foodRepository.findAll();
+        else if(Objects.equals(sort, "rate_Decrease")) foodPostList = foodRepository.findAllByOrderByRatingDesc();
+        else foodPostList = foodRepository.findAllByOrderByRatingAsc();//rate increase
+
         List<FoodDTO> shortenedPostList = new ArrayList<>();
         for (FoodEntity post : foodPostList) {
             FoodDTO dto = new FoodDTO(post.getPostId(), post.getNickname(), post.getStore(), post.getRating(), post.getPost_time());
@@ -113,10 +120,10 @@ public class FoodController {
     @DeleteMapping("/food_post_delete")
     public ResponseEntity<String> foodPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
         System.out.println("/food_post_delete");
-        if(foodRepository.deleteByPostId(postId) !=null){//200
-            return ResponseEntity.ok("Success");
+        if(foodRepository.deleteByPostId(postId) !=null){
+            return ResponseEntity.ok("Success");//200
         }
-        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+        else return ResponseEntity.badRequest().body("Invalid request");//400
     }
 
     @PutMapping("/food_review_modify")
@@ -158,28 +165,29 @@ public class FoodController {
     public ResponseEntity<String> foodReviewDelete(@RequestBody Map<String, String> requestData){
         System.out.println("/food_review_delete");
         double newRate = 0;
+        boolean hasReview = false;
         DecimalFormat decimalFormat = new DecimalFormat("#.0");
         //find the post by postId
         FoodEntity thisPost = foodRepository.deleteByPostId(requestData.get("postId"));
+        if(thisPost == null)return ResponseEntity.badRequest().body("Invalid : post not found");//400
         //find the review by studentID
         FoodEntity.p thisReview = new FoodEntity.p();
-        if(thisPost !=null){
-            for(FoodEntity.p review : thisPost.getReview()){
-                if(Objects.equals(review.getP_studentID(), requestData.get("studentID"))){
-                    thisReview = review;
-                }
+        for(FoodEntity.p review : thisPost.getReview()){
+            if(Objects.equals(review.getP_studentID(), requestData.get("studentID"))){
+                thisReview = review;
+                hasReview = true;
             }
-            if(thisReview.getP_rate()!=0) { //this review has rating
-                newRate = (thisPost.getRating() * thisPost.getRating_num() - thisReview.getP_rate()) / (thisPost.getRating_num() - 1);
-                thisPost.setRating(Double.parseDouble(decimalFormat.format(newRate)));
-                thisPost.setRating_num(thisPost.getRating_num() - 1);
-            }
-            thisPost.removeReview(thisReview);
-            foodRepository.save(thisPost);
-            //200
-            return ResponseEntity.ok("Success");
         }
-        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+        if(!hasReview) return new ResponseEntity<>("Review not found", HttpStatus.NOT_FOUND);//404
+        if(thisReview.getP_rate()!=0) { //this review has rating
+            newRate = (thisPost.getRating() * thisPost.getRating_num() - thisReview.getP_rate()) / (thisPost.getRating_num() - 1);
+            thisPost.setRating(Double.parseDouble(decimalFormat.format(newRate)));
+            thisPost.setRating_num(thisPost.getRating_num() - 1);
+        }
+        thisPost.removeReview(thisReview);
+        foodRepository.save(thisPost);
+        return ResponseEntity.ok("Success");//200
+
     }
 
     @PostMapping("/food_review_add")
@@ -215,33 +223,27 @@ public class FoodController {
     }
 
     @GetMapping("/food_search")
-    public List<FoodDTO> foodSearch(@RequestParam(value = "area", required = false) String area, @RequestParam(value = "store", required = false) String store){
+    public List<FoodDTO> foodSearch(
+            @RequestParam(value = "area", required = false) String area,
+            @RequestParam(value = "store", required = false) String store,
+            @RequestParam(value = "addr", required = false) String addr){
         System.out.println("/food_search");
         List<FoodDTO> resultList = new ArrayList<>();
         for(FoodEntity food : foodRepository.findAll()){
-            //search for both
-            if((store!=null && !store.equals(""))&&(area!=null && !area.equals(""))){
-                if(food.getStore().toLowerCase().contains(store.toLowerCase()) && food.getAddress().contains(area)){
-                    FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
-                    resultList.add(result);
-                }
-            }
-            //search for store key word
-            else if(store!=null && !store.equals("")){
-                if(food.getStore().toLowerCase().contains(store.toLowerCase())){
-                    FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
-                    resultList.add(result);
-                }
-            }
-            //search for area
-            else if(area!=null && !area.equals("")){
-                if(food.getAddress().contains(area)){
-                    FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
-                    resultList.add(result);
-                }
+            if((Objects.equals(store, "") || food.getStore().toLowerCase().contains(store.toLowerCase())) &&
+               (Objects.equals(area, "") || food.getAddress().equals(area)) &&
+               (Objects.equals(addr, "") || food.getAddress().contains(addr))
+            ){
+                FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                resultList.add(result);
             }
         }
         return resultList;
     }
 
+    /*@PostMapping("/food_close_report")
+    public ResponseEntity<String> foodCloseReport(@RequestBody Map<String, String> requestData){
+        System.out.println("/food_close_report");
+
+    }*/
 }

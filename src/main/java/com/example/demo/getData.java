@@ -16,7 +16,7 @@ public class getData {
     @Autowired
     TodoService todoService;//取得Service物件
 
-    List getRData(String location){
+    List<FoodEntity> getRData(String location){
         List<FoodEntity> restaurantList = new ArrayList<>();
         try {
             String pagetoken;
@@ -63,7 +63,7 @@ public class getData {
         }
         return restaurantList;
     }
-    List setting(List arrayList, JSONObject jsonObject) {
+    List<FoodEntity> setting(List<FoodEntity> arrayList, JSONObject jsonObject) {
         JSONArray resultsArray = (JSONArray) jsonObject.get("results");
         String getString;
         String placeID;
@@ -72,9 +72,12 @@ public class getData {
             FoodEntity restaurant = new FoodEntity();
             restaurant.setStore(resultsArray.getJSONObject(i).getString("name"));//restaurant
             placeID = resultsArray.getJSONObject(i).getString("place_id");
-            //restaurant.setPlace_id(resultsArray.getJSONObject(i).getString("place_id"));
+            //rating
             if (!resultsArray.getJSONObject(i).has("rating")) restaurant.setRating(0);
             else restaurant.setRating(resultsArray.getJSONObject(i).getDouble("rating"));
+            //how many person rating
+            if (!resultsArray.getJSONObject(i).has("user_ratings_total")) restaurant.setRating_num(5);
+            else restaurant.setRating(resultsArray.getJSONObject(i).getInt("rating"));
             //details api
             getString = getDATA.get("https://maps.googleapis.com/maps/api/place/details/json?key" +
                     "=AIzaSyA2DfKC5NYIGGTxNnoCs6Bbr6WVPbVHmes&language=zh-TW&placeid=" + placeID);
@@ -103,11 +106,40 @@ public class getData {
             restaurant.setStudentID("IUA");
             restaurant.setNickname("IUA");
             restaurant.setPost_time(DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()));
-            restaurant.setRating_num(5);
             arrayList.add(restaurant);
             //foodRepository.save(restaurant);
         }
         return arrayList;
     }
-
+    FoodEntity FoodByCid(String cid){
+        getApi res = new getApi();
+        FoodEntity restaurant = new FoodEntity();
+        String result = res.get("https://maps.googleapis.com/maps/api/place/details/json?cid="+cid+"&key=AIzaSyC_zYmWyI7RDMLhO7p5XRt0pqlxprBKAuk&language=zh-TW");
+        JSONObject jsonObject = new JSONObject(result);
+        restaurant.setStore(jsonObject.getJSONObject("result").getString("name"));
+        restaurant.setRating(jsonObject.getJSONObject("result").getDouble("rating"));
+        restaurant.setRating_num(jsonObject.getJSONObject("result").getInt("user_ratings_total"));
+        if(jsonObject.getJSONObject("result").has("opening_hours")){
+            JSONArray timeArr =
+                    jsonObject.getJSONObject("result").getJSONObject("opening_hours").getJSONArray("weekday_text");
+            for (int j = 0; j < 7; j++) {
+                restaurant.setWeekday_text(timeArr.getString(j), j);
+            }
+        }
+        restaurant.setAddress(jsonObject.getJSONObject("result").getString("formatted_address"));
+        restaurant.setURL(jsonObject.getJSONObject("result").getString("URL"));
+        if(jsonObject.getJSONObject("result").has("reviews")) {
+            int count = jsonObject.getJSONObject("result").getJSONArray("reviews").length();
+            for (int j = 0; j < count; j++) {
+                FoodEntity.p userReview = new FoodEntity.p();
+                userReview.setP_name(jsonObject.getJSONObject("result").getJSONArray("reviews").getJSONObject(j).getString("author_name"));
+                userReview.setP_review(jsonObject.getJSONObject("result").getJSONArray("reviews").getJSONObject(j).getString("text"));
+                userReview.setP_time(jsonObject.getJSONObject("result").getJSONArray("reviews").getJSONObject(j).getString("relative_time_description"));
+                userReview.setP_rate(jsonObject.getJSONObject("result").getJSONArray("reviews").getJSONObject(j).getInt("rating"));
+                userReview.setP_studentID("IUA");
+                restaurant.setReview(userReview);
+            }
+        }
+        return restaurant;
+    }
 }
