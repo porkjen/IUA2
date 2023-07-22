@@ -40,8 +40,9 @@ public class RemainedService {
                 int credit = Integer.parseInt(f.getCredit());
                 String dept = f.getDepartment();
                 System.out.println("course: " + f.getName() + "\ncredit: " + f.getCredit());
-                if(f.getCategory().equals("必修") && dept.equals("資訊工程學系")){
-                    required -= credit;
+                if(f.getCategory().equals("必修")){
+                    if(dept.equals("資訊工程學系"))
+                        required -= credit;
                     if(dept.equals("體育室"))
                         pe -= 1;
                     if(required < 0)
