@@ -37,7 +37,7 @@ class ChatRoom extends React.Component {
         </div>
         <div className="message-list">
           <Message content="Hi!" isSent={false} />
-          <Message content="test" isSent={false} />
+          <Message content="嗨嗨" isSent={false} />
           {messages.map((message, index) => (
             <div key={index} className='sent'>{message}</div>
           ))}

@@ -36,9 +36,11 @@ const HomePage=()=> {
                     </div>
                     <div class="flex">
                         <div className="courseSelectBtn">
-                            <button className="courseSelectButton">
-                                <img src={courseSelectImg} className='pic'/>
-                            </button>
+                            <Link to='/CourseSelection'>
+                                <button className="courseSelectButton">
+                                    <img src={courseSelectImg} className='pic'/>
+                                </button>
+                            </Link>
                         </div>
                         <div className="socialBtn">
                             <Link to="/choose">

@@ -64,8 +64,8 @@ public class Crawler {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);
-                BufferedImage subImage = image.getSubimage(point.getX()+200, point.getY()+69, width + 6, height + 4);
+                BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
                 ImageIO.write(subImage, "png", screenshot);
                 File screenshotLocation = new File("test.png");
                 FileUtils.copyFile(screenshot, screenshotLocation);
@@ -353,6 +353,8 @@ public class Crawler {
             myClass.setName(cols.get(3).getText());
             System.out.println("課號 : " + cols.get(2).getText());
             myClass.setClassNum(cols.get(2).getText());
+            System.out.println("授課老師 : " + cols.get(6).getText());
+            myClass.setTeacher(cols.get(6).getText());
             driver.findElement(By.linkText(cols.get(2).getText())).click();
 
             if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
@@ -411,8 +413,8 @@ public class Crawler {
         String password = "";
         CrawlerHandle(account,password);
         //getBasicData(account,password);
-        //getMyClass(account,password); //not complete
-        //getAllGeneralClass(); //not complete
+        //getMyClass(account,password);
+        //getAllGeneralClass();
         //getFinishedCredict();
         detectCoureses();
     }
