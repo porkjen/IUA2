@@ -233,7 +233,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment}){
                   state: {
                     fromSearch:true,
                     FArea:FSArea,
-                    FName:FSName,},});
+                    FName:FSName,
+                    FAddr:FSAddress,},});
                     //closeModal(false);
                     window.location.reload();
           }

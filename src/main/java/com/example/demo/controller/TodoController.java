@@ -29,6 +29,8 @@ public class TodoController {
     @Autowired
     FinishedRepository fRepository;
     @Autowired
+    DetectedRepository dRepository;
+    @Autowired
     BasicRepository basicRepository;
     @Autowired
     HouseRepository houseRepository;
@@ -54,13 +56,14 @@ public class TodoController {
         System.out.println(studentID);
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
         String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
+        //sign in
+        crawler.CrawlerHandle(studentID,password);
+        System.out.println("login message " +Crawler.loginMessage);
+        if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
+            return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
+        }
         //account is not in database
         if(basicRepository.findByStudentID(studentID)==null){
-            crawler.CrawlerHandle(studentID,password);
-            System.out.println("login message " +Crawler.loginMessage);
-            if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
-                return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
-            }
             basic = crawler.getBasicData(studentID,password);
             basic.setPassword(encryptedpwd);
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
@@ -70,12 +73,8 @@ public class TodoController {
             return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
         }
         else {
-            if(!Objects.equals(basicRepository.findByStudentID(studentID).getPassword(), encryptedpwd)){
-                System.out.println("password error");
-                return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
-            }
             basicRepository.findByStudentID(studentID).setPassword(encryptedpwd); //user may change password, update password everytime
-            System.out.println("This account has login before!");
+            System.out.println("Old user!");
         }
         System.out.println("加密:"+encryptedpwd);
         System.out.println("original:"+decryptedpwd);
@@ -85,11 +84,61 @@ public class TodoController {
     }
 
     @PostMapping("/nickname")
-    public void postnickname (@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
+    public ResponseEntity<String> postnickname (@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
         System.out.println(basic.getStudentID());
         BasicEntity oldProduct = basicRepository.findByStudentID(basic.getStudentID());
         oldProduct.setNickname(basic.getNickname());
         basicRepository.save(oldProduct);
+        return ResponseEntity.ok("Success"); // 回傳狀態碼 200
+    }
+
+    @PostMapping("/remained_credits")
+    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
+        ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
+        System.out.println("*********student ID: " + finished.getStudentID());
+        if(fRepository.existsByStudentID(finished.getStudentID())){
+            System.out.println("found.");
+            FinishedCourseList oriList = fRepository.findByStudentID(finished.getStudentID());
+            ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
+            String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
+            System.out.println("semester: " + sem);
+//            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
+//            oriList.setFinishedCourses(finishedCourse);
+//            fRepository.save(oriList);
+        }
+        else{
+            finishedCourse = crawler.getFinishedCredict(finishedCourse, "");
+            finished.setFinishedCourses(finishedCourse);
+            fRepository.save(finished);
+        }
+
+        RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
+        return remainCredit;
+    }
+
+    @PostMapping("/add_detect_course") 
+    public void addDetectCourse(@RequestBody CourseToBeDetected course)throws TesseractException, IOException, InterruptedException{
+        ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
+        if(dRepository.existsByStudentID(course.getStudentID())){
+            DetectedCoursesList oriList = dRepository.findByStudentID(course.getStudentID());
+            courses = oriList.getDetectedCourses();
+            courses.add(course);
+            oriList.setDetectedCourse(courses);
+            dRepository.save(oriList);
+        }
+        else{
+            DetectedCoursesList newList = new DetectedCoursesList();
+            newList.setStudentID(course.getStudentID());
+            courses.add(course);
+            newList.setDetectedCourse(courses);
+            dRepository.save(newList);
+        }
+        crawler.detectCoureses(courses);
+    }
+    
+    @PostMapping("/detect_course")
+    public void detectCourse()throws TesseractException, IOException, InterruptedException{
+
     }
 
     @PostMapping("/rent_post")
@@ -108,21 +157,6 @@ public class TodoController {
         house.setName(basicRepository.findByStudentID(house.getStudentID()).getName());//real name
         houseRepository.save(house);
         return house;
-    }
-
-    @PostMapping("/remained_credits")
-    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
-        ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
-        System.out.println("*********student ID: " + finished.getStudentID());
-        if(fRepository.existsByStudentID(finished.getStudentID())){
-            System.out.println("found.");
-            finished = fRepository.findByStudentID(finished.getStudentID());
-        }
-//       finishedCourse = crawler.getFinishedCredict();
-//       finished.setFinishedCourses(finishedCourse);
-//       fRepository.save(finished);
-        RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
-        return remainCredit;
     }
 
     @GetMapping("/rent_load") //list all house posts
@@ -301,7 +335,7 @@ public class TodoController {
                 return ResponseEntity.ok("Success");
             }
         }
-        return ResponseEntity.badRequest().body("Invalid request");
+        return ResponseEntity.badRequest().body("Invalid request");//400
     }
 
     @PostMapping("/pre_curriculum_search")

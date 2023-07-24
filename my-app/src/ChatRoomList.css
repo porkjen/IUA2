@@ -1,0 +1,40 @@
+.ChatRoomList {
+  /* The image used */
+  background-color: rgb(249, 236, 207);
+
+  /* Full height */
+  height: 100%;
+  
+}
+  
+.ChatRoomList input[type="text"] {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ChatRoomList input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ChatRoomList ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ChatRoomList li {
+  margin-bottom: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 10px;
+  background-color: #f9f5eb;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}

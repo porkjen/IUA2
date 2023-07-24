@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class getApi {
 
     String get(String u){
-        String inline = "";
+        StringBuilder inline = new StringBuilder();
         try{
             URL url = new URL(u);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -23,7 +23,7 @@ public class getApi {
 
                 //Write all the JSON data into a string using a scanner
                 while (scanner.hasNext()) {
-                    inline += scanner.nextLine();
+                    inline.append(scanner.nextLine());
                 }
 
                 //Close the scanner
@@ -34,6 +34,6 @@ public class getApi {
         catch (Exception e){
 
         }
-        return inline;
+        return inline.toString();
     }
 }

@@ -30,6 +30,13 @@ public class RemainedService {
         int general = 16;        //通識
         int kernal = 12;         //核心選修
         int pe = 4;             //體育
+        
+        ArrayList<String> requiredList = new ArrayList<String>();   //必修細項
+        ArrayList<String> deptList = new ArrayList<String>();       //內選細項
+        ArrayList<String> optionalList = new ArrayList<String>();   //其他細項
+        ArrayList<String> generalList = new ArrayList<String>();    //通識細項
+        ArrayList<String> kernalList = new ArrayList<String>();     //核心細項
+        ArrayList<String> peList = new ArrayList<String>();         //體育細項
 
         int eecse = 0;          //電資學院
         int optOffset = 0;      //共同教育抵銷
@@ -46,24 +53,35 @@ public class RemainedService {
         for(FinishedCourse f : fc){
             if(NumberUtils.isCreatable(f.getCredit())){
                 int credit = Integer.parseInt(f.getCredit());
+                String courseName = f.getName();
+                String courseCredit = f.getCredit();
+                String item = courseName + ": " + courseCredit + "學分";
                 String dept = f.getDepartment();
-                System.out.println("course: " + f.getName() + "\ncredit: " + f.getCredit());
+                System.out.println("course: " + courseName + "\ncredit: " + courseCredit);
                 if(f.getCategory().equals("必修")){
-                    required -= credit;
-                    if(dept.equals("體育室"))
+                    if(dept.equals("資訊工程學系")){
+                        required -= credit;
+                        requiredList.add(item);
+                    }
+                    if(dept.equals("體育室")){
+                        peList.add(item);
                         pe -= 1;
+                    }
+                    if(required < 0)
+                        required = 0;
                 }
                 else if(f.getCategory().equals("選修")){
                     if(!dept.isEmpty()){
                         if(dept.equals("資訊工程學系") || dept.equals("電機工程學系") || dept.equals("電機資訊學院")){
                             if(f.getName().contains("資工系專題") || f.getName().equals("資訊專題討論")){
                                 required -= credit;
+                                requiredList.add(item);
                                 if(required < 0)
                                     required = 0;
                             }
                             else{
                                 if(dept.equals("電機工程學系") || dept.equals("電機資訊學院")){
-                                    eecse -= credit;
+                                    eecse += credit;
                                     if(eecse > 6)
                                         eecse = 6;
                                     deptOptional -= eecse;
@@ -72,10 +90,12 @@ public class RemainedService {
                                     deptOptional -= credit;
                                 if(deptOptional < 0)
                                     deptOptional = 0;
+                                deptList.add(item);
                             }
                             for(String k : kernalCourse){
                                 if(f.getName().equals(k)){
                                     kernal -= credit;
+                                    kernalList.add(item);
                                     if(kernal < 0)
                                         kernal = 0;
                                     break;
@@ -84,6 +104,7 @@ public class RemainedService {
                         }
                         else{
                             optional -= credit;
+                            optionalList.add(item);
                             if(optional < 0)
                                 optional = 0;
                         }
@@ -92,11 +113,15 @@ public class RemainedService {
                 }
                 else if(f.getCategory().equals("通識")){
                     general -= credit;
+                    generalList.add(item);
                     if(general < 0){
                         general = 0;
                         optOffset += credit;
-                        if(optOffset < 8)
+                        if(optOffset < 8){
                             optional -= optOffset;
+                            if(optional < 0)
+                                optional = 0;
+                        }
                     }
                 }
                 else if(f.getCategory().equals("抵")){
@@ -107,13 +132,13 @@ public class RemainedService {
 
         }
 
-        //計算
         remainCredit.setRequired(required);
         remainCredit.setDeptOptional(deptOptional);
         remainCredit.setKernal(kernal);
         remainCredit.setOptional(optional);
         remainCredit.setGeneral(general);
         remainCredit.setPE(pe);
+
 
 
         return remainCredit;
