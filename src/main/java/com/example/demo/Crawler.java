@@ -236,7 +236,9 @@ public class Crawler {
         }
         
         System.out.println("*********cID size: " + cID.size());
+        System.out.println("c sme: " + fcList.get(cID.size()-1).getSemester());
         if(sem.equals(fcList.get(cID.size()-1).getSemester())){
+            System.out.println("already update: " + fcList.get(cID.size()-1).getSemester());
             return ori;
         }
 
@@ -262,12 +264,12 @@ public class Crawler {
             if(Integer.parseInt(semester[0]) <= ny && Integer.parseInt(semester[1]) <= ns){
                 driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
                 driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
-                driver.findElement(By.id("radioButtonClass_0")).click();
+                //driver.findElement(By.id("radioButtonClass_0")).click();
                 driver.findElement(By.id("Q_CH_LESSON")).clear();
                 driver.findElement(By.id("Q_CH_LESSON")).sendKeys(cID.get(i));
                 driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢
 
-                Thread.sleep(500);
+                Thread.sleep(800);
                 List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
                 if(trList2.size() > 1){
                     List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
@@ -289,7 +291,7 @@ public class Crawler {
     }
 
     @Scheduled(fixedRate = 5000)    //間隔5秒
-    public static void detectCoureses() throws InterruptedException{
+    public static void detectCoureses(ArrayList<CourseToBeDetected> courses) throws InterruptedException{
         String tDate = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()); //today
 
         driver.switchTo().defaultContent();

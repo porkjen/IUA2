@@ -1,13 +1,13 @@
 package com.example.demo.controller;
 
-import com.example.demo.*;
-import com.example.demo.dao.*;
-//import com.example.demo.BasicRepository;
-//import com.example.demo.ChangeCourseHaveRepository;
-//import com.example.demo.ChangeCourseRepository;
-//import com.example.demo.NextPostId;
-//import com.example.demo.dao.ChangeCourseEntity;
-//import com.example.demo.dao.ChangeCourseHaveEntity;
+//import com.example.demo.*;
+//import com.example.demo.dao.*;
+import com.example.demo.BasicRepository;
+import com.example.demo.ChangeCourseHaveRepository;
+import com.example.demo.ChangeCourseRepository;
+import com.example.demo.NextPostId;
+import com.example.demo.dao.ChangeCourseEntity;
+import com.example.demo.dao.ChangeCourseHaveEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

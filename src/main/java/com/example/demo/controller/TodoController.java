@@ -29,6 +29,8 @@ public class TodoController {
     @Autowired
     FinishedRepository fRepository;
     @Autowired
+    DetectedRepository dRepository;
+    @Autowired
     BasicRepository basicRepository;
     @Autowired
     HouseRepository houseRepository;
@@ -97,10 +99,10 @@ public class TodoController {
             FinishedCourseList oriList = fRepository.findByStudentID(finished.getStudentID());
             ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
             String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
-
-            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
-            oriList.setFinishedCourses(finishedCourse);
-            fRepository.save(oriList);
+            System.out.println("semester: " + sem);
+//            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
+//            oriList.setFinishedCourses(finishedCourse);
+//            fRepository.save(oriList);
         }
         else{
             finishedCourse = crawler.getFinishedCredict(finishedCourse, "");
@@ -112,9 +114,24 @@ public class TodoController {
         return remainCredit;
     }
 
-    @PostMapping("/add_detect_course")
-    public void addDetectCourse()throws TesseractException, IOException, InterruptedException{
-        crawler.detectCoureses();
+    @PostMapping("/add_detect_course") 
+    public void addDetectCourse(@RequestBody CourseToBeDetected course)throws TesseractException, IOException, InterruptedException{
+        ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
+        if(dRepository.existsByStudentID(course.getStudentID())){
+            DetectedCoursesList oriList = dRepository.findByStudentID(course.getStudentID());
+            courses = oriList.getDetectedCourses();
+            courses.add(course);
+            oriList.setDetectedCourse(courses);
+            dRepository.save(oriList);
+        }
+        else{
+            DetectedCoursesList newList = DetectedCoursesList();
+            newList.setID(course.getStudentID());
+            courses.add(course);
+            newList.setDetectedCourse(courses);
+            dRepository.save(newList);
+        }
+        crawler.detectCoureses(courses);
     }
     
     @PostMapping("/detect_course")
