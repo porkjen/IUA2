@@ -64,8 +64,8 @@ public class Crawler {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-                BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
+                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
                 ImageIO.write(subImage, "png", screenshot);
                 File screenshotLocation = new File("test.png");
                 FileUtils.copyFile(screenshot, screenshotLocation);
@@ -303,17 +303,22 @@ public class Crawler {
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
 
-        driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='111']")).click();
-        driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='1']")).click();
-        driver.findElement(By.id("radioButtonClass_0")).click();
-        driver.findElement(By.id("Q_CH_LESSON")).clear();
-        driver.findElement(By.id("Q_CH_LESSON")).sendKeys("B5703N54");
-        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢
+        for(int i = 0; i < courses.size(); i++){
+            String[] semester = courses.get(i).getSemester().split("(?<=\\G.{3})");
 
-        Thread.sleep(500);
-        List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
-        List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
-        System.out.println("***" + col.get(2) + "***");
+            driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
+            driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
+            driver.findElement(By.id("radioButtonClass_0")).click();
+            driver.findElement(By.id("Q_CH_LESSON")).clear();
+            driver.findElement(By.id("Q_CH_LESSON")).sendKeys(courses.get(i).getNumber());
+            driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢
+
+            Thread.sleep(500);
+            List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+            List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
+            System.out.println("***" + col.get(2) + "***");
+        }
+        
     }
 
     public static List<TimeTableEntity.Info> getMyClass(String studentID, String password) throws InterruptedException{
@@ -416,7 +421,6 @@ public class Crawler {
         //getMyClass(account,password);
         //getAllGeneralClass();
         //getFinishedCredict();
-        detectCoureses();
     }
 }
 

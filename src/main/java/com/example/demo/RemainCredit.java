@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.ArrayList;
+
 public class RemainCredit{
     int required;       //必修
     int deptOptional;   //系選
@@ -7,6 +9,12 @@ public class RemainCredit{
     int general;        //通識
     int kernal;         //核心
     int pe;             //體育
+    ArrayList<String> requiredList;
+    ArrayList<String> deptList;
+    ArrayList<String> optionalList;
+    ArrayList<String> generalList;
+    ArrayList<String> kernalList;
+    ArrayList<String> peList;
     String eng = "未通過";
     String swimming = "未通過";
 
@@ -44,6 +52,30 @@ public class RemainCredit{
         this.swimming = swimming;
     }
 
+    public void setReqList(ArrayList<String> reqList){
+        this.requiredList = reqList;
+    }
+
+    public void setDeptList(ArrayList<String> deptList){
+        this.deptList = deptList;
+    }
+
+    public void setoptList(ArrayList<String> optList){
+        this.optionalList = optList;
+    }
+
+    public void setgeneralList(ArrayList<String> generalList){
+        this.generalList = generalList;
+    }
+
+    public void setKernalList(ArrayList<String> kernalList){
+        this.kernalList = kernalList;
+    }
+
+    public void setPeList(ArrayList<String> peList){
+        this.peList = peList;
+    }
+
     public int getRequired(){
         return required;
     }
@@ -74,5 +106,29 @@ public class RemainCredit{
 
     public String getSwimming(){
         return swimming;
+    }
+
+    public ArrayList<String> getReqList(){
+        return requiredList;
+    }
+
+    public ArrayList<String> getDeptList(){
+        return deptList;
+    }
+
+    public ArrayList<String> getOptList(){
+        return optionalList;
+    }
+
+    public ArrayList<String> getGeneralList(){
+        return generalList;
+    }
+
+    public ArrayList<String> getKernalList(){
+        return kernalList;
+    }
+
+    public ArrayList<String> getPeList(){
+        return peList;
     }
 }
