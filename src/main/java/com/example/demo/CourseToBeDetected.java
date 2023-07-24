@@ -5,6 +5,7 @@ public class CourseToBeDetected{
     private String studentID;
     private String courseName;
     private String courseNumber;
+    private String semester;
 
     public CourseToBeDetected(){}
 
@@ -20,7 +21,11 @@ public class CourseToBeDetected{
         this.courseNumber = number;
     }
 
-    public String getID(){
+    public void setSemester(String smemster){
+        this.semester = smemster;
+    }
+
+    public String getStudentID(){
         return studentID;
     }
 
@@ -30,5 +35,9 @@ public class CourseToBeDetected{
 
     public String getNumber(){
         return courseNumber;
+    }
+
+    public String getSemester(){
+        return semester;
     }
 }

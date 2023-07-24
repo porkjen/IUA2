@@ -43,7 +43,7 @@ public class DemoApplication {
 			/*TaskConfiguration taskConfiguration = new TaskConfiguration();
 			LocalDateTime localDateTime = LocalDateTime.now();
 			taskConfiguration.timeTableTiming(0);*/
-			getData gd = new getData();
+			/*getData gd = new getData();
 			NextPostId nextPostId = new NextPostId();
 			List<FoodEntity> restaurantList = gd.getRData("25.131736,121.782001");//深溪路
 			for(FoodEntity r: restaurantList){
@@ -95,7 +95,7 @@ public class DemoApplication {
 					foodRepository.save(r);
 				}
 			}
-			System.out.println("finish!");
+			System.out.println("finish!");*/
 			/*ChangeCourseHaveEntity changeCourseHaveEntity = new ChangeCourseHaveEntity();
 			for(ChangeCourseHaveEntity c : changeCourseHaveEntity.initialization()){
 				System.out.println(c.getTime()+" : "+c.getHave());

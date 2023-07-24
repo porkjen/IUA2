@@ -417,11 +417,6 @@ public class Crawler {
         //getAllGeneralClass();
         //getFinishedCredict();
         //detectCoureses();
-        String add = "201台灣基隆市信義區深溪街3-5號";
-        String roadName = add.split("[路街]")[0].split("區")[1];
-        if(add.contains("路")) roadName+="路";
-        else roadName+="街";
-        System.out.println(roadName);
     }
 }
 

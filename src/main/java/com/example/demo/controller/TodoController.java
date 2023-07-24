@@ -125,8 +125,8 @@ public class TodoController {
             dRepository.save(oriList);
         }
         else{
-            DetectedCoursesList newList = DetectedCoursesList();
-            newList.setID(course.getStudentID());
+            DetectedCoursesList newList = new DetectedCoursesList();
+            newList.setStudentID(course.getStudentID());
             courses.add(course);
             newList.setDetectedCourse(courses);
             dRepository.save(newList);
