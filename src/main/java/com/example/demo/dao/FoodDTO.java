@@ -6,6 +6,7 @@ public class FoodDTO {
     private String store = "";
     private double rating;
     private String post_time;
+    private String road;
 
     public String getPostId() {
         return postId;
@@ -47,11 +48,20 @@ public class FoodDTO {
         this.post_time = post_time;
     }
 
-    public FoodDTO(String postId, String nickname, String store, double rating, String post_time) {
+    public String getRoad() {
+        return road;
+    }
+
+    public void setRoad(String road) {
+        this.road = road;
+    }
+
+    public FoodDTO(String postId, String nickname, String store, double rating, String post_time ,String road) {
         this.postId = postId;
         this.nickname = nickname;
         this.store = store;
         this.rating = rating;
         this.post_time = post_time;
+        this.road = road;
     }
 }
