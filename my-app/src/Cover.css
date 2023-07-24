@@ -95,13 +95,13 @@ input{
     transition: 0.5s;
   }
 
-button:hover{
+.Cover_welcomeBtn:hover{
     background-color: transparent;
     letter-spacing: 1px;
     padding-right: 25px;
 }
 
-button:hover span::after {
+.Cover_welcomeBtn:hover span::after {
     opacity: 1;
     right: 0;
   }

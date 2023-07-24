@@ -4,21 +4,156 @@ import dialog from './img/chatBubble.png';
 import cookie from './img/cookie.png';
 import toast from './img/toast.png';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
-import { Routes ,Route } from 'react-router-dom';
-import {useState} from "react";
+import { Routes ,Route, useLocation } from 'react-router-dom';
+import {useState, useEffect} from "react";
 
 const TimeTable=()=> {
+
+    
     function TimeTable() {
 
+        const location = useLocation();
         const [data, setData] = useState(null);
+        const [student_id, setStudent] = useState(null);
 
-        fetch("")
-        .then((res)=>res.json())
-        .then((data)=>{
-            setData(data)
-        })
+        useEffect(() => {
+            if (!data) {
+              fetch(`/curriculum_search?studentID=${"00957017"}`)
+                .then(response => response.json())
+                .then(data => {
+                  console.log(data);
+                  setData(data);
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+            }
+          }, [data]); // 添加依賴項data
+          
+          function generateTableRows() {
+            const rows = [];
+             const timeSlots = ['101', '102', '103', '104', '105', '106', '107', '108', '109', '110', '111', '112', '113', '114',
+            ];
+
+            const timeSlotsMon = [
+                '101', '102', '103', '104', '105', '106', '107', '108', '109', '110', '111', '112', '113', '114'
+            ];
+
+            const timeSlotsTue = [
+                '201', '202', '203', '204', '205', '206', '207', '208', '209', '210', '211', '212', '213', '214'
+           ];
+
+            const timeSlotsWed = [
+                '301', '302', '303', '304', '305', '306', '307', '308', '309', '310', '311', '312', '313', '314'
+            ];
+
+            const timeSlotsThr = [
+                '401', '402', '403', '404', '405', '406', '407', '408', '409', '410', '411', '412', '413', '414'
+            ];
+
+            const timeSlotsFri = [
+                '501', '502', '503', '504', '505', '506', '507', '508', '509', '510', '511', '512', '513', '514'
+            ];
+             const timeSlotsSat = [
+                '601', '602', '603', '604', '605', '606', '607', '608', '609', '610', '611', '612', '613', '614'
+            ];
+
+            const timeSlotsSun = [
+                '701', '702', '703', '704', '705', '706', '707', '708', '709', '710', '711', '712', '713', '714'
+            ];
+          
+            for (let i = 0; i < timeSlots.length; i++) {
+              const timeSlot = timeSlots[i];
+              const timeSlotMon = timeSlotsMon[i];
+              const timeSlotTue = timeSlotsTue[i];
+              const timeSlotWed = timeSlotsWed[i];
+              const timeSlotThr = timeSlotsThr[i];
+              const timeSlotFri = timeSlotsFri[i];
+              const timeSlotSat = timeSlotsSat[i];
+              const timeSlotSun = timeSlotsSun[i];
+              let timeContent = '';
+              let timeContentMon = '';
+              let timeContentTue = '';
+              let timeContentWed = '';
+              let timeContentThr = '';
+              let timeContentFri = '';
+              let timeContentSat = '';
+              let timeContentSun = '';
+              let nextRow = false; 
+          
+              for (const key in data) {
+                if (data.hasOwnProperty(key) && data[key].time && data[key].time.hasOwnProperty('0')) {
+                  const timeValues = Object.values(data[key].time);
+                  if (timeValues.includes(timeSlotMon)) {
+                    timeContentMon += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                  }
+                  if (timeValues.includes(timeSlotTue)) {
+                    timeContentTue += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                  }
+                  if (timeValues.includes(timeSlotWed)) {
+                    timeContentWed += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                  }
+                  if (timeValues.includes(timeSlotThr)) {
+                    timeContentThr += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                  }
+                  if (timeValues.includes(timeSlotFri)) {
+                    timeContentFri += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                  }
+                  if (timeValues.includes(timeSlotSat)) {
+                    timeContentSat += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                  }
+                  if (timeValues.includes(timeSlotSun)) {
+                    timeContentSun += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                  }
+                }
+              }
+          
+              rows.push(
+                <tr key={timeSlot}>
+                  <th>{getTimeSlotLabel(timeSlot)}</th>
+                  <td id={timeSlotMon}>{timeContentMon}</td>
+                  <td id={timeSlotTue}>{timeContentTue}</td>
+                  <td id={timeSlotWed}>{timeContentWed}</td>
+                  <td id={timeSlotThr}>{timeContentThr}</td>
+                  <td id={timeSlotFri}>{timeContentFri}</td>
+                  <td id={timeSlotSat}>{timeContentSat}</td>
+                  <td id={timeSlotSun}>{timeContentSun}</td>
+                </tr>
+              );
+              
+              
+            }
+          
+            return rows;
+          }
+          
+          
+
+          function getTimeSlotLabel(timeSlot) {
+            const timeLabels = {
+              '101': '8:20-9:10',
+              '102': '9:20-10:10',
+              '103': '10:20-11:00',
+              '104': '11:10-12:00',
+              '105': '13:10-14:00',
+              '106': '13:10-14:00',
+              '107': '14:10-15:00',
+              '108': '15:10-16:00',
+              '109': '16:05-16:55',
+              '110': '17:30-18:20',
+              '111': '18:30-19:20',
+              '112': '19:25-20:15',
+              '113': '20:20-21:10',
+              '114': '21:15-22:05',
+            };
+        
+            return timeLabels[timeSlot] || '';
+          }
+
+        
       
       return (
+
         <div className="TimeTable">    
             <div className="TimeTablebg">
                 <div className="TimeTable_draw"> 
@@ -37,9 +172,11 @@ const TimeTable=()=> {
                 </div>
 
                 <br/>
+                
+
                 <div className="timeTable_info_place">
                     <table className="timeTable_info">
-                        <tr>
+                    <tr>
                             <th></th>
                             <th>星期一</th>
                             <th>星期二</th>
@@ -48,144 +185,8 @@ const TimeTable=()=> {
                             <th>星期五</th>
                             <th>星期六</th>
                             <th>星期日</th>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>8:20-9:10</th>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>9:20-10:10</th>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>10:20-11:10</th>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <td colspan="8" className="break">休息時間</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>13:10-14:00</th>
-                            <td>星期一好累喔星期一好累喔</td>
-                            <td>星期一好累喔星期一好累喔</td>
-                            <td>星期一星期一好累喔</td>
-                            <td>星期一星期一好累喔</td>
-                            <td>星期一好累喔星期一好累喔</td>
-                            <td>星期一星期一好累喔</td>
-                            <td>星期一星期一好累喔</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>14:10-15:00</th>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>15:10-16:00</th>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>16:05-16:55</th>
-                            <td>星期一好累喔</td>
-                            <td>排球初</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>17:30-18:20</th>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>18:30-19:20</th>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一好累喔</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>19:25-20:15</th>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>20:20-21:10</th>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                        </tr>
-                        <br/>
-                        <tr>
-                            <th>21:15-22:05</th>
-                            <td>星期一好累喔</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一</td>
-                            <td>星期一好累喔</td>
-                            <td>星期一好累喔</td>
-                            <td>星期一好累喔</td>
-                        </tr>
-
+                    </tr>
+                    {generateTableRows()}
                     </table>
                 </div>
             </div>

@@ -26,7 +26,7 @@ const DetectCourse=()=> {
             <div className="DetectCourse_bg">
                 <Title className='DetectCourse_title'>偵測課程</Title>
                 <div className='DetectCourse_search_position'>
-                    <input type='text' className='DetectCourse_search' placeholder="請輸入課號"></input>
+                    <input type='text' className='DetectCourse_search' placeholder="請輸入課號或課名"></input>
                     <button className='DetectCourse_searchBtn'>加入課程</button>
                 </div>
                 <ArticleList>

@@ -5,7 +5,9 @@ import yolk from './img/yolk.PNG';
 import star from './img/star.png';
 import redBall from './img/redBall.PNG';
 import logo from './img/IUAlogo.png';
-import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody } from './components/ArticleStyle.js';
+import student from './img/student.png';
+import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleDistance, 
+  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect } from './components/ArticleStyle.js';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef,  } from "react";
 
@@ -15,11 +17,17 @@ const Food = () => {
   const [openModal, setOpenModal] = useState(false);
   const [visibleData, setVisibleData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isIUA, setIsIUA] = useState(false);
+  const [AS, setAS] = useState("");
   let navigate = useNavigate();
   const articleListRef = useRef(null);
   const location = useLocation();
   const { fromSearch, FArea, FName } = location.state;
   const scrollPositionRef = useRef(0);
+
+  const handleASChange = event => {
+    setAS(event.target.value);
+  };
 
   function RatingFood({ rating }) {
     const stars = [];
@@ -61,8 +69,10 @@ const Food = () => {
     return (
       <ArticleContainer>
         <ArticleText onClick={handleShowFoodSubmit}>
+        <ArticleDistance>距離海大10m</ArticleDistance>
           <ArticleAuthorArea>
-            <ArticleAuthorImg src={logo}></ArticleAuthorImg>
+            {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
+            {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}
             <ArticleAuthor>{author}</ArticleAuthor>
           </ArticleAuthorArea>
           <ArticleBody>{store}</ArticleBody>
@@ -85,6 +95,14 @@ const Food = () => {
             <PostArticleBtn>我要發文</PostArticleBtn>
           </Link>
           <ChooseArticleBtn onClick={() => setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
+          <div className='ArticleSelect'>
+              <input type="radio" id='distance' name='AS' value='距離' onChange={handleASChange} ></input>
+              <label for="distance">距離遠近</label>
+              <input type="radio" id='rate' name='AS' value='評分' onChange={handleASChange}></input>
+              <label for="rate">評分高低</label>
+              <input type="radio" id='time' name='AS' value='時間' checked onChange={handleASChange}></input>
+              <label for="time">加入時間</label>
+          </div><br/>
           <ArticleList ref={articleListRef}>
             {visibleData.map(item => (
               <Articleinfo key={item.postId} author={item.nickname} post_time={item.post_time} store={item.store} rating={item.rating} postID={item.postId}></Articleinfo>

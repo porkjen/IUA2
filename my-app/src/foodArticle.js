@@ -1,6 +1,7 @@
 //import './changeClass.css';
 import React from 'react';
 import dog from './img/dog.png';
+import banana from './img/banana.png';
 import Modal from "./components/Modal";
 import logo from './img/IUAlogo.png';
 import star from './img/star.png';
@@ -22,7 +23,11 @@ const FoodArticle=()=> {
     const { studentID, postId } = location.state;
     const [isCreator, setIsCreator] = useState(false);
     const [isReviewCreator, setIsReviewCreator] = useState(false);
+    const [isMeComment, setIsMeComment] = useState(false);
+    const [isMeRating, setIsMeRating] = useState(false);
     const [isFoodSaved, setIsFoodSaved] = useState(false);
+    const [isAlreadyComment, setIsAlreadyComment] = useState(false);
+    const [isAlreadyRating, setIsAlreadyRating] = useState(false);
     const [responseStatus, setResponseStatus] = useState(null);
 
     function RatingFood({ rating, commentStar }) {
@@ -64,11 +69,14 @@ const FoodArticle=()=> {
       }
 
       if(commentCreator===true){
+        setIsMeComment(text);
+        setIsMeRating(commentRating)
         return (
           <CommentContainer>
             <CommentText>
             <CommentAuthorBtn>
                 <CommentAuthor>{author}</CommentAuthor>
+                
                 <ArticleDetailCommentDeleteBtn onClick={handleCommentDeleteSubmit}>刪除</ArticleDetailCommentDeleteBtn>
               </CommentAuthorBtn>
                 <CommentBody>{text}</CommentBody>
@@ -133,10 +141,43 @@ const FoodArticle=()=> {
                         postId:postId,
                         studentID: "00957025",
                         p_review : FComment,
-                        p_rate : 4,
+                        p_rate : 0,
                       };
                       fetch('/food_review_add', {
                             method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                          })
+                          .then(response =>{
+                            if(response.status===400)
+                              setIsAlreadyComment(true);
+                            else
+                              setIsAlreadyComment(false)
+                          })
+                          .then(data => {
+                            console.log(data);
+                          })
+                          .catch(error => {
+                            console.error(error);
+                          });
+                          window.location.reload();
+                          
+                       //Form submission happens here
+      }
+
+      const handleModifyCommentSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        const formData = {
+                        postId:postId,
+                        studentID: "00957025",
+                        p_review : FComment,
+                        p_rate : isMeRating,
+                      };
+                      fetch('/food_review_modify', {
+                            method: 'PUT',
                             headers: {
                               'Content-Type': 'application/json'
                             },
@@ -149,6 +190,7 @@ const FoodArticle=()=> {
                           .catch(error => {
                             console.error(error);
                           });
+                          window.location.reload();
                           
                        //Form submission happens here
       }
@@ -269,6 +311,12 @@ const FoodArticle=()=> {
                 <hr></hr>
                 <ArticleDetailComment>
                 {data.review.map(item => {
+                    if(item.p_studentID===studentID){
+                      setIsAlreadyComment(true);
+                    }
+                    if(item.p_review==="test"){
+                      setIsAlreadyRating(true);
+                    }
                     if (item.p_review) {
                       if(item.p_studentID===studentID){
                         return (
@@ -283,16 +331,18 @@ const FoodArticle=()=> {
                         );
                       }
                       else{
-                        return (
-                          <Commentinfo
-                            key={item.p_name}
-                            author={item.p_name}
-                            text={item.p_review}
-                            commentTime={item.p_time}
-                            commentRating={item.p_rate}
-                            commentCreator={false}
-                          />
-                        );
+                        if(item.p_review!=='尚未發表評論'){
+                          return (
+                            <Commentinfo
+                              key={item.p_name}
+                              author={item.p_name}
+                              text={item.p_review}
+                              commentTime={item.p_time}
+                              commentRating={item.p_rate}
+                              commentCreator={false}
+                            />
+                          );
+                        }
                       }
                       
                     }
@@ -300,11 +350,20 @@ const FoodArticle=()=> {
                 </ArticleDetailComment>
             </ArticleDetailPosition>
             <ArticleDetailPostCommentPosition>
-                <form onSubmit={handleCommentSubmit}>
-                  <ArticleDetailCommentImg src={dog}/>
-                  <ArticleDetailPostComment type='text' name = 'FComment' onChange={handleFCommentChange} value={FComment}></ArticleDetailPostComment>
-                  <ArticleDetailPostBtn>送出</ArticleDetailPostBtn>
-                </form>
+              {isAlreadyComment? (
+                     <form onSubmit={handleModifyCommentSubmit}>
+                     <ArticleDetailCommentImg src={banana}/>
+                     <ArticleDetailPostComment type='text' name = 'FComment'  placeholder='如留言過再次留言會更新舊有留言' onChange={handleFCommentChange} value={FComment}></ArticleDetailPostComment>
+                     <ArticleDetailPostBtn type='submit'>送出</ArticleDetailPostBtn>
+                   </form>
+                    ) : (
+                      <form onSubmit={handleCommentSubmit}>
+                    <ArticleDetailCommentImg src={dog}/>
+                    <ArticleDetailPostComment type='text' name = 'FComment' onChange={handleFCommentChange} value={FComment}></ArticleDetailPostComment>
+                    <ArticleDetailPostBtn type='submit'>送出</ArticleDetailPostBtn>
+                  </form>
+                    )}
+                
             </ArticleDetailPostCommentPosition>
         </ArticleDetailPage>
       );
@@ -356,7 +415,7 @@ const FoodArticle=()=> {
 
       return (
         <ArticleDetailPage>
-            {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId}/>}
+            {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment}/>}
             {!openModal && < FoodDetailInfo/>}
         </ArticleDetailPage>
       );

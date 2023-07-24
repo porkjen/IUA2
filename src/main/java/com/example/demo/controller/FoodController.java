@@ -53,20 +53,30 @@ public class FoodController {
     public FoodEntity foodFullPost(@RequestBody Map<String, String> requestData){
         System.out.println("/food_full_post");
         FoodEntity foodEntity = foodRepository.findByPostId(requestData.get("postId"));
+        //find out if the user has commented on the post
+        for(FoodEntity.p review : foodEntity.getReview()){
+            if(Objects.equals(review.getP_studentID(), requestData.get("studentID"))) {
+                //remove the review and add to the start
+                foodEntity.removeReview(review);
+                foodEntity.reviewFirst(review);
+                break;
+            }
+        }
+
         //no one save this post
         if(foodEntity.getSaved().size()==0){
-            foodEntity.savefirst("false");
+            foodEntity.saveFirst("false");
             return foodEntity;
         }
         for(String user : foodEntity.getSaved()){
             //user saved this post
             if(Objects.equals(user, requestData.get("studentID"))) {
-                foodEntity.savefirst("true");
+                foodEntity.saveFirst("true");
                 return foodEntity;
             }
         }
         //user doesn't save this post
-        foodEntity.savefirst("false");
+        foodEntity.saveFirst("false");
         return foodEntity;
     }
 

@@ -99,7 +99,7 @@ function ChooseArticle(){
 
 
 
-function Modal({closeModal,type, postId}){
+function Modal({closeModal, type, postId, comment, alreadyComment}){
 
     let navigate = useNavigate();
     const [isModalFood, setisModalFood] = useState(true);
@@ -107,6 +107,8 @@ function Modal({closeModal,type, postId}){
     const [isModalChangeClass, setisModalChangeClass] = useState(false);
     const [isRating, setisRating] = useState(false);
     const [isPostId, setisPostId] = useState(false);
+    const [isComment, setisComment] = useState(false);
+    const [isAlreadyComment, setIsAlreadyComment] = useState(false);
 
     function ModalRent(){
 
@@ -209,11 +211,15 @@ function Modal({closeModal,type, postId}){
         let navigate = useNavigate();
         const [FSArea, setFSArea] = useState("");
         const [FSName, setFSName] = useState("");
+        const [FSAddress, setFSAddress] = useState("");
         const handleFSAreaChange = event => {
             setFSArea(event.target.value);
           };
           const handleFSNameChange = event => {
             setFSName(event.target.value);
+          };
+          const handleFSAddressChange = event => {
+            setFSAddress(event.target.value);
           };
         const handleSearchFoodSubmit = (e) => {
             e.preventDefault();
@@ -252,6 +258,10 @@ function Modal({closeModal,type, postId}){
                             <label>店家:</label>
                             <input className='ModalFoodStoreText' type="text" onChange={handleFSNameChange}></input>
                         </div><br/>
+                        <div className='ModalFoodAddress'>
+                            <label>地址:</label>
+                            <input className='ModalFoodAddressText' type="text" onChange={handleFSAddressChange}></input>
+                        </div><br/>
                     </div>
                     <ModalSubmitBtn type="submit">確認</ModalSubmitBtn>
                 </form>
@@ -282,6 +292,8 @@ function Modal({closeModal,type, postId}){
         setisModalChangeClass(false);
         setisRating(true);
         setisPostId(postId)
+        setisComment(comment);
+        setIsAlreadyComment(alreadyComment);
       }
     }, [type]);
 
@@ -294,13 +306,37 @@ function Modal({closeModal,type, postId}){
         const handleRatingSubmit = (e) => {
             e.preventDefault();
             //const student_id = loginUser();
-            const formData = {
-                            postId:isPostId,
-                            studentID: "00957025",
-                            p_review : "",
-                            p_rate : Frating,
-                          };
-                          fetch('/food_review_add', {
+            
+                        if(isAlreadyComment===true){
+                            const formData = {
+                                postId:isPostId,
+                                studentID: "00957025",
+                                p_review : isComment,
+                                p_rate : Frating,
+                              };
+                              fetch('/food_review_modify', {
+                                method: 'PUT',
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(formData)
+                              })
+                              .then(response => response.json())
+                              .then(data => {
+                                console.log(data);
+                              })
+                              .catch(error => {
+                                console.error(error);
+                              });
+                        }
+                        else{
+                            const formData = {
+                                postId:isPostId,
+                                studentID: "00957025",
+                                p_review : "尚未發表評論",
+                                p_rate : Frating,
+                              };
+                            fetch('/food_review_add', {
                                 method: 'POST',
                                 headers: {
                                   'Content-Type': 'application/json'
@@ -314,12 +350,14 @@ function Modal({closeModal,type, postId}){
                               .catch(error => {
                                 console.error(error);
                               });
+                        }
+                              window.location.reload();
                               navigate("/foodArticle", {
                                 state: {
                                   studentID:"00957025",
                                   postId,postId,
                                   fromSearch:false},});
-                                  window.location.reload();
+                                  
                               
                            //Form submission happens here
           }
@@ -343,7 +381,7 @@ function Modal({closeModal,type, postId}){
                         
                         </div><br/>
                     </div>
-                    <ModalSubmitBtn>確認</ModalSubmitBtn>
+                    <ModalSubmitBtn type='submit'>確認</ModalSubmitBtn>
                 </form>
         );
     
