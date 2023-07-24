@@ -74,6 +74,27 @@ const ArticleDetailAlreadySavedBtn = styled.button`
     border-radius: 6px; 
 `;
 
+/*回報 */
+const ArticleDetailReportdBtn = styled.button`
+    background-color: rgba(249, 231, 193, 0.951);
+    width:60px;
+    text-align:center;
+    height:30px;
+    margin-right:20px;
+    border-radius: 6px; 
+`;
+
+/*已回報 */
+const ArticleDetailAlreadyReportBtn = styled.button`
+    background-color: rgba(223, 223, 223);
+    width:60px;
+    text-align:center;
+    height:30px;
+    margin-right:20px;
+    border-radius: 6px; 
+`;
+
+
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -177,4 +198,6 @@ const ArticleDetailPostBtn = styled.button`
 `
 
 
-export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn,  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn, ArticleDetailCommentDeleteBtn};
+export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor,
+     ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, 
+     ArticleDetailNormalBtn,  ArticleDetailAlreadySavedBtn, ArticleDetailReportdBtn, ArticleDetailAlreadyReportBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn, ArticleDetailCommentDeleteBtn};

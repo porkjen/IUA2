@@ -9,7 +9,7 @@ import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, Artic
   ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, 
   ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn, ArticleDetailAlreadySavedBtn, ArticleDetailRatingdBtn, 
   ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, 
-  ArticleDetailPostBtn, ArticleDetailContactdBtn, ArticleDetailCommentDeleteBtn}  from './components/ArticleDetailStyle.js';
+  ArticleDetailPostBtn, ArticleDetailContactdBtn, ArticleDetailCommentDeleteBtn,ArticleDetailReportdBtn, ArticleDetailAlreadyReportBtn}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating, CommentAuthorBtn} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation, useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
@@ -26,6 +26,7 @@ const FoodArticle=()=> {
     const [isMeComment, setIsMeComment] = useState(false);
     const [isMeRating, setIsMeRating] = useState(false);
     const [isFoodSaved, setIsFoodSaved] = useState(false);
+    const [isFoodReport, setIsFoodReport] = useState(false);
     const [isAlreadyComment, setIsAlreadyComment] = useState(false);
     const [isAlreadyRating, setIsAlreadyRating] = useState(false);
     const [responseStatus, setResponseStatus] = useState(null);
@@ -281,6 +282,31 @@ const FoodArticle=()=> {
                        //Form submission happens here
       }
 
+      const handleReportSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        const formData = {
+                        postId:postId,
+                      };
+                      fetch('/food_close_report', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                          })
+                          .then(response => response.status)
+                          .then(data => {
+                            console.log(data);
+                          })
+                          .catch(error => {
+                            console.error(error);
+                          });
+                
+                          
+                       //Form submission happens here
+      }
+
       return (
         <ArticleDetailPage>
             <ArticleDetailPosition>
@@ -306,6 +332,7 @@ const FoodArticle=()=> {
                         收藏
                       </ArticleDetailSavedBtn>
                     )}
+                    <ArticleDetailNormalBtn onClick={handleReportSubmit}>回報歇業</ArticleDetailNormalBtn>
                   </ButtonContainer>
                 )}
                 <hr></hr>

@@ -93,14 +93,16 @@ table, th, td {
     flex-wrap: wrap;
     z-index: 2;
     margin-top: 140px;
+    margin-left:50px;
 }
 
 .timeTable_info{
     font-family: 'Noto Serif TC', serif;
     z-index: 2;
     position: absolute;
-    width: 100%;
+    width:100%;
     overflow-x: auto;
+    border: 1px solid black;
 }
 
 

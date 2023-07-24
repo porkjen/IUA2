@@ -303,7 +303,7 @@ public class TodoController {
             for(String post : savedEntity.getPostId()){
                 if(post.startsWith("F")){
                     FoodEntity food = foodRepository.findByPostId(post);
-                    FoodDTO foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                    FoodDTO foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad());
                     savedDTO.setSavedFood(foodDTO);
                 }else if(post.startsWith("H")){
                     HouseEntity house = houseRepository.findByPostId(post);
@@ -312,6 +312,7 @@ public class TodoController {
                 }
             }
             return savedDTO;
+
         }
     }
 

@@ -18,7 +18,7 @@ const TimeTable=()=> {
 
         useEffect(() => {
             if (!data) {
-              fetch(`/curriculum_search?studentID=${"00957017"}`)
+              fetch(`/curriculum_search?studentID=${"00957025"}`)
                 .then(response => response.json())
                 .then(data => {
                   console.log(data);
@@ -32,7 +32,7 @@ const TimeTable=()=> {
           
           function generateTableRows() {
             const rows = [];
-             const timeSlots = ['101', '102', '103', '104', '105', '106', '107', '108', '109', '110', '111', '112', '113', '114',
+             const timeSlots = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14',
             ];
 
             const timeSlotsMon = [
@@ -85,25 +85,25 @@ const TimeTable=()=> {
                 if (data.hasOwnProperty(key) && data[key].time && data[key].time.hasOwnProperty('0')) {
                   const timeValues = Object.values(data[key].time);
                   if (timeValues.includes(timeSlotMon)) {
-                    timeContentMon += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                    timeContentMon += data[key].name + ' (' + data[key].classroom + ')' + '\n'+ data[key].teacher;
                   }
                   if (timeValues.includes(timeSlotTue)) {
-                    timeContentTue += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                    timeContentTue += data[key].name + ' (' + data[key].classroom + ')' + '\n'+ data[key].teacher;
                   }
                   if (timeValues.includes(timeSlotWed)) {
-                    timeContentWed += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                    timeContentWed += data[key].name + ' (' + data[key].classroom + ')' + '\n'+ data[key].teacher;
                   }
                   if (timeValues.includes(timeSlotThr)) {
-                    timeContentThr += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                    timeContentThr += data[key].name + ' (' + data[key].classroom + ')' + '\n'+ data[key].teacher;
                   }
                   if (timeValues.includes(timeSlotFri)) {
-                    timeContentFri += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                    timeContentFri += data[key].name + ' (' + data[key].classroom + ')' + '\n'+ data[key].teacher;
                   }
                   if (timeValues.includes(timeSlotSat)) {
-                    timeContentSat += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                    timeContentSat += data[key].name + ' (' + data[key].classroom + ')' + '\n'+ data[key].teacher;
                   }
                   if (timeValues.includes(timeSlotSun)) {
-                    timeContentSun += data[key].name + ' (' + data[key].classroom + ')' + '\n';
+                    timeContentSun += data[key].name + ' (' + data[key].classroom + ')' + '\n'+ data[key].teacher;
                   }
                 }
               }
@@ -131,20 +131,20 @@ const TimeTable=()=> {
 
           function getTimeSlotLabel(timeSlot) {
             const timeLabels = {
-              '101': '8:20-9:10',
-              '102': '9:20-10:10',
-              '103': '10:20-11:00',
-              '104': '11:10-12:00',
-              '105': '13:10-14:00',
-              '106': '13:10-14:00',
-              '107': '14:10-15:00',
-              '108': '15:10-16:00',
-              '109': '16:05-16:55',
-              '110': '17:30-18:20',
-              '111': '18:30-19:20',
-              '112': '19:25-20:15',
-              '113': '20:20-21:10',
-              '114': '21:15-22:05',
+              '1': '8:20-9:10',
+              '2': '9:20-10:10',
+              '3': '10:20-11:00',
+              '4': '11:10-12:00',
+              '5': '13:10-14:00',
+              '6': '13:10-14:00',
+              '7': '14:10-15:00',
+              '8': '15:10-16:00',
+              '9': '16:05-16:55',
+              '10': '17:30-18:20',
+              '11': '18:30-19:20',
+              '12': '19:25-20:15',
+              '13': '20:20-21:10',
+              '14': '21:15-22:05',
             };
         
             return timeLabels[timeSlot] || '';
@@ -177,7 +177,7 @@ const TimeTable=()=> {
                 <div className="timeTable_info_place">
                     <table className="timeTable_info">
                     <tr>
-                            <th></th>
+                            <th>時間</th>
                             <th>星期一</th>
                             <th>星期二</th>
                             <th>星期三</th>
