@@ -240,6 +240,7 @@ public class FoodController {
         }
         return resultList;
     }
+
     @PostMapping("/food_close_report")
     public ResponseEntity<String> foodCloseReport(@RequestBody Map<String, String> requestData){
         System.out.println("/food_close_report");

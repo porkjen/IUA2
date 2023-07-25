@@ -63,7 +63,8 @@ public class TodoController {
             return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
         }
         //account is not in database
-        if(basicRepository.findByStudentID(studentID)==null){
+        BasicEntity personalData = basicRepository.findByStudentID(studentID);
+        if(personalData==null){
             basic = crawler.getBasicData(studentID,password);
             basic.setPassword(encryptedpwd);
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
@@ -73,7 +74,8 @@ public class TodoController {
             return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
         }
         else {
-            basicRepository.findByStudentID(studentID).setPassword(encryptedpwd); //user may change password, update password everytime
+            personalData.setPassword(encryptedpwd); //user may change password, update password everytime
+            basicRepository.save(personalData);
             System.out.println("Old user!");
         }
         System.out.println("加密:"+encryptedpwd);
