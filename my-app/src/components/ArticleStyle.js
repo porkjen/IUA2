@@ -73,6 +73,7 @@ const ArticleList = styled.div`
     transform: translate(-50%, -50%);
 `;
 
+
 const ArticleContainer = styled.div`
     min-width: match-parent;
     border: transparent;

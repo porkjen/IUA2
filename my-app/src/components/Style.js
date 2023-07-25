@@ -9,4 +9,27 @@ const RemainTitle = styled.label`
     
 `;
 
-export {RemainTitle};
+const RemainContainer = styled.div`
+    z-index: 2;
+    margin-top: 15px;
+    width: 230px;
+    height: 50px;
+    background-color: white;
+    border-radius: 10px;
+    
+`;
+
+const RemainList = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    overflow: auto;
+    height: 75%;
+    will-change: transform;
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    transform: translate(-50%, -50%);
+`;
+
+export {RemainTitle, RemainContainer, RemainList};

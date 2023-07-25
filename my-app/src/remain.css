@@ -23,7 +23,7 @@ html,body,#root,.Remain{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    overflow-y: hidden;
+    overflow: hidden;
   }
 
 .Remain_title{
@@ -41,7 +41,11 @@ html,body,#root,.Remain{
     width: 230px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 20%;
+    margin-top: 13%;
+}
+
+.Remain_Course_credits{
+    margin-top: 5%;
 }
 
 .c_Course, .ie_Course, .oe_Course, .g_Course, .core_Course, .pe_Course, .eng_Course, .swim_Course{
@@ -51,6 +55,15 @@ html,body,#root,.Remain{
     height: 50px;
     background-color: white;
     border-radius: 10px;
+}
+
+.courseSelect{
+    padding: 4px;
+    background-color: transparent;
+    border-color: #008CBA;
+    border-radius: 4px;
+    min-height: 10%;
+    margin-top: 5%px;
 }
 
 .bee img{
@@ -68,5 +81,5 @@ html,body,#root,.Remain{
     max-height: 280px;
     z-index: 1;
     right: -115px;
-    bottom: 0px;
+    bottom: 5px;
 }

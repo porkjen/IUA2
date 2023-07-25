@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.hpsf.Array;
 import org.checkerframework.checker.units.qual.C;
@@ -24,13 +23,13 @@ public class RemainedService {
         ArrayList<FinishedCourse> fc = fcl.getFinishedCourses();
         RemainCredit remainCredit = new RemainCredit();
 
-        int required = 67;       //必修
+        int required = 53;       //必修
         int deptOptional = 43;   //系內選修
         int optional = 11;       //其他選修
         int general = 16;        //通識
         int kernal = 12;         //核心選修
         int pe = 4;             //體育
-        
+
         ArrayList<String> requiredList = new ArrayList<String>();   //必修細項
         ArrayList<String> deptList = new ArrayList<String>();       //內選細項
         ArrayList<String> optionalList = new ArrayList<String>();   //其他細項
@@ -40,13 +39,6 @@ public class RemainedService {
 
         int eecse = 0;          //電資學院
         int optOffset = 0;      //共同教育抵銷
-
-        for(FinishedCourse f : fc){
-            int credit = Integer.parseInt(f.getCredit());
-            if(f.getCategory().equals("必修"))  required += credit;
-            else if(f.getCategory().equals("選修")) optional += credit;
-        }
-
 
         String[] kernalCourse = {"數位系統設計", "微處理器原理與組合語言", "計算機系統設計", "計算機結構", "程式語言", "資料庫系統", "軟體工程", "嵌入式系統設計", "系統程式", "編譯器", "人工智慧"};
 
@@ -139,7 +131,12 @@ public class RemainedService {
         remainCredit.setGeneral(general);
         remainCredit.setPE(pe);
 
-
+        remainCredit.setReqList(requiredList);
+        remainCredit.setDeptList(deptList);
+        remainCredit.setoptList(optionalList);
+        remainCredit.setgeneralList(generalList);
+        remainCredit.setKernalList(kernalList);
+        remainCredit.setPeList(peList);
 
         return remainCredit;
     }
