@@ -22,10 +22,15 @@ html,body,#root,.DetectCourse{
     text-align: center;
 }
 
-.DetectCourse_search{
+.DetectCourse_search_number{
     width:200px;
     height:30px;
     margin-top: 30%;
+}
+
+.DetectCourse_search_name{
+    width:200px;
+    height:30px;
 }
 
 .DetectCourse_searchBtn, .DetectCourse_delete{
