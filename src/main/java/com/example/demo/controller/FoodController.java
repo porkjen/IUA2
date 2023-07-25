@@ -241,9 +241,15 @@ public class FoodController {
         return resultList;
     }
 
-    /*@PostMapping("/food_close_report")
+    @PostMapping("/food_close_report")
     public ResponseEntity<String> foodCloseReport(@RequestBody Map<String, String> requestData){
         System.out.println("/food_close_report");
-
-    }*/
+        FoodEntity post = foodRepository.findByPostId(requestData.get("postId"));
+        if(post==null)return ResponseEntity.badRequest().body("Invalid request"); //400
+        else{
+            post.setReport(post.getReport()+1);
+            foodRepository.save(post);
+            return ResponseEntity.ok("Success");
+        }
+    }
 }

@@ -63,7 +63,8 @@ public class TodoController {
             return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
         }
         //account is not in database
-        if(basicRepository.findByStudentID(studentID)==null){
+        BasicEntity personalData = basicRepository.findByStudentID(studentID);
+        if(personalData==null){
             basic = crawler.getBasicData(studentID,password);
             basic.setPassword(encryptedpwd);
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
@@ -72,7 +73,8 @@ public class TodoController {
             return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");//201
         }
         else {
-            basicRepository.findByStudentID(studentID).setPassword(encryptedpwd); //user may change password, update password everytime
+            personalData.setPassword(encryptedpwd); //user may change password, update password everytime
+            basicRepository.save(personalData);
             System.out.println("Old user!");
         }
         System.out.println("加密:"+encryptedpwd);
@@ -300,7 +302,7 @@ public class TodoController {
             for(String post : savedEntity.getPostId()){
                 if(post.startsWith("F")){
                     FoodEntity food = foodRepository.findByPostId(post);
-                    FoodDTO foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                    FoodDTO foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad());
                     savedDTO.setSavedFood(foodDTO);
                 }else if(post.startsWith("H")){
                     HouseEntity house = houseRepository.findByPostId(post);

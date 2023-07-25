@@ -416,7 +416,7 @@ public class Crawler {
     public static void main(String[] args) throws Exception {
         String account = "";
         String password = "";
-        //CrawlerHandle(account,password);
+        CrawlerHandle(account,password);
         //getBasicData(account,password);
         //getMyClass(account,password);
         //getAllGeneralClass();

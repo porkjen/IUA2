@@ -99,6 +99,7 @@ public class getData {
                     restaurant.setRoad(add.getJSONObject(j).getString("long_name"));
                     break;
                 }
+                restaurant.setRoad(null);
             }
             System.out.println(restaurant.getRoad());
             restaurant.setURL(jsonObject.getJSONObject("result").getString("url"));
