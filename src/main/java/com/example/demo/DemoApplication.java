@@ -38,7 +38,6 @@ public class DemoApplication {
 	// 	@Autowired
 	// 	ChangeCourseHaveRepository changeCourseHaveRepository;
 
-<<<<<<< HEAD
 	// 	@Override
 	// 	public void onApplicationEvent(ContextStartedEvent event) {
 	// 		System.out.println("run");
@@ -171,7 +170,6 @@ public class DemoApplication {
 
 		}
 	}
->>>>>>> 479c7bdeeaf202f18f78c5a4c6b470343cf04327
 
 	// 	}
 	// }
