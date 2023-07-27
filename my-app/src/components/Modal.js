@@ -211,11 +211,15 @@ function Modal({closeModal, type, postId, comment, alreadyComment}){
         let navigate = useNavigate();
         const [FSArea, setFSArea] = useState("");
         const [FSName, setFSName] = useState("");
+        const [FSAddress, setFSAddress] = useState("");
         const handleFSAreaChange = event => {
             setFSArea(event.target.value);
           };
           const handleFSNameChange = event => {
             setFSName(event.target.value);
+          };
+          const handleFSAddressChange = event => {
+            setFSAddress(event.target.value);
           };
         const handleSearchFoodSubmit = (e) => {
             e.preventDefault();
@@ -229,7 +233,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment}){
                   state: {
                     fromSearch:true,
                     FArea:FSArea,
-                    FName:FSName,},});
+                    FName:FSName,
+                    FAddr:FSAddress,},});
                     //closeModal(false);
                     window.location.reload();
           }
@@ -253,6 +258,10 @@ function Modal({closeModal, type, postId, comment, alreadyComment}){
                         <div className='ModalFoodStore'>
                             <label>店家:</label>
                             <input className='ModalFoodStoreText' type="text" onChange={handleFSNameChange}></input>
+                        </div><br/>
+                        <div className='ModalFoodAddress'>
+                            <label>地址:</label>
+                            <input className='ModalFoodAddressText' type="text" onChange={handleFSAddressChange}></input>
                         </div><br/>
                     </div>
                     <ModalSubmitBtn type="submit">確認</ModalSubmitBtn>

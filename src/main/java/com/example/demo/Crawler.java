@@ -424,18 +424,21 @@ public class Crawler {
     public static void main(String[] args) throws Exception {
         String account = "";
         String password = "";
-        //CrawlerHandle(account,password);
+        CrawlerHandle(account,password);
         //getBasicData(account,password);
         //getMyClass(account,password);
         //getAllGeneralClass();
         //getFinishedCredict();
 
         //detectCoureses();
+<<<<<<< HEAD
         String add = "201台灣基隆市信義區深溪街3-5號";
         String roadName = add.split("[路街]")[0].split("區")[1];
         if(add.contains("路")) roadName+="路";
         else roadName+="街";
         System.out.println(roadName);
+=======
+>>>>>>> 479c7bdeeaf202f18f78c5a4c6b470343cf04327
     }
 }
 

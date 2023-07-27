@@ -69,9 +69,10 @@ const ArticleList = styled.div`
     will-change: transform;
     position: absolute;
     left: 50%;
-    top: 58%;
+    top: 63%;
     transform: translate(-50%, -50%);
 `;
+
 
 const ArticleContainer = styled.div`
     min-width: match-parent;
@@ -125,16 +126,41 @@ const ArticleDCText = styled.button`
     margin-left:7px;
 `;
 
+const ArticleSelect= styled.select`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border: 1px solid #FF8C00;
+    border-radius: 5px;
+    background-color: transparent; 
+    padding: 10px;
+    width: 110px;
+    margin-left: 60%;
+    position: absolute;
+    margin-top: 45%;
+    z-index: 2;
+`;
 
-const ArticleAuthorArea= styled.div`
+const ArticleDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+`;
+
+
+const ArticleAuthorArea= styled.div` 
     display: flex;
     flex-direction: row ;
+    width:80%;
+   
 `;
 
 
 const ArticleAuthorImg = styled.img`
-    width: 13%; /* 設定頭像的寬度和高度 */
-    height: 13%;
+    width: 15%; /* 設定頭像的寬度和高度 */
+    height: 15%;
     border-radius: 50%;
     overflow: hidden;
 `;
@@ -202,4 +228,5 @@ const PerChangeClassBtn = styled.button`
 `;
 
 
-export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn};
+export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleDistance,
+     ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn, ArticleSelect};

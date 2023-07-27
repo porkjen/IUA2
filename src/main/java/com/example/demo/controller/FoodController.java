@@ -92,7 +92,7 @@ public class FoodController {
 
         List<FoodDTO> shortenedPostList = new ArrayList<>();
         for (FoodEntity post : foodPostList) {
-            FoodDTO dto = new FoodDTO(post.getPostId(), post.getNickname(), post.getStore(), post.getRating(), post.getPost_time());
+            FoodDTO dto = new FoodDTO(post.getPostId(), post.getNickname(), post.getStore(), post.getRating(), post.getPost_time(), post.getRoad());
             shortenedPostList.add(dto);
         }
         return shortenedPostList;
@@ -234,16 +234,22 @@ public class FoodController {
                (Objects.equals(area, "") || food.getAddress().equals(area)) &&
                (Objects.equals(addr, "") || food.getAddress().contains(addr))
             ){
-                FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time());
+                FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad());
                 resultList.add(result);
             }
         }
         return resultList;
     }
 
-    /*@PostMapping("/food_close_report")
+    @PostMapping("/food_close_report")
     public ResponseEntity<String> foodCloseReport(@RequestBody Map<String, String> requestData){
         System.out.println("/food_close_report");
-
-    }*/
+        FoodEntity post = foodRepository.findByPostId(requestData.get("postId"));
+        if(post==null)return ResponseEntity.badRequest().body("Invalid request"); //400
+        else{
+            post.setReport(post.getReport()+1);
+            foodRepository.save(post);
+            return ResponseEntity.ok("Success");
+        }
+    }
 }
