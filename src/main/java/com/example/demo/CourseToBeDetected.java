@@ -1,5 +1,4 @@
 package com.example.demo;
-import java.util.ArrayList;
 
 public class CourseToBeDetected{
     private String studentID;
@@ -9,15 +8,15 @@ public class CourseToBeDetected{
 
     public CourseToBeDetected(){}
 
-    public void setID(String id){
+    public void setstudentID(String id){
         this.studentID = id;
     }
 
-    public void setName(String name){
+    public void setcourseName(String name){
         this.courseName = name;
     }
 
-    public void setNumber(String number){
+    public void setcourseNumber(String number){
         this.courseNumber = number;
     }
 

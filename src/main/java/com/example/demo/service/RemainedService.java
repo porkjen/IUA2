@@ -23,7 +23,7 @@ public class RemainedService {
         ArrayList<FinishedCourse> fc = fcl.getFinishedCourses();
         RemainCredit remainCredit = new RemainCredit();
 
-        int required = 67;       //必修
+        int required = 53;       //必修
         int deptOptional = 43;   //系內選修
         int optional = 11;       //其他選修
         int general = 16;        //通識

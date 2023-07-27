@@ -115,19 +115,21 @@ public class TodoController {
     }
 
     @PostMapping("/add_detect_course") 
-    public void addDetectCourse(@RequestBody CourseToBeDetected course)throws TesseractException, IOException, InterruptedException{
+    public void addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
-        if(dRepository.existsByStudentID(course.getStudentID())){
-            DetectedCoursesList oriList = dRepository.findByStudentID(course.getStudentID());
+        if(dRepository.existsByStudentID(requestData.getStudentID())){
+            DetectedCoursesList oriList = dRepository.findByStudentID(requestData.getStudentID());
+            System.out.println("course number: " + requestData.getNumber());
             courses = oriList.getDetectedCourses();
-            courses.add(course);
+            courses.add(requestData);
             oriList.setDetectedCourse(courses);
             dRepository.save(oriList);
         }
         else{
             DetectedCoursesList newList = new DetectedCoursesList();
-            newList.setStudentID(course.getStudentID());
-            courses.add(course);
+            newList.setStudentID(requestData.getStudentID());
+            System.out.println("course number: " + requestData.getNumber());
+            courses.add(requestData);
             newList.setDetectedCourse(courses);
             dRepository.save(newList);
         }

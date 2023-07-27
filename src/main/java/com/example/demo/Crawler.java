@@ -25,8 +25,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+
 
 
 @EnableScheduling
@@ -290,12 +292,15 @@ public class Crawler {
         return fCourses;
     }
 
-    @Scheduled(fixedRate = 5000)    //間隔5秒
+    @Scheduled(fixedDelay = 5000)    //間隔5秒
     public static void detectCoureses(ArrayList<CourseToBeDetected> courses) throws InterruptedException{
         String tDate = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()); //today
 
         driver.switchTo().defaultContent();
+        Thread.sleep(1000);
         driver.switchTo().frame("menuFrame");
+        Thread.sleep(1000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
         Thread.sleep(1000);
         driver.findElement(By.linkText("選課系統")).click(); //選課系統
         Thread.sleep(3000);
@@ -304,19 +309,22 @@ public class Crawler {
         driver.switchTo().frame("mainFrame");
 
         for(int i = 0; i < courses.size(); i++){
+            Thread.sleep(3000);
             String[] semester = courses.get(i).getSemester().split("(?<=\\G.{3})");
+
+            System.out.println("semester:" + semester[0]);
 
             driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
             driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
-            driver.findElement(By.id("radioButtonClass_0")).click();
+            //driver.findElement(By.id("radioButtonClass_0")).click();
             driver.findElement(By.id("Q_CH_LESSON")).clear();
             driver.findElement(By.id("Q_CH_LESSON")).sendKeys(courses.get(i).getNumber());
             driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢
 
             Thread.sleep(500);
             List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
-            List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
-            System.out.println("***" + col.get(2) + "***");
+//            List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
+//            System.out.println("***" + col.get(2) + "***");
         }
         
     }
@@ -421,15 +429,13 @@ public class Crawler {
         //getMyClass(account,password);
         //getAllGeneralClass();
         //getFinishedCredict();
-<<<<<<< HEAD
-=======
+
         //detectCoureses();
         String add = "201台灣基隆市信義區深溪街3-5號";
         String roadName = add.split("[路街]")[0].split("區")[1];
         if(add.contains("路")) roadName+="路";
         else roadName+="街";
         System.out.println(roadName);
->>>>>>> bb5ca241c8cafd9772884498880913c259554022
     }
 }
 
