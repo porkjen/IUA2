@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.example.demo.CourseCredit;
 import com.example.demo.FinishedCourse;
 import com.example.demo.FinishedCourseList;
 import com.example.demo.FinishedRepository;
@@ -30,12 +31,12 @@ public class RemainedService {
         int kernal = 12;         //核心選修
         int pe = 4;             //體育
         
-        ArrayList<String> requiredList = new ArrayList<String>();   //必修細項
-        ArrayList<String> deptList = new ArrayList<String>();       //內選細項
-        ArrayList<String> optionalList = new ArrayList<String>();   //其他細項
-        ArrayList<String> generalList = new ArrayList<String>();    //通識細項
-        ArrayList<String> kernalList = new ArrayList<String>();     //核心細項
-        ArrayList<String> peList = new ArrayList<String>();         //體育細項
+        ArrayList<CourseCredit> requiredList = new ArrayList<CourseCredit>();   //必修細項
+        ArrayList<CourseCredit> deptList = new ArrayList<CourseCredit>();       //內選細項
+        ArrayList<CourseCredit> optionalList = new ArrayList<CourseCredit>();   //其他細項
+        ArrayList<CourseCredit> generalList = new ArrayList<CourseCredit>();    //通識細項
+        ArrayList<CourseCredit> kernalList = new ArrayList<CourseCredit>();     //核心細項
+        ArrayList<CourseCredit> peList = new ArrayList<CourseCredit>();         //體育細項
 
         int eecse = 0;          //電資學院
         int optOffset = 0;      //共同教育抵銷
@@ -46,10 +47,9 @@ public class RemainedService {
             if(NumberUtils.isCreatable(f.getCredit())){
                 int credit = Integer.parseInt(f.getCredit());
                 String courseName = f.getName();
-                String courseCredit = f.getCredit();
-                String item = courseName + ": " + courseCredit + "學分";
+                CourseCredit item = new CourseCredit(courseName, credit);
                 String dept = f.getDepartment();
-                System.out.println("course: " + courseName + "\ncredit: " + courseCredit);
+                System.out.println("course: " + courseName + "\ncredit: " + credit);
                 if(f.getCategory().equals("必修")){
                     if(dept.equals("資訊工程學系")){
                         required -= credit;

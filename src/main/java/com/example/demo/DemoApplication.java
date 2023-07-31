@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SpringBootApplication
+@EnableScheduling
 public class DemoApplication {
 
 	public static void main(String[] args) {
@@ -38,7 +39,6 @@ public class DemoApplication {
 	// 	@Autowired
 	// 	ChangeCourseHaveRepository changeCourseHaveRepository;
 
-<<<<<<< HEAD
 	// 	@Override
 	// 	public void onApplicationEvent(ContextStartedEvent event) {
 	// 		System.out.println("run");
@@ -103,10 +103,10 @@ public class DemoApplication {
 	// 			System.out.println(c.getTime()+" : "+c.getHave());
 	// 			changeCourseHaveRepository.save(c);
 	// 		}*/
-=======
-		@Override
-		public void onApplicationEvent(ContextStartedEvent event) {
-			System.out.println("run");
+
+//		@Override
+//		public void onApplicationEvent(ContextStartedEvent event) {
+//			System.out.println("run");
 			/*TaskConfiguration taskConfiguration = new TaskConfiguration();
 			LocalDateTime localDateTime = LocalDateTime.now();
 			taskConfiguration.timeTableTiming(0);*/
@@ -169,9 +169,8 @@ public class DemoApplication {
 				changeCourseHaveRepository.save(c);
 			}*/
 
-		}
-	}
->>>>>>> 479c7bdeeaf202f18f78c5a4c6b470343cf04327
+//		}
+//	}
 
 	// 	}
 	// }

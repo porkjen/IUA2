@@ -143,6 +143,11 @@ public class TodoController {
 
     }
 
+    @GetMapping("core_elective")
+    public void coreElective(){
+        
+    }
+
     @PostMapping("/rent_post")
     public HouseEntity rentPost(@RequestBody HouseEntity house){
         System.out.println("/rent_post");

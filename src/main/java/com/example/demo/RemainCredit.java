@@ -9,12 +9,12 @@ public class RemainCredit{
     int general;        //通識
     int kernal;         //核心
     int pe;             //體育
-    ArrayList<String> requiredList;
-    ArrayList<String> deptList;
-    ArrayList<String> optionalList;
-    ArrayList<String> generalList;
-    ArrayList<String> kernalList;
-    ArrayList<String> peList;
+    ArrayList<CourseCredit> requiredList;
+    ArrayList<CourseCredit> deptList;
+    ArrayList<CourseCredit> optionalList;
+    ArrayList<CourseCredit> generalList;
+    ArrayList<CourseCredit> kernalList;
+    ArrayList<CourseCredit> peList;
     String eng = "未通過";
     String swimming = "未通過";
 
@@ -52,27 +52,27 @@ public class RemainCredit{
         this.swimming = swimming;
     }
 
-    public void setReqList(ArrayList<String> reqList){
+    public void setReqList(ArrayList<CourseCredit> reqList){
         this.requiredList = reqList;
     }
 
-    public void setDeptList(ArrayList<String> deptList){
+    public void setDeptList(ArrayList<CourseCredit> deptList){
         this.deptList = deptList;
     }
 
-    public void setoptList(ArrayList<String> optList){
+    public void setoptList(ArrayList<CourseCredit> optList){
         this.optionalList = optList;
     }
 
-    public void setgeneralList(ArrayList<String> generalList){
+    public void setgeneralList(ArrayList<CourseCredit> generalList){
         this.generalList = generalList;
     }
 
-    public void setKernalList(ArrayList<String> kernalList){
+    public void setKernalList(ArrayList<CourseCredit> kernalList){
         this.kernalList = kernalList;
     }
 
-    public void setPeList(ArrayList<String> peList){
+    public void setPeList(ArrayList<CourseCredit> peList){
         this.peList = peList;
     }
 
@@ -108,27 +108,27 @@ public class RemainCredit{
         return swimming;
     }
 
-    public ArrayList<String> getReqList(){
+    public ArrayList<CourseCredit> getReqList(){
         return requiredList;
     }
 
-    public ArrayList<String> getDeptList(){
+    public ArrayList<CourseCredit> getDeptList(){
         return deptList;
     }
 
-    public ArrayList<String> getOptList(){
+    public ArrayList<CourseCredit> getOptList(){
         return optionalList;
     }
 
-    public ArrayList<String> getGeneralList(){
+    public ArrayList<CourseCredit> getGeneralList(){
         return generalList;
     }
 
-    public ArrayList<String> getKernalList(){
+    public ArrayList<CourseCredit> getKernalList(){
         return kernalList;
     }
 
-    public ArrayList<String> getPeList(){
+    public ArrayList<CourseCredit> getPeList(){
         return peList;
     }
 }
