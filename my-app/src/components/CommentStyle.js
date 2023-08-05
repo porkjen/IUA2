@@ -44,6 +44,14 @@ const CommentText = styled.button`
     background-color: transparent; 
 `;
 
+const CommentAuthorImg = styled.img`
+    width: 40px; /* 設定頭像的寬度和高度 */
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left: 20px;
+    padding-top: 25px;
+`;
 
 
 const CommentAuthor = styled.div`

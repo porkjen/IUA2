@@ -11,7 +11,9 @@ body{
  background-position: center;
  background-repeat: repeat-y;
  background-size: cover;
+ 
 }
+
 
 /*dialog position*/
 .TimeTable_draw >.TimeTabledialog{
@@ -81,8 +83,8 @@ body{
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
-    
 }
+
 
 /*table position*/
 .timeTable_info_place{
@@ -91,14 +93,16 @@ table, th, td {
     flex-wrap: wrap;
     z-index: 2;
     margin-top: 140px;
-    
+    margin-left:50px;
 }
 
 .timeTable_info{
     font-family: 'Noto Serif TC', serif;
     z-index: 2;
-    margin-left: 13%;
     position: absolute;
+    width:100%;
+    overflow-x: auto;
+    border: 1px solid black;
 }
 
 
