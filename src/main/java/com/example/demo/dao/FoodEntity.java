@@ -24,7 +24,7 @@ public class FoodEntity {
     private String road;
     private List<p> review = new ArrayList<>();
     private List<String> saved = new ArrayList<>();
-
+    private double distance;
 
     public static class p {
         private String p_studentID = "";
@@ -200,5 +200,13 @@ public class FoodEntity {
 
     public void setRoad(String road) {
         this.road = road;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 }

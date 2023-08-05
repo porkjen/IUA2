@@ -416,13 +416,14 @@ public class Crawler {
     public static void main(String[] args) throws Exception {
         String account = "";
         String password = "";
-        CrawlerHandle(account,password);
+        //CrawlerHandle(account,password);
         //getBasicData(account,password);
         //getMyClass(account,password);
         //getAllGeneralClass();
         //getFinishedCredict();
-
         //detectCoureses();
+        getData g = new getData();
+        System.out.println(g.getDistanceFromLatLonInKm(25.15328209647634, 121.76958328583095));
     }
 }
 

@@ -13,10 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.lang.Math.*;
+
 public class getData {
     @Autowired
     TodoService todoService;//取得Service物件
 
+    double deg2rad(double deg) {
+        return deg * (PI/180);
+    }
+    double getDistanceFromLatLonInKm(double lat,double lon) {
+        int R = 6371; // Radius of the earth in km
+        double dLat = deg2rad(25.150768046194273 - lat);  // deg2rad below
+        double dLon = deg2rad(121.77575413680472 - lon);
+        double a = (sin(dLat / 2) * sin(dLat / 2)) + (cos(deg2rad(lat)) * cos(deg2rad(lat)) * sin(dLon / 2) * sin(dLon / 2));
+        double c = 2 * atan2(sqrt(a), sqrt(1-a));
+        return R * c;
+    }
     List<FoodEntity> getRData(String location){
         List<FoodEntity> restaurantList = new ArrayList<>();
         try {
@@ -51,7 +64,7 @@ public class getData {
             for(FoodEntity r : restaurantList){
                 System.out.println(i);
                 System.out.println("name : "+ r.getStore()+"\nrating : "+ r.getRating()+
-                        "\naddress : "+ r.getAddress()+"\nopen time : \n"+ r.getWeekday_text());
+                        "\naddress : "+ r.getAddress()+"\ndistance : \n"+ r.getDistance());
                 i++;
             }
 
@@ -74,6 +87,9 @@ public class getData {
             FoodEntity restaurant = new FoodEntity();
             restaurant.setStore(resultsArray.getJSONObject(i).getString("name"));//restaurant
             placeID = resultsArray.getJSONObject(i).getString("place_id");
+            double lat = resultsArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+            double lng = resultsArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+            restaurant.setDistance(getDistanceFromLatLonInKm(lat, lng));
             //rating
             if (!resultsArray.getJSONObject(i).has("rating")) restaurant.setRating(0);
             else restaurant.setRating(resultsArray.getJSONObject(i).getDouble("rating"));
@@ -115,20 +131,11 @@ public class getData {
                     restaurant.setReview(userReview);
                 }
             }
-            /*String add = restaurant.getAddress();
-            System.out.println(add);
-            if((add.contains("路")||add.contains("街"))&&add.contains("區")){
-                String roadName = add.split("路|街")[0].split("區")[1];
-                if(add.contains("路")) roadName+="路";
-                else roadName+="街";
-                restaurant.setRoad(roadName);
-            }*/
             restaurant.setStudentID("IUA");
             restaurant.setNickname("IUA");
             restaurant.setPost_time(DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()));
             restaurant.setReport(0);
             arrayList.add(restaurant);
-            //foodRepository.save(restaurant);
         }
         return arrayList;
     }
