@@ -19,14 +19,16 @@ const Must = () => {
             </Link>
           </div>
           <div className="must_title">
-            <label className="titleText">必選修課程</label>
+            <label className="titleText">課程結果</label>
           </div>
           <div className='mustLable'>
-            {RCResult.map((item) => (
-              <Mustinfo key={item.id}>
-                {item.cname}&emsp;{item.cnumber}
-              </Mustinfo>
-            ))}
+            <div className="scrollableContainer">
+              {RCResult.map((item) => (
+                <Mustinfo key={item.id}>
+                  {item.cname}<br />{item.cnumber}&emsp;{item.cgrade}&emsp;{item.cteacher}&emsp;{item.ccredit}學分
+                </Mustinfo>
+              ))}
+            </div>
           </div>
         </div>
       </div>

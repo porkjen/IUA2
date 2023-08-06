@@ -28,15 +28,7 @@ html,body,#root,.Must{
     padding-top: 0px;
 }
 
-
-
-.mustLable{
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 2;
-    margin-top: 15px;
-    width: 300px;
-    height: 30px;
-    background-color: white;
-    border-radius: 10px;
-}
+.scrollableContainer {
+    height: 580px; /* 設置固定高度，根據需要調整 */
+    overflow: auto;
+  }

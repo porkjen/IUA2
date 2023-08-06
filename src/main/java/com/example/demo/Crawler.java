@@ -70,8 +70,8 @@ public class Crawler {
                 int height = element.getSize().getHeight();
 
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
-
+                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
+                BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);
                 ImageIO.write(subImage, "png", screenshot);
                 File screenshotLocation = new File("test.png");
                 FileUtils.copyFile(screenshot, screenshotLocation);
@@ -519,9 +519,9 @@ public class Crawler {
 
     public static void main(String[] args) throws Exception {
 
-        String account = "";
-        String password = "";
-        //CrawlerHandle(account,password);
+        String account = "00957039";
+        String password = "kl29nhpo";
+        CrawlerHandle(account,password);
 
         //getBasicData(account,password);
         //getMyClass(account,password);
