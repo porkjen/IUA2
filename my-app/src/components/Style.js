@@ -6,7 +6,7 @@ const RemainTitle = styled.label`
     font-family: 'Noto Serif TC', serif;
     color:#008CBA;
     margin-top:10px;
-    
+
 `;
 
 const RemainContainer = styled.div`
@@ -37,7 +37,16 @@ const Mustinfo = styled.label`
     font-family: 'Noto Serif TC', serif;
     color:#008CBA;
     margin-top:10px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+    width: 350px;
+    height: 30px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
     
 `;
 
-export {RemainTitle, RemainContainer, RemainList , Mustinfo};
+export {RemainTitle, RemainContainer, RemainList, Mustinfo} ;
