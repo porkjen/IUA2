@@ -54,13 +54,14 @@ const App=()=> {
                     <Route path="/Credit" element={<Credit />} />
                     <Route path="/Core" element={<Core />} />
                     <Route path="/Must" element={<Must />} />
+                    //<Route path="/Must/*" element={<Must />} />
                     <Route path="/Graduation" element={<Graduation />} />
                     <Route path="/Search" element={<Search />} />
                     <Route path="/CourseSelection" element={<CourseSelection />} />
                     <Route path="/generalEducation" element={<GeneralEducaton />} />
                     <Route path="/favorite" element={<Favorite />} />
                     <Route path="/DetectCourse" element={<DetectCourse />} />
-                    <Route path="/Chatroom" element={<Chatroom />} />
+                    <Route path="/Chatroom/:id" element={<Chatroom />} />
                     <Route path="/modifyPost" element={<ModifyPost />} />
                     <Route path="/ChatRoomList" element={<ChatRoomList />} />
                     <Route path="/navbar" element={<navbar/> } />

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven 3.8.1
+Built-By: user
+Build-Jdk: 18.0.2
+Implementation-Title: ChatroomV1
+Implementation-Version: 1.0
+Implementation-Vendor-Id: IUA.version1
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/ChatroomV1
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: IUA.version1.ChatroomV1Appication
+Spring-Boot-Version: 2.1.0.RELEASE
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+

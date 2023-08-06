@@ -6,7 +6,15 @@ const RemainTitle = styled.label`
     font-family: 'Noto Serif TC', serif;
     color:#008CBA;
     margin-top:10px;
-    
+
 `;
 
-export {RemainTitle};
+const Mustinfo = styled.label`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    color:#008CBA;
+    margin-top:10px;
+
+`;
+
+export {RemainTitle, Mustinfo};

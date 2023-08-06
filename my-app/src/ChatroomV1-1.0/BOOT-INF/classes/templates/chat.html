@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>ChatRoom1</title>
+    <script src="js/sockjs-0.3.4.js"></script>
+    <script src="js/stomp.js"></script>
+    <script type="text/javascript">
+        var stompClient = null;
+        var userName = null;
+        var apiRoom = null;
+
+        function setConnected(connected) {
+            document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+            document.getElementById('response').innerHTML = '';
+        }
+        function initializeStompClient() {
+            var socket = new SockJS('/chatroom');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({ user: userName }, function (frame) {
+                setConnected(true);
+                console.log('Connected: ' + frame);
+                apiRoom = localStorage.getItem('nowRoom');
+
+                // 廣播
+                stompClient.subscribe('/topic/'+apiRoom, function (messageOutput) {
+                    showMessageOutput(JSON.parse(messageOutput.body));
+                });
+
+                // 私人
+                stompClient.subscribe('/user/subscribe', function (messageOutput) {
+                    showMessageOutput(JSON.parse(messageOutput.body));
+                });
+            });
+        }
+            function sendMessage() {
+                var from = userName;
+                console.log(userName)
+                var text = document.getElementById('text').value;
+                if(text != ''){
+                    stompClient.send("/app/"+apiRoom, {}, JSON.stringify({'from':from, 'text':text}));
+                    document.getElementById('text').value = '';
+                }
+            }
+
+            function showMessageOutput(messageOutput) {
+                var response = document.getElementById('response');
+                var p = document.createElement('p');
+                p.style.wordWrap = 'break-word';
+                p.appendChild(document.createTextNode(" (" + messageOutput.dateStr + ")" + messageOutput.message.from + ":      "+
+                messageOutput.message.text));
+                response.appendChild(p);
+
+                var elem = document.getElementById('scroll');
+                elem.scrollTop = elem.scrollHeight;
+            }
+        window.onload = function() {
+            userName = localStorage.getItem('userName');
+            console.log(userName);
+            initializeStompClient();
+        };
+    </script>
+    <style>
+        @import url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+        *{
+            font-family:'cwTeXYen', Comic Sans MS;
+        }
+        body{
+            font-family: 'Jacques Francois Shadow';
+            background-image: linear-gradient(to top,  #6D7B86, #BFCDD4);
+        }
+        #from, #text{
+            width: 200px;
+            height: 25px;
+            margin: 10px;
+            color: #336666;
+            text-align: center;
+        }
+        #sendMessage{
+            position: relative;
+            bottom: 0;
+            width: 5%;
+            height: 25px;
+            border: groove;
+            background-image: linear-gradient(to bottom,  #6D7B86, #BFCDD4);
+            font-family: "Open Sans", sans-serif;
+            text-align: center;
+            font-size: 10px;
+            text-transform: capitalize;
+            color: #fff;
+            z-index: 3;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-transition: 0.3s;
+            -moz-transition: 0.3s;
+            -ms-transition: 0.3s;
+            -o-transition: 0.3s;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+</body>
+<div>
+    <br/>
+    <div id="conversationDiv">
+        <input type="text" id="text" placeholder="Write a message..."/>
+        <button id="sendMessage" onclick="sendMessage();">Send</button>
+    </div>
+    <div id = "scroll" style="height:600px;width:500px;border:1px;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+        <p id="response"></p>
+    </div>
+</div>
+
+</body>
+</html>

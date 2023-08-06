@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/sockjs-0.3.4.js"></script>
+    <script src="js/stomp.js"></script>
+    <script type="text/javascript">
+        var stompClient = null;
+        var userName = null;
+        var sessionId = null;
+        function setConnected(connected) {
+            document.getElementById('connect').disabled = connected;
+            document.getElementById('disconnect').disabled = !connected;
+            document.getElementById('add').style.visibility = connected ? 'visible' : 'hidden';
+            document.getElementById('from').disabled = connected;
+        }
+        function connect() {
+            var socket = new SockJS('/chatroom');
+            stompClient = Stomp.over(socket);
+
+            userName = document.getElementById('from').value;
+            stompClient.connect({user:userName}, function(frame) {
+                setConnected(true);
+                console.log('Connected: ' + frame);
+                localStorage.setItem('userName', userName);
+
+                stompClient.subscribe('/topic/messages', function (messageOutput) {
+                    showMessageOutput(JSON.parse(messageOutput.body));
+                });
+
+                // 私人
+                stompClient.subscribe('/user/subscribe', function (messageOutput) {
+                    showMessageOutput(JSON.parse(messageOutput.body));
+                });
+            })
+        }
+
+        function disconnect() {
+            if(stompClient != null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            userName = null;
+            console.log("Disconnected");
+        }
+        /*function btnOne() {
+            localStorage.setItem('userName', userName);
+            var url = '/chat';
+            window.location.href = url;
+        }*/
+    </script>
+    <style>
+        body{
+            font-family: 'Jacques Francois Shadow';
+            background-image: linear-gradient(to top,  #6D7B86, #BFCDD4);
+        }
+        html, body{
+            height : 100%;
+        }
+        #add {
+            position: relative;
+            bottom: 0;
+            width: 15%;
+            height: 50px;
+            border: groove;
+            margin-left: 42%;
+            background-image: linear-gradient(to bottom,  #6D7B86, #BFCDD4);
+            font-family: "Open Sans", sans-serif;
+            text-align: center;
+            font-size: 18pt;
+            text-transform: capitalize;
+            color: #fff;
+            z-index: 3;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-transition: 0.3s;
+            -moz-transition: 0.3s;
+            -ms-transition: 0.3s;
+            -o-transition: 0.3s;
+            transition: 0.3s;
+        }
+        #connect{
+            position: relative;
+            bottom: 0;
+            width: 7%;
+            height: 30px;
+            border: groove;
+            margin-left: 42%;
+            background-image: linear-gradient(to bottom,  #6D7B86, #BFCDD4);
+            font-family: "Open Sans", sans-serif;
+            text-align: center;
+            font-size: 10px;
+            text-transform: capitalize;
+            color: #fff;
+            z-index: 3;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-transition: 0.3s;
+            -moz-transition: 0.3s;
+            -ms-transition: 0.3s;
+            -o-transition: 0.3s;
+            transition: 0.3s;
+        }
+        #disconnect{
+            position: relative;
+            bottom: 0;
+            width: 7%;
+            height: 30px;
+            border: groove;
+            background-image: linear-gradient(to bottom,  #6D7B86, #BFCDD4);
+            font-family: "Open Sans", sans-serif;
+            text-align: center;
+            font-size: 10px;
+            text-transform: capitalize;
+            color: #fff;
+            z-index: 3;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-transition: 0.3s;
+            -moz-transition: 0.3s;
+            -ms-transition: 0.3s;
+            -o-transition: 0.3s;
+            transition: 0.3s;
+        }
+        #from{
+            width: 200px;
+            height: 25px;
+            margin: 10px;
+            color: #336666;
+            margin-left: 42.5%;
+            text-align: center;
+        }
+        .chat-room {
+            border: 1px solid #336666;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body  onload="disconnect()">
+<div>
+  <input type="text" id="from" placeholder="Choose a nickname"/>
+</div>
+<br/>
+<div>
+  <button id="connect" onclick="connect();">Connect</button>
+  <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+</div>
+<h1>聊天室列表</h1>
+<div id="chatRoomList">
+
+</div>
+
+<script src="js/chatroom.js"></script>
+
+<button id="add" onclick="add();">Add Room</button>
+</body>
+</html>

@@ -22,6 +22,7 @@ class ChatRoom extends React.Component {
 
   render() {
     const { messages, newMessage } = this.state;
+    const { chatRoomName } = this.props; // 接收传递的聊天室名称
     const Message = ({ content, isSent }) => {
       return (
         <div className={`message ${isSent ? 'sent' : 'received'}`}>
@@ -29,11 +30,11 @@ class ChatRoom extends React.Component {
         </div>
       );
     };
-
+    
     return (
       <div className="Chatroom">
         <div className="chatroom-header">
-          <h1>ChatRoom</h1>
+          <h1>chatroom</h1>
         </div>
         <div className="message-list">
           <Message content="Hi!" isSent={false} />

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Jacques+Francois+Shadow">
+    <style>
+        body{
+            font-family: 'Jacques Francois Shadow';
+            background-image: linear-gradient(to top,  #6D7B86, #BFCDD4);
+        }
+        html, body{
+            height : 100%;
+        }
+        h1{
+            margin-top: 200px;
+            text-align: center;
+            color: #fff;
+            -webkit-text-stroke: 0.05px #6D7B90;
+        }
+        p{
+            font-size: 20px;
+            text-align: center;
+            color: #fff;
+            -webkit-text-stroke: 0.6px #6D7B95;
+        }
+        .enter {
+            position: relative;
+            bottom: 0;
+            width: 15%;
+            height: 50px;
+            border: groove;
+            margin-left: 42%;
+            background-image: linear-gradient(to bottom,  #6D7B86, #BFCDD4);
+            font-family: "Open Sans", sans-serif;
+            text-align: center;
+            font-size: 18pt;
+            text-transform: capitalize;
+            color: #fff;
+            z-index: 3;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-transition: 0.3s;
+            -moz-transition: 0.3s;
+            -ms-transition: 0.3s;
+            -o-transition: 0.3s;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+<h1>
+    <span class = "title" th:text="${welcomeMsg}"/>
+</h1>
+<p>
+    Now is <span class = "time" th:text="${serverTime}"/>
+</p>
+<br>
+<a href="/list">
+    <button class="enter" onclick="enter();">-*START*-</button>
+</a>
+</body>
+</html>
