@@ -24,8 +24,8 @@ import java.util.List;
 public class TodoController {
     @Autowired
     TodoService todoService;//取得Service物件
-    @Autowired
-    RemainedService remainedService;
+    //@Autowired
+    //RemainedService remainedService;
     @Autowired
     FinishedRepository fRepository;
     @Autowired
@@ -93,7 +93,7 @@ public class TodoController {
         basicRepository.save(oldProduct);
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
     }
-
+/*
     @PostMapping("/remained_credits")
     public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
@@ -119,19 +119,21 @@ public class TodoController {
     }
 
     @PostMapping("/add_detect_course") 
-    public void addDetectCourse(@RequestBody CourseToBeDetected course)throws TesseractException, IOException, InterruptedException{
+    public void addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
-        if(dRepository.existsByStudentID(course.getStudentID())){
-            DetectedCoursesList oriList = dRepository.findByStudentID(course.getStudentID());
+        if(dRepository.existsByStudentID(requestData.getStudentID())){
+            DetectedCoursesList oriList = dRepository.findByStudentID(requestData.getStudentID());
+            System.out.println("course number: " + requestData.getNumber());
             courses = oriList.getDetectedCourses();
-            courses.add(course);
+            courses.add(requestData);
             oriList.setDetectedCourse(courses);
             dRepository.save(oriList);
         }
         else{
             DetectedCoursesList newList = new DetectedCoursesList();
-            newList.setStudentID(course.getStudentID());
-            courses.add(course);
+            newList.setStudentID(requestData.getStudentID());
+            System.out.println("course number: " + requestData.getNumber());
+            courses.add(requestData);
             newList.setDetectedCourse(courses);
             dRepository.save(newList);
         }
@@ -141,6 +143,11 @@ public class TodoController {
     @PostMapping("/detect_course")
     public void detectCourse()throws TesseractException, IOException, InterruptedException{
 
+    }
+
+    @GetMapping("core_elective")
+    public void coreElective(){
+        
     }
 
     @PostMapping("/rent_post")
@@ -305,7 +312,7 @@ public class TodoController {
             for(String post : savedEntity.getPostId()){
                 if(post.startsWith("F")){
                     FoodEntity food = foodRepository.findByPostId(post);
-                    FoodDTO foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad());
+                    FoodDTO foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad(), food.getDistance());
                     savedDTO.setSavedFood(foodDTO);
                 }else if(post.startsWith("H")){
                     HouseEntity house = houseRepository.findByPostId(post);

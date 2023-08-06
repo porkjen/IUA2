@@ -88,11 +88,13 @@ public class FoodController {
         if(Objects.equals(sort, "PostTimeNtoF"))foodPostList = foodRepository.findAllByOrderByIdDesc();
         else if (Objects.equals(sort, "PostTimeFtoN")) foodPostList = foodRepository.findAll();
         else if(Objects.equals(sort, "rate_Decrease")) foodPostList = foodRepository.findAllByOrderByRatingDesc();
-        else foodPostList = foodRepository.findAllByOrderByRatingAsc();//rate increase
+        else if(Objects.equals(sort, "rate_Increase")) foodPostList = foodRepository.findAllByOrderByRatingAsc();
+        else if(Objects.equals(sort, "distance_Increase"))foodPostList = foodRepository.findAllByOrderByDistanceAsc();
+        else foodPostList = foodRepository.findAllByOrderByDistanceDesc();
 
         List<FoodDTO> shortenedPostList = new ArrayList<>();
         for (FoodEntity post : foodPostList) {
-            FoodDTO dto = new FoodDTO(post.getPostId(), post.getNickname(), post.getStore(), post.getRating(), post.getPost_time(), post.getRoad());
+            FoodDTO dto = new FoodDTO(post.getPostId(), post.getNickname(), post.getStore(), post.getRating(), post.getPost_time(), post.getRoad(), post.getDistance());
             shortenedPostList.add(dto);
         }
         return shortenedPostList;
@@ -234,7 +236,7 @@ public class FoodController {
                (Objects.equals(area, "") || food.getAddress().equals(area)) &&
                (Objects.equals(addr, "") || food.getAddress().contains(addr))
             ){
-                FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad());
+                FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad() , food.getDistance());
                 resultList.add(result);
             }
         }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
 html,body,#root,.modalBackground{
     
@@ -90,4 +91,98 @@ html,body,#root,.modalBackground{
     position: absolute;
     z-index: 2;
     margin-top: 160%;
+=======
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+html,body,#root,.modalBackground{
+    
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(249, 236, 207, 0.951);
+    overflow: auto;
+}
+
+.modalClose{
+    background-color: transparent;
+    border: 0;
+}
+
+.modalContainer{
+    
+    background-color: white;
+    width:300px;
+    margin-top: 100px;
+    position: relative;
+    top: 30%;  
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal_tilte{
+    font-family: 'Noto Serif TC', serif;
+    text-align: center;
+}
+
+.modalBodyText{
+    text-align: center;
+    padding-bottom: 60px;
+
+}
+
+.ModalFoodStoreText,.ModalFoodRating,.ModalFoodAddressText {
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+}
+
+
+
+.modal_sandwich{
+    max-width: 23%;
+    padding-left: 1%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 90%;
+}
+
+.modal_pizza{
+    max-width: 20%;
+    margin-left: 80%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 30%;
+    
+}
+
+.modal_cookiemonster{
+    max-width: 40%;
+    padding-left: 8%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 140%;
+}
+
+.modal_cookiem{
+    max-width: 20%;
+    padding-left: 50%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 130%;
+}
+
+.modal_minion{
+    max-width: 40%;
+    padding-left: 55%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 133%;
+}
+
+.modal_banana{
+    max-width: 35%;
+    padding-left: 12%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 160%;
+>>>>>>> 6874f83394979ee2f1ff6b017bc09983dd45a104
 }

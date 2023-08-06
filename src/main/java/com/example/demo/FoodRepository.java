@@ -15,4 +15,6 @@ public interface FoodRepository extends MongoRepository<FoodEntity, String> {
     FoodEntity deleteByPostId(String postId);
     List<FoodEntity> findAllByOrderByRatingDesc();
     List<FoodEntity> findAllByOrderByRatingAsc();
+    List<FoodEntity> findAllByOrderByDistanceAsc();
+    List<FoodEntity> findAllByOrderByDistanceDesc();
 }
