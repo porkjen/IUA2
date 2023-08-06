@@ -47,7 +47,7 @@ const Must=()=>{
                         <label className="titleText">必選修課程</label>
                     </div>
                     <div className='mustLable'>
-                        {data.map((item) => (<Mustinfo key={item.id}>{item.cname}&emsp;{item.cnumber}</Mustinfo>))}
+                        {data.map((item) => (<Mustinfo key={item.id}>{item.cname}&emsp;{item.cnumber}&emsp;{item.ccredit}</Mustinfo>))}
                     </div>
                     
 

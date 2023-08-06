@@ -9,7 +9,7 @@ const MoodChat = () => {
 
     return () => {
       // Clean up by removing the script when the component unmounts
-      
+
     };
   }, []);
 
@@ -23,6 +23,5 @@ const MoodChat = () => {
     ></df-messenger>
   );
 };
-
 
 export default MoodChat;

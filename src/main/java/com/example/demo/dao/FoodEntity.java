@@ -20,9 +20,11 @@ public class FoodEntity {
     private String[] weekday_text = new String[7]; //"星期一: 11:30 – 20:30"
     private String address = "";
     private String URL = "";
+    private int report;
+    private String road;
     private List<p> review = new ArrayList<>();
     private List<String> saved = new ArrayList<>();
-
+    private double distance;
 
     public static class p {
         private String p_studentID = "";
@@ -182,5 +184,29 @@ public class FoodEntity {
     }
     public void saveFirst(String saved) {
         this.saved.add(0, saved);
+    }
+
+    public int getReport() {
+        return report;
+    }
+
+    public void setReport(int report) {
+        this.report = report;
+    }
+
+    public String getRoad() {
+        return road;
+    }
+
+    public void setRoad(String road) {
+        this.road = road;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 }

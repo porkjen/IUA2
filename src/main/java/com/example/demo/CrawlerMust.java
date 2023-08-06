@@ -40,7 +40,7 @@ public class CrawlerMust {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-                BufferedImage subImage = image.getSubimage(point.getX() + 205, point.getY() + 69, width + 5, height + 3);
+                BufferedImage subImage = image.getSubimage(point.getX() + 235, point.getY() + 69, width + 5, height + 3);
                 ImageIO.write(subImage, "png", screenshot);
                 File screenshotLocation = new File("C:\\Users\\elain\\1112\\senior_project\\Seleniumtest\\test.png");
                 FileUtils.copyFile(screenshot, screenshotLocation);
