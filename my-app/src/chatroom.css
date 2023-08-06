@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    position: relative;
 }
 .Chatroom{
     background-color: rgb(249, 236, 207);
@@ -13,7 +14,27 @@
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
+    position: fixed;
+    left: 0;
+    right: 0;
 }
+
+.chatroom-messages {
+    flex: 1;
+    overflow-y: auto; /* 聊天區塊滾動 */
+    padding-bottom: 30px;
+}
+
+.chatroom-input {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+}
+  
 
 .Chatroom h1 {
     margin-bottom: 20px;
@@ -23,7 +44,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
+    margin-top: 110px;
 }
 
 .Chatroom .sent {
@@ -52,6 +74,7 @@
     align-items: center;
     position: absolute;
     bottom: 0;
+    left: 0;
     width: 95%;
     background-color: #fff;
     padding: 10px;

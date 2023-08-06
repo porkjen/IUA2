@@ -8,6 +8,8 @@ import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDe
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody } from './components/ArticleStyle.js';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef,  } from "react";
+import yolk from './img/yolk.PNG';
+import redBall from './img/redBall.PNG';
 
 function Favorite() {
     const [FoodData, setFoodData] = useState([]);
@@ -178,8 +180,10 @@ function Favorite() {
       <div className='Favorite'>
         <div>
           <Title>我的收藏</Title>
-          <img className='heart' src={heart}/>
-          <img className='stars' src={stars}/>
+          {/* <img className='heart' src={heart}/>
+          <img className='stars' src={stars}/> */}
+          <img className='food_yolk' src={yolk} alt="yolk" />
+          <img className='food_redBall' src={redBall} alt="redBall" />
         </div>
         <div>
           <select className='selectType' onChange={handleSelectChange}> 
