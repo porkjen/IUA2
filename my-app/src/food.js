@@ -23,6 +23,7 @@ const Food = () => {
   const [AS, setAS] = useState("PostTimeNtoF");
   const [isRate, setisRate] = useState(false);
   const [isPostTime, setisPostTime] = useState(true);
+  const [isDistant, setisDistant] = useState(false);
   let navigate = useNavigate();
   const articleListRef = useRef(null);
   const location = useLocation();
@@ -33,6 +34,7 @@ const Food = () => {
     setAS("PostTimeNtoF");
     setisPostTime(true);
     setisRate(false);
+    setisDistant(false);
     fetch(`/food_load?sort=PostTimeNtoF`)
       .then(response => response.json())
       .then(data => {
@@ -51,7 +53,27 @@ const Food = () => {
     setAS("rate_Decrease");
     setisPostTime(false);
     setisRate(true);
+    setisDistant(false);
     fetch(`/food_load?sort=rate_Decrease`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("NOTsearchIn");
+        setData(data);
+        setVisibleData(data.slice(0, 50));
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setIsLoading(false); 
+      });
+  };
+
+  const handleDistantASChange = event => {
+    setAS("distance_Increase");
+    setisPostTime(false);
+    setisRate(false);
+    setisDistant(true);
+    fetch(`/food_load?sort=distance_Increase`)
       .then(response => response.json())
       .then(data => {
         console.log("NOTsearchIn");
@@ -133,13 +155,17 @@ const Food = () => {
           </Link>
           <ChooseArticleBtn onClick={() => setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
           <div className='ArticleSelect'>
-          {isPostTime && <input type="radio" id='distance' name='AS' value='PostTimeNtoF' onChange={handlePostASChange} checked></input>}
-          {!isPostTime && <input type="radio" id='distance' name='AS' value='PostTimeNtoF' onChange={handlePostASChange}></input>}
-          <label for="distance">發布時間近到遠</label>
+          {isPostTime && <input type="radio" id='postTime' name='AS' value='PostTimeNtoF' onChange={handlePostASChange} checked></input>}
+          {!isPostTime && <input type="radio" id='postTime' name='AS' value='PostTimeNtoF' onChange={handlePostASChange}></input>}
+          <label for="distance">發布時間近遠</label>
 
           {isRate && <input type="radio" id='rate' name='AS' value='rate_Decrease' onChange={handleRateASChange} checked></input>}
           {!isRate && <input type="radio" id='rate' name='AS' value='rate_Decrease' onChange={handleRateASChange}></input>}
-          <label for="rate">評分高到低</label>
+          <label for="rate">評分高低</label>
+
+          {isDistant && <input type="radio" id='distant' name='AS' value='distant_Increase' onChange={handleDistantASChange} checked></input>}
+          {!isDistant && <input type="radio" id='distant' name='AS' value='distant_Increase' onChange={handleDistantASChange}></input>}
+          <label for="rate">距離近遠</label>
           </div><br/>
           <ArticleList ref={articleListRef}>
             {visibleData.map(item => (
