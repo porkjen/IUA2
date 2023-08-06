@@ -6,7 +6,6 @@ const RemainTitle = styled.label`
     font-family: 'Noto Serif TC', serif;
     color:#008CBA;
     margin-top:10px;
-
 `;
 
 const RemainContainer = styled.div`
@@ -16,7 +15,6 @@ const RemainContainer = styled.div`
     height: 50px;
     background-color: white;
     border-radius: 10px;
-    
 `;
 
 const RemainList = styled.div`
@@ -41,12 +39,12 @@ const Mustinfo = styled.label`
     margin-right: auto;
     z-index: 2;
     width: 350px;
-    height: 30px;
+    height: 60px;
     background-color: white;
     border-radius: 10px;
     display: flex;
     flex-wrap: wrap;
-    
+    padding-left: 10px;
 `;
 
 export {RemainTitle, RemainContainer, RemainList, Mustinfo} ;
