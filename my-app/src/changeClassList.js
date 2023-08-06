@@ -7,6 +7,7 @@ import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, Arti
 import { Routes ,Route,Link,useNavigate,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
+//列出該時段有的課
 const ChangeClassList=()=> {
 
     const [data, setData] = useState(null);
@@ -15,16 +16,16 @@ const ChangeClassList=()=> {
     const location = useLocation();
     const { studentID, time } = location.state;
 
-    function Articleinfo({ author, post_time, store, rating, postID }) {
+    function Articleinfo({ author, className, category, postID }) {
 
-      const handleShowFoodSubmit = (e) => {
+      const handleShowClassSubmit = (e) => {
         e.preventDefault();
         //const student_id = loginUser();
         const formData = {
                         studentID: "00957025",
                         time:time,
                       };
-          fetch('/food_full_post', {
+          fetch('/course_full_post', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(formData)})
@@ -34,7 +35,7 @@ const ChangeClassList=()=> {
                   .catch(error => {
                         console.error(error);});
                        //Form submission happens here
-            navigate("/foodArticle", {
+            navigate("/changeClassArticle", {
               state: {
                 studentID: "00957025",
                 postId : postID,},});
@@ -43,10 +44,10 @@ const ChangeClassList=()=> {
 
         return (
           <ArticleContainer>
-            <ArticleText onClick={handleShowFoodSubmit}>
+            <ArticleText onClick={handleShowClassSubmit}>
                 <ArticleAuthor>{author}</ArticleAuthor>
-                <ArticleBody>{store}</ArticleBody>
-                <ArticlePostTime>{rating+"顆星 " + post_time}</ArticlePostTime>
+                <ArticleBody>{className}</ArticleBody>
+                <ArticlePostTime>{category}</ArticlePostTime>
             </ArticleText>
           </ArticleContainer>
         );
@@ -62,7 +63,7 @@ const ChangeClassList=()=> {
                 </Link>
                 <ArticleList>
                     {data.map(item => (
-                      <Articleinfo key={item.postId} author={item.studentID} class={item.class} store={item.store} rating={item.rating} postID={item.postId}></Articleinfo>
+                      <Articleinfo key={item.postId} author={item.studentID} className={item.class} category={item.category} postID={item.postId}></Articleinfo>
                     ))}
                 </ArticleList>
             </Pagebg>
@@ -75,12 +76,16 @@ const ChangeClassList=()=> {
     function ChangeClassList() {
       useEffect(() => {
         if (!data) {
-          fetch('/course_change?time='+time)
-            .then(response => response.json())
-            .then(data => setData(data))
-            .catch(error => {
-              console.error('Error:', error);
-            });
+          fetch(`/course_change?time=${time}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(time);
+            setData(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+          
         }
       }, [data]); // 添加依賴項data
 

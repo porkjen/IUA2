@@ -2,6 +2,8 @@ import './PostArticle.css';
 import React from 'react';
 import elmo from './img/elmo.png';
 import conversation from './img/conversation.png';
+import cat1 from './img/SignIn1.png';
+import cat2 from './img/SignIn2.PNG';
 import {Title}  from './components/ArticleStyle.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
@@ -467,8 +469,8 @@ const PostArticle=()=> {
         <div className="PostArticle">   
             <div className='PostArticle_bg'>
                 <Title>發文</Title>
-                <img className='post_elmo' src={elmo}/>
-                <img className='post_conversation' src={conversation}/>
+                <img className='post_cat1' src={cat1}/>
+                <img className='post_cat2' src={cat2}/>
                 <div className='articleFormPosition'>
                     <div className='articleForm' >
                         <select className='selectType' onChange={handleSelectChange}>

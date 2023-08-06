@@ -9,12 +9,12 @@ import NickName from './nickName';
 import TimeTable from './timeTable';
 import ChangeClass from './changeClass';
 import ChangeClassList from './changeClassList';
+import ChangeClassArticle from './changeClassArticle';
 import Food from './food';
 import Rent from './rent';
 import PostArticle from './postArticle';
 import RentArticle from './rentArticle';
 import FoodArticle from './foodArticle';
-import ChangeClassArticle from './changeClassArticle';
 import HomePage from './homePage';
 import Credit from './Credit';
 import Core from './Core';
@@ -42,13 +42,12 @@ const App=()=> {
                     <Route path="/choose" element={<Choose />} />
                     <Route path="/changeClass" element={<ChangeClass/>} />
                     <Route path="/changeClassList" element={<ChangeClassList/>} />
+                    <Route path="/changeClassArticle" element={<ChangeClassArticle/>} />
                     <Route path="/food" element={<Food/>} />
                     <Route path="/foodArticle/*" element={<FoodArticle/>} />
                     <Route path="/rent/*" element={<Rent/>} />
                     <Route path="/rentArticle/*" element={<RentArticle/>} />
                     <Route path="/postArticle" element={<PostArticle/>} />
-                    <Route path="/changeClassArticle" element={<ChangeClassArticle/>} />
-                    <Route path="/changeClassArticle" element={<ChangeClassArticle/>} />
                     <Route path="/HomePage" element={<HomePage />} />
                     <Route path="/Credit" element={<Credit />} />
                     <Route path="/Core" element={<Core />} />

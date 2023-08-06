@@ -91,3 +91,18 @@ html,body,#root,.modalBackground{
     z-index: 2;
     margin-top: 160%;
 }
+
+.modal_dogpic{
+    position: fixed;
+    padding-top: 400px;
+    margin-left: -20px;
+    height: 420px;
+    width: 420px;
+}
+
+.modal_duckpic{
+    position: fixed;
+    height: 400px;
+    width: 400px;
+    padding-top: 400px;
+}

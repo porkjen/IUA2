@@ -7,6 +7,8 @@ import cookiem from '../img/cookiem.png';
 import cookiemonster from '../img/cookiemonster.png';
 import minion from '../img/minion.png';
 import banana from '../img/banana.png';
+import duck from '../img/duck.PNG';
+import cuteDogImg from "../img/cutedoggy.PNG";
 import {ArticleSubmitBtn, ModalSubmitBtn} from './ArticleStyle.js';
 import {useState,useEffect} from "react";
 import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
@@ -77,10 +79,7 @@ function ModalChangeClass(){
 function RatingFood(){
     return(
         <div>
-            <img className='modal_sandwich' src={sandwich}/>
-            <img className='modal_pizza' src={pizza}/>
-            <img className='modal_cookiemonster' src={cookiemonster}/>
-            <img className='modal_cookiem' src={cookiem}/>
+            <img src={duck} className='modal_duckpic'/>
         </div>
 
     );
@@ -89,8 +88,7 @@ function RatingFood(){
 function ChooseArticle(){
     return(
         <div>
-            <img className='modal_minion' src={minion}/>
-            <img className='modal_banana' src={banana}/>
+            <img src={cuteDogImg} className='modal_dogpic'/>
         </div>
 
     );

@@ -6,6 +6,8 @@ import star from './img/star.png';
 import redBall from './img/redBall.PNG';
 import logo from './img/IUAlogo.png';
 import student from './img/student.png';
+import cat from './img/SignIn4.PNG';
+import studentboy from './img/studentboy.png';
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleDistance, 
   ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect } from './components/ArticleStyle.js';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
@@ -208,7 +210,7 @@ const Food = () => {
     articleListRef.current.addEventListener("scroll", handleScroll);
 
    return () => {
-    // 移除滚动事件监听器
+  
     articleListRef.current?.removeEventListener("scroll", handleScroll);
   };
   }, [visibleData, isLoading]);

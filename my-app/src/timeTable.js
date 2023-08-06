@@ -3,6 +3,8 @@ import React from 'react';
 import dialog from './img/chatBubble.png';
 import cookie from './img/cookie.png';
 import toast from './img/toast.png';
+import cat1 from './img/SignIn1.png';
+import cat2 from './img/SignIn2.PNG';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useLocation } from 'react-router-dom';
 import {useState, useEffect} from "react";
@@ -157,17 +159,10 @@ const TimeTable=()=> {
         <div className="TimeTable">    
             <div className="TimeTablebg">
                 <div className="TimeTable_draw"> 
-                    <div className="TimeTablecookie">
-                        <img src={cookie} alt="IUA" />
-                    </div>
-                    <div className="TimeTabledialog">
-                        <img src={dialog} alt="IUA" />
-                    </div>
-                    <div className="TimeTabletoast">
-                        <img src={toast} alt="IUA" />
-                    </div>
+                        <img src={cat1} alt="IUA" className="TimeTableCat1" />
+                        <img src={cat2} alt="IUA"  className="TimeTableCat2"/>
                     <div className="TimeTable_title">
-                        <label>課表查詢</label>
+                        <label className="TimeTable_title_font">課表查詢</label>
                     </div>
                 </div>
 
