@@ -1,5 +1,6 @@
 import './chatroom.css';
 import React from "react";
+import { useParams } from "react-router-dom";
 
 class ChatRoom extends React.Component {
   state = {
@@ -20,9 +21,23 @@ class ChatRoom extends React.Component {
     }
   };
 
+  
+  messageListRef = React.createRef();
+
+  scrollToBottom = () => {
+    if (this.messageListRef.current) {
+      this.messageListRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.messages.length !== this.state.messages.length) {
+      this.scrollToBottom();
+    }
+  }
+
   render() {
     const { messages, newMessage } = this.state;
-    const { chatRoomName } = this.props; // 接收传递的聊天室名称
     const Message = ({ content, isSent }) => {
       return (
         <div className={`message ${isSent ? 'sent' : 'received'}`}>
@@ -31,27 +46,33 @@ class ChatRoom extends React.Component {
       );
     };
     
+
     return (
       <div className="Chatroom">
         <div className="chatroom-header">
-          <h1>chatroom</h1>
+          <h1>ChatRoom</h1>
         </div>
-        <div className="message-list">
-          <Message content="Hi!" isSent={false} />
-          <Message content="嗨嗨" isSent={false} />
-          {messages.map((message, index) => (
-            <div key={index} className='sent'>{message}</div>
-          ))}
+        <div className="chatroom-messages" >
+          <div className="message-list" >
+            <Message content="Hi!" isSent={false} />
+            <Message content="嗨嗨" isSent={false} />
+            {messages.map((message, index) => (
+              <div key={index} className='sent'>{message}</div>
+            ))}
+            <div ref={this.messageListRef} />
+          </div>
         </div>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            placeholder='輸入想說的話...'
-            value={newMessage}
-            onChange={this.handleMessageChange}
-          />
-          <button type="submit">Send</button>
-        </form>
+        <div className="chatroom-input">
+          <form onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              placeholder='輸入想說的話...'
+              value={newMessage}
+              onChange={this.handleMessageChange}
+            />
+            <button type="submit">Send</button>
+          </form>
+        </div>
       </div>
     );
   }
