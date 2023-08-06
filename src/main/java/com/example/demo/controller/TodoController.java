@@ -290,7 +290,7 @@ public class TodoController {
 
         System.out.println("/course_search");
         String studentID ="00957039";
-        String password = "";
+        String password = " ";
 
         List<RequiredCourseEntity> RC_result = new ArrayList<>();;
         if(grade.equals("大一")) {
