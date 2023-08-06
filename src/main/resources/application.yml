@@ -1,0 +1,10 @@
+scheduler:
+  # 定時任務的時間，每五秒執行一次
+  #second: 0-59
+  #minute: 0-59
+  #hour: 0-23
+  #dayOfMonth: 一个月的哪一天（1-31）
+  #month: 1-12或JAN-DEC
+  #dayOfWeek: 一周的哪一天（0-6或SUN-SAT，0和7都代表星期日）
+  #year: 年份（可选）
+  FoodUpdateCron: 0 0 1 1 * ? #every month #? : no specific day of week

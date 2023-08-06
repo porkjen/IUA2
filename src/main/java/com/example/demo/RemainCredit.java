@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.ArrayList;
+
 public class RemainCredit{
     int required;       //必修
     int deptOptional;   //系選
@@ -7,6 +9,12 @@ public class RemainCredit{
     int general;        //通識
     int kernal;         //核心
     int pe;             //體育
+    ArrayList<CourseCredit> requiredList;
+    ArrayList<CourseCredit> deptList;
+    ArrayList<CourseCredit> optionalList;
+    ArrayList<CourseCredit> generalList;
+    ArrayList<CourseCredit> kernalList;
+    ArrayList<CourseCredit> peList;
     String eng = "未通過";
     String swimming = "未通過";
 
@@ -44,6 +52,30 @@ public class RemainCredit{
         this.swimming = swimming;
     }
 
+    public void setReqList(ArrayList<CourseCredit> reqList){
+        this.requiredList = reqList;
+    }
+
+    public void setDeptList(ArrayList<CourseCredit> deptList){
+        this.deptList = deptList;
+    }
+
+    public void setoptList(ArrayList<CourseCredit> optList){
+        this.optionalList = optList;
+    }
+
+    public void setgeneralList(ArrayList<CourseCredit> generalList){
+        this.generalList = generalList;
+    }
+
+    public void setKernalList(ArrayList<CourseCredit> kernalList){
+        this.kernalList = kernalList;
+    }
+
+    public void setPeList(ArrayList<CourseCredit> peList){
+        this.peList = peList;
+    }
+
     public int getRequired(){
         return required;
     }
@@ -74,5 +106,29 @@ public class RemainCredit{
 
     public String getSwimming(){
         return swimming;
+    }
+
+    public ArrayList<CourseCredit> getReqList(){
+        return requiredList;
+    }
+
+    public ArrayList<CourseCredit> getDeptList(){
+        return deptList;
+    }
+
+    public ArrayList<CourseCredit> getOptList(){
+        return optionalList;
+    }
+
+    public ArrayList<CourseCredit> getGeneralList(){
+        return generalList;
+    }
+
+    public ArrayList<CourseCredit> getKernalList(){
+        return kernalList;
+    }
+
+    public ArrayList<CourseCredit> getPeList(){
+        return peList;
     }
 }
