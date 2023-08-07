@@ -27,12 +27,26 @@ public class ChangeCourseController {
     ChangeCourseRepository changeCourseRepository;
     @Autowired
     BasicRepository basicRepository;
+    /*
     @GetMapping("/course_change_have") //whether there is class at this time
     public List<ChangeCourseHaveEntity> courseChangeHave(){
         List<ChangeCourseHaveEntity> courseTimeList = changeCourseHaveRepository.findAll();
         return courseTimeList;
+    }*/
+    @GetMapping("/course_change_have") //whether there is class at this time
+    public List<ChangeCourseHaveEntity> courseChangeHave(){
+        List<ChangeCourseHaveEntity> courseTimeList = new ArrayList<>();
+        for(int i=1;i<15;i++){
+            for(int j=100;j<800;j+=100){
+                String time = String.valueOf(j+i);
+                courseTimeList.add(changeCourseHaveRepository.findByTime(time));
+            }
+        }
+
+        return courseTimeList;
     }
 
+    /*
     @GetMapping("/course_change")
     public List<ChangeCourseEntity> courseChange(@RequestParam("time") String time){
         List<ChangeCourseEntity> thisTimeCourses = new ArrayList<>();
@@ -40,6 +54,18 @@ public class ChangeCourseController {
             String[] timeArray = c.getTime();
             for(int i=0;i< timeArray.length;i++){
                 if(timeArray[i] == time)thisTimeCourses.add(c);
+            }
+        }
+        return thisTimeCourses;
+    }*/
+
+    @GetMapping("/course_change")
+    public List<ChangeCourseEntity> courseChange(@RequestParam("time") String time){
+        List<ChangeCourseEntity> thisTimeCourses = new ArrayList<>();
+        for(ChangeCourseEntity c : changeCourseRepository.findAll()){
+            String[] timeArray = c.getTime();
+            for(int i=0;i< timeArray.length;i++){
+                if(Objects.equals(timeArray[i], time))thisTimeCourses.add(c);
             }
         }
         return thisTimeCourses;

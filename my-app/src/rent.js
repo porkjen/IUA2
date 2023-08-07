@@ -4,6 +4,10 @@ import Modal from "./components/Modal";
 import house from './img/house.png';
 import connection from './img/connection.png';
 import dog from './img/dog.png';
+import bee1 from './img/bee1.png';
+import bee2 from './img/bee2.png';
+import yolk from './img/yolk.PNG';
+import cat from './img/SignIn4.PNG';
 import star from './img/star.png';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
 import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleRentContainer, ArticleAuthor, ArticlePostTime, ArticleBody}  from './components/ArticleStyle.js';
@@ -48,7 +52,7 @@ const Rent=()=> {
           <ArticleContainer>
               <ArticleText onClick={handleShowHouseSubmit}>
               <ArticleDetailAuthorArea>
-                <ArticleDetailAuthorImg src={dog}></ArticleDetailAuthorImg>
+                <ArticleDetailAuthorImg src={cat}></ArticleDetailAuthorImg>
                 <ArticleDetailAuthor>{author}</ArticleDetailAuthor>
               </ArticleDetailAuthorArea>
                   <ArticleBody>{text}</ArticleBody>
@@ -63,8 +67,8 @@ const Rent=()=> {
         <Page>
             <Pagebg>
                   <Title>租屋板</Title>
-                  <img className='rent_house' src={house}/>
-                  <img className='rent_connection' src={connection}/>
+                    <img src={bee1} className='rent_bee1Img'></img>
+                    <img src={bee2} className='rent_bee2Img'></img>
                 <Link to='/postArticle'>
                   <PostArticleBtn>我要發文</PostArticleBtn>
                 </Link>

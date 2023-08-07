@@ -1,4 +1,4 @@
-/*package com.example.demo;
+package com.example.demo;
 
 import java.util.ArrayList;
 
@@ -10,16 +10,12 @@ public class RemainCredit{
     int kernal;         //核心
     int pe;             //體育
 
-
     ArrayList<String> requiredList;
     ArrayList<String> deptList;
     ArrayList<String> optionalList;
     ArrayList<String> generalList;
     ArrayList<String> kernalList;
     ArrayList<String> peList;
-
-
-
 
     String eng = "未通過";
     String swimming = "未通過";
@@ -58,27 +54,27 @@ public class RemainCredit{
         this.swimming = swimming;
     }
 
-    public void setReqList(ArrayList<CourseCredit> reqList){
+    public void setReqList(ArrayList<String> reqList){
         this.requiredList = reqList;
     }
 
-    public void setDeptList(ArrayList<CourseCredit> deptList){
+    public void setDeptList(ArrayList<String> deptList){
         this.deptList = deptList;
     }
 
-    public void setoptList(ArrayList<CourseCredit> optList){
+    public void setoptList(ArrayList<String> optList){
         this.optionalList = optList;
     }
 
-    public void setgeneralList(ArrayList<CourseCredit> generalList){
+    public void setgeneralList(ArrayList<String> generalList){
         this.generalList = generalList;
     }
 
-    public void setKernalList(ArrayList<CourseCredit> kernalList){
+    public void setKernalList(ArrayList<String> kernalList){
         this.kernalList = kernalList;
     }
 
-    public void setPeList(ArrayList<CourseCredit> peList){
+    public void setPeList(ArrayList<String> peList){
         this.peList = peList;
     }
 
@@ -114,27 +110,27 @@ public class RemainCredit{
         return swimming;
     }
 
-    public ArrayList<CourseCredit> getReqList(){
+    public ArrayList<String> getReqList(){
         return requiredList;
     }
 
-    public ArrayList<CourseCredit> getDeptList(){
+    public ArrayList<String> getDeptList(){
         return deptList;
     }
 
-    public ArrayList<CourseCredit> getOptList(){
+    public ArrayList<String> getOptList(){
         return optionalList;
     }
 
-    public ArrayList<CourseCredit> getGeneralList(){
+    public ArrayList<String> getGeneralList(){
         return generalList;
     }
 
-    public ArrayList<CourseCredit> getKernalList(){
+    public ArrayList<String> getKernalList(){
         return kernalList;
     }
 
-    public ArrayList<CourseCredit> getPeList(){
+    public ArrayList<String> getPeList(){
         return peList;
     }
-}*/
+}

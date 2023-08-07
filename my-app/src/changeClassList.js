@@ -3,28 +3,31 @@ import React from 'react';
 import Modal from "./components/Modal";
 import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
-import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody}  from './components/ArticleStyle.js';
+import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer,
+   ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleDistance}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link,useNavigate,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
+//列出該時段有的課
 const ChangeClassList=()=> {
 
     const [data, setData] = useState(null);
+    const [isPostID, setisPostID] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     let navigate = useNavigate();
     const location = useLocation();
     const { studentID, time } = location.state;
 
-    function Articleinfo({ author, post_time, store, rating, postID }) {
+    function Articleinfo({ author, className, category, postID }) {
 
-      const handleShowFoodSubmit = (e) => {
+      const handleShowClassSubmit = (e) => {
         e.preventDefault();
         //const student_id = loginUser();
         const formData = {
                         studentID: "00957025",
                         time:time,
                       };
-          fetch('/food_full_post', {
+          fetch('/course_full_post', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(formData)})
@@ -33,20 +36,24 @@ const ChangeClassList=()=> {
                         console.log(data);})
                   .catch(error => {
                         console.error(error);});
-                       //Form submission happens here
-            navigate("/foodArticle", {
+            setisPostID(postID);
+            setOpenModal(true);
+            /*
+            navigate("/changeClassArticle", {
               state: {
                 studentID: "00957025",
-                postId : postID,},});
+                postId : postID,
+                time:time},});
+            */
       }
 
 
         return (
           <ArticleContainer>
-            <ArticleText onClick={handleShowFoodSubmit}>
+            <ArticleText onClick={handleShowClassSubmit}>
+                <ArticleDistance>{category}</ArticleDistance>
                 <ArticleAuthor>{author}</ArticleAuthor>
-                <ArticleBody>{store}</ArticleBody>
-                <ArticlePostTime>{rating+"顆星 " + post_time}</ArticlePostTime>
+                <ArticleBody>{className}</ArticleBody>
             </ArticleText>
           </ArticleContainer>
         );
@@ -62,7 +69,7 @@ const ChangeClassList=()=> {
                 </Link>
                 <ArticleList>
                     {data.map(item => (
-                      <Articleinfo key={item.postId} author={item.studentID} class={item.class} store={item.store} rating={item.rating} postID={item.postId}></Articleinfo>
+                      <Articleinfo key={item.postId} author={item.studentID} className={item.course} category={item.category} postID={item.postId}></Articleinfo>
                     ))}
                 </ArticleList>
             </Pagebg>
@@ -75,12 +82,17 @@ const ChangeClassList=()=> {
     function ChangeClassList() {
       useEffect(() => {
         if (!data) {
-          fetch('/course_change?time='+time)
-            .then(response => response.json())
-            .then(data => setData(data))
-            .catch(error => {
-              console.error('Error:', error);
-            });
+          fetch(`/course_change?time=${time}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(time);
+            console.log(data);
+            setData(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+          
         }
       }, [data]); // 添加依賴項data
 
@@ -90,7 +102,7 @@ const ChangeClassList=()=> {
 
       return (
         <Page>
-          {openModal && <Modal closeModal={setOpenModal} type={"food"}/>}
+          {openModal && <Modal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={studentID} time={time} />}
           {!openModal && < ChangeClassList_all/>}
         </Page>
       );

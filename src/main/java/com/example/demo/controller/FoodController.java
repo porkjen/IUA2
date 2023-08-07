@@ -2,9 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.BasicRepository;
 import com.example.demo.FoodRepository;
+import com.example.demo.HouseRepository;
 import com.example.demo.NextPostId;
-import com.example.demo.dao.FoodDTO;
-import com.example.demo.dao.FoodEntity;
+import com.example.demo.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -233,8 +233,8 @@ public class FoodController {
         List<FoodDTO> resultList = new ArrayList<>();
         for(FoodEntity food : foodRepository.findAll()){
             if((Objects.equals(store, "") || food.getStore().toLowerCase().contains(store.toLowerCase())) &&
-               (Objects.equals(area, "") || food.getAddress().equals(area)) &&
-               (Objects.equals(addr, "") || food.getAddress().contains(addr))
+                    (Objects.equals(area, "") || food.getAddress().equals(area)) &&
+                    (Objects.equals(addr, "") || food.getAddress().contains(addr))
             ){
                 FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad() , food.getDistance());
                 resultList.add(result);
@@ -254,5 +254,6 @@ public class FoodController {
             return ResponseEntity.ok("Success");
         }
     }
+
 
 }

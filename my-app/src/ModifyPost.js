@@ -13,7 +13,7 @@ const ModifyPost=()=> {
     let navigate = useNavigate();
     const location = useLocation();
     const [data, setData] = useState(null);
-    const { studentID, postId, fromSearch, ModifyType } = location.state;
+    const { studentID, postId, fromSearch, ModifyType, timeValue } = location.state;
     
 
     function ArticleModifyFoodInput({ newData }) {
@@ -341,13 +341,24 @@ const ModifyPost=()=> {
         );
       }
 
-      function ArticleChangeClassInput() {
+      function ArticleChangeClassInput({ newData }) {
 
         const [Ctitle, setCtitle] = useState("");
         const [Ctext, setCtext] = useState("");
         const [CCategory, setCCategory] = useState("");
-        const [Ctime, setCtime] = useState("");
+        const [Ctime, setCtime] = useState([]);
         const [Cteacher, setCteacher] = useState("");
+
+        useEffect(() => {
+          if (newData) {
+            setCtitle(newData.course);
+            setCtext(newData.content);
+            setCCategory(newData.category);
+            setCtime(newData.time);
+            setCteacher(newData.teacher);
+          }
+        }, [newData]);
+
 
         const handleCtitleChange = event => {
           setCtitle(event.target.value);
@@ -369,14 +380,15 @@ const ModifyPost=()=> {
           const student_id = loginUser();
           const formData = {
                           studentID: "00957025",
+                          postId:postId,
                           course : Ctitle,
                           category:CCategory,
                           time:[Ctime],
                           teacher:Cteacher,
                           content : Ctext,
                         };
-                        fetch('/exchange_course_post', {
-                              method: 'POST',
+                        fetch('/course_post_modify', {
+                              method: 'PUT',
                               headers: {
                                 'Content-Type': 'application/json'
                               },
@@ -385,11 +397,16 @@ const ModifyPost=()=> {
                             .then(response => response.status)
                             .then(data => {
                               console.log(data);
+                              navigate("/changeClassList", {
+                                state: {
+                                  studentID: "00957025",
+                                        time:timeValue,},});
                             })
                             .catch(error => {
                               console.error(error);
                             });
-                            navigate("/changeClass")
+                            
+                     
                          //Form submission happens here
         }
 
@@ -416,7 +433,7 @@ const ModifyPost=()=> {
               <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange} value={Ctext}></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
-                <ArticleSubmitBtn>確認發文</ArticleSubmitBtn>
+                <ArticleSubmitBtn type="submit">確認修改</ArticleSubmitBtn>
             </ArticleSubmitBtnPosition>
           </form>  
         );
@@ -512,7 +529,7 @@ const ModifyPost=()=> {
                   <div className="inputFormPosition">
                     {isFoodShown && data && <ArticleModifyFoodInput newData={data}/>}
                     {isRentShown && <ArticleModifyRentInput newData={data}/>}
-                    {isChangeClassShown && <ArticleChangeClassInput />}
+                    {isChangeClassShown && <ArticleChangeClassInput newData={data}/>}
                   </div>
                 </div>
               </div>

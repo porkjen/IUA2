@@ -202,7 +202,6 @@ public class FoodEntity {
         this.road = road;
     }
 
-
     public double getDistance() {
         return distance;
     }
@@ -210,5 +209,4 @@ public class FoodEntity {
     public void setDistance(double distance) {
         this.distance = distance;
     }
-
 }
