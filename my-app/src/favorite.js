@@ -4,12 +4,15 @@ import heart from './img/heart.png';
 import star from './img/star.png';
 import logo from './img/IUAlogo.png';
 import dog from './img/dog.png';
-import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
-import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody } from './components/ArticleStyle.js';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect, useState, useRef,  } from "react";
 import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
+import student from './img/student.png';
+import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleDistance, 
+  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect } from './components/ArticleStyle.js';
+import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
+import { Routes ,Route,useLocation, useNavigate } from 'react-router-dom';
+import {useEffect,useState} from "react";
+
 
 function Favorite() {
     const [FoodData, setFoodData] = useState([]);
@@ -30,7 +33,7 @@ function Favorite() {
       return <div>{stars}</div>;
     }
 
-    function SavedFinfo({ author, post_time, store, rating, postID }) {
+    function SavedFinfo({ author, post_time, store, rating, postID, road }) {
       const handleShowFoodSubmit = (e) => {
         e.preventDefault();
         const formData = {
@@ -61,8 +64,10 @@ function Favorite() {
       return (
         <ArticleContainer>
         <ArticleText onClick={handleShowFoodSubmit}>
+          {road!==null &&  <ArticleDistance>{road}</ArticleDistance>}
           <ArticleAuthorArea>
-            <ArticleAuthorImg src={logo}></ArticleAuthorImg>
+            {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
+            {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}
             <ArticleAuthor>{author}</ArticleAuthor>
           </ArticleAuthorArea>
           <ArticleBody>{store}</ArticleBody>
@@ -180,10 +185,8 @@ function Favorite() {
       <div className='Favorite'>
         <div>
           <Title>我的收藏</Title>
-          {/* <img className='heart' src={heart}/>
-          <img className='stars' src={stars}/> */}
-          <img className='food_yolk' src={yolk} alt="yolk" />
-          <img className='food_redBall' src={redBall} alt="redBall" />
+          <img className='heart' src={yolk}/>
+          <img className='stars' src={redBall}/>
         </div>
         <div>
           <select className='selectType' onChange={handleSelectChange}> 
@@ -200,6 +203,7 @@ function Favorite() {
               post_time={item.post_time}
               store={item.store} 
               rating={item.rating} 
+              road={item.road}
               postID={item.postId}
             />
           ))}
