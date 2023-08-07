@@ -25,7 +25,7 @@ const Must = () => {
             <div className="scrollableContainer">
               {RCResult.map((item) => (
                 <Mustinfo key={item.id}>
-                  {item.cname}&emsp;{item.cgrade}&emsp;{item.ccredit}學分
+                  {item.cname}<br />{item.cnumber}&emsp;{item.cgrade}&emsp;{item.cteacher}&emsp;{item.ccredit}學分
                 </Mustinfo>
               ))}
             </div>

@@ -2,6 +2,7 @@ package com.example.demo;
 import com.example.demo.FinishedCourseList;
 
 import com.example.demo.dao.BasicEntity;
+import com.example.demo.dao.RequiredCourseEntity;
 import com.example.demo.dao.TimeTableEntity;
 import com.google.common.base.Splitter;
 
@@ -41,7 +42,8 @@ public class Crawler {
     public static void CrawlerHandle(String userAccount, String userPassword) throws IOException, TesseractException, InterruptedException {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
+        //C:\Program Files\Google\Chrome\Application
 
         ChromeOptions options = new ChromeOptions();
 
@@ -66,8 +68,10 @@ public class Crawler {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
+
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
+                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
+                BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);
                 ImageIO.write(subImage, "png", screenshot);
                 File screenshotLocation = new File("test.png");
                 FileUtils.copyFile(screenshot, screenshotLocation);
@@ -422,14 +426,108 @@ public class Crawler {
         Thread.sleep(5000);
     }
 
+    public static List<RequiredCourseEntity> findRCourse(String takingCategory, String takingGrade) throws InterruptedException{
+        if(takingGrade.equals("大一")) {
+            takingGrade = "1";
+        }
+        else if(takingGrade.equals("大二")) {
+            takingGrade = "2";
+        }
+        else if(takingGrade.equals("大三")) {
+            takingGrade = "3";
+        }
+        else if(takingGrade.equals("大四")) {
+            takingGrade = "4";
+        }
+        List<RequiredCourseEntity> RCourseList = new ArrayList<>();
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        Thread.sleep(3000);
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        //select
+        driver.findElement(By.id("Q_DEGREE_CODE")).findElement(By.xpath("//option[@value='0']")).click();
+        System.out.println("0-大學");
+        WebElement selectedOption1 = driver.findElement(By.id("Q_DEGREE_CODE")).findElement(By.xpath("//option[@value='0']"));
+        String selectedOptionText1 = selectedOption1.getText();
+        System.out.println("->"+ selectedOptionText1);
+
+        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='0507']")).click();
+        System.out.println("資工系");
+        WebElement selectedOption2 = driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='0507']"));
+        String selectedOptionText2 = selectedOption2.getText();
+        System.out.println("->"+ selectedOptionText2);
+        /*
+        driver.findElement(By.id("Q_GRADE")).click();
+        {
+            WebElement dropdown = driver.findElement(By.id("Q_GRADE"));
+            dropdown.findElement(By.xpath("//option[. = '2']")).click();
+        }
+        */
+        driver.findElement(By.id("Q_GRADE")).findElement(By.xpath("//option[. ='"+ takingGrade +"']")).click();
+        System.out.println(takingGrade);
+        WebElement selectedOption3 = driver.findElement(By.id("Q_GRADE")).findElement(By.xpath("//option[. ='"+ takingGrade +"']"));
+        String selectedOptionText3 = selectedOption3.getText();
+        System.out.println("->"+ selectedOptionText3);
+
+
+        //driver.findElement(By.xpath("//*[@id='Q_GRADE']")).findElement(By.xpath("//option[@value='2']")).click();
+        
+
+        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click();  //開課單位查詢
+        Thread.sleep(3000);
+        //show_25
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = '25';", driver.findElement(By.id("PC_PageSize")));
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
+        Thread.sleep(3000);
+        List<WebElement> rcReault = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        System.out.println(takingCategory);
+        for(int i = 1;i < rcReault.size();i++){
+            System.out.println(i);
+            WebElement itemCourse = rcReault.get(i);
+            List<WebElement> item = itemCourse.findElements(By.tagName("td"));
+            Thread.sleep(3000);
+            System.out.println(item.get(10).getText());
+            System.out.println(takingCategory);
+            if(item.get(10).getText().equals(takingCategory))
+            {
+                System.out.println("課號 : " + item.get(2).getText());
+                System.out.println("課名 : " + item.get(3).getText());
+                System.out.println("老師 : " + item.get(6).getText());
+                System.out.println("學分 : " + item.get(9).getText());
+
+                RequiredCourseEntity courseEntity = new RequiredCourseEntity();
+                courseEntity.setCNumber(item.get(2).getText());
+                courseEntity.setCName(item.get(3).getText());
+                courseEntity.setCGrade(item.get(5).getText());
+                courseEntity.setCTeacher(item.get(6).getText());
+                courseEntity.setCCredit(item.get(9).getText());
+                courseEntity.setCCategory(item.get(10).getText());
+
+                RCourseList.add(courseEntity);
+
+            }
+        }
+        return RCourseList;
+    }
+
     public static void main(String[] args) throws Exception {
+
         String account = "";
         String password = "";
-        //CrawlerHandle(account,password);
+       // CrawlerHandle(account,password);
+
         //getBasicData(account,password);
         //getMyClass(account,password);
         //getAllGeneralClass();
         //getFinishedCredict();
+        //findRCourse("必修","3");
         //detectCoureses();
 
     }
