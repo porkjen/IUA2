@@ -299,7 +299,7 @@ public class TodoController {
                 System.out.println("必修");
                 List<RequiredCourseEntityG1must> rCourseEntityG1must = rcourseG1MustRepository.findByc_category(category);
                 if (rCourseEntityG1must != null && !rCourseEntityG1must.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G1M");
                     for (RequiredCourseEntityG1must G1must : rCourseEntityG1must) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G1must.getCNumber());
@@ -334,7 +334,7 @@ public class TodoController {
                 System.out.println("選修");
                 List<RequiredCourseEntityG1select> rCourseEntityG1select = rcourseG1SelectRepository.findByc_category(category);
                 if (rCourseEntityG1select != null && !rCourseEntityG1select.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G1S");
                     for (RequiredCourseEntityG1select G1select : rCourseEntityG1select) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G1select.getCNumber());
@@ -372,7 +372,7 @@ public class TodoController {
                 System.out.println("必修");
                 List<RequiredCourseEntityG2must> rCourseEntityG2must = rcourseG2MustRepository.findByc_category(category);
                 if (rCourseEntityG2must != null && !rCourseEntityG2must.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G2M");
                     for (RequiredCourseEntityG2must G2must : rCourseEntityG2must) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G2must.getCNumber());
@@ -407,7 +407,7 @@ public class TodoController {
                 System.out.println("選修");
                 List<RequiredCourseEntityG2select> rCourseEntityG2select = rcourseG2SelectRepository.findByc_category(category);
                 if (rCourseEntityG2select != null && !rCourseEntityG2select.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G2S");
                     for (RequiredCourseEntityG2select G2select : rCourseEntityG2select) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G2select.getCNumber());
@@ -445,7 +445,7 @@ public class TodoController {
                 System.out.println("必修");
                 List<RequiredCourseEntityG3must> rCourseEntityG3must = rcourseG3MustRepository.findByc_category(category);
                 if (rCourseEntityG3must != null && !rCourseEntityG3must.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G3M");
                     for (RequiredCourseEntityG3must G3must : rCourseEntityG3must) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G3must.getCNumber());
@@ -480,7 +480,7 @@ public class TodoController {
                 System.out.println("選修");
                 List<RequiredCourseEntityG3select> rCourseEntityG3select = rcourseG3SelectRepository.findByc_category(category);
                 if (rCourseEntityG3select != null && !rCourseEntityG3select.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G3S");
                     for (RequiredCourseEntityG3select G3select : rCourseEntityG3select) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G3select.getCNumber());
@@ -518,7 +518,7 @@ public class TodoController {
                 System.out.println("必修");
                 List<RequiredCourseEntityG4must> rCourseEntityG4must = rcourseG4MustRepository.findByc_category(category);
                 if (rCourseEntityG4must != null && !rCourseEntityG4must.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G4M");
                     for (RequiredCourseEntityG4must G4must : rCourseEntityG4must) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G4must.getCNumber());
@@ -553,7 +553,7 @@ public class TodoController {
                 System.out.println("選修");
                 List<RequiredCourseEntityG4select> rCourseEntityG4select = rcourseG4SelectRepository.findByc_category(category);
                 if (rCourseEntityG4select != null && !rCourseEntityG4select.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G4S");
                     for (RequiredCourseEntityG4select G4select : rCourseEntityG4select) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G4select.getCNumber());
@@ -585,7 +585,7 @@ public class TodoController {
                 }
             }
         }
-        System.out.println("finish!!");
+        System.out.println("RequiredCourseSearch is end!!");
 
         return RC_result;
     }
