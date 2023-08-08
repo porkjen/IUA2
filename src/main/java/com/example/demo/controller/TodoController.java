@@ -40,6 +40,7 @@ public class TodoController {
     SavedRepository savedRepository;
     @Autowired
     FoodRepository foodRepository;
+    //必選修課程DB
     @Autowired
     RCourseG1MustRepository rcourseG1MustRepository;
     @Autowired
@@ -327,7 +328,7 @@ public class TodoController {
 
                         rcourseG1MustRepository.save(RCourseEntityG1must);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
             else if(category.equals("選修")){
@@ -362,7 +363,7 @@ public class TodoController {
 
                         rcourseG1SelectRepository.save(RCourseEntityG1select);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
         }
@@ -400,7 +401,7 @@ public class TodoController {
 
                         rcourseG2MustRepository.save(RCourseEntityG2must);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
             else if(category.equals("選修")){
@@ -435,7 +436,7 @@ public class TodoController {
 
                         rcourseG2SelectRepository.save(RCourseEntityG2select);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
         }
@@ -473,7 +474,7 @@ public class TodoController {
 
                         rcourseG3MustRepository.save(RCourseEntityG3must);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
             else if(category.equals("選修")){
@@ -508,7 +509,7 @@ public class TodoController {
 
                         rcourseG3SelectRepository.save(RCourseEntityG3select);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
         }
@@ -546,7 +547,7 @@ public class TodoController {
 
                         rcourseG4MustRepository.save(RCourseEntityG4must);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
             else if(category.equals("選修")){
@@ -581,7 +582,7 @@ public class TodoController {
 
                         rcourseG4SelectRepository.save(RCourseEntityG4select);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
         }
