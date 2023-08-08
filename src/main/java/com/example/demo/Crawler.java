@@ -494,13 +494,11 @@ public class Crawler {
             List<WebElement> item = itemCourse.findElements(By.tagName("td"));
             Thread.sleep(3000);
             System.out.println(item.get(10).getText());
-            System.out.println(takingCategory);
+            //System.out.println(takingCategory);
             if(item.get(10).getText().equals(takingCategory))
             {
-                System.out.println("課號 : " + item.get(2).getText());
                 System.out.println("課名 : " + item.get(3).getText());
-                System.out.println("老師 : " + item.get(6).getText());
-                System.out.println("學分 : " + item.get(9).getText());
+                System.out.println("年班級 : " + item.get(5).getText());
 
                 RequiredCourseEntity courseEntity = new RequiredCourseEntity();
                 courseEntity.setCNumber(item.get(2).getText());
