@@ -317,12 +317,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG1must RCourseEntityG1must = new RequiredCourseEntityG1must();
                         RCourseEntityG1must.setCNumber(course.getCNumber());
                         RCourseEntityG1must.setCTeacher(course.getCTeacher());
@@ -358,12 +352,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG1select RCourseEntityG1select = new RequiredCourseEntityG1select();
                         RCourseEntityG1select.setCNumber(course.getCNumber());
                         RCourseEntityG1select.setCTeacher(course.getCTeacher());
@@ -402,12 +390,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG2must RCourseEntityG2must = new RequiredCourseEntityG2must();
                         RCourseEntityG2must.setCNumber(course.getCNumber());
                         RCourseEntityG2must.setCTeacher(course.getCTeacher());
@@ -443,12 +425,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG2select RCourseEntityG2select = new RequiredCourseEntityG2select();
                         RCourseEntityG2select.setCNumber(course.getCNumber());
                         RCourseEntityG2select.setCTeacher(course.getCTeacher());
@@ -487,12 +463,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG3must RCourseEntityG3must = new RequiredCourseEntityG3must();
                         RCourseEntityG3must.setCNumber(course.getCNumber());
                         RCourseEntityG3must.setCTeacher(course.getCTeacher());
@@ -528,12 +498,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG3select RCourseEntityG3select = new RequiredCourseEntityG3select();
                         RCourseEntityG3select.setCNumber(course.getCNumber());
                         RCourseEntityG3select.setCTeacher(course.getCTeacher());
@@ -572,12 +536,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG4must RCourseEntityG4must = new RequiredCourseEntityG4must();
                         RCourseEntityG4must.setCNumber(course.getCNumber());
                         RCourseEntityG4must.setCTeacher(course.getCTeacher());
@@ -613,12 +571,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG4select RCourseEntityG4select = new RequiredCourseEntityG4select();
                         RCourseEntityG4select.setCNumber(course.getCNumber());
                         RCourseEntityG4select.setCTeacher(course.getCTeacher());
