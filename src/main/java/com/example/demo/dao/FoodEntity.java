@@ -25,6 +25,7 @@ public class FoodEntity {
     private List<p> review = new ArrayList<>();
     private List<String> saved = new ArrayList<>();
     private double distance;
+    private String district;
 
     public static class p {
         private String p_studentID = "";
@@ -208,5 +209,13 @@ public class FoodEntity {
 
     public void setDistance(double distance) {
         this.distance = distance;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 }
