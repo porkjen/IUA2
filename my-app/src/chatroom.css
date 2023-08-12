@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    position: relative;
 }
 .Chatroom{
     background-color: rgb(249, 236, 207);
@@ -13,11 +14,22 @@
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
 }
 
 .Chatroom h1 {
     margin-bottom: 20px;
 }
+
+.chatroom-messages {
+    flex: 1;
+    overflow-y: auto; /* 让聊天消息区域可滚动 */
+    padding-top: 110px;
+    padding-bottom: 10px; /* 为了让输入框留出空间 */
+  }
 
 .Chatroom .message-list {
     display: flex;

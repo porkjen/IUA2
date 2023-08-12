@@ -11,6 +11,7 @@ public class GeneralCourseEntity {
     String time; //"306、307"
     String teacher = "";
     String evaluation = ""; //評量方式
+    String subfield;
 
     public String getName() {
         return name;
@@ -66,5 +67,13 @@ public class GeneralCourseEntity {
 
     public void setEvaluation(String evaluation) {
         this.evaluation = evaluation;
+    }
+
+    public String getSubfield(){
+        return subfield;
+    }
+
+    public void setSubfield(String subfield){
+        this.subfield = subfield;
     }
 }
