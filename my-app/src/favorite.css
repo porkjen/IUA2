@@ -13,15 +13,36 @@ html,body,#root,.Favorite{
     
 }
 
-.Favorite #div1{
-    display: flex;
+/* .Favorite .heart{
+    max-width: 20%;
+    padding-left: 10%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 5%;
 }
 
-.Favorite .favorite_icon {
-    height: 40px;
-    width: 40px;
-    padding-left: 40px;
-    padding-top: 60px;
+.Favorite .stars{
+    max-width: 20%;
+    padding-left: 75%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 5%;
+} */
+
+.Favorite .heart{
+    max-width: 30%;
+    padding-left: 5%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 5%;
+}
+
+.Favorite .stars{
+    max-width: 30%;
+    padding-left: 65%;
+    position: absolute;
+    z-index: 2;
+    margin-top: 5%;
 }
 
 .Favorite #div1 h1{

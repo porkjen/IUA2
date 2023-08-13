@@ -27,12 +27,16 @@ import GeneralEducaton from './generalEducation';
 import Favorite from './favorite';
 import DetectCourse from './DetectCourse';
 import ModifyPost from './ModifyPost';
+
 import Chatroom from './chatroom';
+import ChatRoomList from './ChatRoomList';
+import MoodChat from './moodChat';  
 
 const App=()=> {
-   
+
     return (
-           
+
+        
                 <Routes>
                     <Route path="/" element={<Cover/>} />
                     <Route path="/signIn" element={<SignIn/>} />
@@ -58,12 +62,15 @@ const App=()=> {
                     <Route path="/generalEducation" element={<GeneralEducaton />} />
                     <Route path="/favorite" element={<Favorite />} />
                     <Route path="/DetectCourse" element={<DetectCourse />} />
+                    <Route path="/Chatroom/:id" element={<Chatroom />} />
                     <Route path="/modifyPost" element={<ModifyPost />} />
-                    <Route path="/chatroom" element={<Chatroom />} />
+                    <Route path="/ChatRoomList" element={<ChatRoomList />} />
+                    <Route path="/moodChat" element={<MoodChat />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
-             
+                
     );
+    
 }
 
 export default App;

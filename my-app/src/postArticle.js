@@ -139,7 +139,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleFoodFormSchoolRate'>
               <label>我的評分:&emsp;</label>
-              <select name = 'Frate' value={Frate} onChange={handleFrateChange}>
+              <select name = 'Frate' className='articleFoodFormSchoolRateInput' value={Frate} onChange={handleFrateChange}>
                   <option>請選擇評分</option>
                   <option value='1'>1</option>
                   <option value='2'>2</option>
@@ -281,7 +281,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormType'>
               <label>房型:</label>
-              <select name = 'Htype' value={Htype} onChange={handleHtypeChange}>
+              <select name = 'Htype' className='articleRentFormTypeInput' value={Htype} onChange={handleHtypeChange}>
                   <option>請選擇區域</option>
                   <option value='套房'>套房</option>
                   <option value='雅房'>雅房</option>
@@ -290,7 +290,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormRegion'>
               <label>地區:</label>
-              <select name = 'Harea' value={Harea} onChange={handleHareaChange}>
+              <select name = 'Harea' className='articleRentFormRegionInput' value={Harea} onChange={handleHareaChange}>
                   <option>請選擇區域</option>
                   <option value='中正區'>中正區</option>
                   <option value='信義區'>信義區</option>
@@ -395,7 +395,15 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleChangeClassFormCategory'>
               <label>分類:</label>
-              <input type='text' className='articleChangeClassFormCategoryInput' onChange={handleCCategoryChange} value={CCategory}></input>
+              <select className='articleChangeClassFormCategoryInput' value={CCategory} onChange={handleCCategoryChange}>
+                  <option>請選擇分類</option>
+                  <option value='體育'>體育</option>
+                  <option value='通識'>通識</option>
+                  <option value='英文'>英文</option>
+                  <option value='第二外語'>第二外語</option>
+                  <option value='必修'>必修</option>
+                  <option value='選修'>選修</option>
+              </select>
             </div><br/>
             <div className='articleChangeClassFormTime'>
               <label>時間:</label>

@@ -95,6 +95,7 @@ body {
     border-radius: 5px;
 }
 
+.articleRentFormRegionInput,.articleRentFormTypeInput,.articleFoodFormSchoolRateInput,
 .articleChangeClassForm > .articleChangeClassFormTitle > .articleChangeClassFormTitleInput,
 .articleChangeClassForm > .articleChangeClassFormCategory > .articleChangeClassFormCategoryInput,
 .articleChangeClassForm > .articleChangeClassFormTime > .articleChangeClassFormTimeInput,

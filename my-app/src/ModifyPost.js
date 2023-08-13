@@ -292,11 +292,11 @@ const ModifyPost=()=> {
             </div><br/>
             <div className='articleRentFormType'>
               <label>房型:</label>
-              <input type='text' name = 'Htype' onChange={handleHtypeChange} value={Htype}></input>
+              <input type='text' name = 'Htype' className='articleRentFormTypeInput' onChange={handleHtypeChange} value={Htype}></input>
             </div><br/>
             <div className='articleRentFormRegion'>
               <label>地區:</label>
-              <select name = 'Harea' value={Harea} onChange={handleHareaChange}>
+              <select name = 'Harea' value={Harea} className='articleRentFormRegionInput' onChange={handleHareaChange}>
                   <option>請選擇區域</option>
                   <option value='中正區'>中正區</option>
                   <option value='信義區'>信義區</option>
@@ -346,7 +346,7 @@ const ModifyPost=()=> {
         const [Ctitle, setCtitle] = useState("");
         const [Ctext, setCtext] = useState("");
         const [CCategory, setCCategory] = useState("");
-        const [Ctime, setCtime] = useState([]);
+        const [Ctime, setCtime] = useState("");
         const [Cteacher, setCteacher] = useState("");
 
         useEffect(() => {
@@ -354,7 +354,7 @@ const ModifyPost=()=> {
             setCtitle(newData.course);
             setCtext(newData.content);
             setCCategory(newData.category);
-            setCtime(newData.time);
+            setCtime(newData.time.join(', '));
             setCteacher(newData.teacher);
           }
         }, [newData]);
@@ -367,7 +367,9 @@ const ModifyPost=()=> {
           setCCategory(event.target.value);
         };
         const handleCtimeChange = event => {
-          setCtime(event.target.value);
+          const timeArray = event.target.value.split(', '); // 將字串拆分為陣列
+          setCtime(timeArray);
+          console.log(timeArray);
         };
         const handleCteacherChange = event => {
           setCteacher(event.target.value);
@@ -422,7 +424,7 @@ const ModifyPost=()=> {
             </div><br/>
             <div className='articleChangeClassFormTime'>
               <label>時間:</label>
-              <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime}></input>
+              <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime} ></input>
             </div><br/>
             <div className='articleChangeClassFormTeacher'>
               <label>老師:</label>

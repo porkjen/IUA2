@@ -40,12 +40,27 @@ public class TodoController {
     SavedRepository savedRepository;
     @Autowired
     FoodRepository foodRepository;
+    @Autowired
+    RCourseG1MustRepository rcourseG1MustRepository;
+    @Autowired
+    RCourseG1SelectRepository rcourseG1SelectRepository;
+    @Autowired
+    RCourseG2MustRepository rcourseG2MustRepository;
+    @Autowired
+    RCourseG2SelectRepository rcourseG2SelectRepository;
+    @Autowired
+    RCourseG3MustRepository rcourseG3MustRepository;
+    @Autowired
+    RCourseG3SelectRepository rcourseG3SelectRepository;
+    @Autowired
+    RCourseG4MustRepository rcourseG4MustRepository;
+    @Autowired
+    RCourseG4SelectRepository rcourseG4SelectRepository;
+
     String secretKey = "au4a83";
 
     Crawler crawler = new Crawler();
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
-
-
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
@@ -263,6 +278,361 @@ public class TodoController {
             return myClassList;
         }
     }
+
+
+    @PostMapping("/course_search")
+    public List<RequiredCourseEntity> course_search(@RequestParam(value = "category") String category,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException  {
+
+        System.out.println("/course_search");
+        String studentID ="00957039";
+        String password = " ";
+
+        List<RequiredCourseEntity> RC_result = new ArrayList<>();;
+        if(grade.equals("大一")) {
+            System.out.println("大一");
+            if(category.equals("必修")){
+                System.out.println("必修");
+                List<RequiredCourseEntityG1must> rCourseEntityG1must = rcourseG1MustRepository.findByc_category(category);
+                if (rCourseEntityG1must != null && !rCourseEntityG1must.isEmpty()){
+                    System.out.println("find it");
+                    for (RequiredCourseEntityG1must G1must : rCourseEntityG1must) {
+                        RequiredCourseEntity result = new RequiredCourseEntity();
+                        result.setCNumber(G1must.getCNumber());
+                        result.setCTeacher(G1must.getCTeacher());
+                        result.setCCredit(G1must.getCCredit());
+                        result.setCGrade(G1must.getCGrade());
+                        result.setCName(G1must.getCName());
+                        result.setCCategory(G1must.getCCategory());
+                        RC_result.add(result);
+                    }
+                }
+                else{
+                    crawler.CrawlerHandle(studentID,password);
+
+                    RC_result = crawler.findRCourse(category,grade);
+
+                    for (RequiredCourseEntity course : RC_result) {
+                        System.out.println("課號: " + course.getCNumber());
+                        System.out.println("老師: " + course.getCTeacher());
+                        System.out.println("學分: " + course.getCCredit());
+                        System.out.println("年級: " + course.getCGrade());
+                        System.out.println("課名: " + course.getCName());
+                        System.out.println("課別: " + course.getCCategory());
+                        RequiredCourseEntityG1must RCourseEntityG1must = new RequiredCourseEntityG1must();
+                        RCourseEntityG1must.setCNumber(course.getCNumber());
+                        RCourseEntityG1must.setCTeacher(course.getCTeacher());
+                        RCourseEntityG1must.setCCredit(course.getCCredit());
+                        RCourseEntityG1must.setCGrade(course.getCGrade());
+                        RCourseEntityG1must.setCName(course.getCName());
+                        RCourseEntityG1must.setCCategory(course.getCCategory());
+
+                        rcourseG1MustRepository.save(RCourseEntityG1must);
+                    }
+                    System.out.println(RC_result.size());
+                }
+            }
+            else if(category.equals("選修")){
+                System.out.println("選修");
+                List<RequiredCourseEntityG1select> rCourseEntityG1select = rcourseG1SelectRepository.findByc_category(category);
+                if (rCourseEntityG1select != null && !rCourseEntityG1select.isEmpty()){
+                    System.out.println("find it");
+                    for (RequiredCourseEntityG1select G1select : rCourseEntityG1select) {
+                        RequiredCourseEntity result = new RequiredCourseEntity();
+                        result.setCNumber(G1select.getCNumber());
+                        result.setCTeacher(G1select.getCTeacher());
+                        result.setCCredit(G1select.getCCredit());
+                        result.setCGrade(G1select.getCGrade());
+                        result.setCName(G1select.getCName());
+                        result.setCCategory(G1select.getCCategory());
+                        RC_result.add(result);
+                    }
+                }
+                else{
+                    crawler.CrawlerHandle(studentID,password);
+
+                    RC_result = crawler.findRCourse(category,grade);
+
+                    for (RequiredCourseEntity course : RC_result) {
+                        System.out.println("課號: " + course.getCNumber());
+                        System.out.println("老師: " + course.getCTeacher());
+                        System.out.println("學分: " + course.getCCredit());
+                        System.out.println("年級: " + course.getCGrade());
+                        System.out.println("課名: " + course.getCName());
+                        System.out.println("課別: " + course.getCCategory());
+                        RequiredCourseEntityG1select RCourseEntityG1select = new RequiredCourseEntityG1select();
+                        RCourseEntityG1select.setCNumber(course.getCNumber());
+                        RCourseEntityG1select.setCTeacher(course.getCTeacher());
+                        RCourseEntityG1select.setCCredit(course.getCCredit());
+                        RCourseEntityG1select.setCGrade(course.getCGrade());
+                        RCourseEntityG1select.setCName(course.getCName());
+                        RCourseEntityG1select.setCCategory(course.getCCategory());
+
+                        rcourseG1SelectRepository.save(RCourseEntityG1select);
+                    }
+                    System.out.println(RC_result.size());
+                }
+            }
+        }
+        else if(grade.equals("大二")) {
+            System.out.println("大二");
+            if(category.equals("必修")){
+                System.out.println("必修");
+                List<RequiredCourseEntityG2must> rCourseEntityG2must = rcourseG2MustRepository.findByc_category(category);
+                if (rCourseEntityG2must != null && !rCourseEntityG2must.isEmpty()){
+                    System.out.println("find it");
+                    for (RequiredCourseEntityG2must G2must : rCourseEntityG2must) {
+                        RequiredCourseEntity result = new RequiredCourseEntity();
+                        result.setCNumber(G2must.getCNumber());
+                        result.setCTeacher(G2must.getCTeacher());
+                        result.setCCredit(G2must.getCCredit());
+                        result.setCGrade(G2must.getCGrade());
+                        result.setCName(G2must.getCName());
+                        result.setCCategory(G2must.getCCategory());
+                        RC_result.add(result);
+                    }
+                }
+                else{
+                    crawler.CrawlerHandle(studentID,password);
+
+                    RC_result = crawler.findRCourse(category,grade);
+
+                    for (RequiredCourseEntity course : RC_result) {
+                        System.out.println("課號: " + course.getCNumber());
+                        System.out.println("老師: " + course.getCTeacher());
+                        System.out.println("學分: " + course.getCCredit());
+                        System.out.println("年級: " + course.getCGrade());
+                        System.out.println("課名: " + course.getCName());
+                        System.out.println("課別: " + course.getCCategory());
+                        RequiredCourseEntityG2must RCourseEntityG2must = new RequiredCourseEntityG2must();
+                        RCourseEntityG2must.setCNumber(course.getCNumber());
+                        RCourseEntityG2must.setCTeacher(course.getCTeacher());
+                        RCourseEntityG2must.setCCredit(course.getCCredit());
+                        RCourseEntityG2must.setCGrade(course.getCGrade());
+                        RCourseEntityG2must.setCName(course.getCName());
+                        RCourseEntityG2must.setCCategory(course.getCCategory());
+
+                        rcourseG2MustRepository.save(RCourseEntityG2must);
+                    }
+                    System.out.println(RC_result.size());
+                }
+            }
+            else if(category.equals("選修")){
+                System.out.println("選修");
+                List<RequiredCourseEntityG2select> rCourseEntityG2select = rcourseG2SelectRepository.findByc_category(category);
+                if (rCourseEntityG2select != null && !rCourseEntityG2select.isEmpty()){
+                    System.out.println("find it");
+                    for (RequiredCourseEntityG2select G2select : rCourseEntityG2select) {
+                        RequiredCourseEntity result = new RequiredCourseEntity();
+                        result.setCNumber(G2select.getCNumber());
+                        result.setCTeacher(G2select.getCTeacher());
+                        result.setCCredit(G2select.getCCredit());
+                        result.setCGrade(G2select.getCGrade());
+                        result.setCName(G2select.getCName());
+                        result.setCCategory(G2select.getCCategory());
+                        RC_result.add(result);
+                    }
+                }
+                else{
+                    crawler.CrawlerHandle(studentID,password);
+
+                    RC_result = crawler.findRCourse(category,grade);
+
+                    for (RequiredCourseEntity course : RC_result) {
+                        System.out.println("課號: " + course.getCNumber());
+                        System.out.println("老師: " + course.getCTeacher());
+                        System.out.println("學分: " + course.getCCredit());
+                        System.out.println("年級: " + course.getCGrade());
+                        System.out.println("課名: " + course.getCName());
+                        System.out.println("課別: " + course.getCCategory());
+                        RequiredCourseEntityG2select RCourseEntityG2select = new RequiredCourseEntityG2select();
+                        RCourseEntityG2select.setCNumber(course.getCNumber());
+                        RCourseEntityG2select.setCTeacher(course.getCTeacher());
+                        RCourseEntityG2select.setCCredit(course.getCCredit());
+                        RCourseEntityG2select.setCGrade(course.getCGrade());
+                        RCourseEntityG2select.setCName(course.getCName());
+                        RCourseEntityG2select.setCCategory(course.getCCategory());
+
+                        rcourseG2SelectRepository.save(RCourseEntityG2select);
+                    }
+                    System.out.println(RC_result.size());
+                }
+            }
+        }
+        else if(grade.equals("大三")) {
+            System.out.println("大三");
+            if(category.equals("必修")){
+                System.out.println("必修");
+                List<RequiredCourseEntityG3must> rCourseEntityG3must = rcourseG3MustRepository.findByc_category(category);
+                if (rCourseEntityG3must != null && !rCourseEntityG3must.isEmpty()){
+                    System.out.println("find it");
+                    for (RequiredCourseEntityG3must G3must : rCourseEntityG3must) {
+                        RequiredCourseEntity result = new RequiredCourseEntity();
+                        result.setCNumber(G3must.getCNumber());
+                        result.setCTeacher(G3must.getCTeacher());
+                        result.setCCredit(G3must.getCCredit());
+                        result.setCGrade(G3must.getCGrade());
+                        result.setCName(G3must.getCName());
+                        result.setCCategory(G3must.getCCategory());
+                        RC_result.add(result);
+                    }
+                }
+                else{
+                    crawler.CrawlerHandle(studentID,password);
+
+                    RC_result = crawler.findRCourse(category,grade);
+
+                    for (RequiredCourseEntity course : RC_result) {
+                        System.out.println("課號: " + course.getCNumber());
+                        System.out.println("老師: " + course.getCTeacher());
+                        System.out.println("學分: " + course.getCCredit());
+                        System.out.println("年級: " + course.getCGrade());
+                        System.out.println("課名: " + course.getCName());
+                        System.out.println("課別: " + course.getCCategory());
+                        RequiredCourseEntityG3must RCourseEntityG3must = new RequiredCourseEntityG3must();
+                        RCourseEntityG3must.setCNumber(course.getCNumber());
+                        RCourseEntityG3must.setCTeacher(course.getCTeacher());
+                        RCourseEntityG3must.setCCredit(course.getCCredit());
+                        RCourseEntityG3must.setCGrade(course.getCGrade());
+                        RCourseEntityG3must.setCName(course.getCName());
+                        RCourseEntityG3must.setCCategory(course.getCCategory());
+
+                        rcourseG3MustRepository.save(RCourseEntityG3must);
+                    }
+                    System.out.println(RC_result.size());
+                }
+            }
+            else if(category.equals("選修")){
+                System.out.println("選修");
+                List<RequiredCourseEntityG3select> rCourseEntityG3select = rcourseG3SelectRepository.findByc_category(category);
+                if (rCourseEntityG3select != null && !rCourseEntityG3select.isEmpty()){
+                    System.out.println("find it");
+                    for (RequiredCourseEntityG3select G3select : rCourseEntityG3select) {
+                        RequiredCourseEntity result = new RequiredCourseEntity();
+                        result.setCNumber(G3select.getCNumber());
+                        result.setCTeacher(G3select.getCTeacher());
+                        result.setCCredit(G3select.getCCredit());
+                        result.setCGrade(G3select.getCGrade());
+                        result.setCName(G3select.getCName());
+                        result.setCCategory(G3select.getCCategory());
+                        RC_result.add(result);
+                    }
+                }
+                else{
+                    crawler.CrawlerHandle(studentID,password);
+
+                    RC_result = crawler.findRCourse(category,grade);
+
+                    for (RequiredCourseEntity course : RC_result) {
+                        System.out.println("課號: " + course.getCNumber());
+                        System.out.println("老師: " + course.getCTeacher());
+                        System.out.println("學分: " + course.getCCredit());
+                        System.out.println("年級: " + course.getCGrade());
+                        System.out.println("課名: " + course.getCName());
+                        System.out.println("課別: " + course.getCCategory());
+                        RequiredCourseEntityG3select RCourseEntityG3select = new RequiredCourseEntityG3select();
+                        RCourseEntityG3select.setCNumber(course.getCNumber());
+                        RCourseEntityG3select.setCTeacher(course.getCTeacher());
+                        RCourseEntityG3select.setCCredit(course.getCCredit());
+                        RCourseEntityG3select.setCGrade(course.getCGrade());
+                        RCourseEntityG3select.setCName(course.getCName());
+                        RCourseEntityG3select.setCCategory(course.getCCategory());
+
+                        rcourseG3SelectRepository.save(RCourseEntityG3select);
+                    }
+                    System.out.println(RC_result.size());
+                }
+            }
+        }
+        else if(grade.equals("大四")) {
+            System.out.println("大四");
+            if(category.equals("必修")){
+                System.out.println("必修");
+                List<RequiredCourseEntityG4must> rCourseEntityG4must = rcourseG4MustRepository.findByc_category(category);
+                if (rCourseEntityG4must != null && !rCourseEntityG4must.isEmpty()){
+                    System.out.println("find it");
+                    for (RequiredCourseEntityG4must G4must : rCourseEntityG4must) {
+                        RequiredCourseEntity result = new RequiredCourseEntity();
+                        result.setCNumber(G4must.getCNumber());
+                        result.setCTeacher(G4must.getCTeacher());
+                        result.setCCredit(G4must.getCCredit());
+                        result.setCGrade(G4must.getCGrade());
+                        result.setCName(G4must.getCName());
+                        result.setCCategory(G4must.getCCategory());
+                        RC_result.add(result);
+                    }
+                }
+                else{
+                    crawler.CrawlerHandle(studentID,password);
+
+                    RC_result = crawler.findRCourse(category,grade);
+
+                    for (RequiredCourseEntity course : RC_result) {
+                        System.out.println("課號: " + course.getCNumber());
+                        System.out.println("老師: " + course.getCTeacher());
+                        System.out.println("學分: " + course.getCCredit());
+                        System.out.println("年級: " + course.getCGrade());
+                        System.out.println("課名: " + course.getCName());
+                        System.out.println("課別: " + course.getCCategory());
+                        RequiredCourseEntityG4must RCourseEntityG4must = new RequiredCourseEntityG4must();
+                        RCourseEntityG4must.setCNumber(course.getCNumber());
+                        RCourseEntityG4must.setCTeacher(course.getCTeacher());
+                        RCourseEntityG4must.setCCredit(course.getCCredit());
+                        RCourseEntityG4must.setCGrade(course.getCGrade());
+                        RCourseEntityG4must.setCName(course.getCName());
+                        RCourseEntityG4must.setCCategory(course.getCCategory());
+
+                        rcourseG4MustRepository.save(RCourseEntityG4must);
+                    }
+                    System.out.println(RC_result.size());
+                }
+            }
+            else if(category.equals("選修")){
+                System.out.println("選修");
+                List<RequiredCourseEntityG4select> rCourseEntityG4select = rcourseG4SelectRepository.findByc_category(category);
+                if (rCourseEntityG4select != null && !rCourseEntityG4select.isEmpty()){
+                    System.out.println("find it");
+                    for (RequiredCourseEntityG4select G4select : rCourseEntityG4select) {
+                        RequiredCourseEntity result = new RequiredCourseEntity();
+                        result.setCNumber(G4select.getCNumber());
+                        result.setCTeacher(G4select.getCTeacher());
+                        result.setCCredit(G4select.getCCredit());
+                        result.setCGrade(G4select.getCGrade());
+                        result.setCName(G4select.getCName());
+                        result.setCCategory(G4select.getCCategory());
+                        RC_result.add(result);
+                    }
+                }
+                else{
+                    crawler.CrawlerHandle(studentID,password);
+
+                    RC_result = crawler.findRCourse(category,grade);
+
+                    for (RequiredCourseEntity course : RC_result) {
+                        System.out.println("課號: " + course.getCNumber());
+                        System.out.println("老師: " + course.getCTeacher());
+                        System.out.println("學分: " + course.getCCredit());
+                        System.out.println("年級: " + course.getCGrade());
+                        System.out.println("課名: " + course.getCName());
+                        System.out.println("課別: " + course.getCCategory());
+                        RequiredCourseEntityG4select RCourseEntityG4select = new RequiredCourseEntityG4select();
+                        RCourseEntityG4select.setCNumber(course.getCNumber());
+                        RCourseEntityG4select.setCTeacher(course.getCTeacher());
+                        RCourseEntityG4select.setCCredit(course.getCCredit());
+                        RCourseEntityG4select.setCGrade(course.getCGrade());
+                        RCourseEntityG4select.setCName(course.getCName());
+                        RCourseEntityG4select.setCCategory(course.getCCategory());
+
+                        rcourseG4SelectRepository.save(RCourseEntityG4select);
+                    }
+                    System.out.println(RC_result.size());
+                }
+            }
+        }
+        System.out.println("finish!!");
+
+        return RC_result;
+    }
+
 
     @PostMapping("/favorites")
     public ResponseEntity<String> favorites(@RequestBody Map<String, String> requestData){

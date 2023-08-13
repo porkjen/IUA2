@@ -1,6 +1,16 @@
 import './favorite.css';
-import bookmark from './img/bookmark.png';
-import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody, ArticlePostTime}  from './components/ArticleStyle.js';
+import stars from './img/stars.png';
+import heart from './img/heart.png';
+import star from './img/star.png';
+import logo from './img/IUAlogo.png';
+import dog from './img/dog.png';
+import yolk from './img/yolk.PNG';
+import redBall from './img/redBall.PNG';
+import student from './img/student.png';
+import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleDistance, 
+  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect } from './components/ArticleStyle.js';
+import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
+import { Routes ,Route,useLocation, useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
 
@@ -12,17 +22,99 @@ function Favorite() {
     const [isFoodShown, setIsFoodShown] = useState(true);
     const [isRentShown, setIsRentShown] = useState(false);
     const [isChangeClassShown, setIsChangeClassShown] = useState(false);
+    let navigate = useNavigate();
     
-    function Savedinfo({ author, time, text }) {
+    function RatingFood({ rating }) {
+      const stars = [];
+      for (let i = 1; i <= rating; i++) {
+        stars.push(<img key={i} className="rating_star" src={star} alt="star" />);
+      }
+  
+      return <div>{stars}</div>;
+    }
+
+    function SavedFinfo({ author, post_time, store, rating, postID, road }) {
+      const handleShowFoodSubmit = (e) => {
+        e.preventDefault();
+        const formData = {
+          studentID: "00957025",
+          postId: postID,
+        };
+        fetch('/food_full_post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            navigate("/foodArticle", {
+              state: {
+                studentID: "00957025",
+                postId: postID
+              }
+            });
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+
+
       return (
         <ArticleContainer>
-          <ArticleText>
+        <ArticleText onClick={handleShowFoodSubmit}>
+          {road!==null &&  <ArticleDistance>{road}</ArticleDistance>}
+          <ArticleAuthorArea>
+            {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
+            {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}
             <ArticleAuthor>{author}</ArticleAuthor>
-            <ArticlePostTime>{time}</ArticlePostTime>
-            <ArticleBody>{text}</ArticleBody>
-          </ArticleText>
-        </ArticleContainer>
+          </ArticleAuthorArea>
+          <ArticleBody>{store}</ArticleBody>
+          <ArticlePostTime>
+            <RatingFood rating={rating}></RatingFood>{post_time}
+          </ArticlePostTime>
+        </ArticleText>
+      </ArticleContainer>
       );
+    }
+
+    function SavedHinfo({ author, time, text, postID }) {
+      const handleShowHouseSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        const formData = {
+                        studentID: "00957025",
+                        postId : postID,
+                      };
+          fetch('/rent_full_post', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)})
+                  .then(response => response.json())
+                  .then(data => {
+                        console.log(data);})
+                  .catch(error => {
+                        console.error(error);});
+                       //Form submission happens here
+            navigate("/rentArticle", {
+              state: {
+                studentID: "00957025",
+                postId : postID,},});
+      }
+
+        return (
+          <ArticleContainer>
+              <ArticleText onClick={handleShowHouseSubmit}>
+              <ArticleDetailAuthorArea>
+                <ArticleDetailAuthorImg src={dog}></ArticleDetailAuthorImg>
+                <ArticleDetailAuthor>{author}</ArticleDetailAuthor>
+              </ArticleDetailAuthorArea>
+                  <ArticleBody>{text}</ArticleBody>
+                  <ArticlePostTime>{time}</ArticlePostTime>
+              </ArticleText>
+          </ArticleContainer>
+        );
     }
   
     useEffect(() => {
@@ -37,6 +129,8 @@ function Favorite() {
       })
         .then(response => response.json())
         .then(data => {
+          // 從服務器獲取的 JSON 格式數據是一個物件，包含 food 和 rent 兩個屬性
+          // 每個屬性的值都是一個物件的陣列，將這些陣列組合成一個新的陣列
 
           const newFoodData = [...data.savedFood];
           const newHouseData = [...data.savedHouse];
@@ -89,9 +183,10 @@ function Favorite() {
 
     return (
       <div className='Favorite'>
-        <div id='div1'>
-          <img src={bookmark} alt='收藏' className='favorite_icon'></img>
-          <h1>我的收藏</h1>
+        <div>
+          <Title>我的收藏</Title>
+          <img className='heart' src={yolk}/>
+          <img className='stars' src={redBall}/>
         </div>
         <div>
           <select className='selectType' onChange={handleSelectChange}> 
@@ -102,20 +197,25 @@ function Favorite() {
         </div>
         {isFoodShown && <ArticleList>
           {FoodData.map((item, index) => (
-            <Savedinfo
+            <SavedFinfo
               key={index}
               author={item.nickname}
-              time={item.post_time}
-              text={item.store}
+              post_time={item.post_time}
+              store={item.store} 
+              rating={item.rating} 
+              road={item.road}
+              postID={item.postId}
             />
           ))}
         </ArticleList>}
         {isRentShown && <ArticleList>
           {RentData.map((item, index) => (
-            <Savedinfo
+            <SavedHinfo
               key={index}
-              author={item.name}
-              text={item.title}
+              author={item.name} 
+              time={item.postTime} 
+              text={item.title} 
+              postID={item.postId}
             />
           ))}
         </ArticleList>}

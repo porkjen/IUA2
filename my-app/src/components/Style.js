@@ -6,7 +6,6 @@ const RemainTitle = styled.label`
     font-family: 'Noto Serif TC', serif;
     color:#008CBA;
     margin-top:10px;
-    
 `;
 
 const RemainContainer = styled.div`
@@ -16,7 +15,6 @@ const RemainContainer = styled.div`
     height: 50px;
     background-color: white;
     border-radius: 10px;
-    
 `;
 
 const RemainList = styled.div`
@@ -32,4 +30,21 @@ const RemainList = styled.div`
     transform: translate(-50%, -50%);
 `;
 
-export {RemainTitle, RemainContainer, RemainList};
+const Mustinfo = styled.label`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    color:#008CBA;
+    margin-top:10px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+    width: 350px;
+    height: 60px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 10px;
+`;
+
+export {RemainTitle, RemainContainer, RemainList, Mustinfo} ;

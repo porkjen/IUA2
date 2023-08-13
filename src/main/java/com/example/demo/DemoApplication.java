@@ -29,6 +29,7 @@ public class DemoApplication {
 		ConfigurableApplicationContext applicationContext = SpringApplication.run(DemoApplication.class, args);//啟動
 		applicationContext.start();
 	}
+
 	@Component
 	class ContextStartedListener implements ApplicationListener<ContextStartedEvent> {
 
@@ -106,3 +107,4 @@ public class DemoApplication {
 		}
 	}
 }
+
