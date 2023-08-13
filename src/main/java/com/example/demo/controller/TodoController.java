@@ -40,6 +40,8 @@ public class TodoController {
     SavedRepository savedRepository;
     @Autowired
     FoodRepository foodRepository;
+    @Autowired
+    GeneralRepository generalRepository;
     //必選修課程DB
     @Autowired
     RCourseG1MustRepository rcourseG1MustRepository;
@@ -752,6 +754,21 @@ public class TodoController {
         }
         if(deleted)return ResponseEntity.ok("Success"); //400
         else return ResponseEntity.badRequest().body("Invalid request : Class not found"); //400
+    }
+
+    @PostMapping("/general_education")
+    public List<GeneralCourseEntity> generalEducation(@RequestBody String field){
+        List<GeneralCourseEntity> gcList = getGeneralCourses();
+        for(GeneralCourseEntity gc : gcList){
+            generalRepository.save(gc);
+        }
+        List<GeneralCourseEntity> result = generalRepository.findBysubfield(field);
+        return result;
+    }
+
+    private List<GeneralCourseEntity> getGeneralCourses(){
+        List<GeneralCourseEntity> result = crawler.getAllGeneralClass();
+        return result;
     }
 
 }
