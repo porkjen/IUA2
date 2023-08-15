@@ -55,6 +55,7 @@ body {
     margin-left: 20px;
     padding: 5px;
     width: 28%;
+    font-family: 'Noto Serif TC', serif;
 }
 
 /*美食發文*/
@@ -105,6 +106,7 @@ body {
     border-radius: 0px;
     margin-left: 15px;
     width: 200px;
+    font-family: 'Noto Serif TC', serif;
 }
 
 .articleChangeClassForm > .articleChangeClassFormText > .articleChangeClassFormTextInput{

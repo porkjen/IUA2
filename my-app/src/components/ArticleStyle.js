@@ -225,6 +225,7 @@ const PerChangeClassBtn = styled.button`
     border-radius: 5px;
     background-color: white; 
     padding: 10px;
+    
 `;
 
 const PerHaveChangeClassBtn = styled.button`
@@ -236,7 +237,20 @@ const PerHaveChangeClassBtn = styled.button`
     padding: 10px;
     background-color:#DEAD73;
 `;
+const ChangeClassCategorySelect = styled.select`
+    font-family: 'Noto Serif TC', serif;
+    border: 1px solid #FFA500;
+    border-radius: 5px;
+    background-color: transparent; 
+    padding: 10px;
+    width: 100px;
+    margin-left: 68%;
+    position: absolute;
+    margin-top: 30%;
+    z-index: 2;
+`;
 
 
 export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleDistance,
-     ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn, ArticleSelect,PerHaveChangeClassBtn};
+     ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn, ArticleSelect,PerHaveChangeClassBtn,
+     ChangeClassCategorySelect};

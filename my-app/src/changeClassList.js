@@ -4,7 +4,7 @@ import Modal from "./components/Modal";
 import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
 import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer,
-   ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleDistance}  from './components/ArticleStyle.js';
+   ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleDistance,ChangeClassCategorySelect}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link,useNavigate,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
@@ -60,6 +60,18 @@ const ChangeClassList=()=> {
       }
 
       function ChangeClassList_all(){
+        const handleCategoryChange = event => {
+          fetch(` /course_classify?category=${event.target.value}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            setData(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+          //setCategory(event.target.value);
+        };
         return(
           <Page>
               <Pagebg>
@@ -67,6 +79,15 @@ const ChangeClassList=()=> {
                 <Link to='/postArticle'>
                   <PostArticleBtn >我要發文</PostArticleBtn>
                 </Link>
+                <ChangeClassCategorySelect onChange={handleCategoryChange}>
+                  <option >分類</option>
+                  <option value='PE'>體育</option>
+                  <option value='general'>通識</option>
+                  <option value='english'>英文</option>
+                  <option value='foreign_language'>第二外語</option>
+                  <option value='compulsory'>必修</option>
+                  <option value='elective'>選修</option>
+                </ChangeClassCategorySelect>
                 <ArticleList>
                     {data.map(item => (
                       <Articleinfo key={item.postId} author={item.studentID} className={item.course} category={item.category} postID={item.postId}></Articleinfo>

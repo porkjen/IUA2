@@ -31,8 +31,8 @@ public class ChangeCourseController {
     @GetMapping("/course_change_have") //whether there is class at this time
     public List<ChangeCourseHaveEntity> courseChangeHave(){
         List<ChangeCourseHaveEntity> courseTimeList = new ArrayList<>();
-        for(int i=1;i<14;i++){
-            for(int j=100;j<700;j+=100){
+        for(int i=1;i<15;i++){
+            for(int j=100;j<800;j+=100){
                 String time = String.valueOf(j+i);
                 courseTimeList.add(changeCourseHaveRepository.findByTime(time));
             }
@@ -42,14 +42,7 @@ public class ChangeCourseController {
     }*/
     @GetMapping("/course_change_have") //whether there is class at this time
     public List<ChangeCourseHaveEntity> courseChangeHave(){
-        List<ChangeCourseHaveEntity> courseTimeList = new ArrayList<>();
-        for(int i=1;i<15;i++){
-            for(int j=100;j<800;j+=100){
-                String time = String.valueOf(j+i);
-                courseTimeList.add(changeCourseHaveRepository.findByTime(time));
-            }
-        }
-
+        List<ChangeCourseHaveEntity> courseTimeList = changeCourseHaveRepository.findAll();
         return courseTimeList;
     }
 
@@ -137,5 +130,27 @@ public class ChangeCourseController {
             return ResponseEntity.ok("Success"); //200
         }
         else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+    }
+
+    @GetMapping("/course_classify")
+    public List<ChangeCourseEntity> course_Classify(@RequestParam("category") String category){
+        if(Objects.equals(category, "general")){
+            return changeCourseRepository.findByCategory("通識");
+        }
+        else if (Objects.equals(category, "PE")) {
+            return changeCourseRepository.findByCategory("體育");
+        }
+        else if(Objects.equals(category, "elective")){
+            return changeCourseRepository.findByCategory("選修");
+        }
+        else if(Objects.equals(category, "compulsory")){
+            return changeCourseRepository.findByCategory("必修");
+        }
+        else if(Objects.equals(category, "english")){
+            return changeCourseRepository.findByCategory("英文");
+        }
+        else{
+            return changeCourseRepository.findByCategory("外文");
+        }
     }
 }

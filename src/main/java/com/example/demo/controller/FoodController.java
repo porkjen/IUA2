@@ -233,9 +233,12 @@ public class FoodController {
         List<FoodDTO> resultList = new ArrayList<>();
         for(FoodEntity food : foodRepository.findAll()){
             if((Objects.equals(store, "") || food.getStore().toLowerCase().contains(store.toLowerCase())) &&
-                    (Objects.equals(area, "") || food.getAddress().equals(area)) &&
-                    (Objects.equals(addr, "") || food.getAddress().contains(addr))
+
+               (Objects.equals(area, "") || food.getDistrict().contains(area)) &&
+               (Objects.equals(addr, "") || food.getAddress().contains(addr))
+
             ){
+
                 FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad() , food.getDistance());
                 resultList.add(result);
             }

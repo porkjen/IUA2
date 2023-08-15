@@ -71,23 +71,29 @@ const ChangeClass=()=> {
         }
        
       }
-
+      const itemsPerRow = 14;
       return (
         <Page>
-            <Pagebg>
-                <Title>換課板</Title>
-                <Link to='/postArticle'>
-                  <PostArticleBtn>我要發文</PostArticleBtn>
-                </Link>
-                <div className='PerChangeClassTable'>
-                  <div>
-                    {data.map(item => (
-                      <ChangeClassBtn key={item.time} time={item.time} haveClass={item.have}/>
-                    ))}
-                  </div>
+      <Pagebg>
+        <Title>換課板</Title>
+        <Link to='/postArticle'>
+          <PostArticleBtn>我要發文</PostArticleBtn>
+        </Link>
+        <div className='PerChangeClassTable'>
+          {Array.from({ length: Math.ceil(data.length / itemsPerRow) }).map((_, rowIndex) => (
+            <div className='column' key={rowIndex}>
+              {data.slice(rowIndex * itemsPerRow, (rowIndex + 1) * itemsPerRow).map(item => (
+                <div className='ChangeClassBtnContainer' key={item.time}>
+                  <ChangeClassBtn time={item.time} haveClass={item.have} onClick={() => handleShowClassInfoSubmit(item.time)}>
+                    {item.time}
+                  </ChangeClassBtn>
                 </div>
-            </Pagebg>
-        </Page>
+              ))}
+            </div>
+          ))}
+        </div>
+      </Pagebg>
+    </Page>
       );
     }
 

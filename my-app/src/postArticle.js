@@ -342,6 +342,7 @@ const PostArticle=()=> {
         const [CCategory, setCCategory] = useState("");
         const [Ctime, setCtime] = useState("");
         const [Cteacher, setCteacher] = useState("");
+        const [numberArray, setNumberArray] = useState([]);
 
         const handleCtitleChange = event => {
           setCtitle(event.target.value);
@@ -351,6 +352,9 @@ const PostArticle=()=> {
         };
         const handleCtimeChange = event => {
           setCtime(event.target.value);
+          const numbers = event.target.value.split('、').map(Number);
+          console.log(numbers);
+          setNumberArray(numbers);
         };
         const handleCteacherChange = event => {
           setCteacher(event.target.value);
@@ -365,7 +369,7 @@ const PostArticle=()=> {
                           studentID: "00957025",
                           course : Ctitle,
                           category:CCategory,
-                          time:[Ctime],
+                          time:numberArray,
                           teacher:Cteacher,
                           content : Ctext,
                         };
@@ -396,7 +400,7 @@ const PostArticle=()=> {
             <div className='articleChangeClassFormCategory'>
               <label>分類:</label>
               <select className='articleChangeClassFormCategoryInput' value={CCategory} onChange={handleCCategoryChange}>
-                  <option>請選擇分類</option>
+                  <option>請選擇你所擁有的課分類</option>
                   <option value='體育'>體育</option>
                   <option value='通識'>通識</option>
                   <option value='英文'>英文</option>
