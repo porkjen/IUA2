@@ -62,7 +62,7 @@ public class TodoController {
 
     String secretKey = "au4a83";
 
-    Crawler crawler = new Crawler();
+    static Crawler crawler = new Crawler();
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
@@ -757,16 +757,18 @@ public class TodoController {
     }
 
     @PostMapping("/general_education")
-    public List<GeneralCourseEntity> generalEducation(@RequestBody String field){
-        List<GeneralCourseEntity> gcList = getGeneralCourses();
-        for(GeneralCourseEntity gc : gcList){
-            generalRepository.save(gc);
+    public List<GeneralCourseEntity> generalEducation(@RequestParam("field") String field) throws InterruptedException {
+        if(generalRepository.count() == 0){
+            List<GeneralCourseEntity> gcList = getGeneralCourses();
+            for(GeneralCourseEntity gc : gcList){
+                generalRepository.save(gc);
+            }
         }
-        List<GeneralCourseEntity> result = generalRepository.findBysubfield(field);
+        List<GeneralCourseEntity> result = generalRepository.findBySubfield(field);
         return result;
     }
 
-    private List<GeneralCourseEntity> getGeneralCourses(){
+    private static List<GeneralCourseEntity> getGeneralCourses() throws InterruptedException {
         List<GeneralCourseEntity> result = crawler.getAllGeneralClass();
         return result;
     }

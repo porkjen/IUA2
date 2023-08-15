@@ -12,7 +12,7 @@ import java.util.Date;
 
 import static java.sql.DriverManager.println;
 
-@Controller
+@RestController
 @CrossOrigin(value = "http://localhost:8080/list")
 public class ListController {
 
