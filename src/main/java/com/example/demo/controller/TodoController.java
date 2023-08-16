@@ -40,6 +40,8 @@ public class TodoController {
     SavedRepository savedRepository;
     @Autowired
     FoodRepository foodRepository;
+    @Autowired
+    GeneralRepository generalRepository;
     //必選修課程DB
     @Autowired
     RCourseG1MustRepository rcourseG1MustRepository;
@@ -60,7 +62,7 @@ public class TodoController {
 
     String secretKey = "au4a83";
 
-    Crawler crawler = new Crawler();
+    static Crawler crawler = new Crawler();
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
@@ -752,6 +754,23 @@ public class TodoController {
         }
         if(deleted)return ResponseEntity.ok("Success"); //400
         else return ResponseEntity.badRequest().body("Invalid request : Class not found"); //400
+    }
+
+    @PostMapping("/general_education")
+    public List<GeneralCourseEntity> generalEducation(@RequestParam("field") String field) throws InterruptedException {
+        if(generalRepository.count() == 0){
+            List<GeneralCourseEntity> gcList = getGeneralCourses();
+            for(GeneralCourseEntity gc : gcList){
+                generalRepository.save(gc);
+            }
+        }
+        List<GeneralCourseEntity> result = generalRepository.findBySubfield(field);
+        return result;
+    }
+
+    private static List<GeneralCourseEntity> getGeneralCourses() throws InterruptedException {
+        List<GeneralCourseEntity> result = crawler.getAllGeneralClass();
+        return result;
     }
 
 }

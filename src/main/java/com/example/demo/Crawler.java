@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 
 @Component
@@ -405,14 +406,14 @@ public class Crawler {
         return myClassList;
     }
 
-    public static void getAllGeneralClass() throws InterruptedException{
+    public static List<GeneralCourseEntity> getAllGeneralClass() throws InterruptedException{
         driver.switchTo().frame("menuFrame");
         driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
-        Thread.sleep(3000);
+        Thread.sleep(1500);
         driver.findElement(By.linkText("選課系統")).click(); //選課系統
-        Thread.sleep(3000);
+        Thread.sleep(1500);
         driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
-        Thread.sleep(3000);
+        Thread.sleep(1500);
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
         //select
@@ -423,23 +424,31 @@ public class Crawler {
         Thread.sleep(3000);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].value = '300';", driver.findElement(By.id("PC_PageSize")));
-        Thread.sleep(3000);
+        Thread.sleep(1500);
         driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
-        Thread.sleep(5000);
+        Thread.sleep(3000);
 
-        ArrayList<GeneralCourseEntity> gCourses = new ArrayList<GeneralCourseEntity>();
+        List<GeneralCourseEntity> gCourses = new ArrayList<GeneralCourseEntity>();
 
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
-        for(int i = 1; i< trList.size(); i++){
+        for(int i = 1; i < trList.size(); i++){
             GeneralCourseEntity gc = new GeneralCourseEntity();
-            WebElement row = trList.get(i);
-            List<WebElement> cols= row.findElements(By.tagName("td"));
-            System.out.println("///course number: " + cols.get(2).getText());
-            gc.setNumber(cols.get(2).getText());
-            gc.setName(cols.get(3).getText());
-            gc.setTeacher(cols.get(6).getText());
-            driver.findElement(By.linkText(cols.get(2).getText())).click();
-
+            // WebElement row = trList.get(i);
+            // Duration duration = Duration.ofSeconds(5);
+            // WebDriverWait wait = new WebDriverWait(driver, duration);
+            //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("td")));
+            // wait.ignoring(StaleElementReferenceException.class).until(
+            //     (WebDriver d) -> {
+                    // List<WebElement> cols = row.findElements(By.tagName("td"));
+                    // Thread.sleep(1500);
+                    // System.out.println("///course number: " + cols.get(2).getText());
+                    // gc.setNumber(cols.get(2).getText());
+                    // gc.setName(cols.get(3).getText());
+                    // gc.setTeacher(cols.get(6).getText());
+                    // driver.findElement(By.linkText(cols.get(2).getText())).click();
+            //         return true;
+            //     }
+            // );
             if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
             else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();
             //switch iframe
@@ -447,28 +456,35 @@ public class Crawler {
             WebElement iframe = driver.findElement(By.tagName("iframe"));
             driver.switchTo().frame(iframe);
             driver.switchTo().frame("mainFrame");
+            Thread.sleep(1500);
             List<WebElement> trlist = driver.findElements(By.cssSelector("#QTable2 > tbody > tr"));
             List<WebElement> tablelist = trlist.get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table"));
             List<WebElement> tr = tablelist.get(0).findElements(By.tagName("tr"));
+            String number = tr.get(4).findElement(By.id("M_COSID")).getText();
+            String teacher = tr.get(5).findElement(By.id("M_LECTR_TCH_CH")).getText();
+            String name = tr.get(6).findElement(By.id("CH_LESSON")).getText();
             String time = tr.get(11).findElement(By.id("M_SEG")).getText();
             String room = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();
             String subfield = tr.get(12).findElement(By.id("M_CHILD_NAME")).getText();
             List<WebElement> tr2 = tablelist.get(2).findElements(By.tagName("tr"));
             String eva = tr2.get(13).findElement(By.id("M_CH_TYPE")).getText();
+            System.out.println("///course number: " + number);
             System.out.println("///subfield: " + subfield);
+            gc.setNumber(number);
+            gc.setName(name);
+            gc.setTeacher(teacher);
             gc.setTime(time);
             gc.setClassroom(room);
             gc.setSubfield(subfield);
             gc.setEvaluation(eva);
             gCourses.add(gc);
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             driver.switchTo().defaultContent();
             driver.switchTo().frame("mainFrame");
             driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
             driver.switchTo().defaultContent();
             driver.switchTo().frame("mainFrame");
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         }
+        return gCourses;
     }
 
     public static List<RequiredCourseEntity> findRCourse(String takingCategory, String takingGrade) throws InterruptedException{
@@ -568,7 +584,7 @@ public class Crawler {
 
         //getBasicData(account,password);
         //getMyClass(account,password);
-        getAllGeneralClass();
+        //getAllGeneralClass();
         //getFinishedCredict();
         //findRCourse("必修","3");
         //detectCoureses();
