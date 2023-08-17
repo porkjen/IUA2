@@ -41,6 +41,8 @@ public class TodoController {
     @Autowired
     FoodRepository foodRepository;
     @Autowired
+    ChangeCourseRepository changeCourseRepository;
+    @Autowired
     GeneralRepository generalRepository;
     //必選修課程DB
     @Autowired
@@ -102,9 +104,10 @@ public class TodoController {
     }
 
     @PostMapping("/nickname")
-    public ResponseEntity<String> postnickname (@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
-        System.out.println(basic.getStudentID());
+    public ResponseEntity<String> postnickname (@RequestBody BasicEntity basic)  {
+        System.out.println("/nickname, user : "+basic.getStudentID());
         BasicEntity oldProduct = basicRepository.findByStudentID(basic.getStudentID());
+        if(oldProduct == null)return ResponseEntity.badRequest().body("Invalid request : user not found"); // 400
         oldProduct.setNickname(basic.getNickname());
         basicRepository.save(oldProduct);
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
@@ -632,6 +635,8 @@ public class TodoController {
     @PostMapping("/favorites")
     public ResponseEntity<String> favorites(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites");
+        System.out.println("user : "+requestData.get("studentID")+", post : "+requestData.get("postId"));
+        if(basicRepository.findByStudentID(requestData.get("studentID"))==null)return ResponseEntity.badRequest().body("Invalid request : user not found"); // 400
         //get user's favorites
         SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
         //user haven't create
@@ -642,7 +647,7 @@ public class TodoController {
         else {
             for (String post : savedEntity.getPostId()){
                 if (Objects.equals(requestData.get("postId"), post))
-                    return ResponseEntity.badRequest().body("Invalid request");//400
+                    return ResponseEntity.status(HttpStatus.CREATED).body("post already added");//201
             }
         }
         savedEntity.setPostId(requestData.get("postId"));
@@ -655,6 +660,9 @@ public class TodoController {
             HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
             house.setSaved(requestData.get("studentID"));
             houseRepository.save(house);
+        }
+        else {
+            return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
         }
         return ResponseEntity.ok("Success");
     }
@@ -684,6 +692,7 @@ public class TodoController {
     @DeleteMapping("/favorites_delete")
     public ResponseEntity<String> favoritesDelete(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites_delete");
+        System.out.println("user : "+requestData.get("studentID")+", post : "+requestData.get("postId"));
         SavedEntity savedEntity = savedRepository.findByStudentID(requestData.get("studentID"));
         for(String postId : savedEntity.getPostId()){
             if(Objects.equals(postId, requestData.get("postId"))){

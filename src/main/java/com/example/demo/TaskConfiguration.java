@@ -40,20 +40,20 @@ public class TaskConfiguration implements SchedulingConfigurer {
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         // 使用cron expression可以動態設置循環間隔
         taskRegistrar.addTriggerTask(() -> {
-            log.info(">>>>>>定时任务开始时间： {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS)));
+            log.info(">>>>>>定時任務開始時間： {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS)));
             try {
-                // 定时任务具体业务逻辑，模拟业务逻辑处理
+                // do something
                 log.info("定时任务具体业务逻辑，模拟业务逻辑处理......");
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                log.error("发送邮件定时任务处理失败", e);
+                log.error("美食定時更新失敗", e);
                 Thread.currentThread().interrupt();
             }
-            log.info(">>>>>>定时任务结束时间： {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS)));
+            log.info(">>>>>>定時任務結束時間： {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS)));
         }, triggerContext -> {
             // 使用CronTrigger觸發器，可動態修改cron表達式來操作循環規則
             CronTrigger cronTrigger = new CronTrigger(foodUpdateCron);
-            return cronTrigger.nextExecutionTime(triggerContext).toInstant();
+            return cronTrigger.nextExecutionTime(triggerContext).toInstant();//下次執行時間
         });
 
     }

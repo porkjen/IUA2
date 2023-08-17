@@ -127,17 +127,21 @@ public class ChangeCourseController {
                 courses = changeCourseRepository.findByCategory("第二外語");
             }
             boolean found;
+            System.out.println(courses.size());
             if(!Objects.equals(time, "")){
-                for(ChangeCourseEntity c : courses){
-                    System.out.println(c.getCategory());
+                for(int j=0;j<courses.size();j++){
+                    System.out.println(courses.get(j).getCategory());
                     found = false;
-                    for(int i=0;i<c.getTime().length;i++){
-                        if(Objects.equals(c.getTime()[i], time)){
+                    for(int i=0;i<courses.get(j).getTime().length;i++){
+                        if(Objects.equals(courses.get(j).getTime()[i], time)){
                             found = true;
                             break;
                         }
                     }
-                    if(!found)courses.remove(c);
+                    if(!found){
+                        courses.remove(courses.get(j));
+                        j--;
+                    }
                 }
             }
             return courses;

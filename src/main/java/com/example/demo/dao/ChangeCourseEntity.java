@@ -2,6 +2,9 @@ package com.example.demo.dao;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Document("change_CourseCollection")
 public class ChangeCourseEntity {
     private String id;
