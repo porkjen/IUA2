@@ -88,8 +88,7 @@ public class TodoController {
             basic.setEmail(studentID + "@mail.ntou.edu.tw");
             basicRepository.save(basic);
             System.out.println("New user!");
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");//201
         }
         else {
             personalData.setPassword(encryptedpwd); //user may change password, update password everytime
@@ -100,7 +99,6 @@ public class TodoController {
         System.out.println("original:"+decryptedpwd);
 
         return ResponseEntity.ok("Success"); // 回傳狀態碼 200
-
     }
 
     @PostMapping("/nickname")
@@ -136,31 +134,32 @@ public class TodoController {
         return remainCredit;
     }
 
-    @PostMapping("/add_detect_course") 
-    public void addDetectCourse(@RequestBody CourseToBeDetected course)throws TesseractException, IOException, InterruptedException{
+    @PostMapping("/add_detect_course")
+    public void addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
-        if(dRepository.existsByStudentID(course.getStudentID())){
-            DetectedCoursesList oriList = dRepository.findByStudentID(course.getStudentID());
+        if(dRepository.existsByStudentID(requestData.getStudentID())){
+            DetectedCoursesList oriList = dRepository.findByStudentID(requestData.getStudentID());
+            System.out.println("course number: " + requestData.getNumber());
             courses = oriList.getDetectedCourses();
-            courses.add(course);
+            courses.add(requestData);
             oriList.setDetectedCourse(courses);
             dRepository.save(oriList);
         }
         else{
             DetectedCoursesList newList = new DetectedCoursesList();
-            newList.setStudentID(course.getStudentID());
-            courses.add(course);
+            newList.setStudentID(requestData.getStudentID());
+            System.out.println("course number: " + requestData.getNumber());
+            courses.add(requestData);
             newList.setDetectedCourse(courses);
             dRepository.save(newList);
         }
         crawler.detectCoureses(courses);
     }
-    
+
     @PostMapping("/detect_course")
     public void detectCourse()throws TesseractException, IOException, InterruptedException{
 
     }
-
 
     @GetMapping("core_elective")
     public ArrayList<RequiredCourseEntity> coreElective(@RequestParam("grade") String grade){
@@ -201,7 +200,6 @@ public class TodoController {
         }
         return RCList;
     }
-
 
     @PostMapping("/rent_post")
     public HouseEntity rentPost(@RequestBody HouseEntity house){
@@ -661,7 +659,6 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
-
     @PostMapping("/favorites_load")
     public SavedDTO favoritesLoad(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites_load");
@@ -777,5 +774,4 @@ public class TodoController {
     }
 
 }
-
 

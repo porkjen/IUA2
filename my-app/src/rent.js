@@ -9,6 +9,8 @@ import bee2 from './img/bee2.png';
 import yolk from './img/yolk.PNG';
 import cat from './img/SignIn4.PNG';
 import star from './img/star.png';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
 import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleRentContainer, ArticleAuthor, ArticlePostTime, ArticleBody}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link ,useNavigate, useLocation} from 'react-router-dom';
@@ -125,6 +127,9 @@ const Rent=()=> {
       
       return (
         <Page>
+           <Link to='/choose'>
+              <Back src={back} alt="回上一頁" />
+          </Link>
           {openModal && <Modal closeModal={setOpenModal} type={"rent"}/>}
           {!openModal && < Rent_all/>}
         </Page>

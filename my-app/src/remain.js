@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react';
 import logo from './img/IUAlogo.png';
 import bee from './img/bee.PNG';
 import bear from './img/bear.PNG';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleDCText, ArticleText, ArticlePostTimeRating,
     ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody } from './components/ArticleStyle.js';
-import { RemainTitle, RemainContainer, RemainList } from './components/Style.js';
+import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody } from './components/Style.js';
 
 const Remain = () => {
     const [data, setData] = useState(null);
@@ -18,6 +20,7 @@ const Remain = () => {
     const [general, setGeneral] = useState(false);
     const [kernal, setKernal] = useState(false);
     const [pe, setPE] = useState(false);
+    const [showAlready, setshowAlready] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
     const [deptListData, setDeptListData] = useState([]);
     const [generalListData, setGeneralListData] = useState([]);
@@ -25,6 +28,7 @@ const Remain = () => {
     const [optListData, setOptListData] = useState([]);
     const [peListData, setPeListData] = useState([]);
     const [reqListData, setReqListData] = useState([]);
+    const [AlreadyCredits, setAlreadyCredits] = useState();
 
     const formData = {
         studentID: "00957030",
@@ -65,6 +69,7 @@ const Remain = () => {
             setGeneral(false);
             setKernal(false);
             setPE(false);
+            setshowAlready(false);
         } else if (event.target.value === "pre") {
             setRemainAll(false);
             setReq(true);
@@ -73,6 +78,7 @@ const Remain = () => {
             setGeneral(false);
             setKernal(false);
             setPE(false);
+            setshowAlready(true);
         } else if (event.target.value === "dept") {
             setRemainAll(false);
             setReq(false);
@@ -81,6 +87,7 @@ const Remain = () => {
             setGeneral(false);
             setKernal(false);
             setPE(false);
+            setshowAlready(true);
         } else if (event.target.value === "opt") {
             setRemainAll(false);
             setReq(false);
@@ -89,6 +96,7 @@ const Remain = () => {
             setGeneral(false);
             setKernal(false);
             setPE(false);
+            setshowAlready(true);
         } else if (event.target.value === "general") {
             setRemainAll(false);
             setReq(false);
@@ -97,6 +105,7 @@ const Remain = () => {
             setGeneral(true);
             setKernal(false);
             setPE(false);
+            setshowAlready(true);
         } else if (event.target.value === "kernal") {
             setRemainAll(false);
             setReq(false);
@@ -105,6 +114,7 @@ const Remain = () => {
             setGeneral(false);
             setKernal(true);
             setPE(false);
+            setshowAlready(true);
         } else if (event.target.value === "pe") {
             setRemainAll(false);
             setReq(false);
@@ -113,6 +123,7 @@ const Remain = () => {
             setGeneral(false);
             setKernal(false);
             setPE(true);
+            setshowAlready(true);
         }
     };
 
@@ -164,13 +175,15 @@ const Remain = () => {
     }
 
     function FCourseList({ list }) {
+        const totalCredit = list.reduce((total, item) => total + item.credit, 0);
+        setAlreadyCredits(totalCredit);
         return (
             <RemainList>
                 <ArticleContainer>
                     {list.map((item, index) => (
-                        <ArticleDCText key={index}>
-                            <ArticleBody>{item}</ArticleBody>
-                        </ArticleDCText>
+                        <RemainBody key={index}>
+                            <RemainText>{item.courseName}&nbsp;{item.credit}&nbsp;學分</RemainText>
+                        </RemainBody>
                     ))}
                 </ArticleContainer>
             </RemainList>
@@ -180,6 +193,9 @@ const Remain = () => {
     function Remain() {
         return (
             <div className="Remain">
+                <Link to='/Credit'>
+                    <Back src={back} alt="回上一頁" />
+                </Link>
                 <div className='Remain_bg'>
                     <div className="Remain_title">
                         <Title>剩餘學分</Title>
@@ -195,6 +211,7 @@ const Remain = () => {
                             <option value="kernal">已修過核心選修</option>
                             <option value="pe">已修過體育</option>
                         </select>
+                        {showAlready && <label className='Remain_label'>已修過{AlreadyCredits}學分</label>}
                         {remainAll && <RemainCredits />}
                         {dept && <FCourseList list={deptListData} />}
                         {req && <FCourseList list={reqListData} />}

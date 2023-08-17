@@ -6,10 +6,12 @@ import star from './img/star.png';
 import redBall from './img/redBall.PNG';
 import logo from './img/IUAlogo.png';
 import student from './img/student.png';
+import back from './img/back.png';
 import cat from './img/SignIn4.PNG';
 import studentboy from './img/studentboy.png';
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleDistance, 
   ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect } from './components/ArticleStyle.js';
+import {Back}  from './components/Style.js';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef,  } from "react";
 
@@ -128,7 +130,7 @@ const Food = () => {
     return (
       <ArticleContainer>
         <ArticleText onClick={handleShowFoodSubmit}>
-          {road!==null &&  <ArticleDistance>{road}</ArticleDistance>}
+          {road!=="" &&  <ArticleDistance>{road}</ArticleDistance>}
           <ArticleAuthorArea>
             {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
             {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}
@@ -244,6 +246,9 @@ const Food = () => {
 
   return (
     <Page>
+      <Link to='/choose'>
+              <Back src={back} alt="回上一頁" />
+      </Link>
       {openModal && <Modal closeModal={setOpenModal} type={"food"} />}
       {!openModal && <Food_all />}
     </Page>

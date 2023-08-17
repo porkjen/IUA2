@@ -7,6 +7,7 @@ const Page = styled.div`
     padding: 0;
     margin: 0;
     overflow-y:hidden;
+    overflow: hidden;
     
 `;
 /*background-image: url(${backgroundImg});   */
@@ -16,6 +17,7 @@ const Pagebg = styled.div`
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    overflow: hidden;
 `;
 
 const Title = styled.h1`
@@ -168,7 +170,7 @@ const ArticleAuthorImg = styled.img`
 const ArticleAuthor = styled.div`
     width:100px;
     color: #232323;
-    margin-left:-30px;
+    margin-left:-20px;
     margin-top:10px;
 `;
 

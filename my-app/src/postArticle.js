@@ -5,6 +5,8 @@ import conversation from './img/conversation.png';
 import cat1 from './img/SignIn1.png';
 import cat2 from './img/SignIn2.PNG';
 import {Title}  from './components/ArticleStyle.js';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useNavigate } from 'react-router-dom';
@@ -366,7 +368,7 @@ const PostArticle=()=> {
           e.preventDefault();
           const student_id = loginUser();
           const formData = {
-                          studentID: "00957025",
+                          studentID: "00957017",
                           course : Ctitle,
                           category:CCategory,
                           time:numberArray,
@@ -395,7 +397,7 @@ const PostArticle=()=> {
           <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
             <div className='articleChangeClassFormTitle'>
               <label>標題:</label>
-              <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle} placeholder='範例:503504排球課換503504通識'></input>
+              <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle} placeholder='你有的課'></input>
             </div><br/>
             <div className='articleChangeClassFormCategory'>
               <label>分類:</label>
@@ -419,7 +421,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
-              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange} value={Ctext}></textarea>
+              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange} value={Ctext} placeholder='偏好換的課'></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn>確認發文</ArticleSubmitBtn>
@@ -478,7 +480,10 @@ const PostArticle=()=> {
       
 
       return (
-        <div className="PostArticle">   
+        <div className="PostArticle">
+           <Link to='/choose'>
+              <Back src={back} alt="回上一頁" />
+          </Link>   
             <div className='PostArticle_bg'>
                 <Title>發文</Title>
                 <img className='post_cat1' src={cat1}/>

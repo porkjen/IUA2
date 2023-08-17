@@ -1,5 +1,7 @@
 import './changeClass.css';
 import React from 'react';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody, PerChangeClassBtn, PerHaveChangeClassBtn}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
 import {useState,useEffect} from "react";
@@ -74,6 +76,9 @@ const ChangeClass=()=> {
       const itemsPerRow = 14;
       return (
         <Page>
+          <Link to='/choose'>
+              <Back src={back} alt="回上一頁" />
+          </Link>
       <Pagebg>
         <Title>換課板</Title>
         <Link to='/postArticle'>

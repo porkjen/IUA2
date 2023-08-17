@@ -5,6 +5,8 @@ import cookie from './img/cookie.png';
 import toast from './img/toast.png';
 import cat1 from './img/SignIn1.png';
 import cat2 from './img/SignIn2.PNG';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useLocation } from 'react-router-dom';
 import {useState, useEffect} from "react";
@@ -157,6 +159,9 @@ const TimeTable=()=> {
       return (
 
         <div className="TimeTable">    
+        <Link to='/HomePage'>
+              <Back src={back} alt="回上一頁" />
+          </Link>
             <div className="TimeTablebg">
                 <div className="TimeTable_draw"> 
                         <img src={cat1} alt="IUA" className="TimeTableCat1" />

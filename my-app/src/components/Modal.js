@@ -274,6 +274,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
       let navigate = useNavigate();
       //const { studentID, postId, time } = location.state;
       const [data, setData] = useState("");
+      const [timeValue, setTimeValue] = useState("");
       const [isCreator, setIsCreator] = useState(false);
       const location = useLocation();
       const formData = {
@@ -376,7 +377,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
               <label>標題:&ensp;{data.course}</label><br/>
               <label>課程分類:&ensp;{data.category}</label><br/>
               <label>課程老師:&ensp;{data.teacher}</label><br/>
-              <label>課程時間:&ensp;{data.time}</label><br/>
+              <label>課程時間:&ensp;{data.time.join('、')}</label><br/>
               <label>內容:&ensp;{data.content}</label><br/><br/>
               {isCreator===false && <ModalSubmitBtn type="submit">聯絡發文者</ModalSubmitBtn>}
               {isCreator && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit}>修改貼文</ArticleDetailNormalBtn>

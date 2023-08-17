@@ -30,17 +30,24 @@ const RemainList = styled.div`
     transform: translate(-50%, -50%);
 `;
 
-const RemainText = styled.button`
+const RemainBody = styled.div`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
-    border-radius: 5px;
-    width: 350px;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    width: 230px;
+    height: 50px;
+    background-color: white;
+    border-radius: 10px;
     padding: 16px;
     background-color: white;
-    min-height:70px;
     margin-top:2%;
     margin-left:7px;
+`;
+
+const RemainText = styled.div`
+    padding-top: 12px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size:15px;
 `;
 
 const Mustinfo = styled.label`
@@ -60,4 +67,12 @@ const Mustinfo = styled.label`
     padding-left: 10px;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText} ;
+const Back = styled.img`
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+    position: absolute;
+    z-index: 3;
+`;
+
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, Back} ;

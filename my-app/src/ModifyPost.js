@@ -346,16 +346,19 @@ const ModifyPost=()=> {
         const [Ctitle, setCtitle] = useState("");
         const [Ctext, setCtext] = useState("");
         const [CCategory, setCCategory] = useState("");
-        const [Ctime, setCtime] = useState("");
+        const [Ctime, setCtime] = useState([]);
         const [Cteacher, setCteacher] = useState("");
+        const [timeArray, setTimeArray] = useState([]);
+        const [numberArray, setNumberArray] = useState([]);
 
         useEffect(() => {
           if (newData) {
             setCtitle(newData.course);
             setCtext(newData.content);
             setCCategory(newData.category);
-            setCtime(newData.time.join(', '));
+            setCtime(newData.time.join('、 '));
             setCteacher(newData.teacher);
+            setNumberArray(newData.time);
           }
         }, [newData]);
 
@@ -367,9 +370,10 @@ const ModifyPost=()=> {
           setCCategory(event.target.value);
         };
         const handleCtimeChange = event => {
-          const timeArray = event.target.value.split(', '); // 將字串拆分為陣列
-          setCtime(timeArray);
-          console.log(timeArray);
+          setCtime(event.target.value);
+          const numbers = event.target.value.split('、').map(Number);
+          console.log(numbers);
+          setNumberArray(numbers);
         };
         const handleCteacherChange = event => {
           setCteacher(event.target.value);
@@ -385,7 +389,7 @@ const ModifyPost=()=> {
                           postId:postId,
                           course : Ctitle,
                           category:CCategory,
-                          time:[Ctime],
+                          time: numberArray,
                           teacher:Cteacher,
                           content : Ctext,
                         };
@@ -419,9 +423,16 @@ const ModifyPost=()=> {
               <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle}></input>
             </div><br/>
             <div className='articleChangeClassFormCategory'>
-              <label>分類:</label>
-              <input type='text' className='articleChangeClassFormCategoryInput' onChange={handleCCategoryChange} value={CCategory}></input>
-            </div><br/>
+            <label>分類:</label>
+              <select className='articleChangeClassFormCategoryInput' value={CCategory} onChange={handleCCategoryChange}>
+                  <option>請選擇你所擁有的課分類</option>
+                  <option value='體育'>體育</option>
+                  <option value='通識'>通識</option>
+                  <option value='英文'>英文</option>
+                  <option value='第二外語'>第二外語</option>
+                  <option value='必修'>必修</option>
+                  <option value='選修'>選修</option>
+              </select></div><br/>
             <div className='articleChangeClassFormTime'>
               <label>時間:</label>
               <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime} ></input>
