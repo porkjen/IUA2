@@ -33,31 +33,25 @@ label{
     font-family: 'Noto Serif TC', serif;
 }
 
-.coreLable{
-    margin-top: 30px;
-    width: 230px;
-    height: 350px;
-    background-color: white;
-    border-radius: 10px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-
-.orangefox img{
+/* .orangefox img{
     position: absolute;
     width: 250px;
     height: 250px;
     left: -75px;
     bottom: 0px;
     z-index: 1;
-}
+} */
 
 .whitefox img{
     position: fixed;
-    width: 300px;
-    height: 300px;
+    width: 200px;
+    height: 200px;
     z-index: 1;
-    right: -90px;
-    bottom: -44px;
+    right: -60px;
+    bottom: -29px;
 }
+
+.c_scrollableContainer {
+    height: 580px; /* 設置固定高度，根據需要調整 */
+    overflow: auto;
+  }

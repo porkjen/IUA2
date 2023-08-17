@@ -12,8 +12,8 @@ import java.util.Date;
 
 import static java.sql.DriverManager.println;
 
-@RestController
-@CrossOrigin(value = "http://localhost:8080/list")
+@Controller
+@CrossOrigin(value = "http://localhost:3000/ChatRoomlist")
 public class ListController {
 
     static String data;
@@ -39,12 +39,5 @@ public class ListController {
         }*/
         return "chat";
     }
-
-    /*
-    @RequestMapping(value = "/room4", method = RequestMethod.GET)
-    public String getChat(Model model) {
-        return "chat";
-    }
-    */
 
 }
