@@ -13,10 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,14 +26,7 @@ public class ChangeCourseController {
     BasicRepository basicRepository;
     @GetMapping("/course_change_have") //whether there is class at this time
     public List<ChangeCourseHaveEntity> courseChangeHave(){
-        List<ChangeCourseHaveEntity> courseTimeList = new ArrayList<>();
-        for(int i=1;i<15;i++){
-            for(int j=100;j<800;j+=100){
-                String time = String.valueOf(j+i);
-                courseTimeList.add(changeCourseHaveRepository.findByTime(time));
-            }
-        }
-
+        List<ChangeCourseHaveEntity> courseTimeList = changeCourseHaveRepository.findAll();
         return courseTimeList;
     }
 
@@ -114,24 +104,54 @@ public class ChangeCourseController {
     }
 
     @GetMapping("/course_classify")
-    public List<ChangeCourseEntity> course_Classify(@RequestParam("category") String category){
-        if(Objects.equals(category, "general")){
-            return changeCourseRepository.findByCategory("通識");
-        }
-        else if (Objects.equals(category, "PE")) {
-            return changeCourseRepository.findByCategory("體育");
-        }
-        else if(Objects.equals(category, "elective")){
-            return changeCourseRepository.findByCategory("選修");
-        }
-        else if(Objects.equals(category, "compulsory")){
-            return changeCourseRepository.findByCategory("必修");
-        }
-        else if(Objects.equals(category, "english")){
-            return changeCourseRepository.findByCategory("英文");
+    public List<ChangeCourseEntity> course_Classify(@RequestParam(value = "category", required = false) String category, @RequestParam(value = "time", required = false) String time){
+        System.out.println("/course_classify");
+        List<ChangeCourseEntity> courses = new ArrayList<>();
+        if(!Objects.equals(category, "")){
+            if(Objects.equals(category, "general")){
+                courses = changeCourseRepository.findByCategory("通識");
+            }
+            else if (Objects.equals(category, "PE")) {
+                courses = changeCourseRepository.findByCategory("體育");
+            }
+            else if(Objects.equals(category, "elective")){
+                courses = changeCourseRepository.findByCategory("選修");
+            }
+            else if(Objects.equals(category, "compulsory")){
+                courses = changeCourseRepository.findByCategory("必修");
+            }
+            else if(Objects.equals(category, "english")){
+                courses = changeCourseRepository.findByCategory("英文");
+            }
+            else{
+                courses = changeCourseRepository.findByCategory("第二外語");
+            }
+            boolean found;
+            if(!Objects.equals(time, "")){
+                for(ChangeCourseEntity c : courses){
+                    System.out.println(c.getCategory());
+                    found = false;
+                    for(int i=0;i<c.getTime().length;i++){
+                        if(Objects.equals(c.getTime()[i], time)){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found)courses.remove(c);
+                }
+            }
+            return courses;
         }
         else{
-            return changeCourseRepository.findByCategory("外文");
+            for(ChangeCourseEntity c : changeCourseRepository.findAll()){
+                for(int i=0;i<c.getTime().length;i++){
+                    if(Objects.equals(c.getTime()[i], time)){
+                        courses.add(c);
+                        break;
+                    }
+                }
+            }
+            return courses;
         }
     }
 }
