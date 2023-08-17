@@ -23,16 +23,18 @@ const Core=()=>{
                         <label className="titleText">核心選修</label>
                     </div>
                     <div className='coreLable'>
-                        {CResult.map((item) => (
-                            <Coreinfo key={item.id}>
-                            {item.cname}<br />{item.cnumber}&emsp;{item.cgrade}&emsp;{item.cteacher}&emsp;{item.ccredit}學分
-                            </Coreinfo>
-                        ))}
+                        <div className="c_scrollableContainer">
+                            {CResult.map((item) => (
+                                <Coreinfo key={item.id}>
+                                {item.name}<br />{item.number}&emsp;{item.teacher}<br />上課時間: {item.time}
+                                </Coreinfo>
+                            ))}
+                        </div>  
                     </div>
                     <div className="core_pic">
-                      <div className="orangefox">
+                      {/* <div className="orangefox">
                             <img src={orangefox} alt="IUA" />
-                        </div>
+                        </div> */}
                         <div className="whitefox">
                             <img src={whitefox} alt="IUA" />
                         </div>  

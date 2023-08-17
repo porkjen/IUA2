@@ -52,9 +52,11 @@ const HomePage=()=> {
                     </div>
                     <div class="flex">
                         <div className="chatRoomBtn">
-                            <button className="chatRoomButton">
-                                <img src={chatroomImg} className='pic'/>
-                            </button>
+                            <Link to="/ChatRoomList">
+                                <button className="chatRoomButton">
+                                    <img src={chatroomImg} className='pic'/>
+                                </button>
+                            </Link>
                         </div>
                         <div className="othersBtn">
                             <button className="othersButton">

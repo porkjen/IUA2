@@ -83,7 +83,7 @@ public class FoodController {
 
     @GetMapping("/food_load") //load all food posts
     public List<FoodDTO> foodLoad(@RequestParam("sort") String sort){
-        System.out.println("/food_load");
+        System.out.println("/food_load, sort : "+sort);
         List<FoodEntity> foodPostList;
         if(Objects.equals(sort, "PostTimeNtoF"))foodPostList = foodRepository.findAllByOrderByIdDesc();
         else if (Objects.equals(sort, "PostTimeFtoN")) foodPostList = foodRepository.findAll();

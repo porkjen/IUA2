@@ -56,7 +56,7 @@ const Coreinfo = styled.label`
     margin-right: auto;
     z-index: 2;
     width: 350px;
-    height: 60px;
+    height: 80px;
     background-color: white;
     border-radius: 10px;
     display: flex;

@@ -42,6 +42,8 @@ public class TodoController {
     FoodRepository foodRepository;
     @Autowired
     GeneralRepository generalRepository;
+    @Autowired
+    CourseRepository courseRepository;
     //必選修課程DB
     @Autowired
     RCourseG1MustRepository rcourseG1MustRepository;
@@ -162,43 +164,40 @@ public class TodoController {
     }
 
     @GetMapping("/core_elective")
-    public ArrayList<RequiredCourseEntity> coreElective(@RequestParam("grade") String grade){
+    public List<CourseEntity> coreElective(@RequestParam("grade") String grade)throws InterruptedException{
         System.out.println("/core_elective");
-        String[] kernalCourse = {"計算機系統設計", "計算機結構", "軟體工程", "程式語言", "資料庫系統", "嵌入式系統設計", "系統程式", "編譯器", "人工智慧", "數位系統設計", "微處理器原理與組合語言"};
-        ArrayList<RequiredCourseEntity> RCList = new ArrayList<RequiredCourseEntity>();
+        String[] kernalCourseG2 = {"數位系統設計", "微處理器原理與組合語言"};
+        String[] kernalCourseG3 = {"計算機系統設計", "計算機結構", "軟體工程", "程式語言", "資料庫系統", "嵌入式系統設計", "系統程式", "編譯器", "人工智慧"};
+        List<CourseEntity> result = new ArrayList<CourseEntity>();
+        if(courseRepository.count() == 0){
+            List<CourseEntity> cList = getCourses();
+            for(CourseEntity c : cList){
+                courseRepository.save(c);
+            }
+        }
         if(grade.equals("2")){
-            RequiredCourseEntity rc = new RequiredCourseEntity();
-            RequiredCourseEntityG2select rc2 = rcourseG2SelectRepository.findByc_name("數位系統設計");
-            rc.setCName(rc2.getCName());
-            rc.setCNumber(rc2.getCNumber());
-            rc.setCCredit(rc2.getCCredit());
-            rc.setCCategory(rc2.getCCategory());
-            rc.setCGrade(rc2.getCGrade());
-            rc.setCTeacher(rc2.getCTeacher());
-            RCList.add(rc);
+            for(int i = 0; i < 2; i++){
+                List<CourseEntity> rc2 = courseRepository.findByc_name(kernalCourseG2[i]);
+                for(CourseEntity rc : rc2){
+                    result.add(rc);
+                }
+                
+            }
         }
         else if(grade.equals("3")){
-            List<RequiredCourseEntityG3select> rc3list = rcourseG3SelectRepository.findByc_category("選修");
-            for(RequiredCourseEntityG3select rc3 : rc3list){
-                if(rc3.getCGrade().equals("3年A班")){
-                    System.out.println("3A");
-                    for(int i = 0; i < 11; i++){
-                        RequiredCourseEntity rc = new RequiredCourseEntity();
-                        if(rc3.getCName().equals(kernalCourse[i])){
-                            rc.setCName(rc3.getCName());
-                            rc.setCNumber(rc3.getCNumber());
-                            rc.setCCredit(rc3.getCCredit());
-                            rc.setCCategory(rc3.getCCategory());
-                            rc.setCGrade(rc3.getCGrade());
-                            rc.setCTeacher(rc3.getCTeacher());
-                            RCList.add(rc);
-                            break;
-                        }
-                    }
+            for(int i = 0; i < 9; i++){
+                List<CourseEntity> rc3 = courseRepository.findByc_name(kernalCourseG3[i]);
+                for(CourseEntity rc : rc3){
+                    result.add(rc);
                 }
             }
         }
-        return RCList;
+        return result;
+    }
+
+    private static List<CourseEntity> getCourses() throws InterruptedException {
+        List<CourseEntity> result = crawler.getCourses();
+        return result;
     }
 
     @PostMapping("/rent_post")

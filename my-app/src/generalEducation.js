@@ -87,7 +87,6 @@ const GeneralEducaton=()=>{
                     </div>
                 </div>
             </div>
-            
         );
     }
     return (    

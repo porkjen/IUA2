@@ -28,6 +28,7 @@ public class ChatSystemController {
         Output output = new Output(new Date().toString(), message);
         template.sendMsgToUser(user, output);
         return output;
+
     }
 
 }
