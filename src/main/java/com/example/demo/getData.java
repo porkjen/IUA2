@@ -110,14 +110,24 @@ public class getData {
             restaurant.setAddress(jsonObject.getJSONObject("result").getString("formatted_address"));
             System.out.println(restaurant.getAddress());
             JSONArray add = jsonObject.getJSONObject("result").getJSONArray("address_components");
+            boolean road = false;
+            boolean district = false;
             for (int j = 0; j < add.length(); j++) {
                 if(Objects.equals(add.getJSONObject(j).getJSONArray("types").getString(0), "route")) {
                     restaurant.setRoad(add.getJSONObject(j).getString("long_name"));
+                    road = true;
+                    continue;
+                }
+                if(Objects.equals(add.getJSONObject(j).getJSONArray("types").getString(0), "administrative_area_level_3")) {
+                    restaurant.setDistrict(add.getJSONObject(j).getString("long_name"));
+                    district = true;
                     break;
                 }
-                restaurant.setRoad(null);
             }
+            if(!road)restaurant.setRoad("");
+            if(!district)restaurant.setDistrict("");
             System.out.println(restaurant.getRoad());
+            System.out.println(restaurant.getDistrict());
             restaurant.setURL(jsonObject.getJSONObject("result").getString("url"));
             if(jsonObject.getJSONObject("result").has("reviews")) {
                 int count = jsonObject.getJSONObject("result").getJSONArray("reviews").length();

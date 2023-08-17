@@ -30,6 +30,7 @@ import Chatroom from './chatroom';
 import ModifyPost from './ModifyPost';
 import ChatRoomList from './ChatRoomList';
 import MoodChat from './moodChat';  
+import CoreSearch from './coreSearch';
 
 const App=()=> {
 
@@ -66,6 +67,7 @@ const App=()=> {
                     <Route path="/modifyPost" element={<ModifyPost />} />
                     <Route path="/ChatRoomList" element={<ChatRoomList />} />
                     <Route path="/moodChat" element={<MoodChat />} />
+                    <Route path="/coreSearch" element={<CoreSearch />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
                 

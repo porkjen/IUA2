@@ -41,6 +41,9 @@ public class TodoController {
     @Autowired
     FoodRepository foodRepository;
     @Autowired
+    GeneralRepository generalRepository;
+    //必選修課程DB
+    @Autowired
     RCourseG1MustRepository rcourseG1MustRepository;
     @Autowired
     RCourseG1SelectRepository rcourseG1SelectRepository;
@@ -59,7 +62,7 @@ public class TodoController {
 
     String secretKey = "au4a83";
 
-    Crawler crawler = new Crawler();
+    static Crawler crawler = new Crawler();
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
@@ -158,9 +161,44 @@ public class TodoController {
 
     }
 
-    @GetMapping("core_elective")
-    public void coreElective(){
-        
+    @GetMapping("/core_elective")
+    public ArrayList<RequiredCourseEntity> coreElective(@RequestParam("grade") String grade){
+        System.out.println("/core_elective");
+        String[] kernalCourse = {"計算機系統設計", "計算機結構", "軟體工程", "程式語言", "資料庫系統", "嵌入式系統設計", "系統程式", "編譯器", "人工智慧", "數位系統設計", "微處理器原理與組合語言"};
+        ArrayList<RequiredCourseEntity> RCList = new ArrayList<RequiredCourseEntity>();
+        if(grade.equals("2")){
+            RequiredCourseEntity rc = new RequiredCourseEntity();
+            RequiredCourseEntityG2select rc2 = rcourseG2SelectRepository.findByc_name("數位系統設計");
+            rc.setCName(rc2.getCName());
+            rc.setCNumber(rc2.getCNumber());
+            rc.setCCredit(rc2.getCCredit());
+            rc.setCCategory(rc2.getCCategory());
+            rc.setCGrade(rc2.getCGrade());
+            rc.setCTeacher(rc2.getCTeacher());
+            RCList.add(rc);
+        }
+        else if(grade.equals("3")){
+            List<RequiredCourseEntityG3select> rc3list = rcourseG3SelectRepository.findByc_category("選修");
+            for(RequiredCourseEntityG3select rc3 : rc3list){
+                if(rc3.getCGrade().equals("3年A班")){
+                    System.out.println("3A");
+                    for(int i = 0; i < 11; i++){
+                        RequiredCourseEntity rc = new RequiredCourseEntity();
+                        if(rc3.getCName().equals(kernalCourse[i])){
+                            rc.setCName(rc3.getCName());
+                            rc.setCNumber(rc3.getCNumber());
+                            rc.setCCredit(rc3.getCCredit());
+                            rc.setCCategory(rc3.getCCategory());
+                            rc.setCGrade(rc3.getCGrade());
+                            rc.setCTeacher(rc3.getCTeacher());
+                            RCList.add(rc);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return RCList;
     }
 
     @PostMapping("/rent_post")
@@ -299,7 +337,7 @@ public class TodoController {
                 System.out.println("必修");
                 List<RequiredCourseEntityG1must> rCourseEntityG1must = rcourseG1MustRepository.findByc_category(category);
                 if (rCourseEntityG1must != null && !rCourseEntityG1must.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G1M");
                     for (RequiredCourseEntityG1must G1must : rCourseEntityG1must) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G1must.getCNumber());
@@ -317,12 +355,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG1must RCourseEntityG1must = new RequiredCourseEntityG1must();
                         RCourseEntityG1must.setCNumber(course.getCNumber());
                         RCourseEntityG1must.setCTeacher(course.getCTeacher());
@@ -333,14 +365,14 @@ public class TodoController {
 
                         rcourseG1MustRepository.save(RCourseEntityG1must);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
             else if(category.equals("選修")){
                 System.out.println("選修");
                 List<RequiredCourseEntityG1select> rCourseEntityG1select = rcourseG1SelectRepository.findByc_category(category);
                 if (rCourseEntityG1select != null && !rCourseEntityG1select.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G1S");
                     for (RequiredCourseEntityG1select G1select : rCourseEntityG1select) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G1select.getCNumber());
@@ -358,12 +390,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG1select RCourseEntityG1select = new RequiredCourseEntityG1select();
                         RCourseEntityG1select.setCNumber(course.getCNumber());
                         RCourseEntityG1select.setCTeacher(course.getCTeacher());
@@ -374,7 +400,7 @@ public class TodoController {
 
                         rcourseG1SelectRepository.save(RCourseEntityG1select);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
         }
@@ -384,7 +410,7 @@ public class TodoController {
                 System.out.println("必修");
                 List<RequiredCourseEntityG2must> rCourseEntityG2must = rcourseG2MustRepository.findByc_category(category);
                 if (rCourseEntityG2must != null && !rCourseEntityG2must.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G2M");
                     for (RequiredCourseEntityG2must G2must : rCourseEntityG2must) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G2must.getCNumber());
@@ -402,12 +428,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG2must RCourseEntityG2must = new RequiredCourseEntityG2must();
                         RCourseEntityG2must.setCNumber(course.getCNumber());
                         RCourseEntityG2must.setCTeacher(course.getCTeacher());
@@ -418,14 +438,14 @@ public class TodoController {
 
                         rcourseG2MustRepository.save(RCourseEntityG2must);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
             else if(category.equals("選修")){
                 System.out.println("選修");
                 List<RequiredCourseEntityG2select> rCourseEntityG2select = rcourseG2SelectRepository.findByc_category(category);
                 if (rCourseEntityG2select != null && !rCourseEntityG2select.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G2S");
                     for (RequiredCourseEntityG2select G2select : rCourseEntityG2select) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G2select.getCNumber());
@@ -443,12 +463,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG2select RCourseEntityG2select = new RequiredCourseEntityG2select();
                         RCourseEntityG2select.setCNumber(course.getCNumber());
                         RCourseEntityG2select.setCTeacher(course.getCTeacher());
@@ -459,7 +473,7 @@ public class TodoController {
 
                         rcourseG2SelectRepository.save(RCourseEntityG2select);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
         }
@@ -469,7 +483,7 @@ public class TodoController {
                 System.out.println("必修");
                 List<RequiredCourseEntityG3must> rCourseEntityG3must = rcourseG3MustRepository.findByc_category(category);
                 if (rCourseEntityG3must != null && !rCourseEntityG3must.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G3M");
                     for (RequiredCourseEntityG3must G3must : rCourseEntityG3must) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G3must.getCNumber());
@@ -487,12 +501,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG3must RCourseEntityG3must = new RequiredCourseEntityG3must();
                         RCourseEntityG3must.setCNumber(course.getCNumber());
                         RCourseEntityG3must.setCTeacher(course.getCTeacher());
@@ -503,14 +511,14 @@ public class TodoController {
 
                         rcourseG3MustRepository.save(RCourseEntityG3must);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
             else if(category.equals("選修")){
                 System.out.println("選修");
                 List<RequiredCourseEntityG3select> rCourseEntityG3select = rcourseG3SelectRepository.findByc_category(category);
                 if (rCourseEntityG3select != null && !rCourseEntityG3select.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G3S");
                     for (RequiredCourseEntityG3select G3select : rCourseEntityG3select) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G3select.getCNumber());
@@ -528,12 +536,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG3select RCourseEntityG3select = new RequiredCourseEntityG3select();
                         RCourseEntityG3select.setCNumber(course.getCNumber());
                         RCourseEntityG3select.setCTeacher(course.getCTeacher());
@@ -544,7 +546,7 @@ public class TodoController {
 
                         rcourseG3SelectRepository.save(RCourseEntityG3select);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
         }
@@ -554,7 +556,7 @@ public class TodoController {
                 System.out.println("必修");
                 List<RequiredCourseEntityG4must> rCourseEntityG4must = rcourseG4MustRepository.findByc_category(category);
                 if (rCourseEntityG4must != null && !rCourseEntityG4must.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G4M");
                     for (RequiredCourseEntityG4must G4must : rCourseEntityG4must) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G4must.getCNumber());
@@ -572,12 +574,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG4must RCourseEntityG4must = new RequiredCourseEntityG4must();
                         RCourseEntityG4must.setCNumber(course.getCNumber());
                         RCourseEntityG4must.setCTeacher(course.getCTeacher());
@@ -588,14 +584,14 @@ public class TodoController {
 
                         rcourseG4MustRepository.save(RCourseEntityG4must);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
             else if(category.equals("選修")){
                 System.out.println("選修");
                 List<RequiredCourseEntityG4select> rCourseEntityG4select = rcourseG4SelectRepository.findByc_category(category);
                 if (rCourseEntityG4select != null && !rCourseEntityG4select.isEmpty()){
-                    System.out.println("find it");
+                    System.out.println("find it G4S");
                     for (RequiredCourseEntityG4select G4select : rCourseEntityG4select) {
                         RequiredCourseEntity result = new RequiredCourseEntity();
                         result.setCNumber(G4select.getCNumber());
@@ -613,12 +609,6 @@ public class TodoController {
                     RC_result = crawler.findRCourse(category,grade);
 
                     for (RequiredCourseEntity course : RC_result) {
-                        System.out.println("課號: " + course.getCNumber());
-                        System.out.println("老師: " + course.getCTeacher());
-                        System.out.println("學分: " + course.getCCredit());
-                        System.out.println("年級: " + course.getCGrade());
-                        System.out.println("課名: " + course.getCName());
-                        System.out.println("課別: " + course.getCCategory());
                         RequiredCourseEntityG4select RCourseEntityG4select = new RequiredCourseEntityG4select();
                         RCourseEntityG4select.setCNumber(course.getCNumber());
                         RCourseEntityG4select.setCTeacher(course.getCTeacher());
@@ -629,11 +619,11 @@ public class TodoController {
 
                         rcourseG4SelectRepository.save(RCourseEntityG4select);
                     }
-                    System.out.println(RC_result.size());
+                    System.out.println("Total : " + RC_result.size());
                 }
             }
         }
-        System.out.println("finish!!");
+        System.out.println("RequiredCourseSearch is end!!");
 
         return RC_result;
     }
@@ -764,6 +754,23 @@ public class TodoController {
         }
         if(deleted)return ResponseEntity.ok("Success"); //400
         else return ResponseEntity.badRequest().body("Invalid request : Class not found"); //400
+    }
+
+    @PostMapping("/general_education")
+    public List<GeneralCourseEntity> generalEducation(@RequestParam("field") String field) throws InterruptedException {
+        if(generalRepository.count() == 0){
+            List<GeneralCourseEntity> gcList = getGeneralCourses();
+            for(GeneralCourseEntity gc : gcList){
+                generalRepository.save(gc);
+            }
+        }
+        List<GeneralCourseEntity> result = generalRepository.findBySubfield(field);
+        return result;
+    }
+
+    private static List<GeneralCourseEntity> getGeneralCourses() throws InterruptedException {
+        List<GeneralCourseEntity> result = crawler.getAllGeneralClass();
+        return result;
     }
 
 }
