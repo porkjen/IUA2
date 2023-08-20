@@ -16,7 +16,7 @@ public class FoodEntity {
     private String store = "";
     private double rating ;
     private int rating_num ; //number of rating people
-    private String post_time = ""; //2023 06 15
+    private String post_time = ""; //2023/06/15
     private String[] weekday_text = new String[7]; //"星期一: 11:30 – 20:30"
     private String address = "";
     private String URL = "";
