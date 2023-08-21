@@ -151,6 +151,58 @@ const ArticleDistance= styled.div`
     margin-left:200px;
 `;
 
+const ArticleBaiDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:cornsilk;
+`;
+
+const ArticleXiangDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:lavenderblush;
+`;
+
+const ArticleXiDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:floralwhite;
+`;
+
+const ArticleZhongDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:azure;
+`;
+
+const ArticleXingDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:gainsboro;
+`;
+
+
+
 
 const ArticleAuthorArea= styled.div` 
     display: flex;
@@ -255,4 +307,4 @@ const ChangeClassCategorySelect = styled.select`
 
 export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleDistance,
      ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn, ArticleSelect,PerHaveChangeClassBtn,
-     ChangeClassCategorySelect};
+     ChangeClassCategorySelect, ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance};

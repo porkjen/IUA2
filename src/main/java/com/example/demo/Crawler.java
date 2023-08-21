@@ -2,6 +2,7 @@ package com.example.demo;
 import com.example.demo.FinishedCourseList;
 
 import com.example.demo.dao.BasicEntity;
+import com.example.demo.dao.CourseEntity;
 import com.example.demo.dao.GeneralCourseEntity;
 import com.example.demo.dao.RequiredCourseEntity;
 import com.example.demo.dao.TimeTableEntity;
@@ -10,6 +11,10 @@ import com.google.common.base.Splitter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import org.openqa.selenium.support.ui.Select;
+import org.springframework.stereotype.Component;
+
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -69,11 +74,16 @@ public class Crawler {
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
 
+
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
 
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
 
-                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
+                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
+
+
+                BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
 
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);
                 ImageIO.write(subImage, "png", screenshot);
@@ -564,6 +574,73 @@ public class Crawler {
             }
         }
         return RCourseList;
+    }
+
+    public static List<CourseEntity> getCourses() throws InterruptedException{
+        driver.switchTo().defaultContent();
+        Thread.sleep(1000);
+        driver.switchTo().frame("menuFrame");
+        Thread.sleep(1000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(1000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("歷年課程課表查詢")).click();
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+
+        //driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='全部']")).click();
+        Select dropdown = new Select(driver.findElement(By.id("Q_SMS")));
+        dropdown.selectByVisibleText("全部");
+        Thread.sleep(500);
+        driver.findElement(By.id("Q_DEGREE_CODE")).findElement(By.xpath("//option[@value='0']")).click();
+        Thread.sleep(500);
+        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='0507']")).click();
+        Thread.sleep(500);
+        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click();  //開課單位查詢
+        Thread.sleep(3000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = '200';", driver.findElement(By.id("PC_PageSize")));
+        Thread.sleep(1500);
+        driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
+        Thread.sleep(5000);
+
+        List<CourseEntity> courseList = new ArrayList<CourseEntity>();
+
+        List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        for(int i = 1; i < trList.size(); i++){
+            Thread.sleep(1000);
+            if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
+            else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();
+            //switch iframe
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            WebElement iframe = driver.findElement(By.tagName("iframe"));
+            driver.switchTo().frame(iframe);
+            driver.switchTo().frame("mainFrame");
+            Thread.sleep(1500);
+            List<WebElement> trlist = driver.findElements(By.cssSelector("#QTable2 > tbody > tr"));
+            List<WebElement> tablelist = trlist.get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table"));
+            List<WebElement> tr = tablelist.get(0).findElements(By.tagName("tr"));
+            String number = tr.get(4).findElement(By.id("M_COSID")).getText();
+            String dept = tr.get(4).findElement(By.id("M_FACULTY_NAME")).getText();
+            String teacher = tr.get(5).findElement(By.id("M_LECTR_TCH_CH")).getText();
+            String name = tr.get(6).findElement(By.id("CH_LESSON")).getText();
+            System.out.println("///course name: " + name);
+            String grade = tr.get(8).findElement(By.id("M_GRADE")).getText();
+            String people = tr.get(9).findElement(By.id("M_MAX_ST")).getText();
+            String category = tr.get(10).findElement(By.id("M_MUST")).getText();
+            String time = tr.get(11).findElement(By.id("M_SEG")).getText();
+            String room = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();
+            System.out.println("///course number: " + number);
+            CourseEntity ce = new CourseEntity(name, category, number, time, room, teacher, grade, people, dept);
+            courseList.add(ce);
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+        }
+        return courseList;
     }
 
     public static void main(String[] args) throws Exception {

@@ -2,6 +2,8 @@ import './PostArticle.css';
 import React from 'react';
 import elmo from './img/elmo.png';
 import conversation from './img/conversation.png';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import {Title}  from './components/ArticleStyle.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
@@ -385,7 +387,7 @@ const ModifyPost=()=> {
           e.preventDefault();
           const student_id = loginUser();
           const formData = {
-                          studentID: "00957025",
+                          studentID: "00957017",
                           postId:postId,
                           course : Ctitle,
                           category:CCategory,
@@ -405,7 +407,7 @@ const ModifyPost=()=> {
                               console.log(data);
                               navigate("/changeClassList", {
                                 state: {
-                                  studentID: "00957025",
+                                  studentID: "00957017",
                                         time:timeValue,},});
                             })
                             .catch(error => {
@@ -459,7 +461,7 @@ const ModifyPost=()=> {
         const [Fetchurl, setFetchurl] = useState("");
         const [data, setData] = useState(null);
         const formData = {
-          studentID: '00957025',
+          studentID: '00957017',
           postId: postId,
         };
       
@@ -533,6 +535,9 @@ const ModifyPost=()=> {
       
         return (
           <div className="PostArticle">
+             <Link to='/changeClass'>
+                    <Back src={back} alt="回上一頁" />
+                </Link>
             <div className="PostArticle_bg">
               <Title>修改</Title>
               <img className="post_elmo" src={elmo} />

@@ -10,7 +10,7 @@ import back from './img/back.png';
 import cat from './img/SignIn4.PNG';
 import studentboy from './img/studentboy.png';
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleDistance, 
-  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect } from './components/ArticleStyle.js';
+  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect ,ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance} from './components/ArticleStyle.js';
 import {Back}  from './components/Style.js';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef,  } from "react";
@@ -26,6 +26,11 @@ const Food = () => {
   const [isRate, setisRate] = useState(false);
   const [isPostTime, setisPostTime] = useState(true);
   const [isDistance, setisDistance] = useState(true);
+  const [isBai, setisBai] = useState(false);
+  const [isZhong, setisZhong] = useState(false);
+  const [isXiang, setisXiang] = useState(false);
+  const [isXing, setisXing] = useState(false);
+  const [isXi, setisXi] = useState(false);
   let navigate = useNavigate();
   const articleListRef = useRef(null);
   const location = useLocation();
@@ -101,10 +106,46 @@ const Food = () => {
 
   function Articleinfo({ author, post_time, store, rating, postID, road }) {
 
+    if(road.includes("中正")){
+      setisBai(false);
+      setisXiang(false);
+      setisXi(false);
+      setisZhong(true);
+      setisXing(false);
+    }
+    else if(road.includes("祥豐")){
+      setisBai(false);
+      setisXiang(true);
+      setisXi(false);
+      setisZhong(false);
+      setisXing(false);
+    }
+    else if(road.includes("北寧")){
+      setisBai(true);
+      setisXiang(false);
+      setisXi(false);
+      setisZhong(false);
+      setisXing(false);
+    }
+    else if(road.includes("新豐")){
+      setisBai(false);
+      setisXiang(true);
+      setisXi(false);
+      setisZhong(false);
+      setisXing(false);
+    }
+    else if(road.includes("深溪")){
+      setisBai(false);
+      setisXiang(false);
+      setisXi(true);
+      setisZhong(false);
+      setisXing(false);
+    }
+
     const handleShowFoodSubmit = (e) => {
       e.preventDefault();
       const formData = {
-        studentID: "00957025",
+        studentID: "00957017",
         postId: postID,
       };
       fetch('/food_full_post', {
@@ -130,7 +171,11 @@ const Food = () => {
     return (
       <ArticleContainer>
         <ArticleText onClick={handleShowFoodSubmit}>
-          {road!=="" &&  <ArticleDistance>{road}</ArticleDistance>}
+          {road!=="" && isBai  &&  <ArticleBaiDistance >{road}</ArticleBaiDistance>}
+          {road!=="" && isZhong &&  <ArticleZhongDistance >{road}</ArticleZhongDistance>}
+          {road!=="" && isXiang &&  <ArticleXiangDistance >{road}</ArticleXiangDistance>}
+          {road!=="" && isXing &&  <ArticleXingDistance >{road}</ArticleXingDistance>}
+          {road!=="" && isXi &&  <ArticleXiDistance >{road}</ArticleXiDistance>}
           <ArticleAuthorArea>
             {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
             {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}

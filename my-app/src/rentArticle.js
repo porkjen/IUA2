@@ -1,6 +1,10 @@
 //import './changeClass.css';
 import React from 'react';
 import dog from './img/dog.png';
+import banana from './img/banana.png';
+import back from './img/back.png';
+import cat from './img/SignIn4.PNG';
+import {Back}  from './components/Style.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, 
   ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailNormalBtn, ArticleDetailSavedBtn, 
   ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg,
@@ -33,7 +37,7 @@ const RentArticle=()=> {
         return (
             <div>
                 <ArticleDetailAuthorArea>
-                <ArticleDetailAuthorImg src={dog}></ArticleDetailAuthorImg>
+                <ArticleDetailAuthorImg src={cat}></ArticleDetailAuthorImg>
                 <ArticleDetailAuthor>{author}</ArticleDetailAuthor>
               </ArticleDetailAuthorArea>
                 <ArticleDetailTitle>{title}</ArticleDetailTitle>
@@ -197,8 +201,16 @@ const RentArticle=()=> {
             return <div>Loading...</div>;
           }
 
+          const handleBackSubmit = (e) => {
+            e.preventDefault();
+            navigate("/rent", {
+              state: {
+                fromSearch:false,},});
+          }
+
       return (
         <ArticleDetailPage>
+          <Back src={back} alt="回上一頁" onClick={handleBackSubmit}/>
             <ArticleDetailPosition>
                 <ArticleTitleinfo author={data.name} title={data.title} post_time={data.post_time}></ArticleTitleinfo>
                 <hr></hr>

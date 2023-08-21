@@ -13,10 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,14 +27,7 @@ public class ChangeCourseController {
     /*
     @GetMapping("/course_change_have") //whether there is class at this time
     public List<ChangeCourseHaveEntity> courseChangeHave(){
-        List<ChangeCourseHaveEntity> courseTimeList = new ArrayList<>();
-        for(int i=1;i<15;i++){
-            for(int j=100;j<800;j+=100){
-                String time = String.valueOf(j+i);
-                courseTimeList.add(changeCourseHaveRepository.findByTime(time));
-            }
-        }
-
+        List<ChangeCourseHaveEntity> courseTimeList = changeCourseHaveRepository.findAll();
         return courseTimeList;
     }*/
     @GetMapping("/course_change_have") //whether there is class at this time
@@ -156,17 +146,21 @@ public class ChangeCourseController {
                 courses = changeCourseRepository.findByCategory("第二外語");
             }
             boolean found;
+            System.out.println(courses.size());
             if(!Objects.equals(time, "")){
-                for(ChangeCourseEntity c : courses){
-                    System.out.println(c.getCategory());
+                for(int j=0;j<courses.size();j++){
+                    System.out.println(courses.get(j).getCategory());
                     found = false;
-                    for(int i=0;i<c.getTime().length;i++){
-                        if(Objects.equals(c.getTime()[i], time)){
+                    for(int i=0;i<courses.get(j).getTime().length;i++){
+                        if(Objects.equals(courses.get(j).getTime()[i], time)){
                             found = true;
                             break;
                         }
                     }
-                    if(!found)courses.remove(c);
+                    if(!found){
+                        courses.remove(courses.get(j));
+                        j--;
+                    }
                 }
             }
             return courses;

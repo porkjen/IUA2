@@ -182,7 +182,7 @@ const Remain = () => {
                 <ArticleContainer>
                     {list.map((item, index) => (
                         <RemainBody key={index}>
-                            <RemainText>{item.courseName}&nbsp;{item.credit}&nbsp;學分</RemainText>
+                            <RemainText>{item.courseName}&nbsp;<br/>{item.credit}&nbsp;學分</RemainText>
                         </RemainBody>
                     ))}
                 </ArticleContainer>

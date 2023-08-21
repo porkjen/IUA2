@@ -29,7 +29,7 @@ const ChangeClassList=()=> {
         e.preventDefault();
         //const student_id = loginUser();
         const formData = {
-                        studentID: "00957025",
+                        studentID: "00957017",
                         time:time,
                       };
           fetch('/course_full_post', {
@@ -69,6 +69,7 @@ const ChangeClassList=()=> {
 
       function ChangeClassList_all(){
         const handleCategoryChange = event => {
+          console.log(event.target.value);
 
           if(event.target.value==='All'){
             fetch(`/course_change?time=${time}`)
@@ -147,6 +148,10 @@ const ChangeClassList=()=> {
           .then(data => {
             console.log(time);
             console.log(data);
+            if(data=="")
+                setHaveData(false);
+              else
+                setHaveData(true);
             setData(data);
           })
           .catch(error => {

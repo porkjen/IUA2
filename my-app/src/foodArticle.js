@@ -5,13 +5,15 @@ import banana from './img/banana.png';
 import Modal from "./components/Modal";
 import logo from './img/IUAlogo.png';
 import star from './img/star.png';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, 
   ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, 
   ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn, ArticleDetailAlreadySavedBtn, ArticleDetailRatingdBtn, 
   ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, 
   ArticleDetailPostBtn, ArticleDetailContactdBtn, ArticleDetailCommentDeleteBtn,ArticleDetailReportdBtn, ArticleDetailAlreadyReportBtn}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating, CommentAuthorBtn} from './components/CommentStyle.js';
-import { Routes ,Route,useLocation, useNavigate } from 'react-router-dom';
+import { Routes ,Route,useLocation, useNavigate,Link } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
 const FoodArticle=()=> {
@@ -30,6 +32,7 @@ const FoodArticle=()=> {
     const [isAlreadyComment, setIsAlreadyComment] = useState(false);
     const [isAlreadyRating, setIsAlreadyRating] = useState(false);
     const [responseStatus, setResponseStatus] = useState(null);
+    const [isAlreadySaved, setIsAlreadySaved] = useState(false);
 
     function RatingFood({ rating, commentStar }) {
       const stars = [];
@@ -211,7 +214,19 @@ const FoodArticle=()=> {
                             },
                             body: JSON.stringify(savedFormData)
                           })
-                          .then(response => response.status)
+                          .then(response => {
+                            console.log(response.status);
+                            if(response.status==200){
+                              console.log("收藏成功!");
+                            }
+                            else if(response.status==201){
+                              setIsAlreadySaved(true);
+                              console.log("已收藏過!");
+                            }
+                            else if(response.status==400){
+                              console.log("發生錯誤!");
+                            }
+                          })
                           .then(data => {
                             console.log(data);
                           })
@@ -396,6 +411,8 @@ const FoodArticle=()=> {
       );
     }
 
+   
+
 
     function FoodArticle() {
 
@@ -440,8 +457,18 @@ const FoodArticle=()=> {
             return <div>Loading...</div>;
           }
 
+
+
+          const handleBackSubmit = (e) => {
+            e.preventDefault();
+            navigate("/food", {
+              state: {
+                fromSearch:false,},});
+          }
+
       return (
         <ArticleDetailPage>
+           <Back src={back} alt="回上一頁" onClick={handleBackSubmit}/>
             {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment}/>}
             {!openModal && < FoodDetailInfo/>}
         </ArticleDetailPage>

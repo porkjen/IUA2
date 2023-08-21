@@ -48,6 +48,7 @@ const RemainText = styled.div`
     word-break: break-all;
     white-space: pre-line;
     font-size:15px;
+    text-align:center;
 `;
 
 const Mustinfo = styled.label`

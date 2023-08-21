@@ -82,6 +82,7 @@ body {
     margin-left: 15px;
     width: 60%;
     margin-bottom: 15px;
+    font-family: 'Noto Serif TC', serif;
 }
 
 .articleFoodForm > .articleFoodFormSchoolRate > input{
@@ -118,7 +119,7 @@ body {
     width: 250px;
     height: 200px;
     margin-left: 65px;
-
+    font-family: 'Noto Serif TC', serif;
 }
 
 /*租屋發文*/
@@ -165,6 +166,7 @@ body {
     height: 200px;
     margin-left: 50px;
     margin-top: 5px;
+    font-family: 'Noto Serif TC', serif;
 }
 
 .articleFoodFormBtn{

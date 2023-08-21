@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
-html,body,#root,.modalBackground{
+html,body,#root{
     
     height: 100%;
     padding: 0;
     margin: 0;
     background-color: rgba(249, 236, 207, 0.951);
     overflow: auto;
+}
+
+.modalBackground{
+    background-color: rgba(249, 236, 207, 0.951);
 }
 
 .modalClose{
@@ -18,10 +22,11 @@ html,body,#root,.modalBackground{
     background-color: white;
     width:300px;
     margin-top: 100px;
-    position: relative;
+    position: absolute;
     top: 30%;  
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 1;
 }
 
 .modal_tilte{
@@ -105,4 +110,38 @@ html,body,#root,.modalBackground{
     height: 400px;
     width: 400px;
     padding-top: 400px;
+}
+
+.modal_yes{
+    width: 70px;
+    height: 30px;
+    border-radius: 7px;
+    background-color: bisque;
+}
+
+.modal_no{
+    width: 70px;
+    height: 30px;
+    border-radius: 7px;
+    background-color: bisque;
+    margin-left: 5px;
+}
+
+.deleteModal{
+    width: 150px;
+    height: 70px;
+    position: absolute;
+    z-index: 3;
+    background-color: white;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    margin-top: -150px;
+    margin-left: 150px;
+}
+
+.deleteText{
+    font-family: 'Noto Serif TC', serif;
+    text-align: center;
 }

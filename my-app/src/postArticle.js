@@ -112,7 +112,7 @@ const PostArticle=()=> {
           <form className='articleFoodForm' onSubmit={handleFoodSubmit}>
             <div className='articleFoodFormTitle'>
               <label>標題:&emsp;&emsp;&emsp;</label>
-              <input type='text' name = 'Ftitle' onChange={handleFtitleChange} value={Ftitle}></input>
+              <input type='text' name = 'Ftitle' onChange={handleFtitleChange} value={Ftitle} required="required"></input>
             </div><br/>
             <div className='articleFoodFormTime'>
               <label>營業時間&emsp;</label><br/>
@@ -133,7 +133,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家地址:&emsp;</label>
-              <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress}></input>
+              <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress} required="required"></input>
             </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家連結:&emsp;</label>
@@ -258,15 +258,15 @@ const PostArticle=()=> {
           <form className='articleRentForm' onSubmit={handleHouseSubmit}>
             <div className='articleRentFormTitle'>
               <label>標題:</label>
-              <input type='text' name = 'Htitle' onChange={handleHtitleChange} value={Htitle}></input>
+              <input type='text' name = 'Htitle' onChange={handleHtitleChange} value={Htitle} required="required"></input>
             </div><br/>
             <div className='articleRentFormAddress'>
               <label>地址:</label>
-              <input type='text' name = 'Haddress' onChange={handleHaddressChange} value={Haddress}></input>
+              <input type='text' name = 'Haddress' onChange={handleHaddressChange} value={Haddress} required="required"></input>
             </div><br/>
             <div className='articleRentMoney'>
               <label>租金:</label>
-              <input type='text' name = 'Hmoney' onChange={handleHmoneyChange} value={Hmoney}></input>
+              <input type='text' name = 'Hmoney' onChange={handleHmoneyChange} value={Hmoney} required="required"></input>
             </div><br/>
             <div className='articleRentFormGender'>
               <label>性別:</label>
@@ -305,7 +305,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormFloor'>
               <label>樓層:</label>
-              <input type='text' name = 'Hfloor' onChange={handleHfloorChange} value={Hfloor}></input>
+              <input type='text' name = 'Hfloor' onChange={handleHfloorChange} value={Hfloor} required="required"></input>
             </div><br/>
             <div className='articleRentFormCar'>
               <label>車位:</label>
@@ -316,15 +316,15 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormWater'>
               <label>水費:</label>
-              <input type='text' name = 'Hwater' onChange={handleHwaterChange} value={Hwater}></input>
+              <input type='text' name = 'Hwater' onChange={handleHwaterChange} value={Hwater} required="required"></input>
             </div><br/>
             <div className='articleRentFormPower'>
               <label>電費:</label>
-              <input type='text' name = 'Hpower' onChange={handleHpowerChange} value={Hpower}></input>
+              <input type='text' name = 'Hpower' onChange={handleHpowerChange} value={Hpower} required="required"></input>
             </div><br/>
             <div className='articleRentFormDate'>
               <label>起租日期:</label>
-              <input type='text' name = 'rent_date' onChange={handlerent_dateChange} value={rent_date}></input>
+              <input type='text' name = 'rent_date' onChange={handlerent_dateChange} value={rent_date} required="required"></input>
             </div><br/>
             <div className='articleRentFormText'>
               <label>內文:</label><br/>
@@ -390,6 +390,7 @@ const PostArticle=()=> {
                               console.error(error);
                             });
                             navigate("/changeClass")
+                            window.location.reload();
                          //Form submission happens here
         }
 
@@ -397,7 +398,7 @@ const PostArticle=()=> {
           <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
             <div className='articleChangeClassFormTitle'>
               <label>標題:</label>
-              <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle} placeholder='你有的課'></input>
+              <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle} placeholder='你有的課' required="required"></input>
             </div><br/>
             <div className='articleChangeClassFormCategory'>
               <label>分類:</label>
@@ -413,15 +414,15 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleChangeClassFormTime'>
               <label>時間:</label>
-              <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime} placeholder='503、504'></input>
+              <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime} placeholder='503、504' required="required"></input>
             </div><br/>
             <div className='articleChangeClassFormTeacher'>
               <label>老師:</label>
-              <input type='text' className='articleChangeClassFormTeacherInput' onChange={handleCteacherChange} value={Cteacher}></input>
+              <input type='text' className='articleChangeClassFormTeacherInput' onChange={handleCteacherChange} value={Cteacher} required="required"></input>
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
-              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange} value={Ctext} placeholder='偏好換的課'></textarea>
+              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange} value={Ctext} placeholder='留下偏好換的課或其他想說的話!' required="required"></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn>確認發文</ArticleSubmitBtn>

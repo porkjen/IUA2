@@ -109,6 +109,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     const [isPostId, setisPostId] = useState(false);
     const [isComment, setisComment] = useState(false);
     const [isAlreadyComment, setIsAlreadyComment] = useState(false);
+    const [confirm, setConfirm] = useState(false);
 
     function ModalRent(){
 
@@ -323,7 +324,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
             
               navigate("/changeClassList", {
                 state: {
-                  studentID: "00957025",
+                  studentID: "00957017",
                         time:time,},});
                   //closeModal(false);
                   window.location.reload();
@@ -339,7 +340,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
             
                         navigate("/modifyPost", {
                           state: {
-                            studentID:"00957025",
+                            studentID:"00957017",
                             postId:postId,
                             fromSearch:false,
                             ModifyType:"changeClass",
@@ -347,9 +348,12 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                              },});
         }
 
-        const handleRemovedClassPostSubmit = (e) => {
+        const handleRemovedClassPostConfirmSubmit = (e) => {
           e.preventDefault();
           //const student_id = loginUser();
+          setConfirm(true);
+          
+          /*
           const formData = {
                           studentID: studentID,
                           postId : postId,
@@ -367,10 +371,13 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                         });
                         navigate("/changeClassList", {
                           state: {
-                            studentID: "00957025",
+                            studentID: "00957017",
                             time:time,},});
                   window.location.reload();
+                  */
         }
+
+
       return(
              <div><br/>
               <label>發文者:&ensp;{data.studentID}</label><br/>
@@ -380,8 +387,11 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
               <label>課程時間:&ensp;{data.time.join('、')}</label><br/>
               <label>內容:&ensp;{data.content}</label><br/><br/>
               {isCreator===false && <ModalSubmitBtn type="submit">聯絡發文者</ModalSubmitBtn>}
-              {isCreator && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit}>修改貼文</ArticleDetailNormalBtn>
-                    <ArticleDetailNormalBtn onClick={handleRemovedClassPostSubmit}>刪除貼文</ArticleDetailNormalBtn>
+              {isCreator && confirm && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit} disabled>修改貼文</ArticleDetailNormalBtn>
+                    <ArticleDetailNormalBtn onClick={handleRemovedClassPostConfirmSubmit} disabled>刪除貼文</ArticleDetailNormalBtn>
+                </ButtonContainer>)}
+                {isCreator && confirm===false &&(<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit}>修改貼文</ArticleDetailNormalBtn>
+                    <ArticleDetailNormalBtn onClick={handleRemovedClassPostConfirmSubmit}>刪除貼文</ArticleDetailNormalBtn>
                 </ButtonContainer>)}<br/>
 
               
@@ -445,7 +455,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                         if(isAlreadyComment===true){
                             const formData = {
                                 postId:isPostId,
-                                studentID: "00957025",
+                                studentID: "00957017",
                                 p_review : isComment,
                                 p_rate : Frating,
                               };
@@ -467,7 +477,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                         else{
                             const formData = {
                                 postId:isPostId,
-                                studentID: "00957025",
+                                studentID: "00957017",
                                 p_review : "尚未發表評論",
                                 p_rate : Frating,
                               };
@@ -489,7 +499,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                               window.location.reload();
                               navigate("/foodArticle", {
                                 state: {
-                                  studentID:"00957025",
+                                  studentID:"00957017",
                                   postId,postId,
                                   fromSearch:false},});
                                   
@@ -521,6 +531,53 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         );
     
     }
+
+    function ConfirmDelete(){
+
+      const handleRemovedClassPostSubmit = (e) => {
+        e.preventDefault();
+        //const student_id = loginUser();
+        
+        const formData = {
+                        studentID: studentID,
+                        postId : postId,
+                      };
+                      fetch(`/course_post_delete`, {
+                        method: 'DELETE',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                      })
+                      .then(response => response.status)
+                      .catch(error => {
+                        console.error(error);
+                      });
+                      navigate("/changeClassList", {
+                        state: {
+                          studentID: "00957017",
+                          time:time,},});
+                window.location.reload();
+                
+      }
+
+      const handleCancelRemovedClassPostSubmit = (e) => {
+        e.preventDefault();
+
+        setConfirm(false);
+                
+      }
+      
+      return(
+              <div className='deleteModal'>
+                <label className='deleteText'>確定要刪除嗎!!</label>
+                <button className='modal_yes' onClick={handleRemovedClassPostSubmit}>確定</button>
+                <button className='modal_no' onClick={handleCancelRemovedClassPostSubmit}>取消</button>
+              </div>
+      );
+  }
+
+    
     
 
     return(
@@ -536,6 +593,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                         {isModalChangeClass && <ModalChangeClass/>}
                         {isRating && <ModalRating/>}
                         {isModalChangeClassArticle && <ModalChangeClassArticle/>}
+                        {confirm && <ConfirmDelete/>}
                     </div>
                 </div>
             </div>
