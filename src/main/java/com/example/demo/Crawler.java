@@ -1,12 +1,11 @@
 package com.example.demo;
-import com.example.demo.FinishedCourseList;
 
 import com.example.demo.dao.BasicEntity;
 import com.example.demo.dao.CourseEntity;
 import com.example.demo.dao.GeneralCourseEntity;
 import com.example.demo.dao.RequiredCourseEntity;
 import com.example.demo.dao.TimeTableEntity;
-import com.google.common.base.Splitter;
+import com.example.demo.repository.TimeTableRepository;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
@@ -30,10 +29,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 
 @Component

@@ -1,7 +1,7 @@
 package com.example.demo;
 
-import com.example.demo.dao.ChangeCourseHaveEntity;
-import com.example.demo.dao.FoodEntity;
+import com.example.demo.repository.ChangeCourseHaveRepository;
+import com.example.demo.repository.FoodRepository;
 import com.example.demo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -11,14 +11,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @SpringBootApplication
 @EnableScheduling //啟用定時任務功能
@@ -35,9 +27,9 @@ public class DemoApplication {
 	 	@Autowired
 	 	private TodoService service;
 	 	@Autowired
-	 	FoodRepository foodRepository;
+		FoodRepository foodRepository;
 	 	@Autowired
-	 	ChangeCourseHaveRepository changeCourseHaveRepository;
+		ChangeCourseHaveRepository changeCourseHaveRepository;
 		@Override
 		public void onApplicationEvent(ContextStartedEvent event) {
 			System.out.println("run");

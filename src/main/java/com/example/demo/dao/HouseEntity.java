@@ -27,6 +27,7 @@ public class HouseEntity {
     private String note = "";
     private String post_time = "";
     private List<String> saved = new ArrayList<>();
+    private String status;
 
     public String getId() {
         return id;
@@ -182,5 +183,13 @@ public class HouseEntity {
     }
     public void savefirst(String saved) {
         this.saved.add(0, saved);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

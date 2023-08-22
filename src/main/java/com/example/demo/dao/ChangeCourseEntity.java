@@ -17,6 +17,7 @@ public class ChangeCourseEntity {
     private String teacher;
     private String content;
     private String post_time;
+    private String status;
 
     public String getId() {
         return id;
@@ -96,5 +97,13 @@ public class ChangeCourseEntity {
 
     public void setPost_time(String post_time) {
         this.post_time = post_time;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
