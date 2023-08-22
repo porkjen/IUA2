@@ -17,7 +17,7 @@ public class ChangeCourseEntity {
     private String teacher;
     private String content;
     private String post_time;
-    private String status;
+    private String status = "未換";
 
     public String getId() {
         return id;
