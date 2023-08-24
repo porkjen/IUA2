@@ -5,6 +5,7 @@ public class HouseDTO {
     private String name = "";
     private String title = "";
     private String postTime = "";
+    private String status;
 
     public String getPostId() {
         return postId;
@@ -38,10 +39,19 @@ public class HouseDTO {
         this.postTime = postTime;
     }
 
-    public HouseDTO(String post_id, String name, String title, String postTime) {
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public HouseDTO(String post_id, String name, String title, String postTime, String status) {
         this.postId = post_id;
         this.name = name;
         this.title = title;
         this.postTime = postTime;
+        this.status = status;
     }
 }
