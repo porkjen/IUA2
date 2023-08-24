@@ -229,7 +229,7 @@ public class TodoController {
         List<HouseEntity> housePostList = houseRepository.findAll();
         List<HouseDTO> SimpleHousePostList = new ArrayList<>();
         for (HouseEntity post : housePostList) {
-            HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle(), post.getPost_time());
+            HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle(), post.getPost_time(), post.getStatus());
             SimpleHousePostList.add(dto);
         }
         return SimpleHousePostList;
@@ -293,7 +293,7 @@ public class TodoController {
                     && (Objects.equals(people, "") || house.getPeople().equals(people))
                     && (Objects.equals(style, "") || house.getStyle().contains(style))
                     && (Objects.equals(car, "") || house.getCar().equals(car))) {
-                HouseDTO result = new HouseDTO(house.getPostId(), house.getName(), house.getTitle(), house.getPost_time());
+                HouseDTO result = new HouseDTO(house.getPostId(), house.getName(), house.getTitle(), house.getPost_time(), house.getStatus());
                 resultList.add(result);
             }
         }
@@ -309,7 +309,7 @@ public class TodoController {
         for(String postId : savedEntity.getPosted()){
             if(postId.startsWith("H")){
                 HouseEntity h = houseRepository.findByPostId(postId);
-                HouseDTO dto = new HouseDTO(h.getPostId(), h.getName(), h.getTitle(), h.getPost_time());
+                HouseDTO dto = new HouseDTO(h.getPostId(), h.getName(), h.getTitle(), h.getPost_time(), h.getStatus());
                 shortened.add(dto);
             }
         }
@@ -699,7 +699,7 @@ public class TodoController {
                 }else if(post.startsWith("H")){
                     HouseEntity house = houseRepository.findByPostId(post);
                     HouseDTO houseDTO;
-                    if(house !=null) houseDTO = new HouseDTO(post, house.getName(), house.getTitle(), house.getPost_time());
+                    if(house !=null) houseDTO = new HouseDTO(post, house.getName(), house.getTitle(), house.getPost_time(), house.getStatus());
                     else {deleted.add(post); continue;}
                     savedDTO.setSavedHouse(houseDTO);
                 }

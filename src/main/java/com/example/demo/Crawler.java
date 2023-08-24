@@ -372,6 +372,8 @@ public class Crawler {
             myClass.setClassNum(cols.get(2).getText());
             System.out.println("授課老師 : " + cols.get(6).getText());
             myClass.setTeacher(cols.get(6).getText());
+            System.out.println("類別 : " + cols.get(9).getText());
+            myClass.setCategory(cols.get(9).getText());
             driver.findElement(By.linkText(cols.get(2).getText())).click();
 
             if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();

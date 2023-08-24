@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dao.ChangeCourseHaveEntity;
 import com.example.demo.repository.ChangeCourseHaveRepository;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.service.TodoService;
