@@ -1,6 +1,9 @@
 package com.example.demo.dao;
 
-public class RequiredCourseEntity {
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document("courseOMajorTE") //collection name
+public class RequiredCourseEntityOuterMajorTE {
 
     String c_name = "";
     String c_category = "";
