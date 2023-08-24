@@ -11,7 +11,7 @@ public class HouseEntity {
     private String id;
     private String postId = "";
     private String studentID = "";
-    private String name = "";
+    private String name = ""; //real name
     private String title = "";
     private String money = "";
     private String people = "";

@@ -10,25 +10,14 @@ const ChangeClass=()=> {
     let navigate = useNavigate();
     const [data, setData] = useState([]);
     const [isHaveClass, setHaveClass] = useState(false);
-
-
-    function Articleinfo({ author, text }) {
-
-
-        return (
-          <ArticleContainer>
-            <ArticleText>
-                <ArticleAuthor>{author}</ArticleAuthor>
-                <ArticleBody>{text}</ArticleBody>
-            </ArticleText>
-          </ArticleContainer>
-        );
-      }
+    const [myClass, setMyClass] = useState(false);
+    const [changeTable, setchangeTable] = useState(true);
 
 
 
     function ChangeClass() {
       const [value, setValue] = useState('');
+      
 
       useEffect(() => {
         if (data.length === 0) {
@@ -43,7 +32,7 @@ const ChangeClass=()=> {
           });
           
         }
-      }, [data]); // 添加依賴項data
+      }, []); // 添加依賴項data
 
       const handleShowClassInfoSubmit = (timeValue) => {
         
@@ -57,6 +46,53 @@ const ChangeClass=()=> {
                 time:timeValue,
                 },});
       }
+
+      function IsChangeTable() {
+
+
+        return (
+          <div className='PerChangeClassTable'>
+          {Array.from({ length: Math.ceil(data.length / itemsPerRow) }).map((_, rowIndex) => (
+            <div className='column' key={rowIndex}>
+              {data.slice(rowIndex * itemsPerRow, (rowIndex + 1) * itemsPerRow).map(item => (
+                <div className='ChangeClassBtnContainer' key={item.time}>
+                  <ChangeClassBtn time={item.time} haveClass={item.have} onClick={() => handleShowClassInfoSubmit(item.time)}>
+                    {item.time}
+                  </ChangeClassBtn>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        );
+      }
+
+      function ClassItem({name,time,classNum}){
+        return(
+          <ArticleContainer>
+            <ArticleText>
+                <ArticleAuthor>{classNum}</ArticleAuthor>
+                <ArticleBody>{name}</ArticleBody>
+                <ArticleBody>{time.join('、')}</ArticleBody>
+            </ArticleText>
+          </ArticleContainer>
+        );
+      }
+
+      function AllMyClass({myClassData}) {
+
+
+        return (
+
+          <ArticleList >
+          {myClassData.map(item => (
+            <ClassItem key={item.name} name={item.name} time={item.time} classNum={item.classNum}></ClassItem>
+          ))}
+        </ArticleList>
+          
+        );
+      }
+
 
       function ChangeClassBtn({time, haveClass}) {
 
@@ -74,6 +110,40 @@ const ChangeClass=()=> {
        
       }
       const itemsPerRow = 14;
+
+      const handleMyClassTableChange = event => {
+        setMyClass(true);
+        setchangeTable(false);
+        setMyClass(true);
+        fetch(`/curriculum_search?studentID=${"00957025"}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            console.log(myClass);
+            setData(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      };
+      
+
+      const handleChangeTableChange = event => {
+        setMyClass(false);
+        setchangeTable(true);
+        console.log("handleChangeTableChange called");
+        console.log(myClass);
+        fetch("/course_change_have")
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          setData(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      };
+
       return (
         <Page>
           <Link to='/choose'>
@@ -84,19 +154,20 @@ const ChangeClass=()=> {
         <Link to='/postArticle'>
           <PostArticleBtn>我要發文</PostArticleBtn>
         </Link>
-        <div className='PerChangeClassTable'>
-          {Array.from({ length: Math.ceil(data.length / itemsPerRow) }).map((_, rowIndex) => (
-            <div className='column' key={rowIndex}>
-              {data.slice(rowIndex * itemsPerRow, (rowIndex + 1) * itemsPerRow).map(item => (
-                <div className='ChangeClassBtnContainer' key={item.time}>
-                  <ChangeClassBtn time={item.time} haveClass={item.have} onClick={() => handleShowClassInfoSubmit(item.time)}>
-                    {item.time}
-                  </ChangeClassBtn>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+        <div className='ChangeClassSelect'>
+          {myClass && <input type="radio" id='myclass' name='selectTable' onChange={handleMyClassTableChange} checked></input>}
+          {!myClass && <input type="radio" id='myclass' name='selectTable'  onChange={handleMyClassTableChange}></input>}
+          <label for="myclass">我的課表</label>
+
+          {changeTable && <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange} checked></input>}
+          {!changeTable && <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange}></input>}
+          <label for="changeClassTable">選課課表</label>
+
+        </div><br/>
+          {changeTable && <IsChangeTable/>}
+          {myClass && <AllMyClass myClassData={data}/>}
+       
+
       </Pagebg>
     </Page>
       );

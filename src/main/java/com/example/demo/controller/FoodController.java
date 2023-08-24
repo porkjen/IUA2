@@ -5,6 +5,10 @@ import com.example.demo.FoodRepository;
 import com.example.demo.HouseRepository;
 import com.example.demo.NextPostId;
 import com.example.demo.dao.*;
+import com.example.demo.SavedRepository;
+import com.example.demo.dao.FoodDTO;
+import com.example.demo.dao.FoodEntity;
+import com.example.demo.dao.SavedEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,34 +31,39 @@ public class FoodController {
     @Autowired
     BasicRepository basicRepository;
 
+    @Autowired
+    SavedRepository savedRepository;
     @PostMapping("/food_posts")//post a food post
     public FoodEntity foodPosts(@RequestBody FoodEntity food){
-        String post_id; //get new post_id
-        NextPostId nextPostId = new NextPostId();
+        //String post_id; //get new post_id
         if(foodRepository.findFirstByOrderByIdDesc()==null){food.setPostId("F00001");}
         else{
+            NextPostId nextPostId = new NextPostId();
             food.setPostId(nextPostId.getNextFoodString(foodRepository.findFirstByOrderByIdDesc().getPostId()));
         }
         food.setNickname(basicRepository.findByStudentID(food.getStudentID()).getNickname());
         food.setRating(food.getReview().get(0).getP_rate());
         food.setRating_num(1); //rating people : 1(by author)
+        food.setReport(0);
+        food.setDistance(0);
         food.setPost_time(DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
                 .format(LocalDateTime.now()));
         //review
         food.getReview().get(0).setP_studentID(food.getStudentID());
-        food.getReview().get(0).setP_name(basicRepository.findByStudentID(food.getStudentID()).getNickname());
-        food.getReview().get(0).setP_time(DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
-                .format(LocalDateTime.now()));
-
+        food.getReview().get(0).setP_name(food.getNickname());
+        food.getReview().get(0).setP_time(food.getPost_time());
         foodRepository.save(food);
+        SavedEntity savedEntity = savedRepository.findByStudentID(food.getStudentID());
+        savedEntity.setPosted(food.getPostId());//add
+        savedRepository.save(savedEntity);
         return food;
     }
 
     @PostMapping("/food_full_post")
     public FoodEntity foodFullPost(@RequestBody Map<String, String> requestData){
-        System.out.println("/food_full_post");
+        System.out.println("/food_full_post\npostId : "+requestData.get("postId"));
         FoodEntity foodEntity = foodRepository.findByPostId(requestData.get("postId"));
-        //find out if the user has commented on the post
+        //find out if the user has commented on the post, to put user's review first
         for(FoodEntity.p review : foodEntity.getReview()){
             if(Objects.equals(review.getP_studentID(), requestData.get("studentID"))) {
                 //remove the review and add to the start
@@ -63,8 +72,8 @@ public class FoodController {
                 break;
             }
         }
-
-        //no one save this post
+        //to know whether user saves the post
+        //no one saves this post
         if(foodEntity.getSaved().size()==0){
             foodEntity.saveFirst("false");
             return foodEntity;
@@ -90,7 +99,7 @@ public class FoodController {
         else if(Objects.equals(sort, "rate_Decrease")) foodPostList = foodRepository.findAllByOrderByRatingDesc();
         else if(Objects.equals(sort, "rate_Increase")) foodPostList = foodRepository.findAllByOrderByRatingAsc();
         else if(Objects.equals(sort, "distance_Increase"))foodPostList = foodRepository.findAllByOrderByDistanceAsc();
-        else foodPostList = foodRepository.findAllByOrderByDistanceDesc();
+        else foodPostList = foodRepository.findAllByOrderByDistanceDesc(); //distance_Decrease
 
         List<FoodDTO> shortenedPostList = new ArrayList<>();
         for (FoodEntity post : foodPostList) {
@@ -115,6 +124,12 @@ public class FoodController {
         //modify address
         if(!Objects.equals(food.getAddress(), ""))
             modifyFoodPost.setAddress(food.getAddress());
+        //modify road
+        if(!Objects.equals(food.getRoad(), ""))
+            modifyFoodPost.setRoad(food.getRoad());
+        //modify district
+        if(!Objects.equals(food.getDistrict(), ""))
+            modifyFoodPost.setRoad(food.getDistrict());
         foodRepository.save(modifyFoodPost);
         return modifyFoodPost;
     }
@@ -123,6 +138,9 @@ public class FoodController {
     public ResponseEntity<String> foodPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
         System.out.println("/food_post_delete");
         if(foodRepository.deleteByPostId(postId) !=null){
+            SavedEntity savedEntity =  savedRepository.findByStudentID(studentID);
+            savedEntity.removePosted(postId);
+            savedRepository.save(savedEntity);
             return ResponseEntity.ok("Success");//200
         }
         else return ResponseEntity.badRequest().body("Invalid request");//400
@@ -259,4 +277,19 @@ public class FoodController {
     }
 
 
+    @GetMapping("/my_food_posts")
+    public List<FoodDTO> myFoodPosts(@RequestParam("studentID") String studentID){
+        System.out.println("/my_food_posts, studentID : "+studentID);
+        SavedEntity savedEntity = savedRepository.findByStudentID(studentID);
+        List<FoodDTO> shortened = new ArrayList<>();
+        System.out.println("My Posts : "+savedEntity.getPosted().size());
+        for(String postId : savedEntity.getPosted()){
+            if(postId.startsWith("F")){
+                FoodEntity foodPost = foodRepository.findByPostId(postId);
+                FoodDTO dto = new FoodDTO(foodPost.getPostId(), foodPost.getNickname(), foodPost.getStore(), foodPost.getRating(), foodPost.getPost_time(), foodPost.getRoad(), foodPost.getDistance());
+                shortened.add(dto);
+            }
+        }
+        return shortened;
+    }
 }

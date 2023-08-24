@@ -9,7 +9,8 @@ import java.util.List;
 public class SavedEntity {
     private String id;
     private String studentID;
-    private List<String> postId = new ArrayList<>();
+    private List<String> saved = new ArrayList<>();
+    private List<String> posted = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -27,14 +28,24 @@ public class SavedEntity {
         this.studentID = studentID;
     }
 
-    public List<String> getPostId() {
-        return postId;
+    public List<String> getSaved() {
+        return saved;
     }
 
-    public void setPostId(String postId) {
-        this.postId.add(postId);
+    public void setSaved(String saved) {
+        this.saved.add(saved);
     }
-    public void removePostId(String postId) {
-        this.postId.remove(postId);
+    public void removeSaved(String saved) {
+        this.saved.remove(saved);
+    }
+    public List<String> getPosted() {
+        return posted;
+    }
+
+    public void setPosted(String posted) {
+        this.posted.add(posted);
+    }
+    public void removePosted(String posted) {
+        this.posted.remove(posted);
     }
 }

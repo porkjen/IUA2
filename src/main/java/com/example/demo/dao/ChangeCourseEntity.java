@@ -2,6 +2,9 @@ package com.example.demo.dao;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Document("change_CourseCollection")
 public class ChangeCourseEntity {
     private String id;
@@ -13,6 +16,7 @@ public class ChangeCourseEntity {
     private String[] time;
     private String teacher;
     private String content;
+    private String post_time;
 
     public String getId() {
         return id;
@@ -84,5 +88,13 @@ public class ChangeCourseEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getPost_time() {
+        return post_time;
+    }
+
+    public void setPost_time(String post_time) {
+        this.post_time = post_time;
     }
 }

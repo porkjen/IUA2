@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SpringBootApplication
-@EnableScheduling
+@EnableScheduling //啟用定時任務功能
 public class DemoApplication {
 
 	public static void main(String[] args) {
