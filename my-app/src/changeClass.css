@@ -41,3 +41,27 @@
     z-index: 2;
   }
 
+  .changeClass_className{
+    padding-top: 12px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size:15px;
+    text-align:center;
+  }
+
+  .changeClass_classNum{
+    width: 40%;
+  }
+
+  .changeClass_classNum_className{
+    display:flex;
+    justify-content:space-between;
+  }
+
+.changeClassBtn{
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    border-color: bisque;
+    background-color: transparent;
+    box-sizing: 1px;
+}

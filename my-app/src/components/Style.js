@@ -76,4 +76,25 @@ const Back = styled.img`
     z-index: 3;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, Back} ;
+const MyclassBody = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    width: 300px;
+    height: 60px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    margin-top:2%;
+    margin-left:7px;
+`;
+
+const MyclassText = styled.div`
+    padding-top: 12px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size:15px;
+    text-align:center;
+`;
+
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, Back, MyclassBody, MyclassText} ;

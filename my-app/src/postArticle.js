@@ -9,12 +9,14 @@ import back from './img/back.png';
 import {Back}  from './components/Style.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
-import { Routes ,Route, useNavigate } from 'react-router-dom';
+import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
 import {useState} from "react";
 import { loginUser } from "./cookie.js";
 
 const PostArticle=()=> {
     let navigate = useNavigate();
+    const location = useLocation();
+    const { studentID, changeClassClassName, changeClassClassTeacher, changeClassClassTime,IsChangeClass } = location.state || {};
 
     function ArticleFoodInput() {
         const [Ftitle, setFtitle] = useState("");
@@ -284,7 +286,7 @@ const PostArticle=()=> {
             <div className='articleRentFormType'>
               <label>房型:</label>
               <select name = 'Htype' className='articleRentFormTypeInput' value={Htype} onChange={handleHtypeChange}>
-                  <option>請選擇區域</option>
+                  <option>請選擇房型</option>
                   <option value='套房'>套房</option>
                   <option value='雅房'>雅房</option>
                   <option value='家庭式'>家庭式</option>
@@ -339,11 +341,11 @@ const PostArticle=()=> {
 
       function ArticleChangeClassInput() {
 
-        const [Ctitle, setCtitle] = useState("");
+        const [Ctitle, setCtitle] = useState(changeClassClassName);
         const [Ctext, setCtext] = useState("");
         const [CCategory, setCCategory] = useState("");
-        const [Ctime, setCtime] = useState("");
-        const [Cteacher, setCteacher] = useState("");
+        const [Ctime, setCtime] = useState(changeClassClassTime);
+        const [Cteacher, setCteacher] = useState(changeClassClassTeacher);
         const [numberArray, setNumberArray] = useState([]);
 
         const handleCtitleChange = event => {
@@ -398,7 +400,7 @@ const PostArticle=()=> {
           <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
             <div className='articleChangeClassFormTitle'>
               <label>標題:</label>
-              <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle} placeholder='你有的課' required="required"></input>
+              <input type='text' className='articleChangeClassFormTitleInput'  onChange={handleCtitleChange} value={Ctitle.name} placeholder='你有的課' required="required" disabled></input>
             </div><br/>
             <div className='articleChangeClassFormCategory'>
               <label>分類:</label>
@@ -414,11 +416,11 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleChangeClassFormTime'>
               <label>時間:</label>
-              <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime} placeholder='503、504' required="required"></input>
+              <input type='text' className='articleChangeClassFormTimeInput'  onChange={handleCtimeChange} value={Ctime.time} placeholder='503、504' required="required" disabled></input>
             </div><br/>
             <div className='articleChangeClassFormTeacher'>
               <label>老師:</label>
-              <input type='text' className='articleChangeClassFormTeacherInput' onChange={handleCteacherChange} value={Cteacher} required="required"></input>
+              <input type='text' className='articleChangeClassFormTeacherInput'  onChange={handleCteacherChange} value={Cteacher.teacher} required="required" disabled></input>
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
@@ -441,10 +443,21 @@ const PostArticle=()=> {
         alert(`The nickName you entered was: ${nickName_id}`)
       }*/
       const [selectedOption, setSelectedOption] = useState('');
-      const [isFoodShown, setIsFoodShown] = useState(true);
+      const [isFoodShown, setIsFoodShown] = useState(false);
       const [isRentShown, setIsRentShown] = useState(false);
       const [isChangeClassShown, setIsChangeClassShown] = useState(false);
+      const [isFirst, setIsFirst] = useState(true);
 
+      if(isFirst && IsChangeClass){
+        setIsChangeClassShown(true);
+        setIsFirst(false);
+      }
+      else if(isFirst){
+        setIsFoodShown(true);
+        setIsRentShown(false);
+        setIsFirst(false);
+      }
+      
       const handleSelectChange = (event) => {
         const selectedValue = event.target.value;
         setSelectedOption(selectedValue);
@@ -478,8 +491,9 @@ const PostArticle=()=> {
         setIsRentShown(false);
         setIsChangeClassShown(true);
       };
-      
 
+      
+      
       return (
         <div className="PostArticle">
            <Link to='/choose'>
@@ -491,11 +505,18 @@ const PostArticle=()=> {
                 <img className='post_cat2' src={cat2}/>
                 <div className='articleFormPosition'>
                     <div className='articleForm' >
+                      {isFoodShown && 
                         <select className='selectType' onChange={handleSelectChange}>
                             <option value="food">美食版</option>
                             <option value="rent">租屋版</option>
-                            <option value="changeClass">換課版</option>
                         </select>
+                      }
+                      {isRentShown && 
+                        <select className='selectType' onChange={handleSelectChange}>
+                            <option value="food">美食版</option>
+                            <option value="rent">租屋版</option>
+                        </select>
+                      }
                         <div className='inputFormPosition'>
                           {isFoodShown && <ArticleFoodInput/>}
                           {isRentShown && <ArticleRentInput/>}

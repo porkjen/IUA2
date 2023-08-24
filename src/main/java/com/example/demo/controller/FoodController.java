@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.BasicRepository;
-import com.example.demo.FoodRepository;
-import com.example.demo.HouseRepository;
+
+import com.example.demo.repository.BasicRepository;
+import com.example.demo.repository.FoodRepository;
 import com.example.demo.NextPostId;
-import com.example.demo.dao.*;
-import com.example.demo.SavedRepository;
+import com.example.demo.repository.SavedRepository;
 import com.example.demo.dao.FoodDTO;
 import com.example.demo.dao.FoodEntity;
 import com.example.demo.dao.SavedEntity;

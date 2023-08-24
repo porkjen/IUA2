@@ -77,7 +77,7 @@ const Rent=()=> {
                   <ChooseArticleBtn onClick={()=> setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
                 <ArticleList>
                     {data.map(item => (
-                      <Articleinfo key={item.title} author={item.name} time={item.postTime} text={item.title} postID={item.postId}></Articleinfo>
+                      <Articleinfo key={item.title} author={item.name} time={item.postTime} text={item.title} postID={item.postId} ></Articleinfo>
                     ))}
                 </ArticleList>
             </Pagebg>

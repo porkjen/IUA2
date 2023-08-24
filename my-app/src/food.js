@@ -106,18 +106,18 @@ const Food = () => {
 
   function Articleinfo({ author, post_time, store, rating, postID, road }) {
 
-    if(road.includes("中正")){
-      setisBai(false);
-      setisXiang(false);
-      setisXi(false);
-      setisZhong(true);
-      setisXing(false);
-    }
-    else if(road.includes("祥豐")){
+    if(road.includes("祥豐")){
       setisBai(false);
       setisXiang(true);
       setisXi(false);
       setisZhong(false);
+      setisXing(false);
+    }
+    else if(road.includes("中正")){
+      setisBai(false);
+      setisXiang(false);
+      setisXi(false);
+      setisZhong(true);
       setisXing(false);
     }
     else if(road.includes("北寧")){
@@ -141,6 +141,9 @@ const Food = () => {
       setisZhong(false);
       setisXing(false);
     }
+    useEffect(() => {
+      console.log("isZhong:", isZhong);
+    }, [isZhong]);
 
     const handleShowFoodSubmit = (e) => {
       e.preventDefault();

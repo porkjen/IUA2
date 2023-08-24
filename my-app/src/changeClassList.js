@@ -7,7 +7,7 @@ import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
 import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer,
    ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleDistance,ChangeClassCategorySelect,
-   ArticleAuthorArea,ArticleAuthorImg}  from './components/ArticleStyle.js';
+   ArticleAuthorArea,ArticleAuthorImg, AlreadyArticleText}  from './components/ArticleStyle.js';
 import {Back}  from './components/Style.js';
 import { Routes ,Route,Link,useNavigate,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
@@ -19,12 +19,19 @@ const ChangeClassList=()=> {
     const [isPostID, setisPostID] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [haveData, setHaveData] = useState(true);
+    const [alreadyChange, setAlreadyChange] = useState(false);
     let navigate = useNavigate();
     const location = useLocation();
     const { studentID, time } = location.state;
 
-    function Articleinfo({ author, className, category, postID }) {
+    function Articleinfo({ author, className, category, postID, post_time, status }) {
 
+      if(status==="未換"){
+        setAlreadyChange(false);
+      }
+      else{
+        setAlreadyChange(true);
+      }
       const handleShowClassSubmit = (e) => {
         e.preventDefault();
         //const student_id = loginUser();
@@ -52,9 +59,8 @@ const ChangeClassList=()=> {
             */
       }
 
-
-        return (
-          <ArticleContainer>
+      function NotChange(){
+        return(
             <ArticleText onClick={handleShowClassSubmit}>
                 <ArticleDistance>{category}</ArticleDistance>
                 <ArticleAuthorArea>
@@ -62,7 +68,31 @@ const ChangeClassList=()=> {
                   <ArticleAuthor>{author}</ArticleAuthor>
                 </ArticleAuthorArea>
                 <ArticleBody>{className}</ArticleBody>
+                <ArticlePostTime>{post_time}</ArticlePostTime>
             </ArticleText>
+        );
+      }
+
+      function Change(){
+        return(
+            <AlreadyArticleText onClick={handleShowClassSubmit} disabled>
+                <ArticleDistance>{category}</ArticleDistance>
+                <ArticleAuthorArea>
+                  <ArticleAuthorImg src={student}></ArticleAuthorImg>
+                  <ArticleAuthor>{author}</ArticleAuthor>
+                </ArticleAuthorArea>
+                <ArticleBody>{className}</ArticleBody>
+                <ArticlePostTime>{post_time}</ArticlePostTime>
+            </AlreadyArticleText>
+        );
+      }
+
+
+        return (
+          <ArticleContainer>
+            {alreadyChange && <Change/>}
+            {!alreadyChange && <NotChange/>}
+            
           </ArticleContainer>
         );
       }
@@ -130,7 +160,7 @@ const ChangeClassList=()=> {
                 <ArticleList>
                     {haveData===false && <div className='noData'>沒有資料</div>}
                     {data.map(item => (
-                      <Articleinfo key={item.postId} author={item.studentID} className={item.course} category={item.category} postID={item.postId}></Articleinfo>
+                      <Articleinfo key={item.postId} author={item.studentID} className={item.course} category={item.category} postID={item.postId} post_time={item.post_time} status={item.status}></Articleinfo>
                     ))}
                 </ArticleList>
             </Pagebg>

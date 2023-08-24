@@ -4,6 +4,7 @@ import com.example.demo.*;
 
 import com.example.demo.dao.*;
 
+import com.example.demo.repository.*;
 import com.example.demo.service.*;
 import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -688,22 +688,29 @@ public class TodoController {
             return savedDTO; //didn't save any post : return empty
         }
         else{
-            System.out.println(savedEntity.getSaved().size());
+            ArrayList<String> deleted = new ArrayList<>();
             for(String post : savedEntity.getSaved()){
                 if(post.startsWith("F")){
                     FoodEntity food = foodRepository.findByPostId(post);
                     FoodDTO foodDTO;
-                    if(food ==null) foodDTO = new FoodDTO(post, "", "此貼文已被刪除", 0, "", "", 0);
+                    if(food ==null) {deleted.add(post); continue;}
                     else foodDTO = new FoodDTO(post, food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad(), food.getDistance());
                     savedDTO.setSavedFood(foodDTO);
                 }else if(post.startsWith("H")){
                     HouseEntity house = houseRepository.findByPostId(post);
                     HouseDTO houseDTO;
                     if(house !=null) houseDTO = new HouseDTO(post, house.getName(), house.getTitle(), house.getPost_time());
-                    else houseDTO = new HouseDTO(post, "此貼文已被刪除", "", "");
+                    else {deleted.add(post); continue;}
                     savedDTO.setSavedHouse(houseDTO);
                 }
             }
+            if(deleted.size()!=0){
+                for(String post : deleted)
+                    savedEntity.removeSaved(post);
+
+                savedRepository.save(savedEntity);
+            }
+
             return savedDTO;
         }
     }
@@ -732,6 +739,25 @@ public class TodoController {
             }
         }
         return ResponseEntity.badRequest().body("Invalid request");//400
+    }
+
+    @PutMapping("/change_post_status")
+    public ResponseEntity<String> changePostStatus(@RequestBody Map<String, String> requestData){
+        if(requestData.get("postId").startsWith("H")){
+            HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
+            if(!Objects.equals(house.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
+            house.setStatus("已租");
+            houseRepository.save(house);
+            return ResponseEntity.ok("Success");
+        }
+        //requestData.get("postId").startsWith("C")
+        else {
+            ChangeCourseEntity changeCourse = changeCourseRepository.findByPostId(requestData.get("postId"));
+            if(!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
+            changeCourse.setStatus("已換");
+            changeCourseRepository.save(changeCourse);
+            return ResponseEntity.ok("Success");
+        }
     }
 
     @PostMapping("/pre_curriculum_search")

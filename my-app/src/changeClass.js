@@ -3,6 +3,7 @@ import React from 'react';
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
 import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody, PerChangeClassBtn, PerHaveChangeClassBtn}  from './components/ArticleStyle.js';
+import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody, MyclassBody, MyclassText } from './components/Style.js';
 import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
 import {useState,useEffect} from "react";
 
@@ -67,14 +68,30 @@ const ChangeClass=()=> {
         );
       }
 
-      function ClassItem({name,time,classNum}){
+      function ClassItem({name,time,classNum,teacher}){
+
+        const handleChangeClassBtn = event =>{
+          console.log(name);
+          navigate("/postArticle", {
+            state: {
+              studentID:"00957025",
+              changeClassClassName:{name},
+              changeClassClassTeacher:{teacher},
+              changeClassClassTime:{time},
+              IsChangeClass:true,
+               },});
+        };
+
         return(
           <ArticleContainer>
-            <ArticleText>
-                <ArticleAuthor>{classNum}</ArticleAuthor>
-                <ArticleBody>{name}</ArticleBody>
-                <ArticleBody>{time.join('、')}</ArticleBody>
-            </ArticleText>
+            <MyclassBody>
+              <div className='changeClass_classNum_className'>
+                <label className='changeClass_classNum'>{classNum}</label>
+                <button className='changeClassBtn' onClick={handleChangeClassBtn} >我要換課</button>
+              </div>
+                <label className='changeClass_className'>{name}</label>
+                <div>課程時間:&nbsp;{time}</div>
+            </MyclassBody>
           </ArticleContainer>
         );
       }
@@ -85,8 +102,8 @@ const ChangeClass=()=> {
         return (
 
           <ArticleList >
-          {myClassData.map(item => (
-            <ClassItem key={item.name} name={item.name} time={item.time} classNum={item.classNum}></ClassItem>
+          {myClassData.map((item, index) => (
+            <ClassItem key={item.name} name={item.name} time={item.time} classNum={item.classNum} teacher={item.teacher} ></ClassItem>
           ))}
         </ArticleList>
           
@@ -151,8 +168,8 @@ const ChangeClass=()=> {
           </Link>
       <Pagebg>
         <Title>換課板</Title>
-        <Link to='/postArticle'>
-          <PostArticleBtn>我要發文</PostArticleBtn>
+        <Link to=''>
+          <PostArticleBtn>設置通知</PostArticleBtn>
         </Link>
         <div className='ChangeClassSelect'>
           {myClass && <input type="radio" id='myclass' name='selectTable' onChange={handleMyClassTableChange} checked></input>}

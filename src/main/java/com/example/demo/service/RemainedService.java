@@ -1,17 +1,14 @@
 package com.example.demo.service;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.poi.hpsf.Array;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import com.example.demo.CourseCredit;
 import com.example.demo.FinishedCourse;
 import com.example.demo.FinishedCourseList;
-import com.example.demo.FinishedRepository;
+import com.example.demo.repository.FinishedRepository;
 import com.example.demo.RemainCredit;
 
 @Service

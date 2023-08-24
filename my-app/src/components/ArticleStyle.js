@@ -115,6 +115,17 @@ const ArticleText = styled.button`
     min-height:70px;
 `;
 
+const AlreadyArticleText = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    width: 350px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 16px;
+    background-color: 	#D3D3D3;
+    min-height:70px;
+`;
+
 const ArticleDCText = styled.button`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
@@ -158,7 +169,7 @@ const ArticleBaiDistance= styled.div`
     width:40%;
     height:20%;
     margin-left:200px;
-    background-color:cornsilk;
+    background-color:cornsilk ;
 `;
 
 const ArticleXiangDistance= styled.div`
@@ -305,6 +316,6 @@ const ChangeClassCategorySelect = styled.select`
 `;
 
 
-export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleDistance,
+export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText, AlreadyArticleText, ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleDistance,
      ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn, ArticleSelect,PerHaveChangeClassBtn,
      ChangeClassCategorySelect, ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance};
