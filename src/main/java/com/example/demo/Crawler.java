@@ -1,10 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.dao.BasicEntity;
-import com.example.demo.dao.CourseEntity;
-import com.example.demo.dao.GeneralCourseEntity;
-import com.example.demo.dao.RequiredCourseEntity;
-import com.example.demo.dao.TimeTableEntity;
+import com.example.demo.dao.*;
 import com.example.demo.repository.TimeTableRepository;
 
 import org.apache.commons.io.FileUtils;
@@ -165,6 +161,7 @@ public class Crawler {
         }
         driver.close();*/
     }
+    //基本資料
     public static BasicEntity getBasicData(String studentID, String password) throws InterruptedException {//基本資料
         BasicEntity personalInformation = new BasicEntity();
         driver.switchTo().frame("menuFrame");
