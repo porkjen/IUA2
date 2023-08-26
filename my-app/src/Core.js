@@ -5,7 +5,7 @@ import whitefox from './img/whitefox.PNG';
 import back from './img/back.png';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { Coreinfo } from './components/Style';
+import { Coreinfo, CoreField } from './components/Style';
 
 const Core=()=>{
     function Core() {
@@ -26,7 +26,8 @@ const Core=()=>{
                         <div className="c_scrollableContainer">
                             {CResult.map((item) => (
                                 <Coreinfo key={item.id}>
-                                {item.name}<br />{item.number}&emsp;{item.teacher}<br />上課時間: {item.time}
+                                    {<CoreField>{item.field}</CoreField>}
+                                    {item.name}<br />{item.number}&emsp;{item.teacher}<br />上課時間: {item.time}
                                 </Coreinfo>
                             ))}
                         </div>  

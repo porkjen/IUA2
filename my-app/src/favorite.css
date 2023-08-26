@@ -46,8 +46,8 @@ html,body,#root,.Favorite{
 }
 
 .Favorite .selectType{
-    margin-top: 130px;
-    margin-left: 20px;
-    padding: 5px;
+    margin-top: 30%;
+    margin-left: 10%;
+    padding: 2%;
     width: 28%;
 }

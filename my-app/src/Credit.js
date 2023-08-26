@@ -39,7 +39,7 @@ const Credit=()=> {
                         </Link>
                     </div>
                     <div class="flex">
-                        <Link to='/Core'>
+                        <Link to='/coreSearch'>
                             <div className="coreclassBtn">
                                 <button className="coreclassButton">
                                     <img src={coreCourseImg} className='creditpic'/>

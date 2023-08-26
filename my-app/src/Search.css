@@ -29,47 +29,65 @@ html,body,#root,.Search{
 }
 
 .selectDiv{
-    padding-left: 85px;
-    padding-top: 85px;
+    padding-left: 10%;
+    padding-top: 75px;
+}
+
+.selectDepartment{
+    width: 300px;
+    font-size: 30px; 
+    color: #889cd4;
+    border-radius: 10px;
+    border: none;
+}
+
+.selectDepartment option {
+    font-size: 15px;
+}
+
+.selectDiv2{
+    padding-left: 10%;
+    padding-top: 35px;
 }
 
 .selectMust{
-    width: 200px;
+    width: 300px;
     font-size: 30px; 
-    color: #afc2f8;
+    color: #889cd4;
     border-radius: 10px;
     border: none;
 }
 
 .selectMust option {
-    font-size: 25px;
+    font-size: 20px;
 }
 
-.selectDiv2{
-    padding-left: 85px;
-    padding-top: 45px;
+
+.selectDiv3{
+    padding-left: 10%;
+    padding-top: 35px;
 }
 
 .selectGrade{
-    width: 200px;
+    width: 300px;
     font-size: 30px; 
-    color: #afc2f8;
+    color: #889cd4;
     border-radius: 10px;
     border: none;
 }
 
 .selectGrade option {
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .searchDiv{
     padding-left: 150px;
-    padding-top: 45px;
+    padding-top: 35px;
 }
 
 .search_btn{
     font-size: 18px;
-    color: #afc2f8;
+    color: #889cd4;
     font-weight:bold;
     height: 40px;
     width: 60px;
@@ -80,7 +98,7 @@ html,body,#root,.Search{
 
 .duckpic{
     position: fixed;
-    height: 400px;
-    width: 400px;
+    height: 380px;
+    width: 380px;
 }
 

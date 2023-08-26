@@ -1,15 +1,22 @@
 import React, { useEffect } from 'react';
 
+const loadDialogflowMessengerScript = () => {
+  const script = document.createElement('script');
+  script.src = 'https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1';
+  script.async = true;
+  document.body.appendChild(script);
+
+  return script;
+};
+
 const MoodChat = () => {
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1';
-    script.async = true;
-    document.body.appendChild(script);
+    // 載入 Dialogflow Messenger 腳本
+    const dialogflowMessengerScript = loadDialogflowMessengerScript();
 
     return () => {
-      // Clean up by removing the script when the component unmounts
-      
+      // 在元件卸載時清除腳本
+      document.body.removeChild(dialogflowMessengerScript);
     };
   }, []);
 
@@ -19,11 +26,9 @@ const MoodChat = () => {
       intent="WELCOME"
       chat-title="心情樹洞"
       agent-id="c054175b-675f-49ae-93e2-5671f742914a"
-      language-code="zh-tw"
+      language-code="en"
     ></df-messenger>
   );
 };
 
-
 export default MoodChat;
-
