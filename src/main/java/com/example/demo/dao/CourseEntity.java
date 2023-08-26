@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("CourseCollection")
 public class CourseEntity{
+    private String c_semester;
     private String c_name;
     private String c_category;
     private String c_number;
@@ -13,10 +14,12 @@ public class CourseEntity{
     private String c_grade;
     private String c_people;
     private String c_department;
+    private String c_field;
     
     public CourseEntity(){}
 
-    public CourseEntity(String name, String category, String number, String time, String room, String teacher, String grade, String people, String dept){
+    public CourseEntity(String semester, String name, String category, String number, String time, String room, String teacher, String grade, String people, String dept){
+        this.c_semester = semester;
         this.c_name = name;
         this.c_category = category;
         this.c_number = number;
@@ -26,6 +29,10 @@ public class CourseEntity{
         this.c_grade = grade;
         this.c_people = people;
         this.c_department = dept;
+    }
+
+    public String getSemester(){
+        return c_semester;
     }
 
     public String getName(){
@@ -54,5 +61,13 @@ public class CourseEntity{
     }
     public String getDept(){
         return c_department;
+    }
+
+    public String getField(){
+        return c_field;
+    }
+
+    public void setField(String field){
+        this.c_field = field;
     }
 }
