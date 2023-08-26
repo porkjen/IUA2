@@ -2,17 +2,19 @@ package com.example.demo.controller;
 
 //import com.example.demo.*;
 //import com.example.demo.dao.*;
-import com.example.demo.BasicRepository;
-import com.example.demo.ChangeCourseHaveRepository;
-import com.example.demo.ChangeCourseRepository;
-import com.example.demo.NextPostId;
-import com.example.demo.dao.ChangeCourseEntity;
-import com.example.demo.dao.ChangeCourseHaveEntity;
+import com.example.demo.*;
+import com.example.demo.dao.*;
+import com.example.demo.repository.BasicRepository;
+import com.example.demo.repository.ChangeCourseHaveRepository;
+import com.example.demo.repository.ChangeCourseRepository;
+import com.example.demo.repository.SavedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -24,6 +26,8 @@ public class ChangeCourseController {
     ChangeCourseRepository changeCourseRepository;
     @Autowired
     BasicRepository basicRepository;
+    @Autowired
+    SavedRepository savedRepository;
     @GetMapping("/course_change_have") //whether there is class at this time
     public List<ChangeCourseHaveEntity> courseChangeHave(){
         List<ChangeCourseHaveEntity> courseTimeList = changeCourseHaveRepository.findAll();
@@ -61,6 +65,9 @@ public class ChangeCourseController {
             thisTime.setHave(thisTime.getHave() + 1);
             changeCourseHaveRepository.save(thisTime);
         }
+        String dateTime = DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
+                .format(LocalDateTime.now());
+        course.setPost_time(dateTime);
         course.setNickname(basicRepository.findByStudentID(course.getStudentID()).getNickname());
         changeCourseRepository.save(course);
         return course;
@@ -127,17 +134,21 @@ public class ChangeCourseController {
                 courses = changeCourseRepository.findByCategory("第二外語");
             }
             boolean found;
+            System.out.println(courses.size());
             if(!Objects.equals(time, "")){
-                for(ChangeCourseEntity c : courses){
-                    System.out.println(c.getCategory());
+                for(int j=0;j<courses.size();j++){
+                    System.out.println(courses.get(j).getCategory());
                     found = false;
-                    for(int i=0;i<c.getTime().length;i++){
-                        if(Objects.equals(c.getTime()[i], time)){
+                    for(int i=0;i<courses.get(j).getTime().length;i++){
+                        if(Objects.equals(courses.get(j).getTime()[i], time)){
                             found = true;
                             break;
                         }
                     }
-                    if(!found)courses.remove(c);
+                    if(!found){
+                        courses.remove(courses.get(j));
+                        j--;
+                    }
                 }
             }
             return courses;
@@ -153,5 +164,19 @@ public class ChangeCourseController {
             }
             return courses;
         }
+    }
+
+    @GetMapping("/my_course_posts")
+    public List<ChangeCourseEntity> myRentPosts(@RequestParam("studentID") String studentID){
+        System.out.println("/my_course_posts, studentID : "+studentID);
+        SavedEntity savedEntity = savedRepository.findByStudentID(studentID);
+        List<ChangeCourseEntity> C_post = new ArrayList<>();
+        for(String postId : savedEntity.getPosted()){
+            if(postId.startsWith("C")){
+                ChangeCourseEntity c = changeCourseRepository.findByPostId(postId);
+                C_post.add(c);
+            }
+        }
+        return C_post;
     }
 }

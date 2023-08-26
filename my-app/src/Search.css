@@ -30,12 +30,12 @@ html,body,#root,.Search{
 
 .selectDiv{
     padding-left: 10%;
-    padding-top: 75px;
+    padding-top: 90px;
 }
 
 .selectDepartment{
     width: 300px;
-    font-size: 30px; 
+    font-size: 30px;
     color: #889cd4;
     border-radius: 10px;
     border: none;
@@ -52,7 +52,7 @@ html,body,#root,.Search{
 
 .selectMust{
     width: 300px;
-    font-size: 30px; 
+    font-size: 30px;
     color: #889cd4;
     border-radius: 10px;
     border: none;
@@ -70,7 +70,7 @@ html,body,#root,.Search{
 
 .selectGrade{
     width: 300px;
-    font-size: 30px; 
+    font-size: 30px;
     color: #889cd4;
     border-radius: 10px;
     border: none;
@@ -101,4 +101,3 @@ html,body,#root,.Search{
     height: 380px;
     width: 380px;
 }
-

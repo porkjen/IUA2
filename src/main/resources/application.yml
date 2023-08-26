@@ -1,5 +1,4 @@
 scheduler:
-  # 定時任務的時間，每五秒執行一次
   #second: 0-59
   #minute: 0-59
   #hour: 0-23

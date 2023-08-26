@@ -10,14 +10,14 @@ const Search = () => {
   function SearchComponent() {
     const navigate = useNavigate();
     const location = useLocation(); // 獲取路由位置
-    const [selectedDepartment, setSelectedDepartment] = useState('商船');
+    const [selectedDepartment, setSelectedDepartment] = useState('資工');
     const [selectedType, setSelectedType] = useState('必修');
     const [selectedGrade, setSelectedGrade] = useState('大一');
 
     const handleSubmit = (e) => {
       e.preventDefault();
       const queryParams = new URLSearchParams({
-        department: selectedDepartment,
+        major: selectedDepartment,
         category: selectedType,
         grade: selectedGrade
       });
@@ -25,7 +25,7 @@ const Search = () => {
       const url = '/course_search?' + queryParams.toString();
 
       const formData = {
-        "department": selectedDepartment,
+        "major": selectedDepartment,
         "category": selectedType,
         "grade": selectedGrade
       };
@@ -69,14 +69,14 @@ const Search = () => {
               <option value="運輸">運輸科學系</option>
               <option value="輪機">輪機工程學系</option>
               <option value="食科">食品科學系</option>
-              <option value="水產養殖學系">水產養殖學系</option>
-              <option value="生物科技">生命科學暨生物科技學系</option>
+              <option value="養殖">水產養殖學系</option>
+              <option value="生科">生命科學暨生物科技學系</option>
               <option value="環漁">環境生物與漁業科學學系</option>
               <option value="機械">機械與機電工程學系</option>
-              <option value="系統工程">系統工程暨造船學系</option>
+              <option value="系工">系統工程暨造船學系</option>
               <option value="河工">河海工程學系</option>
-              <option value="電機工程">電機工程學系</option>
-              <option value="資訊工程">資訊工程學系</option>
+              <option value="電機">電機工程學系</option>
+              <option value="資工">資訊工程學系</option>
               <option value="通訊">通訊與導航工程學系</option>
               <option value="光電">光電與材料科技學系</option>
             </select>

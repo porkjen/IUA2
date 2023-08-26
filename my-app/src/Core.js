@@ -27,7 +27,7 @@ const Core=()=>{
                             {CResult.map((item) => (
                                 <Coreinfo key={item.id}>
                                     {<CoreField>{item.field}</CoreField>}
-                                    {item.name}<br />{item.number}&emsp;{item.teacher}<br />上課時間: {item.time}
+                                    {item.name}<br />{item.number}&emsp;{item.teacher}<br />學期: {item.semester}<br />上課時間: {item.time}
                                 </Coreinfo>
                             ))}
                         </div>  
