@@ -257,8 +257,13 @@ public class TodoController {
 
     @GetMapping("/rent_load") //list all house posts
     public List<HouseDTO> rentLoad(){
-        List<HouseEntity> housePostList = houseRepository.findAll();
+        List<HouseEntity> housePostList = houseRepository.findByStatus("已租");
         List<HouseDTO> SimpleHousePostList = new ArrayList<>();
+        for (HouseEntity post : housePostList) {
+            HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle(), post.getPost_time(), post.getStatus());
+            SimpleHousePostList.add(dto);
+        }
+        housePostList = houseRepository.findByStatus("未租");
         for (HouseEntity post : housePostList) {
             HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle(), post.getPost_time(), post.getStatus());
             SimpleHousePostList.add(dto);

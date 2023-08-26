@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.repository;
 
 import com.example.demo.dao.RequiredCourseEntityOuterMajorMS;
 import org.springframework.data.mongodb.repository.MongoRepository;
