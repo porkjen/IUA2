@@ -70,6 +70,9 @@ public class ChangeCourseController {
         course.setPost_time(dateTime);
         course.setNickname(basicRepository.findByStudentID(course.getStudentID()).getNickname());
         changeCourseRepository.save(course);
+        SavedEntity saved = savedRepository.findByStudentID(course.getStudentID());
+        saved.setPosted(course.getPostId());//add
+        savedRepository.save(saved);
         return course;
     }
 
