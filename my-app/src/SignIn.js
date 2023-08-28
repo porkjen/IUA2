@@ -45,7 +45,7 @@ const SignIn=()=> {
                           .then(response => {
                             console.log(response.status);
                             if(response.status==200){
-                              navigate("/homePage"); 
+                              navigate("/homePage");
                             }
                             else if(response.status==400){
                               alert("輸入錯誤");
@@ -57,10 +57,12 @@ const SignIn=()=> {
                                 }
                               });
                             }
+                            console.log(response);
+                            return response.json();
                           })
                           .then(data => {
                             onLogin(student_id);
-                            console.log(data);
+                            console.log(data.token);//token
                           })
                           .catch(error => {
                             console.error(error);

@@ -106,7 +106,14 @@ const Food = () => {
 
   function Articleinfo({ author, post_time, store, rating, postID, road }) {
 
-    if(road.includes("祥豐")){
+    if(road===null){
+          setisBai(false);
+          setisXiang(false);
+          setisXi(false);
+          setisZhong(false);
+          setisXing(false);
+        }
+    else if(road.includes("祥豐")){
       setisBai(false);
       setisXiang(true);
       setisXi(false);

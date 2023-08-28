@@ -24,8 +24,6 @@ import java.util.List;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class TodoController {
     @Autowired
-    TodoService todoService;//取得Service物件
-    @Autowired
     RemainedService remainedService;
     @Autowired
     FinishedRepository fRepository;
@@ -100,7 +98,7 @@ public class TodoController {
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
+    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
         //password encrypt
         String studentID = user.get("studentID");
@@ -129,7 +127,9 @@ public class TodoController {
             System.out.println("New user!");
             JwtToken jwtToken = new JwtToken();
             String token = jwtToken.generateToken(user); // 取得token
-            return ResponseEntity.status(HttpStatus.CREATED).body(token);//201
+            Map<String, String> t = new HashMap<>();
+            t.put("token", token);
+            return ResponseEntity.status(HttpStatus.CREATED).body(t);//201
         }
         else {
             personalData.setPassword(encryptedpwd); //user may change password, update password everytime
@@ -137,7 +137,9 @@ public class TodoController {
             System.out.println("Old user!");
             JwtToken jwtToken = new JwtToken();
             String token = jwtToken.generateToken(user); // 取得token
-            return ResponseEntity.ok(token); // 回傳狀態碼 200
+            Map<String, String> t = new HashMap<>();
+            t.put("token", token);
+            return ResponseEntity.ok(t); // 回傳狀態碼 200
         }
     }
 
