@@ -143,8 +143,6 @@ body {
 .articleRentForm > .articleRentMoney > input,
 .articleRentForm > .articleRentFormPeople > input,
 .articleRentForm > .articleRentFormType > input,
-.articleRentForm > .articleRentFormPower > input,
-.articleRentForm > .articleRentFormWater > input,
 .articleRentForm > .articleRentFormFloor > input,
 .articleRentForm > .articleRentFormDate > input{
     border: none;
@@ -156,9 +154,19 @@ body {
 
 .articleRentForm > .articleRentFormCar > input,
 .articleRentForm > .articleRentFormGender > input,
+.articleRentForm > .articleRentFormPower > input,
+.articleRentForm > .articleRentFormWater > input,
 .articleRentForm > .articleRentFormRegion > select{
     margin-left: 15px;
 }
+
+.postArticle_waterMoney, .postArticle_powerMoney{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    width: 25px;
+}
+
 
 
 .articleRentForm > .articleRentFormText > .articleRentFormTextInput{

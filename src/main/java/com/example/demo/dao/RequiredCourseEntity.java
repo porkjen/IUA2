@@ -8,6 +8,7 @@ public class RequiredCourseEntity {
     String c_grade = "";
     String c_credit = "";
     String c_teacher = "";
+    String c_major = "";
 
 
     public String getCName() {
@@ -56,5 +57,13 @@ public class RequiredCourseEntity {
 
     public void setCTeacher(String c_teacher) {
         this.c_teacher = c_teacher;
+    }
+
+    public String getCMajor() {
+        return c_major;
+    }
+
+    public void setCMajor(String c_major) {
+        this.c_major = c_major;
     }
 }

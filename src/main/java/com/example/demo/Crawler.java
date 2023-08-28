@@ -48,7 +48,8 @@ public class Crawler {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
-        //C:\Program Files\Google\Chrome\Application
+        //C:\Program Files\Google\Chrome\Application  //白
+        //C:\Program Files (x86)\Google\chromedriver.exe
 
         ChromeOptions options = new ChromeOptions();
 
@@ -85,7 +86,11 @@ public class Crawler {
                 BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
 
+
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);
+
+                //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
+
                 ImageIO.write(subImage, "png", screenshot);
                 File screenshotLocation = new File("test.png");
                 FileUtils.copyFile(screenshot, screenshotLocation);
@@ -375,6 +380,8 @@ public class Crawler {
             myClass.setClassNum(cols.get(2).getText());
             System.out.println("授課老師 : " + cols.get(6).getText());
             myClass.setTeacher(cols.get(6).getText());
+            System.out.println("類別 : " + cols.get(9).getText());
+            myClass.setCategory(cols.get(9).getText());
             driver.findElement(By.linkText(cols.get(2).getText())).click();
 
             if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
@@ -487,18 +494,52 @@ public class Crawler {
         return gCourses;
     }
 
-    public static List<RequiredCourseEntity> findRCourse(String takingCategory, String takingGrade) throws InterruptedException{
-        if(takingGrade.equals("大一")) {
-            takingGrade = "1";
+    public static List<RequiredCourseEntity> findRCourse(String takingMajor, String takingCategory, String takingGrade) throws InterruptedException{
+        //Convert major code
+        if(takingMajor.equals("商船")) {
+            takingMajor = "0701";
         }
-        else if(takingGrade.equals("大二")) {
-            takingGrade = "2";
+        else if (takingMajor.equals("航管")) {
+            takingMajor = "0703";
         }
-        else if(takingGrade.equals("大三")) {
-            takingGrade = "3";
+        else if (takingMajor.equals("運輸")) {
+            takingMajor = "0608";
         }
-        else if(takingGrade.equals("大四")) {
-            takingGrade = "4";
+        else if (takingMajor.equals("輪機")) {
+            takingMajor = "060F";
+        }
+        else if (takingMajor.equals("食科")) {
+            takingMajor = "0302";
+        }
+        else if (takingMajor.equals("養殖")) {
+            takingMajor = "0303";
+        }
+        else if (takingMajor.equals("生科")) {
+            takingMajor = "030B";
+        }
+        else if (takingMajor.equals("環漁")) {
+            takingMajor = "0301";
+        }
+        else if (takingMajor.equals("機械")) {
+            takingMajor = "0702";
+        }
+        else if (takingMajor.equals("系工")) {
+            takingMajor = "0501";
+        }
+        else if (takingMajor.equals("河工")) {
+            takingMajor = "0502";
+        }
+        else if (takingMajor.equals("電機")) {
+            takingMajor = "0503";
+        }
+        else if (takingMajor.equals("資工")) {
+            takingMajor = "0507";
+        }
+        else if (takingMajor.equals("通訊")) {
+            takingMajor = "060C";
+        }
+        else if (takingMajor.equals("光電")) {
+            takingMajor = "0809";
         }
         List<RequiredCourseEntity> RCourseList = new ArrayList<>();
         driver.switchTo().frame("menuFrame");
@@ -517,9 +558,9 @@ public class Crawler {
         String selectedOptionText1 = selectedOption1.getText();
         System.out.println("->"+ selectedOptionText1);
 
-        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='0507']")).click();
-        System.out.println("資工系");
-        WebElement selectedOption2 = driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='0507']"));
+        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='"+ takingMajor +"']")).click();
+        System.out.println(takingMajor);
+        WebElement selectedOption2 = driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='"+ takingMajor +"']"));
         String selectedOptionText2 = selectedOption2.getText();
         System.out.println("->"+ selectedOptionText2);
         /*
@@ -543,7 +584,7 @@ public class Crawler {
         Thread.sleep(3000);
         //show_25
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].value = '25';", driver.findElement(By.id("PC_PageSize")));
+        js.executeScript("arguments[0].value = '90';", driver.findElement(By.id("PC_PageSize"))); //商船有86筆(Max)
         Thread.sleep(3000);
         driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
         Thread.sleep(3000);

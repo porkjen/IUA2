@@ -159,7 +159,9 @@ const ModifyPost=()=> {
         const [Harea, setHarea] = useState("");
         const [haveCar, sethaveCar] = useState("");
         const [Hwater, setHwater] = useState("");
+        const [HwaterMoney, setHwaterMoney] = useState("");
         const [Hpower, setHpower] = useState("");
+        const [HpowerMoney, setHpowerMoney] = useState("");
         const [Hnote, setHnote] = useState("");
         const [Hfloor, setHfloor] = useState("");
         const [rent_date, setrent_date] = useState("");
@@ -180,9 +182,24 @@ const ModifyPost=()=> {
               setHfloor(newData.floor);
               setrent_date(newData.rent_date);
             }
+
+            if(Hwater.includes("月繳")){
+              const inputString = Hwater;
+              const numbers = inputString.match(/\d+/g);
+              setHwaterMoney(numbers);
+              setHwater("月繳");
+            }
+
+            if(Hpower.includes("一度")){
+              const inputPowerString = Hpower;
+              const powerNumbers = inputPowerString.match(/\d+/g);
+              setHpowerMoney(powerNumbers);
+              Hpower("一度");
+            }
+            
           }, [newData]);
 
-
+          
         const handleHtitleChange = event => {
           setHtitle(event.target.value);
         };
@@ -208,10 +225,26 @@ const ModifyPost=()=> {
           sethaveCar(event.target.value);
         };
         const handleHwaterChange = event => {
+          console.log(event.target.value);
           setHwater(event.target.value);
         };
+        const handleHwaterMoneyChange = event => {
+          setHwaterMoney(event.target.value);
+          console.log(event.target.value);
+          if(Hwater!=="台水" && Hwater!=="含房租內" && Hwater!==""){
+            setHwater("月繳"+event.target.value+"元");
+          }
+        };
         const handleHpowerChange = event => {
+          console.log(event.target.value);
           setHpower(event.target.value);
+        };
+        const handleHpowerMoneyChange = event => {
+          setHpowerMoney(event.target.value);
+          console.log(event.target.value);
+          if(Hpower!=="台電" && Hpower!=="含房租內" && Hpower!==""){
+            setHpower("一度"+event.target.value+"元");
+          }
         };
         const handleHnoteChange = event => {
           setHnote(event.target.value);
@@ -322,11 +355,21 @@ const ModifyPost=()=> {
             </div><br/>
             <div className='articleRentFormWater'>
               <label>水費:</label>
-              <input type='text' name = 'Hwater' onChange={handleHwaterChange} value={Hwater}></input>
+              <input type="radio" id='postArticle_waterOfficial' value='台水' name='rentWater' checked={Hwater === '台水'} onChange={handleHwaterChange} ></input>
+              <label for="postArticle_waterOfficial">台水</label>
+              <input type="radio" id='postArticle_waterLandlord' value='含房租內' name='rentWater' checked={Hwater === '含房租內'} onChange={handleHwaterChange}></input>
+              <label for="postArticle_waterLandlord">含房租內</label>
+              <input type="radio" id='postArticle_waterOne' value='月繳' name='rentWater' checked={Hwater === '月繳'}  onChange={handleHwaterChange}></input>
+              <label for="postArticle_waterOne">月繳<input type='text' className='postArticle_waterMoney' value={HwaterMoney} onChange={handleHwaterMoneyChange}></input>元</label>
             </div><br/>
             <div className='articleRentFormPower'>
               <label>電費:</label>
-              <input type='text' name = 'Hpower' onChange={handleHpowerChange} value={Hpower}></input>
+              <input type="radio" id='postArticle_powerOfficial' value='台電' name='rentPower' checked={Hpower === '台電'} onChange={handleHpowerChange} ></input>
+              <label for="postArticle_powerOfficial">台電</label>
+              <input type="radio" id='postArticle_powerLandlord' value='含房租內' name='rentPower' checked={Hpower === '含房租內'} onChange={handleHpowerChange}></input>
+              <label for="postArticle_powerLandlord">含房租內</label>
+              <input type="radio" id='postArticle_powerOne' value='一度' name='rentPower' checked={Hwater === '一度'} onChange={handleHpowerChange}></input>
+              <label for="postArticle_powerOne">一度<input type='text' className='postArticle_powerMoney' value={HpowerMoney} onChange={handleHpowerMoneyChange} ></input>元</label>
             </div><br/>
             <div className='articleRentFormDate'>
               <label>起租日期:</label>
@@ -535,7 +578,7 @@ const ModifyPost=()=> {
       
         return (
           <div className="PostArticle">
-             <Link to='/changeClass'>
+             <Link to='/choose'>
                     <Back src={back} alt="回上一頁" />
                 </Link>
             <div className="PostArticle_bg">

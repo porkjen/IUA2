@@ -9,7 +9,7 @@ import minion from '../img/minion.png';
 import banana from '../img/banana.png';
 import duck from '../img/duck.PNG';
 import cuteDogImg from "../img/cutedoggy.PNG";
-import {ArticleSubmitBtn, ModalSubmitBtn} from './ArticleStyle.js';
+import {ArticleSubmitBtn, ModalSubmitBtn, ModalNotificationSubmitBtn} from './ArticleStyle.js';
 import {ButtonContainer,ArticleDetailNormalBtn}  from './ArticleDetailStyle.js';
 import {useState,useEffect} from "react";
 import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
@@ -104,6 +104,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     const [isModalFood, setisModalFood] = useState(true);
     const [isModalRent, setIsModalRent] = useState(false);
     const [isModalChangeClass, setisModalChangeClass] = useState(false);
+    const [isModalRentNotification, setisModalRentNotification] = useState(false);
+    const [isModalChangeClassNotification, setisModalChangeClassNotification] = useState(false);
     const [isModalChangeClassArticle, setisModalChangeClassArticle] = useState(false);
     const [isRating, setisRating] = useState(false);
     const [isPostId, setisPostId] = useState(false);
@@ -353,28 +355,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
           //const student_id = loginUser();
           setConfirm(true);
           
-          /*
-          const formData = {
-                          studentID: studentID,
-                          postId : postId,
-                        };
-                        fetch(`/course_post_delete`, {
-                          method: 'DELETE',
-                          headers: {
-                            'Content-Type': 'application/json'
-                          },
-                          body: JSON.stringify(formData)
-                        })
-                        .then(response => response.status)
-                        .catch(error => {
-                          console.error(error);
-                        });
-                        navigate("/changeClassList", {
-                          state: {
-                            studentID: "00957017",
-                            time:time,},});
-                  window.location.reload();
-                  */
+        
         }
 
 
@@ -407,18 +388,24 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClass(false);
         setisRating(false);
         setisModalChangeClassArticle(false);
+        setisModalChangeClassNotification(false);
+        setisModalRentNotification(false);
       } else if (type === "food") {
         setisModalFood(true);
         setIsModalRent(false);
         setisModalChangeClass(false);
         setisRating(false);
         setisModalChangeClassArticle(false);
+        setisModalChangeClassNotification(false);
+        setisModalRentNotification(false);
       } else if (type === "changeClass") {
         setisModalFood(false);
         setIsModalRent(false);
         setisModalChangeClass(true);
         setisRating(false);
         setisModalChangeClassArticle(false);
+        setisModalChangeClassNotification(false);
+        setisModalRentNotification(false);
       }
       else if (type === "rating") {
         setisModalFood(false);
@@ -426,6 +413,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClass(false);
         setisRating(true);
         setisModalChangeClassArticle(false);
+        setisModalChangeClassNotification(false);
+        setisModalRentNotification(false);
         setisPostId(postId)
         setisComment(comment);
         setIsAlreadyComment(alreadyComment);
@@ -436,9 +425,29 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClass(false);
         setisRating(false);
         setisModalChangeClassArticle(true);
+        setisModalChangeClassNotification(false);
+        setisModalRentNotification(false);
         setisPostId(postId)
         //setisComment(comment);
         //setIsAlreadyComment(alreadyComment);
+      }
+      else if (type === "setChangeClassNotification") {
+        setisModalFood(false);
+        setIsModalRent(false);
+        setisModalChangeClass(false);
+        setisRating(false);
+        setisModalChangeClassArticle(false);
+        setisModalChangeClassNotification(true);
+        setisModalRentNotification(false);
+      }
+      else if (type === "setRentNotification") {
+        setisModalFood(false);
+        setIsModalRent(false);
+        setisModalChangeClass(false);
+        setisRating(false);
+        setisModalChangeClassArticle(false);
+        setisModalChangeClassNotification(false);
+        setisModalRentNotification(true);
       }
     }, [type]);
 
@@ -532,6 +541,221 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     
     }
 
+    function SetChangeClassNotification(){
+      
+    }
+
+    function SetRentNotification(){
+        const [Haddress, setHaddress] = useState("");
+        const [Hmoney, setHmoney] = useState("");
+        const [rentGender, setrentGender] = useState("");
+        const [Hpeople, setHpeople] = useState("");
+        const [Htype, setHtype] = useState("");
+        const [Harea, setHarea] = useState("");
+        const [haveCar, sethaveCar] = useState("");
+        const [Hwater, setHwater] = useState("");
+        const [HwaterMoney, setHwaterMoney] = useState("");
+        const [Hpower, setHpower] = useState("");
+        const [HpowerMoney, setHpowerMoney] = useState("");
+        const [Hnote, setHnote] = useState("");
+        const [Hfloor, setHfloor] = useState("");
+        const [rent_date, setrent_date] = useState("");
+        const [selectedArea, setSelectedArea] = useState("");
+        const [selectedType, setSelectedType] = useState([]);
+        const [selectedHpower, setSelectedHpower] = useState([]);
+        const [selectedHwater, setSelectedHwater] = useState([]);
+
+        const handleHmoneyChange = event => {
+          setHmoney(event.target.value);
+        };
+        const handlerentGenderChange = event => {
+          setrentGender(event.target.value);
+        };
+        const handleHpeopleChange = event => {
+          setHpeople(event.target.value);
+        };
+        const handleHtypeChange = event => {
+          const valueType = event.target.value;
+          if (event.target.checked) {
+            setSelectedType([...selectedType, valueType]);
+          }else {
+            setSelectedType(selectedType.filter(item => item !== valueType));
+          }
+          console.log(selectedType);
+        };
+        const handleHareaChange = event => {
+          const valueArea = event.target.value;
+          if (event.target.checked) {
+            setSelectedArea([...selectedArea, valueArea]);
+          }else {
+            setSelectedArea(selectedArea.filter(item => item !== valueArea));
+          }
+          console.log(selectedArea);
+        };
+        const handlehaveCarChange = event => {
+          sethaveCar(event.target.value);
+        };
+        const handleHwaterChange = event => {
+          console.log(HwaterMoney);
+          const valueWater = event.target.value;
+          if (event.target.checked) {
+              setSelectedHwater([...selectedHwater, valueWater]);
+          }else {
+            setSelectedHwater(selectedHwater.filter(item => item !== valueWater));
+            }
+            console.log(selectedHwater);
+          
+        };
+        const handleHwaterMoneyChange = event => {
+          setHwaterMoney(event.target.value);
+          console.log(event.target.value);
+          
+        };
+        const handleHpowerChange = event => {
+          console.log(event.target.value);
+          const value = event.target.value;
+            if (event.target.checked) {
+              setSelectedHpower([...selectedHpower, value]);
+            } else {
+              setSelectedHpower(selectedHpower.filter(item => item !== value));
+            }
+            console.log(selectedHpower);
+        };
+        const handleHpowerMoneyChange = event => {
+          setHpowerMoney(event.target.value);
+          console.log(event.target.value);
+          
+        };
+        const handleHfloorChange = event => {
+          setHfloor(event.target.value);
+        };
+       
+        const handleRentNotificationSubmit = (e) => {
+          e.preventDefault();
+          //const student_id = loginUser();
+
+       
+          const formData = {
+                          studentID: "00957025",
+                          money : Hmoney,
+                          people : Hpeople,
+                          address : Haddress,
+                          area : selectedArea,
+                          gender : rentGender,
+                          style : selectedType,
+                          water : selectedHwater,
+                          power : selectedHpower,
+                          car : haveCar,
+                          floor : Hfloor,
+                          HwaterMoney: HwaterMoney,
+                          HpowerMoney: HpowerMoney,
+                        };
+                        fetch('/notification', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify(formData)
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                              console.log(data);
+                            })
+                            .catch(error => {
+                              console.error(error);
+                            });
+                            navigate("/rent", {
+                              state: {
+                                fromSearch:false,},});
+                                window.location.reload();
+                         //Form submission happens here
+        }
+
+      return(
+        <form className='RentNotificationForm' onSubmit={handleRentNotificationSubmit}>
+            <h2 className='modal_tilte'>設置提醒</h2>
+            <div className='modalBodyText'>
+            <div className='rentNotificationInput'>
+              <label>租金:&ensp;</label>
+              <input type='text' name = 'Hmoney' onChange={handleHmoneyChange} value={Hmoney} placeholder='可接受上限'></input> 
+            </div>
+            <div className='rentNotificationInput'>
+            <label >性別:</label>
+            <select name = 'rentGender' className='modalNotificationRentFormSelect' value={rentGender} onChange={handlerentGenderChange}>
+                  <option>請選擇</option>
+                  <option value='女'>女</option>
+                  <option value='男'>男</option>
+                  <option value='無限制'>無限制</option>
+            </select> 
+            </div>
+            <div className='rentNotificationInput'>
+              <label>人數:&ensp;</label>
+              <input type='text' name = 'Hpeople' onChange={handleHpeopleChange} value={Hpeople}></input>
+            </div>
+            <div className='rentNotificationInputCheckBox'>
+            <label>房型:</label>
+              <input type="checkbox" id='suite' value='套房' name='selectedType[]' onChange={handleHtypeChange} ></input>
+              <label for="suite">套房</label>
+              <input type="checkbox" id='room' value='雅房' name='selectedType[]' onChange={handleHtypeChange}></input>
+              <label for="room">雅房</label>
+              <input type="checkbox" id='family' value='家庭式' name='selectedType[]' onChange={handleHtypeChange}></input>
+              <label for="family">家庭式</label>
+            </div>
+            <div className='rentNotificationInputAreaCheckBox'>
+            <label>地區:</label><br/>
+            <input type="checkbox" id='Zhong' value='中正區' name='selectedType[]' onChange={handleHareaChange} ></input>
+              <label for="Zhong">中正區</label>
+              <input type="checkbox" id='Xing' value='信義區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <label for="Xing">信義區</label>
+              <input type="checkbox" id='Ren' value='仁愛區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <label for="Ren">仁愛區</label><br/>
+              <input type="checkbox" id='Zhongshan' value='中山區' name='selectedType[]' onChange={handleHareaChange} ></input>
+              <label for="Zhongshan">中山區</label>
+              <input type="checkbox" id='Anle' value='安樂區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <label for="Anle">安樂區</label>
+              <input type="checkbox" id='warm' value='暖暖區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <label for="warm">暖暖區</label><br/>
+              <input type="checkbox" id='Qidu' value='七堵區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <label for="Qidu">七堵區</label>
+            </div>
+            <div className='rentNotificationInput'>
+              <label>樓層:&ensp;</label>
+              <input type='text' name = 'Hfloor' onChange={handleHfloorChange} value={Hfloor} placeholder='可接受最高樓層'></input> <br/>
+            </div>
+            <div className='rentNotificationInput'>
+            <label>車位:</label>
+            <select name = 'haveCar' className='modalNotificationRentFormSelect' value={haveCar} onChange={handlehaveCarChange}>
+                  <option>請選擇</option>
+                  <option value='有'>有</option>
+                  <option value='無'>無</option>
+            </select> 
+            </div>
+            <div>
+            <label >水費:</label>
+              <input type="checkbox" id='waterOfficial' value='台水' name='selectedHwater[]' onChange={handleHwaterChange} ></input>
+              <label for="waterOfficial">台水</label>
+              <input type="checkbox" id='waterLandlord' value='含房租內' name='selectedHwater[]' onChange={handleHwaterChange}></input>
+              <label for="waterLandlord">含房租內</label>
+              <input type="checkbox" id='waterOne' value='月繳' name='selectedHwater[]' onChange={handleHwaterChange}></input>
+              <label for="waterOne">月繳<input type='text' className='modal_waterMoney' value={HwaterMoney} onChange={handleHwaterMoneyChange}></input>元</label>
+            </div>
+
+            <div>
+              <label>電費:</label>
+              <input type="checkbox" id='powerOfficial' value='台電' name='rentPower[]' onChange={handleHpowerChange} ></input>
+              <label for="powerOfficial">台電</label>
+              <input type="checkbox" id='powerLandlord' value='含房租內' name='rentPower[]' onChange={handleHpowerChange}></input>
+              <label for="powerLandlord">含房租內</label>
+              <input type="checkbox" id='powerOne' value='一度' name='rentPower[]' onChange={handleHpowerChange}></input>
+              <label for="powerOne">一度<input type='text' className='modal_powerMoney' value={HpowerMoney} onChange={handleHpowerMoneyChange}></input>元</label>
+            </div>
+              
+            <ModalNotificationSubmitBtn type="submit">確認</ModalNotificationSubmitBtn>
+            </div>
+        </form>
+      );
+    }
+
     function ConfirmDelete(){
 
       const handleRemovedClassPostSubmit = (e) => {
@@ -591,6 +815,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                         {isModalFood && <ModalFood/>}
                         {isModalRent && <ModalRent/>}
                         {isModalChangeClass && <ModalChangeClass/>}
+                        {isModalRentNotification && <SetRentNotification/>}
                         {isRating && <ModalRating/>}
                         {isModalChangeClassArticle && <ModalChangeClassArticle/>}
                         {confirm && <ConfirmDelete/>}

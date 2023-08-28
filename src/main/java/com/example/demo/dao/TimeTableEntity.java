@@ -21,6 +21,7 @@ public class TimeTableEntity {
         private String[] time;
         private String classroom = "";
         private String teacher = "";
+        private String category;
 
         public String getName() {
             return name;
@@ -60,6 +61,14 @@ public class TimeTableEntity {
 
         public void setTeacher(String teacher) {
             this.teacher = teacher;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
         }
     }
     public static class Pre_Info {

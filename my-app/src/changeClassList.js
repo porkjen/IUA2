@@ -7,7 +7,7 @@ import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
 import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer,
    ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleDistance,ChangeClassCategorySelect,
-   ArticleAuthorArea,ArticleAuthorImg, AlreadyArticleText}  from './components/ArticleStyle.js';
+   ArticleAuthorArea,ArticleAuthorImg, AlreadyArticleText, ChangeClassStatusSelect}  from './components/ArticleStyle.js';
 import {Back}  from './components/Style.js';
 import { Routes ,Route,Link,useNavigate,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
@@ -18,6 +18,7 @@ const ChangeClassList=()=> {
     const [data, setData] = useState(null);
     const [isPostID, setisPostID] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [setNotification, setSetNotification] = useState(false);
     const [haveData, setHaveData] = useState(true);
     const [alreadyChange, setAlreadyChange] = useState(false);
     let navigate = useNavigate();
@@ -76,7 +77,7 @@ const ChangeClassList=()=> {
       function Change(){
         return(
             <AlreadyArticleText onClick={handleShowClassSubmit} disabled>
-                <ArticleDistance>{category}</ArticleDistance>
+                <ArticleDistance>{status}</ArticleDistance>
                 <ArticleAuthorArea>
                   <ArticleAuthorImg src={student}></ArticleAuthorImg>
                   <ArticleAuthor>{author}</ArticleAuthor>
@@ -144,9 +145,6 @@ const ChangeClassList=()=> {
           <Page>
               <Pagebg>
                 <Title>換課板</Title>
-                <Link to='/postArticle'>
-                  <PostArticleBtn >我要發文</PostArticleBtn>
-                </Link>
                 <ChangeClassCategorySelect onChange={handleCategoryChange}>
                   <option >分類</option>
                   <option value='All'>全部</option>
@@ -200,8 +198,9 @@ const ChangeClassList=()=> {
           <Link to='/changeClass'>
               <Back src={back} alt="回上一頁" />
           </Link>
-          {openModal && <Modal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={studentID} time={time} />}
-          {!openModal && < ChangeClassList_all/>}
+          {openModal && !setNotification && <Modal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={studentID} time={time} />}
+          {!openModal && !setNotification && < ChangeClassList_all/>}
+          
         </Page>
       );
     }

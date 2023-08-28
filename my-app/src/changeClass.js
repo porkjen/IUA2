@@ -1,8 +1,9 @@
 import './changeClass.css';
 import React from 'react';
+import Modal from "./components/Modal";
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
-import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody, PerChangeClassBtn, PerHaveChangeClassBtn}  from './components/ArticleStyle.js';
+import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody, PerChangeClassBtn, PerHaveChangeClassBtn, ChangeClassStatusSelect}  from './components/ArticleStyle.js';
 import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody, MyclassBody, MyclassText } from './components/Style.js';
 import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
 import {useState,useEffect} from "react";
@@ -12,8 +13,9 @@ const ChangeClass=()=> {
     const [data, setData] = useState([]);
     const [isHaveClass, setHaveClass] = useState(false);
     const [myClass, setMyClass] = useState(false);
+    const [notification, setNotification] = useState(false);
     const [changeTable, setchangeTable] = useState(true);
-
+    const [openModal, setOpenModal] = useState(false);
 
 
     function ChangeClass() {
@@ -68,7 +70,7 @@ const ChangeClass=()=> {
         );
       }
 
-      function ClassItem({name,time,classNum,teacher}){
+      function ClassItem({name,time,classNum,teacher,category}){
 
         const handleChangeClassBtn = event =>{
           console.log(name);
@@ -78,6 +80,7 @@ const ChangeClass=()=> {
               changeClassClassName:{name},
               changeClassClassTeacher:{teacher},
               changeClassClassTime:{time},
+              changeClassCategory:{category},
               IsChangeClass:true,
                },});
         };
@@ -103,7 +106,7 @@ const ChangeClass=()=> {
 
           <ArticleList >
           {myClassData.map((item, index) => (
-            <ClassItem key={item.name} name={item.name} time={item.time} classNum={item.classNum} teacher={item.teacher} ></ClassItem>
+            <ClassItem key={item.name} name={item.name} time={item.time} classNum={item.classNum} teacher={item.teacher} category={item.category}></ClassItem>
           ))}
         </ArticleList>
           
@@ -161,6 +164,11 @@ const ChangeClass=()=> {
         });
       };
 
+      const handleSetNotification = event => {
+        setNotification(true);
+      };
+
+
       return (
         <Page>
           <Link to='/choose'>
@@ -168,21 +176,20 @@ const ChangeClass=()=> {
           </Link>
       <Pagebg>
         <Title>換課板</Title>
-        <Link to=''>
-          <PostArticleBtn>設置通知</PostArticleBtn>
-        </Link>
+        <PostArticleBtn onClick={handleSetNotification}>設置通知</PostArticleBtn>
         <div className='ChangeClassSelect'>
-          {myClass && <input type="radio" id='myclass' name='selectTable' onChange={handleMyClassTableChange} checked></input>}
-          {!myClass && <input type="radio" id='myclass' name='selectTable'  onChange={handleMyClassTableChange}></input>}
+          {myClass &&  <input type="radio" id='myclass' name='selectTable' onChange={handleMyClassTableChange} checked></input>}
+          {!myClass &&  <input type="radio" id='myclass' name='selectTable'  onChange={handleMyClassTableChange}></input>}
           <label for="myclass">我的課表</label>
 
-          {changeTable && <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange} checked></input>}
-          {!changeTable && <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange}></input>}
+          {changeTable &&  <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange} checked></input>}
+          {!changeTable &&  <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange}></input>}
           <label for="changeClassTable">選課課表</label>
 
         </div><br/>
           {changeTable && <IsChangeTable/>}
           {myClass && <AllMyClass myClassData={data}/>}
+          {notification && <Modal closeModal={setOpenModal} type={"setChangeClassNotification"}  />}
        
 
       </Pagebg>

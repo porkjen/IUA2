@@ -12,7 +12,7 @@ import star from './img/star.png';
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ArticleDetailSavedBtn, ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
-import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleRentContainer, ArticleAuthor, ArticlePostTime, ArticleBody}  from './components/ArticleStyle.js';
+import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleRentContainer, ArticleAuthor, ArticlePostTime, ArticleBody, ChangeClassCategorySelect}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link ,useNavigate, useLocation} from 'react-router-dom';
 import {useEffect,useState} from "react";
 
@@ -20,6 +20,8 @@ const Rent=()=> {
     
     const [data, setData] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [rentSelect, setRentSelect] = useState(false);
+    const [rentNotification, setRentNotification] = useState(false);
     const [isPost, setIsPost] = useState(false);
     let navigate = useNavigate();
     const location = useLocation();
@@ -65,6 +67,22 @@ const Rent=()=> {
     }
 
     function Rent_all(){
+
+      const handleRentFunctionSelect  = event => {
+
+        if(event.target.value==='selectArticle'){
+          setOpenModal(true);
+          setRentSelect(true);
+          setRentNotification(false);
+        }
+        else if(event.target.value==='setNotification'){
+          setOpenModal(true);
+          setRentSelect(false);
+          setRentNotification(true);
+        }
+
+      };
+
       return(
         <Page>
             <Pagebg>
@@ -74,7 +92,12 @@ const Rent=()=> {
                 <Link to='/postArticle'>
                   <PostArticleBtn>我要發文</PostArticleBtn>
                 </Link>
-                  <ChooseArticleBtn onClick={()=> setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
+                <ChangeClassCategorySelect onChange={handleRentFunctionSelect}>
+                  <option >功能選單</option>
+                  <option value='selectArticle'>篩選貼文</option>
+                  <option value='setNotification'>設置提醒</option>
+                </ChangeClassCategorySelect>
+                  
                 <ArticleList>
                     {data.map(item => (
                       <Articleinfo key={item.title} author={item.name} time={item.postTime} text={item.title} postID={item.postId} ></Articleinfo>
@@ -130,7 +153,8 @@ const Rent=()=> {
            <Link to='/choose'>
               <Back src={back} alt="回上一頁" />
           </Link>
-          {openModal && <Modal closeModal={setOpenModal} type={"rent"}/>}
+          {openModal && rentSelect && <Modal closeModal={setOpenModal} type={"rent"}/>}
+          {openModal && rentNotification && <Modal closeModal={setOpenModal} type={"setRentNotification"}/>}
           {!openModal && < Rent_all/>}
         </Page>
       );

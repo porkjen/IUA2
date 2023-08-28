@@ -16,7 +16,7 @@ import { loginUser } from "./cookie.js";
 const PostArticle=()=> {
     let navigate = useNavigate();
     const location = useLocation();
-    const { studentID, changeClassClassName, changeClassClassTeacher, changeClassClassTime,IsChangeClass } = location.state || {};
+    const { studentID, changeClassClassName, changeClassClassTeacher, changeClassClassTime,IsChangeClass,changeClassCategory } = location.state || {};
 
     function ArticleFoodInput() {
         const [Ftitle, setFtitle] = useState("");
@@ -173,7 +173,9 @@ const PostArticle=()=> {
         const [Harea, setHarea] = useState("");
         const [haveCar, sethaveCar] = useState("");
         const [Hwater, setHwater] = useState("");
+        const [HwaterMoney, setHwaterMoney] = useState("");
         const [Hpower, setHpower] = useState("");
+        const [HpowerMoney, setHpowerMoney] = useState("");
         const [Hnote, setHnote] = useState("");
         const [Hfloor, setHfloor] = useState("");
         const [rent_date, setrent_date] = useState("");
@@ -203,9 +205,25 @@ const PostArticle=()=> {
         };
         const handleHwaterChange = event => {
           setHwater(event.target.value);
+          
+        };
+        const handleHwaterMoneyChange = event => {
+          setHwaterMoney(event.target.value);
+          console.log(event.target.value);
+          if(Hwater!=="台水" && Hwater!=="含房租內" && Hwater!==""){
+            setHwater("月繳"+event.target.value+"元");
+          }
         };
         const handleHpowerChange = event => {
+          console.log(event.target.value);
           setHpower(event.target.value);
+        };
+        const handleHpowerMoneyChange = event => {
+          setHpowerMoney(event.target.value);
+          console.log(event.target.value);
+          if(Hpower!=="台電" && Hpower!=="含房租內" && Hpower!==""){
+            setHpower("一度"+event.target.value+"元");
+          }
         };
         const handleHnoteChange = event => {
           setHnote(event.target.value);
@@ -220,6 +238,7 @@ const PostArticle=()=> {
   const handleHouseSubmit = (e) => {
     e.preventDefault();
     const student_id = loginUser();
+ 
     const formData = {
                     studentID: "00957025",
                     title : Htitle,
@@ -318,11 +337,21 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormWater'>
               <label>水費:</label>
-              <input type='text' name = 'Hwater' onChange={handleHwaterChange} value={Hwater} required="required"></input>
+              <input type="radio" id='postArticle_waterOfficial' value='台水' name='rentWater' checked={Hwater === '台水'} onChange={handleHwaterChange} ></input>
+              <label for="postArticle_waterOfficial">台水</label>
+              <input type="radio" id='postArticle_waterLandlord' value='含房租內' name='rentWater' checked={Hwater === '含房租內'} onChange={handleHwaterChange}></input>
+              <label for="postArticle_waterLandlord">含房租內</label>
+              <input type="radio" id='postArticle_waterOne' value='月繳' name='rentWater'  onChange={handleHwaterChange}></input>
+              <label for="postArticle_waterOne">月繳<input type='text' className='postArticle_waterMoney' value={HwaterMoney} onChange={handleHwaterMoneyChange}></input>元</label>
             </div><br/>
             <div className='articleRentFormPower'>
-              <label>電費:</label>
-              <input type='text' name = 'Hpower' onChange={handleHpowerChange} value={Hpower} required="required"></input>
+            <label>電費:</label>
+              <input type="radio" id='postArticle_powerOfficial' value='台電' name='rentPower' checked={Hpower === '台電'} onChange={handleHpowerChange} ></input>
+              <label for="postArticle_powerOfficial">台電</label>
+              <input type="radio" id='postArticle_powerLandlord' value='含房租內' name='rentPower' checked={Hpower === '含房租內'} onChange={handleHpowerChange}></input>
+              <label for="postArticle_powerLandlord">含房租內</label>
+              <input type="radio" id='postArticle_powerOne' value='一度' name='rentPower' onChange={handleHpowerChange}></input>
+              <label for="postArticle_powerOne">一度<input type='text' className='postArticle_powerMoney' value={HpowerMoney} onChange={handleHpowerMoneyChange} ></input>元</label>
             </div><br/>
             <div className='articleRentFormDate'>
               <label>起租日期:</label>
@@ -343,38 +372,25 @@ const PostArticle=()=> {
 
         const [Ctitle, setCtitle] = useState(changeClassClassName);
         const [Ctext, setCtext] = useState("");
-        const [CCategory, setCCategory] = useState("");
+        const [CCategory, setCCategory] = useState(changeClassCategory);
         const [Ctime, setCtime] = useState(changeClassClassTime);
         const [Cteacher, setCteacher] = useState(changeClassClassTeacher);
         const [numberArray, setNumberArray] = useState([]);
-
-        const handleCtitleChange = event => {
-          setCtitle(event.target.value);
-        };
-        const handleCCategoryChange = event => {
-          setCCategory(event.target.value);
-        };
-        const handleCtimeChange = event => {
-          setCtime(event.target.value);
-          const numbers = event.target.value.split('、').map(Number);
-          console.log(numbers);
-          setNumberArray(numbers);
-        };
-        const handleCteacherChange = event => {
-          setCteacher(event.target.value);
-        };
+        
         const handleCtextChange = event => {
           setCtext(event.target.value);
         };
         const handleChangeClassSubmit = (e) => {
+          console.log("innnnn");
           e.preventDefault();
           const student_id = loginUser();
+          console.log("innnnn");
           const formData = {
                           studentID: "00957017",
-                          course : Ctitle,
-                          category:CCategory,
-                          time:numberArray,
-                          teacher:Cteacher,
+                          course : Ctitle.name,
+                          category:CCategory.category,
+                          time:Ctime.time,
+                          teacher:Cteacher.teacher,
                           content : Ctext,
                         };
                         fetch('/exchange_course_post', {
@@ -392,7 +408,7 @@ const PostArticle=()=> {
                               console.error(error);
                             });
                             navigate("/changeClass")
-                            window.location.reload();
+                            
                          //Form submission happens here
         }
 
@@ -400,27 +416,19 @@ const PostArticle=()=> {
           <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
             <div className='articleChangeClassFormTitle'>
               <label>標題:</label>
-              <input type='text' className='articleChangeClassFormTitleInput'  onChange={handleCtitleChange} value={Ctitle.name} placeholder='你有的課' required="required" disabled></input>
+              <input type='text' className='articleChangeClassFormTitleInput'  value={Ctitle.name} placeholder='你有的課' required="required" disabled></input>
             </div><br/>
             <div className='articleChangeClassFormCategory'>
               <label>分類:</label>
-              <select className='articleChangeClassFormCategoryInput' value={CCategory} onChange={handleCCategoryChange}>
-                  <option>請選擇你所擁有的課分類</option>
-                  <option value='體育'>體育</option>
-                  <option value='通識'>通識</option>
-                  <option value='英文'>英文</option>
-                  <option value='第二外語'>第二外語</option>
-                  <option value='必修'>必修</option>
-                  <option value='選修'>選修</option>
-              </select>
+              <input type='text' className='articleChangeClassFormCategoryInput' value={CCategory.category} disabled></input>
             </div><br/>
             <div className='articleChangeClassFormTime'>
               <label>時間:</label>
-              <input type='text' className='articleChangeClassFormTimeInput'  onChange={handleCtimeChange} value={Ctime.time} placeholder='503、504' required="required" disabled></input>
+              <input type='text' className='articleChangeClassFormTimeInput' value={Ctime.time} required="required" disabled></input>
             </div><br/>
             <div className='articleChangeClassFormTeacher'>
               <label>老師:</label>
-              <input type='text' className='articleChangeClassFormTeacherInput'  onChange={handleCteacherChange} value={Cteacher.teacher} required="required" disabled></input>
+              <input type='text' className='articleChangeClassFormTeacherInput' value={Cteacher.teacher} required="required" disabled></input>
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
