@@ -36,11 +36,9 @@ const HomePage=()=> {
                     </div>
                     <div class="flex">
                         <div className="courseSelectBtn">
-                            <Link to='/CourseSelection'>
-                                <button className="courseSelectButton">
-                                    <img src={courseSelectImg} className='pic'/>
-                                </button>
-                            </Link>
+                            <button className="courseSelectButton">
+                                <img src={courseSelectImg} className='pic'/>
+                            </button>
                         </div>
                         <div className="socialBtn">
                             <Link to="/choose">
@@ -52,11 +50,9 @@ const HomePage=()=> {
                     </div>
                     <div class="flex">
                         <div className="chatRoomBtn">
-                            <Link to="/ChatRoomList">
-                                <button className="chatRoomButton">
-                                    <img src={chatroomImg} className='pic'/>
-                                </button>
-                            </Link>
+                            <button className="chatRoomButton">
+                                <img src={chatroomImg} className='pic'/>
+                            </button>
                         </div>
                         <div className="othersBtn">
                             <button className="othersButton">

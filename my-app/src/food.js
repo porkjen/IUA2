@@ -6,8 +6,12 @@ import star from './img/star.png';
 import redBall from './img/redBall.PNG';
 import logo from './img/IUAlogo.png';
 import student from './img/student.png';
+import back from './img/back.png';
+import cat from './img/SignIn4.PNG';
+import studentboy from './img/studentboy.png';
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleDistance, 
-  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect } from './components/ArticleStyle.js';
+  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect ,ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance} from './components/ArticleStyle.js';
+import {Back}  from './components/Style.js';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef,  } from "react";
 
@@ -21,6 +25,12 @@ const Food = () => {
   const [AS, setAS] = useState("PostTimeNtoF");
   const [isRate, setisRate] = useState(false);
   const [isPostTime, setisPostTime] = useState(true);
+  const [isDistance, setisDistance] = useState(true);
+  const [isBai, setisBai] = useState(false);
+  const [isZhong, setisZhong] = useState(false);
+  const [isXiang, setisXiang] = useState(false);
+  const [isXing, setisXing] = useState(false);
+  const [isXi, setisXi] = useState(false);
   let navigate = useNavigate();
   const articleListRef = useRef(null);
   const location = useLocation();
@@ -31,6 +41,7 @@ const Food = () => {
     setAS("PostTimeNtoF");
     setisPostTime(true);
     setisRate(false);
+    setisDistance(false);
     fetch(`/food_load?sort=PostTimeNtoF`)
       .then(response => response.json())
       .then(data => {
@@ -49,7 +60,27 @@ const Food = () => {
     setAS("rate_Decrease");
     setisPostTime(false);
     setisRate(true);
+    setisDistance(false);
     fetch(`/food_load?sort=rate_Decrease`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("NOTsearchIn");
+        setData(data);
+        setVisibleData(data.slice(0, 50));
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setIsLoading(false); 
+      });
+  };
+
+  const handleDistanceASChange = event => {
+    setAS("distance_Increase");
+    setisPostTime(false);
+    setisRate(false);
+    setisDistance(true);
+    fetch(`/food_load?sort=distance_Increase`)
       .then(response => response.json())
       .then(data => {
         console.log("NOTsearchIn");
@@ -75,10 +106,49 @@ const Food = () => {
 
   function Articleinfo({ author, post_time, store, rating, postID, road }) {
 
+    if(road.includes("祥豐")){
+      setisBai(false);
+      setisXiang(true);
+      setisXi(false);
+      setisZhong(false);
+      setisXing(false);
+    }
+    else if(road.includes("中正")){
+      setisBai(false);
+      setisXiang(false);
+      setisXi(false);
+      setisZhong(true);
+      setisXing(false);
+    }
+    else if(road.includes("北寧")){
+      setisBai(true);
+      setisXiang(false);
+      setisXi(false);
+      setisZhong(false);
+      setisXing(false);
+    }
+    else if(road.includes("新豐")){
+      setisBai(false);
+      setisXiang(true);
+      setisXi(false);
+      setisZhong(false);
+      setisXing(false);
+    }
+    else if(road.includes("深溪")){
+      setisBai(false);
+      setisXiang(false);
+      setisXi(true);
+      setisZhong(false);
+      setisXing(false);
+    }
+    useEffect(() => {
+      console.log("isZhong:", isZhong);
+    }, [isZhong]);
+
     const handleShowFoodSubmit = (e) => {
       e.preventDefault();
       const formData = {
-        studentID: "00957025",
+        studentID: "00957017",
         postId: postID,
       };
       fetch('/food_full_post', {
@@ -104,7 +174,11 @@ const Food = () => {
     return (
       <ArticleContainer>
         <ArticleText onClick={handleShowFoodSubmit}>
-          {road!==null &&  <ArticleDistance>{road}</ArticleDistance>}
+          {road!=="" && isBai  &&  <ArticleBaiDistance >{road}</ArticleBaiDistance>}
+          {road!=="" && isZhong &&  <ArticleZhongDistance >{road}</ArticleZhongDistance>}
+          {road!=="" && isXiang &&  <ArticleXiangDistance >{road}</ArticleXiangDistance>}
+          {road!=="" && isXing &&  <ArticleXingDistance >{road}</ArticleXingDistance>}
+          {road!=="" && isXi &&  <ArticleXiDistance >{road}</ArticleXiDistance>}
           <ArticleAuthorArea>
             {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
             {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}
@@ -131,13 +205,18 @@ const Food = () => {
           </Link>
           <ChooseArticleBtn onClick={() => setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
           <div className='ArticleSelect'>
-          {isPostTime && <input type="radio" id='distance' name='AS' value='PostTimeNtoF' onChange={handlePostASChange} checked></input>}
-          {!isPostTime && <input type="radio" id='distance' name='AS' value='PostTimeNtoF' onChange={handlePostASChange}></input>}
-          <label for="distance">發布時間近到遠</label>
+          {isPostTime && <input type="radio" id='postTime' name='AS' value='PostTimeNtoF' onChange={handlePostASChange} checked></input>}
+          {!isPostTime && <input type="radio" id='postTime' name='AS' value='PostTimeNtoF' onChange={handlePostASChange}></input>}
+          <label for="postTime">發布時間</label>
 
           {isRate && <input type="radio" id='rate' name='AS' value='rate_Decrease' onChange={handleRateASChange} checked></input>}
           {!isRate && <input type="radio" id='rate' name='AS' value='rate_Decrease' onChange={handleRateASChange}></input>}
-          <label for="rate">評分高到低</label>
+          <label for="rate">評分高低</label>
+
+          {isDistance && <input type="radio" id='distance' name='AS' value='distance' onChange={handleDistanceASChange} checked></input>}
+          {!isDistance && <input type="radio" id='distance' name='AS' value='distance' onChange={handleDistanceASChange}></input>}
+          <label for="distance">距離遠近</label>
+
           </div><br/>
           <ArticleList ref={articleListRef}>
             {visibleData.map(item => (
@@ -208,13 +287,16 @@ const Food = () => {
     articleListRef.current.addEventListener("scroll", handleScroll);
 
    return () => {
-    // 移除滚动事件监听器
+  
     articleListRef.current?.removeEventListener("scroll", handleScroll);
   };
   }, [visibleData, isLoading]);
 
   return (
     <Page>
+      <Link to='/choose'>
+              <Back src={back} alt="回上一頁" />
+      </Link>
       {openModal && <Modal closeModal={setOpenModal} type={"food"} />}
       {!openModal && <Food_all />}
     </Page>

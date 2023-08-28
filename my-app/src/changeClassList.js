@@ -1,30 +1,46 @@
-//import './food.css';
+import './changeClass';
 import React from 'react';
 import Modal from "./components/Modal";
+import student from './img/student.png';
+import back from './img/back.png';
 import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
-import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody}  from './components/ArticleStyle.js';
+import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer,
+   ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleDistance,ChangeClassCategorySelect,
+   ArticleAuthorArea,ArticleAuthorImg, AlreadyArticleText, ChangeClassStatusSelect}  from './components/ArticleStyle.js';
+import {Back}  from './components/Style.js';
 import { Routes ,Route,Link,useNavigate,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
 
+//列出該時段有的課
 const ChangeClassList=()=> {
 
     const [data, setData] = useState(null);
+    const [isPostID, setisPostID] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [setNotification, setSetNotification] = useState(false);
+    const [haveData, setHaveData] = useState(true);
+    const [alreadyChange, setAlreadyChange] = useState(false);
     let navigate = useNavigate();
     const location = useLocation();
     const { studentID, time } = location.state;
 
-    function Articleinfo({ author, post_time, store, rating, postID }) {
+    function Articleinfo({ author, className, category, postID, post_time, status }) {
 
-      const handleShowFoodSubmit = (e) => {
+      if(status==="未換"){
+        setAlreadyChange(false);
+      }
+      else{
+        setAlreadyChange(true);
+      }
+      const handleShowClassSubmit = (e) => {
         e.preventDefault();
         //const student_id = loginUser();
         const formData = {
-                        studentID: "00957025",
+                        studentID: "00957017",
                         time:time,
                       };
-          fetch('/food_full_post', {
+          fetch('/course_full_post', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(formData)})
@@ -33,36 +49,116 @@ const ChangeClassList=()=> {
                         console.log(data);})
                   .catch(error => {
                         console.error(error);});
-                       //Form submission happens here
-            navigate("/foodArticle", {
+            setisPostID(postID);
+            setOpenModal(true);
+            /*
+            navigate("/changeClassArticle", {
               state: {
                 studentID: "00957025",
-                postId : postID,},});
+                postId : postID,
+                time:time},});
+            */
+      }
+
+      function NotChange(){
+        return(
+            <ArticleText onClick={handleShowClassSubmit}>
+                <ArticleDistance>{category}</ArticleDistance>
+                <ArticleAuthorArea>
+                  <ArticleAuthorImg src={student}></ArticleAuthorImg>
+                  <ArticleAuthor>{author}</ArticleAuthor>
+                </ArticleAuthorArea>
+                <ArticleBody>{className}</ArticleBody>
+                <ArticlePostTime>{post_time}</ArticlePostTime>
+            </ArticleText>
+        );
+      }
+
+      function Change(){
+        return(
+            <AlreadyArticleText onClick={handleShowClassSubmit} disabled>
+                <ArticleDistance>{status}</ArticleDistance>
+                <ArticleAuthorArea>
+                  <ArticleAuthorImg src={student}></ArticleAuthorImg>
+                  <ArticleAuthor>{author}</ArticleAuthor>
+                </ArticleAuthorArea>
+                <ArticleBody>{className}</ArticleBody>
+                <ArticlePostTime>{post_time}</ArticlePostTime>
+            </AlreadyArticleText>
+        );
       }
 
 
         return (
           <ArticleContainer>
-            <ArticleText onClick={handleShowFoodSubmit}>
-                <ArticleAuthor>{author}</ArticleAuthor>
-                <ArticleBody>{store}</ArticleBody>
-                <ArticlePostTime>{rating+"顆星 " + post_time}</ArticlePostTime>
-            </ArticleText>
+            {alreadyChange && <Change/>}
+            {!alreadyChange && <NotChange/>}
+            
           </ArticleContainer>
         );
       }
 
       function ChangeClassList_all(){
+        const handleCategoryChange = event => {
+          console.log(event.target.value);
+
+          if(event.target.value==='All'){
+            fetch(`/course_change?time=${time}`)
+            .then(response => response.json())
+            .then(data => {
+              console.log(time);
+              console.log(data);
+              setData(data);
+              setHaveData(true);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+          }
+          else{
+            fetch(`/course_classify?category=${event.target.value}&time=${time}`)
+            .then(response => {
+              console.log(response.status);
+              if (response.status === 200) {
+                return response.json(); 
+              } else {
+                throw new Error('Response status not 200');
+              }
+            })
+            .then(data => {
+              console.log(data);
+              if(data=="")
+                setHaveData(false);
+              else
+                setHaveData(true);
+              setData(data); 
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+
+          }
+          
+          //setCategory(event.target.value);
+        };
         return(
           <Page>
               <Pagebg>
                 <Title>換課板</Title>
-                <Link to='/postArticle'>
-                  <PostArticleBtn >我要發文</PostArticleBtn>
-                </Link>
+                <ChangeClassCategorySelect onChange={handleCategoryChange}>
+                  <option >分類</option>
+                  <option value='All'>全部</option>
+                  <option value='PE'>體育</option>
+                  <option value='general'>通識</option>
+                  <option value='english'>英文</option>
+                  <option value='foreign_language'>第二外語</option>
+                  <option value='compulsory'>必修</option>
+                  <option value='elective'>選修</option>
+                </ChangeClassCategorySelect>
                 <ArticleList>
+                    {haveData===false && <div className='noData'>沒有資料</div>}
                     {data.map(item => (
-                      <Articleinfo key={item.postId} author={item.studentID} class={item.class} store={item.store} rating={item.rating} postID={item.postId}></Articleinfo>
+                      <Articleinfo key={item.postId} author={item.studentID} className={item.course} category={item.category} postID={item.postId} post_time={item.post_time} status={item.status}></Articleinfo>
                     ))}
                 </ArticleList>
             </Pagebg>
@@ -75,12 +171,21 @@ const ChangeClassList=()=> {
     function ChangeClassList() {
       useEffect(() => {
         if (!data) {
-          fetch('/course_change?time='+time)
-            .then(response => response.json())
-            .then(data => setData(data))
-            .catch(error => {
-              console.error('Error:', error);
-            });
+          fetch(`/course_change?time=${time}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(time);
+            console.log(data);
+            if(data=="")
+                setHaveData(false);
+              else
+                setHaveData(true);
+            setData(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+          
         }
       }, [data]); // 添加依賴項data
 
@@ -90,8 +195,12 @@ const ChangeClassList=()=> {
 
       return (
         <Page>
-          {openModal && <Modal closeModal={setOpenModal} type={"food"}/>}
-          {!openModal && < ChangeClassList_all/>}
+          <Link to='/changeClass'>
+              <Back src={back} alt="回上一頁" />
+          </Link>
+          {openModal && !setNotification && <Modal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={studentID} time={time} />}
+          {!openModal && !setNotification && < ChangeClassList_all/>}
+          
         </Page>
       );
     }
