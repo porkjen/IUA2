@@ -201,8 +201,8 @@ public class TodoController {
     @GetMapping("/core_elective")
     public List<CourseEntity> coreElective(@RequestParam("grade") String grade)throws InterruptedException{
         System.out.println("/core_elective");
-        String[] kernalCourseG2 = {"數位系統設計", "微處理器原理與組合語言"};
-        String[] kernalCourseG3 = {"計算機系統設計", "計算機結構", "軟體工程", "程式語言", "資料庫系統", "嵌入式系統設計", "系統程式", "編譯器", "人工智慧"};
+        String[][] kernalCourseG2 = {{"數位系統設計", "計算機系統領域"}, {"微處理器原理與組合語言", "計算機系統領域"}};
+        String[][] kernalCourseG3 = {{"計算機系統設計", "計算機系統領域"}, {"計算機結構", "計算機系統領域"}, {"軟體工程", "軟體領域"}, {"程式語言", "軟體領域"}, {"資料庫系統", "軟體領域"}, {"嵌入式系統設計", "計算機系統領域"}, {"系統程式", "計算機系統領域"}, {"編譯器", "軟體領域"}, {"人工智慧", "軟體領域"}};
         List<CourseEntity> result = new ArrayList<CourseEntity>();
         if(courseRepository.count() == 0){
             List<CourseEntity> cList = getCourses();
@@ -212,8 +212,9 @@ public class TodoController {
         }
         if(grade.equals("2")){
             for(int i = 0; i < 2; i++){
-                List<CourseEntity> rc2 = courseRepository.findByc_name(kernalCourseG2[i]);
+                List<CourseEntity> rc2 = courseRepository.findByc_name(kernalCourseG2[i][0]);
                 for(CourseEntity rc : rc2){
+                    rc.setField(kernalCourseG2[i][1]);
                     result.add(rc);
                 }
                 
@@ -221,8 +222,9 @@ public class TodoController {
         }
         else if(grade.equals("3")){
             for(int i = 0; i < 9; i++){
-                List<CourseEntity> rc3 = courseRepository.findByc_name(kernalCourseG3[i]);
+                List<CourseEntity> rc3 = courseRepository.findByc_name(kernalCourseG3[i][0]);
                 for(CourseEntity rc : rc3){
+                    rc.setField(kernalCourseG3[i][1]);
                     result.add(rc);
                 }
             }

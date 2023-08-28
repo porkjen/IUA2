@@ -85,9 +85,10 @@ const CoreField = styled.label`
     border-color:black;
     border-width:1px;
     border-style:solid;
-    width:49%;
+    width:40%;
     height:20%;
     margin-top:2%;
+    color:black;
 `;
 
 export {RemainTitle, RemainContainer, RemainList, Mustinfo, Coreinfo, GEinfo, CoreField} ;
