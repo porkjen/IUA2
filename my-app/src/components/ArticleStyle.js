@@ -7,6 +7,7 @@ const Page = styled.div`
     padding: 0;
     margin: 0;
     overflow-y:hidden;
+    overflow: hidden;
     
 `;
 /*background-image: url(${backgroundImg});   */
@@ -16,6 +17,7 @@ const Pagebg = styled.div`
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    overflow: hidden;
 `;
 
 const Title = styled.h1`
@@ -113,6 +115,17 @@ const ArticleText = styled.button`
     min-height:70px;
 `;
 
+const AlreadyArticleText = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    width: 350px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 16px;
+    background-color:#F5F5F5;
+    min-height:70px;
+`;
+
 const ArticleDCText = styled.button`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
@@ -149,6 +162,58 @@ const ArticleDistance= styled.div`
     margin-left:200px;
 `;
 
+const ArticleBaiDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:cornsilk ;
+`;
+
+const ArticleXiangDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:lavenderblush;
+`;
+
+const ArticleXiDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:floralwhite;
+`;
+
+const ArticleZhongDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:azure;
+`;
+
+const ArticleXingDistance= styled.div`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-left:200px;
+    background-color:gainsboro;
+`;
+
+
+
 
 const ArticleAuthorArea= styled.div` 
     display: flex;
@@ -168,7 +233,7 @@ const ArticleAuthorImg = styled.img`
 const ArticleAuthor = styled.div`
     width:100px;
     color: #232323;
-    margin-left:-30px;
+    margin-left:-20px;
     margin-top:10px;
 `;
 
@@ -213,6 +278,15 @@ const ModalSubmitBtn = styled.button`
     border: 1px solid #FFA500;
 `;
 
+const ModalNotificationSubmitBtn = styled.button`
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: transparent; 
+    padding: 10px;
+    width: 100px;
+    margin-top:5%;
+    border: 1px solid #FFA500;
+`;
 
 const ArticleSubmitBtnPosition = styled.div`
     text-align: center;
@@ -225,8 +299,45 @@ const PerChangeClassBtn = styled.button`
     border-radius: 5px;
     background-color: white; 
     padding: 10px;
+    
+`;
+
+const PerHaveChangeClassBtn = styled.button`
+    width:53px;
+    height:50px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 5px;
+    background-color: white; 
+    padding: 10px;
+    background-color:#DEAD73;
+`;
+const ChangeClassCategorySelect = styled.select`
+    font-family: 'Noto Serif TC', serif;
+    border: 1px solid #FFA500;
+    border-radius: 5px;
+    background-color: transparent; 
+    padding: 10px;
+    width: 100px;
+    margin-left: 68%;
+    position: absolute;
+    margin-top: 30%;
+    z-index: 2;
+`;
+
+const ChangeClassStatusSelect = styled.select`
+    font-family: 'Noto Serif TC', serif;
+    border: 1px solid #FFA500;
+    border-radius: 5px;
+    background-color: transparent; 
+    padding: 10px;
+    width: 100px;
+    margin-left: 5%;
+    position: absolute;
+    margin-top: 30%;
+    z-index: 2;
 `;
 
 
-export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText,ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleDistance,
-     ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn, ArticleSelect};
+export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText, AlreadyArticleText, ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleDistance,
+     ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn, ArticleSelect,PerHaveChangeClassBtn,
+     ChangeClassCategorySelect, ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance, ChangeClassStatusSelect,ModalNotificationSubmitBtn};

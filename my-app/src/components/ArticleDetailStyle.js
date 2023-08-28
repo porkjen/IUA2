@@ -21,6 +21,7 @@ const ArticleDetailPosition = styled.div`
 const ArticleDetailAuthorArea= styled.div`
     display: flex;
     flex-direction: row ;
+    margin-left:7%;
 `;
 
 const ArticleDetailAuthorImg = styled.img`

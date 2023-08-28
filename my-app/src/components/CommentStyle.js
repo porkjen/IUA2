@@ -64,6 +64,7 @@ const CommentBody = styled.div`
     margin-top: 8px;
     word-break: break-all;
     white-space: pre-line;
+    text-align:left
 
 `;
 
