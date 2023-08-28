@@ -30,6 +30,55 @@ const RemainList = styled.div`
     transform: translate(-50%, -50%);
 `;
 
+const RemainBody = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    width: 230px;
+    height: 50px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    margin-top:2%;
+    margin-left:7px;
+`;
+
+const RemainText = styled.div`
+    padding-top: 12px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size:15px;
+    text-align:center;
+`;
+
+const Back = styled.img`
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+    position: absolute;
+    z-index: 3;
+`;
+
+const MyclassBody = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    width: 300px;
+    height: 60px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    margin-top:2%;
+    margin-left:7px;
+`;
+
+const MyclassText = styled.div`
+    padding-top: 12px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size:15px;
+    text-align:center;
+`;
 const Mustinfo = styled.label`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
@@ -81,4 +130,4 @@ const GEinfo = styled.label`
     padding-left: 10px;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, Coreinfo, GEinfo} ;
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, Coreinfo, GEinfo, RemainText, RemainBody, Back, MyclassBody, MyclassText} ;
