@@ -12,11 +12,15 @@ import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
 import {useState} from "react";
 import { loginUser } from "./cookie.js";
+import { getAuthToken } from "./utils";
 
 const PostArticle=()=> {
     let navigate = useNavigate();
     const location = useLocation();
     const { studentID, changeClassClassName, changeClassClassTeacher, changeClassClassTime,IsChangeClass,changeClassCategory } = location.state || {};
+
+    const userInfo = loginUser();
+    const token = getAuthToken();
 
     function ArticleFoodInput() {
         const [Ftitle, setFtitle] = useState("");
@@ -90,7 +94,7 @@ const PostArticle=()=> {
           e.preventDefault();
           const student_id = loginUser();
           const formData = {
-                          studentID: "00957025",
+                          studentID: userInfo,
                           store : Ftitle,
                           weekday_text : openTime,
                           address : Faddress,
@@ -105,7 +109,8 @@ const PostArticle=()=> {
                         fetch('/food_posts', {
                               method: 'POST',
                               headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': `${token}`
                               },
                               body: JSON.stringify(formData)
                             })
@@ -269,7 +274,7 @@ const PostArticle=()=> {
     const student_id = loginUser();
  
     const formData = {
-                    studentID: "00957025",
+                    studentID: userInfo,
                     title : Htitle,
                     money : Hmoney,
                     people : Hpeople,
@@ -287,7 +292,8 @@ const PostArticle=()=> {
                   fetch('/rent_post', {
                         method: 'POST',
                         headers: {
-                          'Content-Type': 'application/json'
+                          'Content-Type': 'application/json',
+                          'Authorization': `${token}`
                         },
                         body: JSON.stringify(formData)
                       })
@@ -415,7 +421,7 @@ const PostArticle=()=> {
           const student_id = loginUser();
           console.log("innnnn");
           const formData = {
-                          studentID: "00957017",
+                          studentID: userInfo,
                           course : Ctitle.name,
                           category:CCategory.category,
                           time:Ctime.time,
@@ -425,7 +431,8 @@ const PostArticle=()=> {
                         fetch('/exchange_course_post', {
                               method: 'POST',
                               headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': `${token}`
                               },
                               body: JSON.stringify(formData)
                             })

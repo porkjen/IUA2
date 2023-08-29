@@ -9,13 +9,16 @@ import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleS
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
-import { loginUser } from "./cookie.js";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 const ModifyPost=()=> {
     let navigate = useNavigate();
     const location = useLocation();
     const [data, setData] = useState(null);
     const { studentID, postId, fromSearch, ModifyType, timeValue } = location.state;
+    const userInfo = loginUser();
+    const token = getAuthToken();
     
 
     function ArticleModifyFoodInput({ newData }) {
@@ -30,6 +33,7 @@ const ModifyPost=()=> {
         const [FtimeSaturday, setFtimeSaturday] = useState("");
         const [FtimeSunday, setFtimeSunday] = useState("");
         const [Faddress, setFaddress] = useState("");
+
 
         useEffect(() => {
             if (newData) {
@@ -87,7 +91,7 @@ const ModifyPost=()=> {
             const student_id = loginUser();
             const formData = {
               postId: postId,
-              studentID: "00957025",
+              studentID: userInfo,
               store: Ftitle,
               weekday_text: openTime,
               address: Faddress,
@@ -95,7 +99,8 @@ const ModifyPost=()=> {
             fetch('/food_modify', {
               method: 'PUT',
               headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `${token}`
               },
               body: JSON.stringify(formData)
             })
@@ -261,7 +266,7 @@ const ModifyPost=()=> {
     e.preventDefault();
     const student_id = loginUser();
     const formData = {
-                    studentID: "00957025",
+                    studentID: userInfo,
                     postId:postId,
                     title : Htitle,
                     money : Hmoney,
@@ -280,7 +285,8 @@ const ModifyPost=()=> {
                   fetch('/rent_post_modify', {
                         method: 'PUT',
                         headers: {
-                          'Content-Type': 'application/json'
+                          'Content-Type': 'application/json',
+                          'Authorization': `${token}`
                         },
                         body: JSON.stringify(formData)
                       })
@@ -431,7 +437,7 @@ const ModifyPost=()=> {
           e.preventDefault();
           const student_id = loginUser();
           const formData = {
-                          studentID: "00957017",
+                          studentID: userInfo,
                           postId:postId,
                           course : Ctitle,
                           category:CCategory,
@@ -442,7 +448,8 @@ const ModifyPost=()=> {
                         fetch('/course_post_modify', {
                               method: 'PUT',
                               headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': `${token}`
                               },
                               body: JSON.stringify(formData)
                             })

@@ -12,6 +12,8 @@ import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDe
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 const RentArticle=()=> {
 
@@ -22,6 +24,8 @@ const RentArticle=()=> {
     const [isRentSaved, setIsRentSaved] = useState(false);
     const [isRentDelete, setIsRentDelete] = useState(false);
     const { studentID, postId } = location.state;
+    const userInfo = loginUser();
+    const token = getAuthToken();
 
     function Commentinfo({ author, text }) {
         return (
@@ -70,7 +74,7 @@ const RentArticle=()=> {
     function RentArticle() {
 
         const formData = {
-            studentID:  '00957025',
+            studentID:  userInfo,
             postId : postId,
           };
 
@@ -179,13 +183,14 @@ const RentArticle=()=> {
               e.preventDefault();
               //const student_id = loginUser();
               const savedFormData = {
-                              studentID: "00957025",
+                              studentID: userInfo,
                               postId:postId,
                             };
-                            fetch(`/rent_post_delete?studentID=${studentID}&postId=${postId}`, {
+                            fetch(`/rent_post_delete?studentID=${userInfo}&postId=${postId}`, {
                                   method: 'DELETE',
                                   headers: {
-                                    'Content-Type': 'application/json'
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `${token}`
                                   },
                                   body: JSON.stringify(savedFormData)
                                 })

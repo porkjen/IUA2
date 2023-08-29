@@ -228,7 +228,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
       const [isCreator, setIsCreator] = useState(false);
       const location = useLocation();
       const formData = {
-        studentID:  studentID,
+        studentID:  userInfo,
         postId : postId,
       };
 
@@ -831,13 +831,14 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         //const student_id = loginUser();
         
         const formData = {
-                        studentID: studentID,
+                        studentID: userInfo,
                         postId : postId,
                       };
                       fetch(`/course_post_delete`, {
                         method: 'DELETE',
                         headers: {
-                          'Content-Type': 'application/json'
+                          'Content-Type': 'application/json',
+                          'Authorization': `${token}`
                         },
                         body: JSON.stringify(formData)
                       })

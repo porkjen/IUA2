@@ -14,6 +14,8 @@ import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, Art
 import {Back}  from './components/Style.js';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef,  } from "react";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 const Food = () => {
 
@@ -36,6 +38,8 @@ const Food = () => {
   const location = useLocation();
   const { fromSearch, FArea, FName, FAddr } = location.state;
   const scrollPositionRef = useRef(0);
+  const userInfo = loginUser();
+  const token = getAuthToken();
 
   const handlePostASChange = event => {
     setAS("PostTimeNtoF");

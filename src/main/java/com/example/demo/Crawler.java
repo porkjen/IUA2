@@ -73,6 +73,7 @@ public class Crawler {
 
 
 
+
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
 
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
@@ -89,6 +90,10 @@ public class Crawler {
 
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
                 BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
+
+               // BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
+
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
 
                 ImageIO.write(subImage, "png", screenshot);
@@ -221,8 +226,11 @@ public class Crawler {
 
         //driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+
         Thread.sleep(2000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(1000);
+
         driver.findElement(By.linkText("成績系統")).click(); //成績系統
         Thread.sleep(2000);
         driver.findElement(By.linkText("查詢各式成績")).click(); //查詢各式成績
@@ -284,11 +292,13 @@ public class Crawler {
 
             String nowYear = driver.findElement(By.id("AYEAR")).getText();  //取得現在學年
             String nowSemester= driver.findElement(By.id("SMS")).getText(); //取得現在學期
+            String now = nowYear + nowSemester;
             int ny = Integer.parseInt(nowYear);
             int ns = Integer.parseInt(nowSemester);
 
             String[] semester = fcList.get(i).getSemester().split("(?<=\\G.{3})");
-            if(Integer.parseInt(semester[0]) <= ny && Integer.parseInt(semester[1]) <= ns){
+            if(!fcList.get(i).getSemester().equals(now)){
+                System.out.println("semester of course: " + fcList.get(i).getSemester());
                 driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
                 driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
                 //driver.findElement(By.id("radioButtonClass_0")).click();

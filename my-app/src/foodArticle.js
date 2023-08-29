@@ -15,6 +15,8 @@ import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, Artic
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating, CommentAuthorBtn} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation, useNavigate,Link } from 'react-router-dom';
 import {useEffect,useState} from "react";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 const FoodArticle=()=> {
 
@@ -33,6 +35,8 @@ const FoodArticle=()=> {
     const [isAlreadyRating, setIsAlreadyRating] = useState(false);
     const [responseStatus, setResponseStatus] = useState(null);
     const [isAlreadySaved, setIsAlreadySaved] = useState(false);
+    const userInfo = loginUser();
+    const token = getAuthToken();
 
     function RatingFood({ rating, commentStar }) {
       const stars = [];
@@ -52,12 +56,13 @@ const FoodArticle=()=> {
         //const student_id = loginUser();
         const formData = {
                         postId:postId,
-                        studentID: "00957025",
+                        studentID: userInfo,
                       };
                       fetch('/food_review_delete', {
                             method: 'DELETE',
                             headers: {
-                              'Content-Type': 'application/json'
+                              'Content-Type': 'application/json',
+                              'Authorization': `${token}`
                             },
                             body: JSON.stringify(formData)
                           })
@@ -143,14 +148,15 @@ const FoodArticle=()=> {
         //const student_id = loginUser();
         const formData = {
                         postId:postId,
-                        studentID: "00957025",
+                        studentID: userInfo,
                         p_review : FComment,
                         p_rate : 0,
                       };
                       fetch('/food_review_add', {
                             method: 'POST',
                             headers: {
-                              'Content-Type': 'application/json'
+                              'Content-Type': 'application/json',
+                              'Authorization': `${token}`
                             },
                             body: JSON.stringify(formData)
                           })
@@ -176,14 +182,15 @@ const FoodArticle=()=> {
         //const student_id = loginUser();
         const formData = {
                         postId:postId,
-                        studentID: "00957025",
+                        studentID: userInfo,
                         p_review : FComment,
                         p_rate : isMeRating,
                       };
                       fetch('/food_review_modify', {
                             method: 'PUT',
                             headers: {
-                              'Content-Type': 'application/json'
+                              'Content-Type': 'application/json',
+                              'Authorization': `${token}`
                             },
                             body: JSON.stringify(formData)
                           })
@@ -266,10 +273,11 @@ const FoodArticle=()=> {
                         studentID: "00957025",
                         postId:postId,
                       };
-                      fetch(`/food_post_delete?studentID=${studentID}&postId=${postId}`, {
+                      fetch(`/food_post_delete?studentID=${userInfo}&postId=${postId}`, {
                             method: 'DELETE',
                             headers: {
-                              'Content-Type': 'application/json'
+                              'Content-Type': 'application/json',
+                              'Authorization': `${token}`
                             },
                             body: JSON.stringify(savedFormData)
                           })
@@ -415,6 +423,7 @@ const FoodArticle=()=> {
 
 
     function FoodArticle() {
+
 
         const formData = {
             studentID:  studentID,
