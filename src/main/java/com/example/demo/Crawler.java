@@ -196,9 +196,10 @@ public class Crawler {
         //已完成課程
         ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
 
-        driver.switchTo().defaultContent();
+        //driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
-        Thread.sleep(1000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(2000);
         driver.findElement(By.linkText("成績系統")).click(); //成績系統
         Thread.sleep(1000);
         driver.findElement(By.linkText("查詢各式成績")).click(); //查詢各式成績
@@ -260,11 +261,13 @@ public class Crawler {
 
             String nowYear = driver.findElement(By.id("AYEAR")).getText();  //取得現在學年
             String nowSemester= driver.findElement(By.id("SMS")).getText(); //取得現在學期
+            String now = nowYear + nowSemester;
             int ny = Integer.parseInt(nowYear);
             int ns = Integer.parseInt(nowSemester);
 
             String[] semester = fcList.get(i).getSemester().split("(?<=\\G.{3})");
-            if(Integer.parseInt(semester[0]) <= ny && Integer.parseInt(semester[1]) <= ns){
+            if(!fcList.get(i).getSemester().equals(now)){
+                System.out.println("semester of course: " + fcList.get(i).getSemester());
                 driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='" + semester[0] + "']")).click();
                 driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='" + semester[1] + "']")).click();
                 //driver.findElement(By.id("radioButtonClass_0")).click();

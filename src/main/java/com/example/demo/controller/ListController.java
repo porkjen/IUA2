@@ -27,17 +27,17 @@ public class ListController {
         // 返回適當的回應給前端
         return ResponseEntity.ok("LocalStorage data received");
     }
-    @RequestMapping(value = "/{dynamicData}", method = RequestMethod.GET)
-    public String getChat(@PathVariable("dynamicData") String dynamicData, Model model) {
-        /*if (dynamicData.equals(data)) {
-            System.out.println("success");
-            return "chat";
-        } else {
-            System.out.println("Dy="+ dynamicData);
-            System.out.println("Da="+ data);
-            return "error";
-        }*/
-        return "chat";
-    }
+//    @RequestMapping(value = "/{dynamicData}", method = RequestMethod.GET)
+//    public String getChat(@PathVariable("dynamicData") String dynamicData, Model model) {
+//        /*if (dynamicData.equals(data)) {
+//            System.out.println("success");
+//            return "chat";
+//        } else {
+//            System.out.println("Dy="+ dynamicData);
+//            System.out.println("Da="+ data);
+//            return "error";
+//        }*/
+//        return "chat";
+//    }
 
 }
