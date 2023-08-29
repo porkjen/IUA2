@@ -65,8 +65,8 @@ public class Crawler {
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
 
-                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
+                BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
                 ImageIO.write(subImage, "png", screenshot);
                 File screenshotLocation = new File("test.png");
@@ -198,8 +198,14 @@ public class Crawler {
 
         //driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
+<<<<<<< HEAD
         driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
         Thread.sleep(2000);
+=======
+        Thread.sleep(2000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(1000);
+>>>>>>> b967ed226b8251a62e81a8073c5af9482e832549
         driver.findElement(By.linkText("成績系統")).click(); //成績系統
         Thread.sleep(1000);
         driver.findElement(By.linkText("查詢各式成績")).click(); //查詢各式成績

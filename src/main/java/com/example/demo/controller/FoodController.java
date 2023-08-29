@@ -245,14 +245,13 @@ public class FoodController {
             @RequestParam(value = "area", required = false) String area,
             @RequestParam(value = "store", required = false) String store,
             @RequestParam(value = "addr", required = false) String addr){
-        System.out.println("/food_search");
+        System.out.println("/food_search, 區 : " + area + " 店名 : " + store + " 地址 : " + addr);
         List<FoodDTO> resultList = new ArrayList<>();
-        for(FoodEntity food : foodRepository.findAll()){
+        for(FoodEntity food : foodRepository.findAllByOrderByIdDesc()){
             if((Objects.equals(store, "") || food.getStore().toLowerCase().contains(store.toLowerCase())) &&
                (Objects.equals(area, "") || food.getDistrict().contains(area)) &&
                (Objects.equals(addr, "") || food.getAddress().contains(addr))
             ){
-
                 FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad() , food.getDistance());
                 resultList.add(result);
             }
