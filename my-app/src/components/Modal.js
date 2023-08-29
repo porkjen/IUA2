@@ -9,71 +9,16 @@ import minion from '../img/minion.png';
 import banana from '../img/banana.png';
 import duck from '../img/duck.PNG';
 import cuteDogImg from "../img/cutedoggy.PNG";
-import {ArticleSubmitBtn, ModalSubmitBtn, ModalNotificationSubmitBtn} from './ArticleStyle.js';
+import {ArticleSubmitBtn, ModalSubmitBtn, ModalNotificationSubmitBtn,ChangeClassStatusSelect} from './ArticleStyle.js';
 import {ButtonContainer,ArticleDetailNormalBtn}  from './ArticleDetailStyle.js';
 import {useState,useEffect} from "react";
 import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
+import { loginUser } from '../cookie';
+import { useCookies } from 'react-cookie';
+import { getAuthToken } from "../utils";
 
 
 
-function ModalChangeClass(){
-    return(
-            <form>
-                <h2 className='modal_tilte'>篩選貼文</h2>
-                <div className='modalBodyText'>
-                    <div className='ModalRentFormRegion'>
-                        <label>地區: </label>
-                        <select>
-                            <option>請選擇區域</option>
-                            <option value='Zhongzheng'>中正區</option>
-                            <option value='Xinyi'>信義區</option>
-                            <option value='Renai'>仁愛區</option>                                    
-                            <option value='Zhongshan'>中山區</option>
-                            <option value='Anle'>安樂區</option>
-                            <option value='Nuannuan'>暖暖區</option>
-                            <option value='Qidu'>七堵區</option>
-                        </select>
-                    </div><br/>
-                    <div className='ModalRentFormGender'>
-                        <label>性別:</label>
-                        <input type="radio" id='girl' value='girl' ></input>
-                        <label for="girl">女</label>
-                        <input type="radio" id='boy' value='boy'></input>
-                        <label for="boy">男</label>
-                        <input type="radio" id='both' value='both'></input>
-                        <label for="both">無限制</label>
-                    </div><br/>
-                    <div className='ModalRentFormPeople'>
-                        <label>人數: </label>
-                        <select>
-                            <option>請選擇人數</option>
-                            <option value='one'>1</option>
-                            <option value='two'>2</option>
-                            <option value='three'>3</option>
-                            <option value='four'>4</option>
-                        </select>
-                    </div><br/>
-                    <div className='ModalRentFormType'>
-                    <label>房型: </label>
-                        <select>
-                            <option>請選擇房型</option>
-                            <option value='studio'>套房</option>
-                            <option value='room'>雅房</option>
-                            <option value='family'>家庭式</option>
-                        </select>
-                    </div><br/>
-                    <div className='ModalRentFormCar'>
-                        <label>車位:</label>
-                        <input type="radio" id='yes' value='yes'></input>
-                        <label for="yes">有</label>
-                        <input type="radio" id='no' value='no'></input>
-                        <label for="no">無</label>
-                    </div><br/>
-                </div>
-                <ModalSubmitBtn>確認</ModalSubmitBtn>
-            </form>
-    );
-}
 
 
 
@@ -112,6 +57,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     const [isComment, setisComment] = useState(false);
     const [isAlreadyComment, setIsAlreadyComment] = useState(false);
     const [confirm, setConfirm] = useState(false);
+    const token = getAuthToken();
+    const userInfo = loginUser();
 
     function ModalRent(){
 
@@ -542,8 +489,129 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     }
 
     function SetChangeClassNotification(){
-      
-    }
+        const [classNum, setClassNum] = useState("");
+        const [time, setTime] = useState([]);
+        const [typeTime, setTypeTime] = useState(false);
+        const [classNumber, setClassNumber] = useState(true);
+        const [selectedType, setSelectedType] = useState([]);
+
+        const handleClassNotificationSubmit = (e) => {
+          e.preventDefault();
+          //const student_id = loginUser();
+          const formData = {
+            studentID: "00957025",
+            calssNum : "123456",
+            time : "45",
+            type : selectedType,
+          };
+                        fetch('/exchange_notification_add', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify(formData)
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                              console.log(data);
+                            })
+                            .catch(error => {
+                              console.error(error);
+                            });
+                            navigate("/changeClass", {
+                              state: {
+                                fromSearch:false,},});
+                                window.location.reload();
+                         //Form submission happens here
+        }
+
+        const handleTypeChange = event => {
+          const valueType = event.target.value;
+          if (event.target.checked) {
+            setSelectedType([...selectedType, valueType]);
+          }else {
+            setSelectedType(selectedType.filter(item => item !== valueType));
+          }
+          console.log(selectedType);
+        };
+
+        const handleClassNum = event => {
+          setClassNum(event.target.value);
+        };
+
+        const handleTime = event => {
+          const timeArray = event.target.value.split("、");
+          setTime(timeArray);
+        };
+
+        const handleClassNumChange = event => {
+          console.log("innum");
+          setClassNumber(true);
+          setTypeTime(false);
+        };
+
+        const handleTimeTypeChange = event => {
+          setClassNumber(false);
+          setTypeTime(true);
+        };
+
+
+        function TimeTypeNotification(){
+          return(
+            <div>
+                  <label>分類:</label>
+                    <input type="checkbox" id='required' value='必修' name='selectedType[]' onChange={handleTypeChange} ></input>
+                    <label for="required">必修</label>
+                    <input type="checkbox" id='optional' value='選修' name='selectedType[]' onChange={handleTypeChange}></input>
+                    <label for="optional">選修</label>
+                    <input type="checkbox" id='general' value='通識' name='selectedType[]' onChange={handleTypeChange}></input>
+                    <label for="general">通識</label><br/>
+                    <input type="checkbox" id='language' value='第二外語' name='selectedType[]' onChange={handleTypeChange} ></input>
+                    <label for="language">第二外語</label>
+                    <input type="checkbox" id='eng' value='英文' name='selectedType[]' onChange={handleTypeChange}></input>
+                    <label for="eng">英文</label>
+                    <input type="checkbox" id='pe' value='體育' name='selectedType[]' onChange={handleTypeChange}></input>
+                    <label for="pe">體育</label>
+                  
+                    <div>
+                    <label>時間:&emsp;</label>
+                    <input type='text' className='changeClassNotificationFormTimeInput' value={time} onChange={handleTime}></input>
+                    </div>
+            </div>
+          );
+        }
+
+        function ClassNumNotification(){
+          return(
+              <div>
+                  <label>課號:&emsp;</label>
+                  <input type='text' className='changeClassNotificationFormTimeInput' value={classNum} onChange={handleClassNum}></input>
+              </div>
+          );
+        }
+
+         return(
+            <form className='classNotificationForm' onSubmit={handleClassNotificationSubmit}>
+                <h2 className='modal_tilte'>設置提醒</h2>
+                <div className='modalChangeClassNotificationSelect'>
+                  {classNumber && <input type="radio" id='myclass' name='selectTable' onChange={handleClassNumChange} checked></input>}
+                  {!classNumber &&  <input type="radio" id='myclass' name='selectTable'  onChange={handleClassNumChange}></input>}
+                  <label for="myclass">課號設定</label>
+
+                  {typeTime &&  <input type="radio" id='changeTable' name='selectTable' onChange={handleTimeTypeChange} checked></input>}
+                  {!typeTime &&  <input type="radio" id='changeTable' name='selectTable' onChange={handleTimeTypeChange}></input>}
+                  <label for="changeClassTable">時間分類設定</label>
+                </div><br/>
+
+                <div className='modalBodyText'>
+                  {typeTime && <TimeTypeNotification/>}
+                  {classNumber && <ClassNumNotification/>}
+                </div>
+                <ModalSubmitBtn type='submit'>確認</ModalSubmitBtn>
+            </form>
+         );
+      }
+
 
     function SetRentNotification(){
         const [Haddress, setHaddress] = useState("");
@@ -650,7 +718,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                           HwaterMoney: HwaterMoney,
                           HpowerMoney: HpowerMoney,
                         };
-                        fetch('/notification', {
+                        fetch('/rent_notification_add', {
                               method: 'POST',
                               headers: {
                                 'Content-Type': 'application/json'
@@ -814,8 +882,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                     <div className="modalBody">
                         {isModalFood && <ModalFood/>}
                         {isModalRent && <ModalRent/>}
-                        {isModalChangeClass && <ModalChangeClass/>}
                         {isModalRentNotification && <SetRentNotification/>}
+                        {isModalChangeClassNotification && <SetChangeClassNotification/>}
                         {isRating && <ModalRating/>}
                         {isModalChangeClassArticle && <ModalChangeClassArticle/>}
                         {confirm && <ConfirmDelete/>}

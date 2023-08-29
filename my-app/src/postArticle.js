@@ -28,6 +28,8 @@ const PostArticle=()=> {
         const [FtimeFriday, setFtimeFriday] = useState("");
         const [FtimeSaturday, setFtimeSaturday] = useState("");
         const [FtimeSunday, setFtimeSunday] = useState("");
+        const [Farea, setFarea] = useState("");
+        const [Froad, setFroad] = useState("");
         const [Faddress, setFaddress] = useState("");
         const [Finfo, setFinfo] = useState("");
         const [FLink, setFLink] = useState("");
@@ -63,6 +65,14 @@ const PostArticle=()=> {
           setFtimeSunday(event.target.value);
         };
 
+        const handleFareaChange = event => {
+          setFarea(event.target.value);
+        };
+
+        const handleFroadChange = event => {
+          setFroad(event.target.value);
+        };
+
         const handleFaddressChange = event => {
           setFaddress(event.target.value);
         };
@@ -85,6 +95,8 @@ const PostArticle=()=> {
                           weekday_text : openTime,
                           address : Faddress,
                           url : FLink,
+                          road : Froad,
+                          district : Farea,
                           review: {
                             p_review: Finfo,
                             p_rate: Frate
@@ -133,6 +145,23 @@ const PostArticle=()=> {
               <label>&emsp;星期日:&emsp;</label>
               <input type='text' name = 'FtimeSunday' onChange={handleFtimeSundayChange} value={FtimeSunday}></input>
             </div><br/>
+            <div className='articleFoodFormArea'>
+            <label>店家地區:&emsp;</label>
+              <select name = 'Farea' className='articleFoodFormSelect' value={Farea} onChange={handleFareaChange}>
+                  <option>請選擇區域</option>
+                  <option value='中正區'>中正區</option>
+                  <option value='信義區'>信義區</option>
+                  <option value='仁愛區'>仁愛區</option>
+                  <option value='中山區'>中山區</option>
+                  <option value='安樂區'>安樂區</option>
+                  <option value='暖暖區'>暖暖區</option>
+                  <option value='七堵區'>七堵區</option>
+              </select>
+              </div><br/>
+            <div className='articleFoodFormAddress'>
+              <label>店家路名:&emsp;</label>
+              <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Froad} required="required"></input>
+            </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家地址:&emsp;</label>
               <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress} required="required"></input>
@@ -143,7 +172,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleFoodFormSchoolRate'>
               <label>我的評分:&emsp;</label>
-              <select name = 'Frate' className='articleFoodFormSchoolRateInput' value={Frate} onChange={handleFrateChange}>
+              <select name = 'Frate' className='articleFoodFormSelect' value={Frate} onChange={handleFrateChange}>
                   <option>請選擇評分</option>
                   <option value='1'>1</option>
                   <option value='2'>2</option>
@@ -304,7 +333,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormType'>
               <label>房型:</label>
-              <select name = 'Htype' className='articleRentFormTypeInput' value={Htype} onChange={handleHtypeChange}>
+              <select name = 'Htype' className='articleRentFormSelect' value={Htype} onChange={handleHtypeChange}>
                   <option>請選擇房型</option>
                   <option value='套房'>套房</option>
                   <option value='雅房'>雅房</option>
@@ -313,7 +342,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormRegion'>
               <label>地區:</label>
-              <select name = 'Harea' className='articleRentFormRegionInput' value={Harea} onChange={handleHareaChange}>
+              <select name = 'Harea' className='articleRentFormSelect' value={Harea} onChange={handleHareaChange}>
                   <option>請選擇區域</option>
                   <option value='中正區'>中正區</option>
                   <option value='信義區'>信義區</option>

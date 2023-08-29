@@ -94,6 +94,16 @@ body {
     margin-bottom: 15px;
 }
 
+
+.articleFoodFormSelect, .articleRentFormSelect{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    margin-left: 15px;
+    width: 200px;
+    font-family: 'Noto Serif TC', serif;
+}
+
 /*換課發文*/
 .articleChangeClassForm{
     padding-top: 30px;
@@ -102,18 +112,7 @@ body {
     border-radius: 5px;
 }
 
-.articleRentFormRegionInput,.articleRentFormTypeInput,.articleFoodFormSchoolRateInput,
-.articleChangeClassForm > .articleChangeClassFormTitle > .articleChangeClassFormTitleInput,
-.articleChangeClassForm > .articleChangeClassFormCategory > .articleChangeClassFormCategoryInput,
-.articleChangeClassForm > .articleChangeClassFormTime > .articleChangeClassFormTimeInput,
-.articleChangeClassForm > .articleChangeClassFormTeacher > .articleChangeClassFormTeacherInput{
-    border: none;
-    border-bottom: 1px solid rgb(35, 35, 35);
-    border-radius: 0px;
-    margin-left: 15px;
-    width: 200px;
-    font-family: 'Noto Serif TC', serif;
-}
+
 
 .articleChangeClassForm > .articleChangeClassFormText > .articleChangeClassFormTextInput{
     width: 250px;

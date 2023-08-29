@@ -1,10 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.dao.BasicEntity;
-import com.example.demo.dao.CourseEntity;
-import com.example.demo.dao.GeneralCourseEntity;
-import com.example.demo.dao.RequiredCourseEntity;
-import com.example.demo.dao.TimeTableEntity;
+import com.example.demo.dao.*;
 import com.example.demo.repository.TimeTableRepository;
 
 import org.apache.commons.io.FileUtils;
@@ -76,6 +72,7 @@ public class Crawler {
                 int height = element.getSize().getHeight();
 
 
+
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
 
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
@@ -83,12 +80,15 @@ public class Crawler {
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
 
 
-                BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
 
 
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);
 
+
+                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
 
                 ImageIO.write(subImage, "png", screenshot);
@@ -184,6 +184,7 @@ public class Crawler {
         }
         driver.close();*/
     }
+    //基本資料
     public static BasicEntity getBasicData(String studentID, String password) throws InterruptedException {//基本資料
         BasicEntity personalInformation = new BasicEntity();
         driver.switchTo().frame("menuFrame");
@@ -218,11 +219,12 @@ public class Crawler {
         //已完成課程
         ArrayList<FinishedCourse> fCourses = new ArrayList<FinishedCourse>();
 
-        driver.switchTo().defaultContent();
+        //driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
-        Thread.sleep(1000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(2000);
         driver.findElement(By.linkText("成績系統")).click(); //成績系統
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         driver.findElement(By.linkText("查詢各式成績")).click(); //查詢各式成績
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
@@ -467,6 +469,7 @@ public class Crawler {
             List<WebElement> trlist = driver.findElements(By.cssSelector("#QTable2 > tbody > tr"));
             List<WebElement> tablelist = trlist.get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table"));
             List<WebElement> tr = tablelist.get(0).findElements(By.tagName("tr"));
+            String semester = tr.get(0).findElement(By.id("M_AYEARSMS")).getText();
             String number = tr.get(4).findElement(By.id("M_COSID")).getText();
             String teacher = tr.get(5).findElement(By.id("M_LECTR_TCH_CH")).getText();
             String name = tr.get(6).findElement(By.id("CH_LESSON")).getText();
@@ -477,6 +480,7 @@ public class Crawler {
             String eva = tr2.get(13).findElement(By.id("M_CH_TYPE")).getText();
             System.out.println("///course number: " + number);
             System.out.println("///subfield: " + subfield);
+            gc.setSemester(semester);
             gc.setNumber(number);
             gc.setName(name);
             gc.setTeacher(teacher);
@@ -662,6 +666,7 @@ public class Crawler {
             List<WebElement> trlist = driver.findElements(By.cssSelector("#QTable2 > tbody > tr"));
             List<WebElement> tablelist = trlist.get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table"));
             List<WebElement> tr = tablelist.get(0).findElements(By.tagName("tr"));
+            String semester = tr.get(0).findElement(By.id("M_AYEARSMS")).getText();
             String number = tr.get(4).findElement(By.id("M_COSID")).getText();
             String dept = tr.get(4).findElement(By.id("M_FACULTY_NAME")).getText();
             String teacher = tr.get(5).findElement(By.id("M_LECTR_TCH_CH")).getText();
@@ -673,7 +678,7 @@ public class Crawler {
             String time = tr.get(11).findElement(By.id("M_SEG")).getText();
             String room = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();
             System.out.println("///course number: " + number);
-            CourseEntity ce = new CourseEntity(name, category, number, time, room, teacher, grade, people, dept);
+            CourseEntity ce = new CourseEntity(semester, name, category, number, time, room, teacher, grade, people, dept);
             courseList.add(ce);
             driver.switchTo().defaultContent();
             driver.switchTo().frame("mainFrame");

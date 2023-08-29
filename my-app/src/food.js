@@ -25,7 +25,7 @@ const Food = () => {
   const [AS, setAS] = useState("PostTimeNtoF");
   const [isRate, setisRate] = useState(false);
   const [isPostTime, setisPostTime] = useState(true);
-  const [isDistance, setisDistance] = useState(true);
+  const [isDistance, setisDistance] = useState(false);
   const [isBai, setisBai] = useState(false);
   const [isZhong, setisZhong] = useState(false);
   const [isXiang, setisXiang] = useState(false);
@@ -106,7 +106,14 @@ const Food = () => {
 
   function Articleinfo({ author, post_time, store, rating, postID, road }) {
 
-    if(road.includes("祥豐")){
+    if(road===null){
+      setisBai(false);
+      setisXiang(false);
+      setisXi(false);
+      setisZhong(false);
+      setisXing(false);
+    }
+    else if(road.includes("祥豐")){
       setisBai(false);
       setisXiang(true);
       setisXi(false);
@@ -141,6 +148,7 @@ const Food = () => {
       setisZhong(false);
       setisXing(false);
     }
+    
     useEffect(() => {
       console.log("isZhong:", isZhong);
     }, [isZhong]);
@@ -174,11 +182,11 @@ const Food = () => {
     return (
       <ArticleContainer>
         <ArticleText onClick={handleShowFoodSubmit}>
-          {road!=="" && isBai  &&  <ArticleBaiDistance >{road}</ArticleBaiDistance>}
-          {road!=="" && isZhong &&  <ArticleZhongDistance >{road}</ArticleZhongDistance>}
-          {road!=="" && isXiang &&  <ArticleXiangDistance >{road}</ArticleXiangDistance>}
-          {road!=="" && isXing &&  <ArticleXingDistance >{road}</ArticleXingDistance>}
-          {road!=="" && isXi &&  <ArticleXiDistance >{road}</ArticleXiDistance>}
+          {road!=="" && road!==null && isBai  &&  <ArticleBaiDistance >{road}</ArticleBaiDistance>}
+          {road!=="" && road!==null && isZhong &&  <ArticleZhongDistance >{road}</ArticleZhongDistance>}
+          {road!=="" && road!==null && isXiang &&  <ArticleXiangDistance >{road}</ArticleXiangDistance>}
+          {road!=="" && road!==null && isXing &&  <ArticleXingDistance >{road}</ArticleXingDistance>}
+          {road!=="" && road!==null && isXi &&  <ArticleXiDistance >{road}</ArticleXiDistance>}
           <ArticleAuthorArea>
             {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
             {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}
@@ -251,12 +259,14 @@ const Food = () => {
     else{
       if (!data) {
         setIsLoading(true);
+        console.log(FArea);
         fetch(`/food_search?area=${FArea}&store=${FName}&addr=${FAddr}`)
         .then(response => response.json())
         .then(data => {
           console.log("searchIn");
           console.log(FArea);
           setData(data);
+          console.log(data);
           setVisibleData(data.slice(0, 50));
           setIsLoading(false);
         })
@@ -274,7 +284,7 @@ const Food = () => {
     const listHeight = articleListRef.current.clientHeight;
     const scrollThreshold = articleListRef.current.scrollHeight * 0.8 - listHeight;
 
-    if (scrollPosition >= scrollThreshold && !isLoading) {
+    if (scrollPosition >= scrollThreshold && !isLoading && data.length>50) {
       const nextBatch = data.slice(visibleData.length, visibleData.length + 50);
       setVisibleData(prevData => [...prevData, ...nextBatch]);
     }

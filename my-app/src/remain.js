@@ -10,6 +10,9 @@ import { Routes, Route } from 'react-router-dom';
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleDCText, ArticleText, ArticlePostTimeRating,
     ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody } from './components/ArticleStyle.js';
 import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody } from './components/Style.js';
+import { onLogin } from "./cookie.js";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 const Remain = () => {
     const [data, setData] = useState(null);
@@ -30,15 +33,21 @@ const Remain = () => {
     const [reqListData, setReqListData] = useState([]);
     const [AlreadyCredits, setAlreadyCredits] = useState();
 
+    const userInfo = loginUser();
+    const token = getAuthToken();
+
     const formData = {
-        studentID: "00957030",
+        studentID: userInfo,
     };
 
     useEffect(() => {
         if (!data) {
             fetch('/remained_credits', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json' ,
+                    'Authorization': `${token}`
+                },
                 body: JSON.stringify(formData)
             })
                 .then(response => response.json())

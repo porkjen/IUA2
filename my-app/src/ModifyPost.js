@@ -34,13 +34,14 @@ const ModifyPost=()=> {
         useEffect(() => {
             if (newData) {
               setFtitle(newData.store);
-              setFtimeMonday(newData.weekday_text[0].split(':')[1].trim());
-              setFtimeTuesday(newData.weekday_text[1].split(':')[1].trim());
-              setFtimeWednesday(newData.weekday_text[2].split(':')[1].trim());
-              setFtimeThursday(newData.weekday_text[3].split(':')[1].trim());
-              setFtimeFriday(newData.weekday_text[4].split(':')[1].trim());
-              setFtimeSaturday(newData.weekday_text[5].split(':')[1].trim());
-              setFtimeSunday(newData.weekday_text[6].split(':')[1].trim());
+              console.log(newData.weekday_text[0].replace("星期一:", ""));
+              setFtimeMonday(newData.weekday_text[0].replace("星期一:", ""));
+              setFtimeTuesday(newData.weekday_text[1].replace("星期二:", ""));
+              setFtimeWednesday(newData.weekday_text[2].replace("星期三:", ""));
+              setFtimeThursday(newData.weekday_text[3].replace("星期四:", ""));
+              setFtimeFriday(newData.weekday_text[4].replace("星期五:", ""));
+              setFtimeSaturday(newData.weekday_text[5].replace("星期六:", ""));
+              setFtimeSunday(newData.weekday_text[6].replace("星期日:", ""));
               setFaddress(newData.address);
             }
           }, [newData]);

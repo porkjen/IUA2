@@ -10,29 +10,48 @@ import {Back}  from './components/Style.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useLocation } from 'react-router-dom';
 import {useState, useEffect} from "react";
+import { loginUser } from './cookie';
+import { useCookies } from 'react-cookie';
+import { getAuthToken } from "./utils";
 
 const TimeTable=()=> {
 
     
     function TimeTable() {
 
+        const userInfo = loginUser();
         const location = useLocation();
         const [data, setData] = useState(null);
         const [student_id, setStudent] = useState(null);
+        const [cookies, setCookie] = useCookies(['token']);
+        const token = getAuthToken();
 
         useEffect(() => {
-            if (!data) {
-              fetch(`/curriculum_search?studentID=${"00957025"}`)
-                .then(response => response.json())
-                .then(data => {
-                  console.log(data);
-                  setData(data);
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                });
-            }
-          }, [data]); // 添加依賴項data
+          if (!data) {
+            fetch(`/curriculum_search?studentID=${userInfo}`, {
+              headers: {
+                'Authorization': `${token}`  // 將 token 添加到請求頭中
+              }
+            })
+            .then(response => {
+              console.log(response.status);
+              if (response.status === 200) {
+                
+                return response.json(); // 解析回應為 JSON
+              } else {
+                throw new Error('Unauthorized'); // 或者在其他狀況處理錯誤
+              }
+            })
+            .then(data => {
+              console.log(data);
+              setData(data);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+          }
+        }, [data, userInfo]); // 添加依賴項data、userInfo和authHeader
+        
           
           function generateTableRows() {
             const rows = [];

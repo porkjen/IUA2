@@ -3,10 +3,13 @@ import React from 'react';
 import Modal from "./components/Modal";
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
-import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleAuthor, ArticleBody, PerChangeClassBtn, PerHaveChangeClassBtn, ChangeClassStatusSelect}  from './components/ArticleStyle.js';
-import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody, MyclassBody, MyclassText } from './components/Style.js';
+import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleContainer, PerChangeClassBtn, PerHaveChangeClassBtn, ChangeClassCategorySelect} from './components/ArticleStyle.js';
+import { MyclassBody } from './components/Style.js';
 import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
 import {useState,useEffect} from "react";
+import { loginUser } from './cookie';
+import { useCookies } from 'react-cookie';
+import { getAuthToken } from "./utils";
 
 const ChangeClass=()=> {
     let navigate = useNavigate();
@@ -16,6 +19,9 @@ const ChangeClass=()=> {
     const [notification, setNotification] = useState(false);
     const [changeTable, setchangeTable] = useState(true);
     const [openModal, setOpenModal] = useState(false);
+    const userInfo = loginUser();
+    const token = getAuthToken();
+
 
 
     function ChangeClass() {
@@ -135,7 +141,11 @@ const ChangeClass=()=> {
         setMyClass(true);
         setchangeTable(false);
         setMyClass(true);
-        fetch(`/curriculum_search?studentID=${"00957025"}`)
+        fetch(`/curriculum_search?studentID=${userInfo}`, {
+          headers: {
+            'Authorization': `${token}`  // 將 token 添加到請求頭中
+          }
+        })
           .then(response => response.json())
           .then(data => {
             console.log(data);
@@ -150,6 +160,7 @@ const ChangeClass=()=> {
 
       const handleChangeTableChange = event => {
         setMyClass(false);
+        setchangeTable(true);
         setchangeTable(true);
         console.log("handleChangeTableChange called");
         console.log(myClass);
@@ -168,6 +179,13 @@ const ChangeClass=()=> {
         setNotification(true);
       };
 
+      const handleChangeClassFunctionSelect = event => {
+        if(event.target.value==="setNotification")
+          setOpenModal(true);
+        else if(event.target.value==="myNotification")
+          navigate('/myNotification')
+      };
+
 
       return (
         <Page>
@@ -176,20 +194,26 @@ const ChangeClass=()=> {
           </Link>
       <Pagebg>
         <Title>換課板</Title>
-        <PostArticleBtn onClick={handleSetNotification}>設置通知</PostArticleBtn>
         <div className='ChangeClassSelect'>
-          {myClass &&  <input type="radio" id='myclass' name='selectTable' onChange={handleMyClassTableChange} checked></input>}
-          {!myClass &&  <input type="radio" id='myclass' name='selectTable'  onChange={handleMyClassTableChange}></input>}
-          <label for="myclass">我的課表</label>
+          {myClass && !openModal &&  <input type="radio" id='myclass' name='selectTable' onChange={handleMyClassTableChange} checked></input>}
+          {!myClass && !openModal &&  <input type="radio" id='myclass' name='selectTable'  onChange={handleMyClassTableChange}></input>}
+          {!openModal && <label for="myclass">我的課表</label>}
 
-          {changeTable &&  <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange} checked></input>}
-          {!changeTable &&  <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange}></input>}
-          <label for="changeClassTable">選課課表</label>
+          {changeTable && !openModal &&  <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange} checked></input>}
+          {!changeTable && !openModal &&  <input type="radio" id='changeTable' name='selectTable' onChange={handleChangeTableChange}></input>}
+          {!openModal && <label for="changeClassTable">選課課表</label>}
 
         </div><br/>
-          {changeTable && <IsChangeTable/>}
-          {myClass && <AllMyClass myClassData={data}/>}
-          {notification && <Modal closeModal={setOpenModal} type={"setChangeClassNotification"}  />}
+          {changeTable && !openModal && <IsChangeTable/>}
+          {myClass && !openModal && <AllMyClass myClassData={data}/>}
+          {openModal && <Modal closeModal={setOpenModal} type={"setChangeClassNotification"}  />}
+          
+          { !openModal && 
+            <ChangeClassCategorySelect onChange={handleChangeClassFunctionSelect}>
+              <option >功能選單</option>
+              <option value='myNotification'>我的提醒</option>
+              <option value='setNotification'>設置提醒</option>
+          </ChangeClassCategorySelect>}
        
 
       </Pagebg>

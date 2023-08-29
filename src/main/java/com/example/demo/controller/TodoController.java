@@ -6,6 +6,7 @@ import com.example.demo.dao.*;
 
 import com.example.demo.repository.*;
 import com.example.demo.service.*;
+import jakarta.security.auth.message.AuthException;
 import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -99,14 +100,16 @@ public class TodoController {
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody BasicEntity basic)throws TesseractException, IOException, InterruptedException  {
+    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
         //password encrypt
-        String studentID = basic.getStudentID();
-        String password = basic.getPassword();
+        String studentID = user.get("studentID");
+        String password = user.get("password");
         System.out.println(studentID);
+        System.out.println(password);
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
         String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
+        System.out.println("加密:"+encryptedpwd);
         //sign in
         crawler.CrawlerHandle(studentID,password);
         System.out.println("login message " +Crawler.loginMessage);
@@ -116,25 +119,30 @@ public class TodoController {
         //account is not in database
         BasicEntity personalData = basicRepository.findByStudentID(studentID);
         if(personalData==null){
-            basic = crawler.getBasicData(studentID,password);
-            basic.setPassword(encryptedpwd);
-            basic.setEmail(studentID + "@mail.ntou.edu.tw");
-            basicRepository.save(basic);
+            personalData = crawler.getBasicData(studentID,password);
+            personalData.setPassword(encryptedpwd);
+            personalData.setEmail(studentID + "@mail.ntou.edu.tw");
+            basicRepository.save(personalData);
             SavedEntity savedEntity = new SavedEntity();
             savedEntity.setStudentID(studentID);
             savedRepository.save(savedEntity);
             System.out.println("New user!");
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");//201
+            JwtToken jwtToken = new JwtToken();
+            String token = jwtToken.generateToken(user); // 取得token
+            Map<String, String> t = new HashMap<>();
+            t.put("token", token);
+            return ResponseEntity.status(HttpStatus.CREATED).body(t);//201
         }
         else {
             personalData.setPassword(encryptedpwd); //user may change password, update password everytime
             basicRepository.save(personalData);
             System.out.println("Old user!");
+            JwtToken jwtToken = new JwtToken();
+            String token = jwtToken.generateToken(user); // 取得token
+            Map<String, String> t = new HashMap<>();
+            t.put("token", token);
+            return ResponseEntity.ok(t); // 回傳狀態碼 200
         }
-        System.out.println("加密:"+encryptedpwd);
-        System.out.println("original:"+decryptedpwd);
-
-        return ResponseEntity.ok("Success"); // 回傳狀態碼 200
     }
 
     @PostMapping("/nickname")
@@ -148,7 +156,14 @@ public class TodoController {
     }
 
     @PostMapping("/remained_credits")
-    public RemainCredit postRemainCredits (@RequestBody FinishedCourseList finished)throws TesseractException, IOException, InterruptedException{
+    public ResponseEntity<?> postRemainCredits (@RequestBody FinishedCourseList finished, @RequestHeader("Authorization") String au)throws TesseractException, IOException, InterruptedException{
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, finished.getStudentID());
+        } catch (AuthException e) {
+            //return null;
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
         System.out.println("*********student ID: " + finished.getStudentID());
         if(fRepository.existsByStudentID(finished.getStudentID())){
@@ -157,9 +172,9 @@ public class TodoController {
             ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
             String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
             System.out.println("semester: " + sem);
-//            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
-//            oriList.setFinishedCourses(finishedCourse);
-//            fRepository.save(oriList);
+            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
+            oriList.setFinishedCourses(finishedCourse);
+            fRepository.save(oriList);
         }
         else{
             finishedCourse = crawler.getFinishedCredict(finishedCourse, "");
@@ -168,7 +183,8 @@ public class TodoController {
         }
 
         RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
-        return remainCredit;
+        return ResponseEntity.ok(remainCredit);
+        //return remainCredit;
     }
 
     @PostMapping("/add_detect_course")
@@ -201,8 +217,8 @@ public class TodoController {
     @GetMapping("/core_elective")
     public List<CourseEntity> coreElective(@RequestParam("grade") String grade)throws InterruptedException{
         System.out.println("/core_elective");
-        String[] kernalCourseG2 = {"數位系統設計", "微處理器原理與組合語言"};
-        String[] kernalCourseG3 = {"計算機系統設計", "計算機結構", "軟體工程", "程式語言", "資料庫系統", "嵌入式系統設計", "系統程式", "編譯器", "人工智慧"};
+        String[][] kernalCourseG2 = {{"數位系統設計", "計算機系統領域"}, {"微處理器原理與組合語言", "計算機系統領域"}};
+        String[][] kernalCourseG3 = {{"計算機系統設計", "計算機系統領域"}, {"計算機結構", "計算機系統領域"}, {"軟體工程", "軟體領域"}, {"程式語言", "軟體領域"}, {"資料庫系統", "軟體領域"}, {"嵌入式系統設計", "計算機系統領域"}, {"系統程式", "計算機系統領域"}, {"編譯器", "軟體領域"}, {"人工智慧", "軟體領域"}};
         List<CourseEntity> result = new ArrayList<CourseEntity>();
         if(courseRepository.count() == 0){
             List<CourseEntity> cList = getCourses();
@@ -212,8 +228,9 @@ public class TodoController {
         }
         if(grade.equals("2")){
             for(int i = 0; i < 2; i++){
-                List<CourseEntity> rc2 = courseRepository.findByc_name(kernalCourseG2[i]);
+                List<CourseEntity> rc2 = courseRepository.findByc_name(kernalCourseG2[i][0]);
                 for(CourseEntity rc : rc2){
+                    rc.setField(kernalCourseG2[i][1]);
                     result.add(rc);
                 }
                 
@@ -221,8 +238,9 @@ public class TodoController {
         }
         else if(grade.equals("3")){
             for(int i = 0; i < 9; i++){
-                List<CourseEntity> rc3 = courseRepository.findByc_name(kernalCourseG3[i]);
+                List<CourseEntity> rc3 = courseRepository.findByc_name(kernalCourseG3[i][0]);
                 for(CourseEntity rc : rc3){
+                    rc.setField(kernalCourseG3[i][1]);
                     result.add(rc);
                 }
             }
@@ -250,13 +268,21 @@ public class TodoController {
         house.setPostId(post_id);
         house.setName(basicRepository.findByStudentID(house.getStudentID()).getName());//real name
         houseRepository.save(house);
+        SavedEntity savedEntity = savedRepository.findByStudentID(house.getStudentID());
+        savedEntity.setPosted(post_id);//add
+        savedRepository.save(savedEntity);
         return house;
     }
 
     @GetMapping("/rent_load") //list all house posts
     public List<HouseDTO> rentLoad(){
-        List<HouseEntity> housePostList = houseRepository.findAll();
+        List<HouseEntity> housePostList = houseRepository.findByStatus("已租");
         List<HouseDTO> SimpleHousePostList = new ArrayList<>();
+        for (HouseEntity post : housePostList) {
+            HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle(), post.getPost_time(), post.getStatus());
+            SimpleHousePostList.add(dto);
+        }
+        housePostList = houseRepository.findByStatus("未租");
         for (HouseEntity post : housePostList) {
             HouseDTO dto = new HouseDTO(post.getPostId(), post.getName(), post.getTitle(), post.getPost_time(), post.getStatus());
             SimpleHousePostList.add(dto);
@@ -346,10 +372,19 @@ public class TodoController {
     }
 
     @GetMapping("/curriculum_search")
-    public List<TimeTableEntity.Info> curriculumSearch(@RequestParam("studentID") String studentID) throws TesseractException, IOException, InterruptedException {
+    public ResponseEntity<?> curriculumSearch(@RequestParam("studentID") String studentID, @RequestHeader("Authorization") String au) throws TesseractException, IOException, InterruptedException {
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            //return null;
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
         if(timeTable!=null && timeTable.getInfo().size()!=0){
-            return timeTable.getInfo();
+            return ResponseEntity.ok(timeTable.getInfo());
+            //return timeTable.getInfo();
         }
         else{
             String password = basicRepository.findByStudentID(studentID).getPassword();
@@ -368,7 +403,8 @@ public class TodoController {
                 table.setInfo(i);
             }
             timeTableRepository.save(table);
-            return myClassList;
+            return ResponseEntity.ok(myClassList);
+            //return myClassList;
         }
     }
 

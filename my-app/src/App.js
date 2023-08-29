@@ -26,6 +26,7 @@ import GeneralEducaton from './generalEducation';
 import Favorite from './favorite';
 import DetectCourse from './DetectCourse';
 import ModifyPost from './ModifyPost';
+import MyNotification from './myNotification';
 
 import Chatroom from './chatroom';
 import ChatRoomList from './ChatRoomList';
@@ -43,6 +44,7 @@ const App=()=> {
                     <Route path="/nickName" element={<NickName/>} />
                     <Route path="/timeTable" element={<TimeTable/>} />
                     <Route path="/choose" element={<Choose />} />
+                    <Route path="/myNotification" element={<MyNotification />} />
                     <Route path="/changeClass" element={<ChangeClass/>} />
                     <Route path="/changeClassList" element={<ChangeClassList/>} />
                     <Route path="/food" element={<Food/>} />

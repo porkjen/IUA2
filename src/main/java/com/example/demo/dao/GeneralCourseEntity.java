@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("g_CourseCollection") //collection name
 public class GeneralCourseEntity {
+    String semester;
     String name = "";
     String number = "";
     float rate;
@@ -12,6 +13,14 @@ public class GeneralCourseEntity {
     String teacher = "";
     String evaluation = ""; //評量方式
     String subfield;
+
+    public String getSemester(){
+        return semester;
+    }
+
+    public void setSemester(String smester){
+        this.semester = smester;
+    }
 
     public String getName() {
         return name;
