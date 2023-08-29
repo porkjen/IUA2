@@ -317,13 +317,25 @@ public class TodoController {
     }
 
     @DeleteMapping("/rent_post_delete")
-    public ResponseEntity<String> rentPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
-        if(houseRepository.deleteByPostId(postId) !=null){
-            //200
-            return ResponseEntity.ok("Success");
+    public ResponseEntity<String> rentPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId, @RequestHeader("Authorization")String au){
+        System.out.println("/rent_post_delete, 刪除租屋發文");
+        HouseEntity house = houseRepository.findByPostId(postId);
+        if(house==null){
+            System.out.println("貼文沒有找到");
+            return ResponseEntity.badRequest().body("Invalid request"); // 400
         }
-        else return ResponseEntity.badRequest().body("Invalid request"); // 400
-
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, houseRepository.findByPostId(postId).getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        houseRepository.deleteByPostId(postId);
+        SavedEntity saved = savedRepository.findByStudentID(studentID);
+        saved.removePosted(postId);
+        savedRepository.save(saved);
+        System.out.println("貼文刪除成功");
+        return ResponseEntity.ok("Success");//200
     }
 
     @PutMapping("/rent_post_modify")
@@ -337,11 +349,13 @@ public class TodoController {
         }
         HouseEntity thisHouse = houseRepository.findByPostId(houseEntity.getPostId());
         houseEntity.setId(thisHouse.getId());
+        houseEntity.setName(thisHouse.getName());
         houseEntity.setPost_time(thisHouse.getPost_time());
         houseEntity.setName(thisHouse.getName());
         if(thisHouse.getSaved().size()!=0){
             for(String save : thisHouse.getSaved())houseEntity.setSaved(save);
         }
+        houseEntity.setStatus(thisHouse.getStatus());
         houseRepository.save(houseEntity);
         System.out.println("修改成功");
         return ResponseEntity.ok("Success");
