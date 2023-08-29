@@ -165,7 +165,7 @@ const PostArticle=()=> {
               </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家路名:&emsp;</label>
-              <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Froad} required="required"></input>
+              <input type='text' name = 'Faddress' onChange={handleFroadChange} value={Froad} required="required"></input>
             </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家地址:&emsp;</label>

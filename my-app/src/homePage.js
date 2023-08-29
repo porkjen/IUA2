@@ -55,9 +55,11 @@ const HomePage=()=> {
                             </button>
                         </div>
                         <div className="othersBtn">
-                            <button className="othersButton">
-                                <img src={calendarImg} className='pic'/>
-                            </button>
+                            <Link to="/timeTable">
+                                <button className="othersButton">
+                                    <img src={calendarImg} className='pic'/>
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

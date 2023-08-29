@@ -33,6 +33,9 @@ const ModifyPost=()=> {
         const [FtimeSaturday, setFtimeSaturday] = useState("");
         const [FtimeSunday, setFtimeSunday] = useState("");
         const [Faddress, setFaddress] = useState("");
+        const [Farea, setFarea] = useState("");
+        const [Froad, setFroad] = useState("");
+        const [Frate, setFrate] = useState("");
 
 
         useEffect(() => {
@@ -47,6 +50,10 @@ const ModifyPost=()=> {
               setFtimeSaturday(newData.weekday_text[5].replace("星期六:", ""));
               setFtimeSunday(newData.weekday_text[6].replace("星期日:", ""));
               setFaddress(newData.address);
+              setFarea(newData.district);
+              setFroad(newData.road);
+              setFrate(newData.rating);
+
             }
           }, [newData]);
 
@@ -84,6 +91,18 @@ const ModifyPost=()=> {
         const handleFaddressChange = event => {
           setFaddress(event.target.value);
         };
+
+        const handleFareaChange = event => {
+          setFarea(event.target.value);
+        };
+
+        const handleFroadChange = event => {
+          setFroad(event.target.value);
+        };
+
+        const handleFrateChange = event => {
+          setFrate(event.target.value);
+        };
         
 
         const handleFoodSubmit = (e) => {
@@ -95,6 +114,9 @@ const ModifyPost=()=> {
               store: Ftitle,
               weekday_text: openTime,
               address: Faddress,
+              road : Froad,
+              district : Farea,
+              
             };
             fetch('/food_modify', {
               method: 'PUT',
@@ -110,7 +132,6 @@ const ModifyPost=()=> {
                 navigate("/foodArticle", {
                   state: {
                     fromSearch: false,
-                    studentID: "00957025",
                     postId: postId
                   }
                 });
@@ -144,6 +165,23 @@ const ModifyPost=()=> {
               <label>&emsp;星期日:&emsp;</label>
               <input type='text' name = 'FtimeSunday' onChange={handleFtimeSundayChange} value={FtimeSunday}></input>
             </div><br/>
+            <div className='articleFoodFormArea'>
+            <label>店家地區:&emsp;</label>
+              <select name = 'Farea' className='articleFoodFormSelect' value={Farea} onChange={handleFareaChange}>
+                  <option>請選擇區域</option>
+                  <option value='中正區'>中正區</option>
+                  <option value='信義區'>信義區</option>
+                  <option value='仁愛區'>仁愛區</option>
+                  <option value='中山區'>中山區</option>
+                  <option value='安樂區'>安樂區</option>
+                  <option value='暖暖區'>暖暖區</option>
+                  <option value='七堵區'>七堵區</option>
+              </select>
+              </div><br/>
+            <div className='articleFoodFormAddress'>
+              <label>店家路名:&emsp;</label>
+              <input type='text' name = 'Faddress' onChange={handleFroadChange} value={Froad} required="required"></input>
+            </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家地址:&emsp;</label>
               <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress}></input>
@@ -165,8 +203,10 @@ const ModifyPost=()=> {
         const [Harea, setHarea] = useState("");
         const [haveCar, sethaveCar] = useState("");
         const [Hwater, setHwater] = useState("");
+        const [newHwater, setNewHwater] = useState("");
         const [HwaterMoney, setHwaterMoney] = useState("");
         const [Hpower, setHpower] = useState("");
+        const [newHpower, setNewHpower] = useState("");
         const [HpowerMoney, setHpowerMoney] = useState("");
         const [Hnote, setHnote] = useState("");
         const [Hfloor, setHfloor] = useState("");
@@ -183,6 +223,8 @@ const ModifyPost=()=> {
               setHtype(newData.style);
               sethaveCar(newData.car);
               setHwater(newData.water);
+              setNewHwater(newData.water);
+              setNewHpower(newData.power);
               setHpower(newData.power);
               setHnote(newData.note);
               setHfloor(newData.floor);
@@ -200,7 +242,7 @@ const ModifyPost=()=> {
               const inputPowerString = Hpower;
               const powerNumbers = inputPowerString.match(/\d+/g);
               setHpowerMoney(powerNumbers);
-              Hpower("一度");
+              setHpower("一度");
             }
             
           }, [newData]);
@@ -366,7 +408,7 @@ const ModifyPost=()=> {
               <label for="postArticle_waterOfficial">台水</label>
               <input type="radio" id='postArticle_waterLandlord' value='含房租內' name='rentWater' checked={Hwater === '含房租內'} onChange={handleHwaterChange}></input>
               <label for="postArticle_waterLandlord">含房租內</label>
-              <input type="radio" id='postArticle_waterOne' value='月繳' name='rentWater' checked={Hwater === '月繳'}  onChange={handleHwaterChange}></input>
+              <input type="radio" id='postArticle_waterOne' value='月繳' name='rentWater' checked={Hwater === '月繳'}   onChange={handleHwaterChange}></input>
               <label for="postArticle_waterOne">月繳<input type='text' className='postArticle_waterMoney' value={HwaterMoney} onChange={handleHwaterMoneyChange}></input>元</label>
             </div><br/>
             <div className='articleRentFormPower'>
@@ -375,7 +417,7 @@ const ModifyPost=()=> {
               <label for="postArticle_powerOfficial">台電</label>
               <input type="radio" id='postArticle_powerLandlord' value='含房租內' name='rentPower' checked={Hpower === '含房租內'} onChange={handleHpowerChange}></input>
               <label for="postArticle_powerLandlord">含房租內</label>
-              <input type="radio" id='postArticle_powerOne' value='一度' name='rentPower' checked={Hwater === '一度'} onChange={handleHpowerChange}></input>
+              <input type="radio" id='postArticle_powerOne' value='一度' name='rentPower' checked={Hpower === '一度'}  onChange={handleHpowerChange}></input>
               <label for="postArticle_powerOne">一度<input type='text' className='postArticle_powerMoney' value={HpowerMoney} onChange={handleHpowerMoneyChange} ></input>元</label>
             </div><br/>
             <div className='articleRentFormDate'>

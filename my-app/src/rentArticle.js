@@ -7,8 +7,7 @@ import cat from './img/SignIn4.PNG';
 import {Back}  from './components/Style.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, 
   ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailNormalBtn, ArticleDetailSavedBtn, 
-  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg,
-   ArticleDetailPostComment, ArticleDetailPostBtn,ArticleDetailReportBtn, ArticleDetailAlreadyReportBtn}  from './components/ArticleDetailStyle.js';
+  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
@@ -23,7 +22,7 @@ const RentArticle=()=> {
     const [isCreator, setIsCreator] = useState(false);
     const [isRentSaved, setIsRentSaved] = useState(false);
     const [isRentDelete, setIsRentDelete] = useState(false);
-    const { studentID, postId } = location.state;
+    const {postId } = location.state;
     const userInfo = loginUser();
     const token = getAuthToken();
 
@@ -96,7 +95,7 @@ const RentArticle=()=> {
                 .then(response => response.json())
                 .then(data => {
                   setData(data);
-                  if(data.studentID==studentID){
+                  if(data.studentID==userInfo){
                     console.log("same");
                     setIsCreator(true);
                   }
@@ -120,7 +119,7 @@ const RentArticle=()=> {
             e.preventDefault();
             //const student_id = loginUser();
             const savedFormData = {
-                            studentID: "00957025",
+                            studentID: userInfo,
                             postId:postId,
                           };
                           fetch('/favorites', {
@@ -145,7 +144,7 @@ const RentArticle=()=> {
             e.preventDefault();
             //const student_id = loginUser();
             const savedFormData = {
-                            studentID: "00957025",
+                            studentID: userInfo,
                             postId:postId,
                           };
                           fetch('/favorites_delete', {
@@ -169,7 +168,7 @@ const RentArticle=()=> {
             //const student_id = loginUser();
                               navigate("/modifyPost", {
                                 state: {
-                                  studentID:"00957025",
+                                  studentID:userInfo,
                                   postId:postId,
                                   fromSearch:false,
                                   ModifyType:"rent",
@@ -200,7 +199,6 @@ const RentArticle=()=> {
                                 });
                                 navigate("/rent", {
                                   state: {
-                                    studentID:"00957025",
                                     fromSearch:false},});
                              //Form submission happens here
             }

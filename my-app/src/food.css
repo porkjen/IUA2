@@ -30,3 +30,63 @@
     margin-left: 10%;
     z-index: 2;
 }
+
+.food_back{
+    max-height: 40px;
+    max-width: 40px;
+    padding-top: 10px;
+    position: absolute;
+    z-index: 3;
+}
+
+.food_noData{
+    font-family: 'Noto Serif TC', serif;
+}
+
+.food_modal_yes{
+    width: 70px;
+    height: 30px;
+    border-radius: 7px;
+    background-color: bisque;
+}
+
+.food_modal_no{
+    width: 70px;
+    height: 30px;
+    border-radius: 7px;
+    background-color: bisque;
+    margin-left: 5px;
+}
+
+.food_deleteModal{
+    width: 150px;
+    height: 70px;
+    position: absolute;
+    z-index: 3;
+    background-color: white;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    margin-top: -150px;
+    margin-left: 150px;
+}
+
+.food_deleteText{
+    font-family: 'Noto Serif TC', serif;
+    text-align: center;
+}
+
+.food_firstRating{
+    width: 200px;
+    height: 80px;
+    position: absolute;
+    z-index: 3;
+    background-color: white;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    margin-top: -150px;
+    margin-left: 150px;
+}

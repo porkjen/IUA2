@@ -51,7 +51,6 @@ const ChangeClass=()=> {
                        //Form submission happens here
             navigate("/changeClassList", {
               state: {
-                studentID: "00957017",
                 time:timeValue,
                 },});
       }

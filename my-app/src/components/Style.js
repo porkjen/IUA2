@@ -68,9 +68,17 @@ const Mustinfo = styled.label`
     padding-left: 10px;
 `;
 
+const BackBtn = styled.img`
+    max-height: 40px;
+    max-width: 40px;
+    padding-top: 10px;
+    position: absolute;
+    z-index: 3;
+`;
+
 const Back = styled.img`
-    height: 40px;
-    width: 40px;
+    max-height: 40px;
+    max-width: 40px;
     padding-top: 10px;
     position: absolute;
     z-index: 3;
@@ -97,4 +105,4 @@ const MyclassText = styled.div`
     text-align:center;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, Back, MyclassBody, MyclassText} ;
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText,Back} ;

@@ -45,20 +45,20 @@ const CommentText = styled.button`
 `;
 
 const CommentAuthorImg = styled.img`
-    width: 40px; /* 設定頭像的寬度和高度 */
-    height: 40px;
+    width: 13%; /* 設定頭像的寬度和高度 */
+    height: 13%;
     border-radius: 50%;
     overflow: hidden;
-    margin-left: 20px;
-    padding-top: 25px;
 `;
 
 
 const CommentAuthor = styled.div`
     color: #232323;
     width: fit-content;
-    
+    margin-top:10px;
 `;
+
+
 
 const CommentBody = styled.div`
     margin-top: 8px;
@@ -89,4 +89,4 @@ const CommentAuthorBtn = styled.div`
 
 
 
-export {Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentAuthorBtn, CommentBody, CommentTimeRating, CommentRating};
+export {Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentAuthorImg, CommentAuthorBtn, CommentBody, CommentTimeRating, CommentRating};

@@ -9,7 +9,11 @@ html,body,#root{
 }
 
 .modalBackground{
+    height: 100%;
+    padding: 0;
+    margin: 0;
     background-color: rgba(249, 236, 207, 0.951);
+    overflow: auto;
 }
 
 .modalClose{

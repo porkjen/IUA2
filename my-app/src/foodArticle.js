@@ -1,18 +1,20 @@
-//import './changeClass.css';
+import './food.css';
 import React from 'react';
 import dog from './img/dog.png';
 import banana from './img/banana.png';
 import Modal from "./components/Modal";
 import logo from './img/IUAlogo.png';
 import star from './img/star.png';
+import student from './img/student.png';
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
+import{ArticleAuthorImg} from './components/ArticleStyle.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor, 
   ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, 
   ButtonContainer, ArticleDetailSavedBtn, ArticleDetailNormalBtn, ArticleDetailAlreadySavedBtn, ArticleDetailRatingdBtn, 
   ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, 
-  ArticleDetailPostBtn, ArticleDetailContactdBtn, ArticleDetailCommentDeleteBtn,ArticleDetailReportdBtn, ArticleDetailAlreadyReportBtn}  from './components/ArticleDetailStyle.js';
-import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating, CommentAuthorBtn} from './components/CommentStyle.js';
+  ArticleDetailPostBtn, ArticleDetailContactdBtn, ArticleDetailCommentDeleteBtn,ArticleDetailReportdBtn, ArticleDetailCommentModifyBtn}  from './components/ArticleDetailStyle.js';
+import{CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentAuthorBtn, CommentAuthorImg} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation, useNavigate,Link } from 'react-router-dom';
 import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
@@ -24,7 +26,7 @@ const FoodArticle=()=> {
     const location = useLocation();
     const [data, setData] = useState(null);
     const [openModal, setOpenModal] = useState(false);
-    const { studentID, postId } = location.state;
+    const { postId } = location.state;
     const [isCreator, setIsCreator] = useState(false);
     const [isReviewCreator, setIsReviewCreator] = useState(false);
     const [isMeComment, setIsMeComment] = useState(false);
@@ -35,6 +37,7 @@ const FoodArticle=()=> {
     const [isAlreadyRating, setIsAlreadyRating] = useState(false);
     const [responseStatus, setResponseStatus] = useState(null);
     const [isAlreadySaved, setIsAlreadySaved] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
     const userInfo = loginUser();
     const token = getAuthToken();
 
@@ -77,6 +80,8 @@ const FoodArticle=()=> {
                        //Form submission happens here
       }
 
+      
+
       if(commentCreator===true){
         setIsMeComment(text);
         setIsMeRating(commentRating)
@@ -84,8 +89,9 @@ const FoodArticle=()=> {
           <CommentContainer>
             <CommentText>
             <CommentAuthorBtn>
+                <CommentAuthorImg src={student}></CommentAuthorImg>
                 <CommentAuthor>{author}</CommentAuthor>
-                
+                <ArticleDetailCommentModifyBtn onClick={() => setOpenModal(true)}>修改評分</ArticleDetailCommentModifyBtn>
                 <ArticleDetailCommentDeleteBtn onClick={handleCommentDeleteSubmit}>刪除</ArticleDetailCommentDeleteBtn>
               </CommentAuthorBtn>
                 <CommentBody>{text}</CommentBody>
@@ -98,7 +104,10 @@ const FoodArticle=()=> {
         return (
           <CommentContainer>
             <CommentText>
+            <CommentAuthorBtn>
+                 <CommentAuthorImg src={student}></CommentAuthorImg>
                 <CommentAuthor>{author}</CommentAuthor>
+            </CommentAuthorBtn>
                 <CommentBody>{text}</CommentBody>
                 <CommentTimeRating><RatingFood rating={commentRating} commentStar={true}></RatingFood>{commentTime}</CommentTimeRating>
             </CommentText>
@@ -122,6 +131,9 @@ const FoodArticle=()=> {
       }
 
       function ArticleDetailInfo({ address, rating, weekday_text, URL}) {
+        if(rating<1){
+          rating=1;
+        }
         return (
           <div>
             <div>地址: {address}</div>
@@ -211,7 +223,7 @@ const FoodArticle=()=> {
         e.preventDefault();
         //const student_id = loginUser();
         const savedFormData = {
-                        studentID: "00957025",
+                        studentID: userInfo,
                         postId:postId,
                       };
                       fetch('/favorites', {
@@ -248,7 +260,7 @@ const FoodArticle=()=> {
         e.preventDefault();
         //const student_id = loginUser();
         const savedFormData = {
-                        studentID: "00957025",
+                        studentID: userInfo,
                         postId:postId,
                       };
                       fetch('/favorites_delete', {
@@ -266,44 +278,63 @@ const FoodArticle=()=> {
                        //Form submission happens here
       }
 
-      const handleRemovedFoodPostSubmit = (e) => {
-        e.preventDefault();
-        //const student_id = loginUser();
-        const savedFormData = {
-                        studentID: "00957025",
-                        postId:postId,
-                      };
-                      fetch(`/food_post_delete?studentID=${userInfo}&postId=${postId}`, {
-                            method: 'DELETE',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'Authorization': `${token}`
-                            },
-                            body: JSON.stringify(savedFormData)
-                          })
-                          .then(response => response.status)
-                          .catch(error => {
-                            console.error(error);
-                          });
-                          navigate("/food", {
-                            state: {
-                              studentID:"00957025",
-                              fromSearch:false},});
-                       //Form submission happens here
-      }
 
       const handleModifyFoodPostSubmit = (e) => {
         e.preventDefault();
         //const student_id = loginUser();
                           navigate("/modifyPost", {
                             state: {
-                              studentID:"00957025",
+                              studentID:userInfo,
                               postId:postId,
                               fromSearch:false,
                               ModifyType:"food",
                                },});
                        //Form submission happens here
       }
+
+      function ConfirmDelete(){
+
+        const handleRemovedFoodPostSubmit = (e) => {
+          e.preventDefault();
+          //const student_id = loginUser();
+          const savedFormData = {
+                          studentID: userInfo,
+                          postId:postId,
+                        };
+                        fetch(`/food_post_delete?studentID=${userInfo}&postId=${postId}`, {
+                              method: 'DELETE',
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `${token}`
+                              },
+                              body: JSON.stringify(savedFormData)
+                            })
+                            .then(response => response.status)
+                            .catch(error => {
+                              console.error(error);
+                            });
+                            navigate("/food", {
+                              state: {
+                                studentID:"00957025",
+                                fromSearch:false},});
+                         //Form submission happens here
+        }
+  
+        const handleCancelRemovedFoodPostSubmit = (e) => {
+          e.preventDefault();
+  
+          setConfirmDelete(false);     
+        }
+        
+        return(
+                <div className='food_deleteModal'>
+                  <label className='food_deleteText'>確定要刪除嗎!!</label>
+                  <button className='food_modal_yes' onClick={handleRemovedFoodPostSubmit}>確定</button>
+                  <button className='food_modal_no' onClick={handleCancelRemovedFoodPostSubmit}>取消</button>
+                </div>
+        );
+    }
+  
 
       const handleReportSubmit = (e) => {
         e.preventDefault();
@@ -330,6 +361,13 @@ const FoodArticle=()=> {
                        //Form submission happens here
       }
 
+      const handleRemovedFoodPostConfirmSubmit = (e) => {
+        e.preventDefault();
+        setConfirmDelete(true);
+
+      }
+
+
       return (
         <ArticleDetailPage>
             <ArticleDetailPosition>
@@ -337,8 +375,13 @@ const FoodArticle=()=> {
                 <hr></hr>
                 <ArticleDetailInfo key={data.postId}   address={data.address} rating={data.rating} weekday_text={data.weekday_text} URL={data.url}  ></ArticleDetailInfo>
                 <hr></hr>
-                {isCreator && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyFoodPostSubmit}>修改貼文</ArticleDetailNormalBtn>
-                    <ArticleDetailNormalBtn onClick={handleRemovedFoodPostSubmit}>刪除貼文</ArticleDetailNormalBtn>
+                {confirmDelete && <ConfirmDelete/>}
+                {!confirmDelete && isCreator && (<ButtonContainer>
+                  <ArticleDetailNormalBtn onClick={handleModifyFoodPostSubmit}>修改貼文</ArticleDetailNormalBtn>
+                    <ArticleDetailNormalBtn onClick={handleRemovedFoodPostConfirmSubmit}>刪除貼文</ArticleDetailNormalBtn>
+                </ButtonContainer>)}
+                {confirmDelete && isCreator && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyFoodPostSubmit} disabled>修改貼文</ArticleDetailNormalBtn>
+                    <ArticleDetailNormalBtn onClick={handleRemovedFoodPostConfirmSubmit} disabled>刪除貼文</ArticleDetailNormalBtn>
                 </ButtonContainer>)}
                 {!isCreator && (
                   <ButtonContainer>
@@ -361,14 +404,14 @@ const FoodArticle=()=> {
                 <hr></hr>
                 <ArticleDetailComment>
                 {data.review.map(item => {
-                    if(item.p_studentID===studentID){
+                    if(item.p_studentID===userInfo){
                       setIsAlreadyComment(true);
                     }
                     if(item.p_review==="test"){
                       setIsAlreadyRating(true);
                     }
                     if (item.p_review) {
-                      if(item.p_studentID===studentID){
+                      if(item.p_studentID===userInfo){
                         return (
                           <Commentinfo
                             key={item.p_name}
@@ -426,7 +469,7 @@ const FoodArticle=()=> {
 
 
         const formData = {
-            studentID:  studentID,
+            studentID:  userInfo,
             postId : postId,
           };
 
@@ -438,7 +481,7 @@ const FoodArticle=()=> {
                     body: JSON.stringify(formData)})
                 .then(response => response.json())
                 .then(data => {
-                  if(data.studentID==studentID){
+                  if(data.studentID==userInfo){
                     console.log("same");
                     setIsCreator(true);
                   }
@@ -477,7 +520,7 @@ const FoodArticle=()=> {
 
       return (
         <ArticleDetailPage>
-           <Back src={back} alt="回上一頁" onClick={handleBackSubmit}/>
+           <img src={back} className='food_back' alt="回上一頁" onClick={handleBackSubmit}/>
             {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment}/>}
             {!openModal && < FoodDetailInfo/>}
         </ArticleDetailPage>

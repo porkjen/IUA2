@@ -43,7 +43,7 @@ function ChooseArticle(){
 
 
 
-function Modal({closeModal, type, postId, comment, alreadyComment, studentID, time}){
+function Modal({closeModal, type, postId, comment, alreadyComment, studentID, time, rating}){
 
     let navigate = useNavigate();
     const [isModalFood, setisModalFood] = useState(true);
@@ -55,8 +55,10 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     const [isRating, setisRating] = useState(false);
     const [isPostId, setisPostId] = useState(false);
     const [isComment, setisComment] = useState(false);
+    const [isMeRating, setisMeRating] = useState(false);
     const [isAlreadyComment, setIsAlreadyComment] = useState(false);
     const [confirm, setConfirm] = useState(false);
+    const [noData, setNoData] = useState(false);
     const token = getAuthToken();
     const userInfo = loginUser();
 
@@ -242,7 +244,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                 body: JSON.stringify(formData)})
             .then(response => response.json())
             .then(data => {
-              if(data.studentID==studentID){
+              if(data.studentID==userInfo){
                 console.log("same");
                 setIsCreator(true);
               }
@@ -273,7 +275,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
             
               navigate("/changeClassList", {
                 state: {
-                  studentID: "00957017",
+                  studentID: userInfo,
                         time:time,},});
                   //closeModal(false);
                   window.location.reload();
@@ -289,7 +291,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
             
                         navigate("/modifyPost", {
                           state: {
-                            studentID:"00957017",
+                            studentID:userInfo,
                             postId:postId,
                             fromSearch:false,
                             ModifyType:"changeClass",
@@ -411,14 +413,15 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                         if(isAlreadyComment===true){
                             const formData = {
                                 postId:isPostId,
-                                studentID: "00957017",
+                                studentID: userInfo,
                                 p_review : isComment,
                                 p_rate : Frating,
                               };
                               fetch('/food_review_modify', {
                                 method: 'PUT',
                                 headers: {
-                                  'Content-Type': 'application/json'
+                                  'Content-Type': 'application/json',
+                                  'Authorization': `${token}`
                                 },
                                 body: JSON.stringify(formData)
                               })
@@ -433,14 +436,15 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                         else{
                             const formData = {
                                 postId:isPostId,
-                                studentID: "00957017",
+                                studentID: userInfo,
                                 p_review : "尚未發表評論",
                                 p_rate : Frating,
                               };
                             fetch('/food_review_add', {
                                 method: 'POST',
                                 headers: {
-                                  'Content-Type': 'application/json'
+                                  'Content-Type': 'application/json',
+                                  'Authorization': `${token}`
                                 },
                                 body: JSON.stringify(formData)
                               })
@@ -455,7 +459,6 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                               window.location.reload();
                               navigate("/foodArticle", {
                                 state: {
-                                  studentID:"00957017",
                                   postId,postId,
                                   fromSearch:false},});
                                   
@@ -499,7 +502,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
           e.preventDefault();
           //const student_id = loginUser();
           const formData = {
-            studentID: "00957025",
+            studentID: userInfo,
             calssNum : "123456",
             time : "45",
             type : selectedType,

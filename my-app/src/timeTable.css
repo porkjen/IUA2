@@ -97,7 +97,7 @@ table, th, td {
     flex-wrap: wrap;
     z-index: 2;
     margin-top: 140px;
-    margin-left:50px;
+    
 }
 
 .timeTable_info{
@@ -125,7 +125,7 @@ table, th, td {
     max-height: 250px;  
     max-width: 250px; 
     top: 20px;
-    right: -155px;
+    right: -105px;
     z-index: 1;
 }
 
