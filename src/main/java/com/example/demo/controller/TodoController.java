@@ -159,7 +159,6 @@ public class TodoController {
         try {
             jwtToken.validateToken(au, finished.getStudentID());
         } catch (AuthException e) {
-            //return null;
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
@@ -251,9 +250,15 @@ public class TodoController {
         return result;
     }
 
-    @PostMapping("/rent_post") //發文
-    public HouseEntity rentPost(@RequestBody HouseEntity house){
-        System.out.println("/rent_post");
+    @PostMapping("/rent_post")
+    public ResponseEntity<?> rentPost(@RequestBody HouseEntity house, @RequestHeader("Authorization")String au){
+        System.out.println("/rent_post, 租屋發文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, house.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         String dateTime = DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
                 .format(LocalDateTime.now());
         house.setPost_time(dateTime);
@@ -266,10 +271,12 @@ public class TodoController {
         house.setPostId(post_id);
         house.setName(basicRepository.findByStudentID(house.getStudentID()).getName());//real name
         houseRepository.save(house);
+        //加到我的文章
         SavedEntity savedEntity = savedRepository.findByStudentID(house.getStudentID());
         savedEntity.setPosted(post_id);//add
         savedRepository.save(savedEntity);
-        return house;
+        System.out.println("發文成功");
+        return ResponseEntity.ok(house);
     }
 
     @GetMapping("/rent_load") //list all house posts
@@ -320,7 +327,14 @@ public class TodoController {
     }
 
     @PutMapping("/rent_post_modify")
-    public ResponseEntity<String> rentPostModify(@RequestBody HouseEntity houseEntity){
+    public ResponseEntity<String> rentPostModify(@RequestBody HouseEntity houseEntity, @RequestHeader("Authorization")String au){
+        System.out.println("/rent_post_modify, 修改租屋發文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, houseEntity.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         HouseEntity thisHouse = houseRepository.findByPostId(houseEntity.getPostId());
         houseEntity.setId(thisHouse.getId());
         houseEntity.setPost_time(thisHouse.getPost_time());
@@ -329,6 +343,7 @@ public class TodoController {
             for(String save : thisHouse.getSaved())houseEntity.setSaved(save);
         }
         houseRepository.save(houseEntity);
+        System.out.println("修改成功");
         return ResponseEntity.ok("Success");
     }
 

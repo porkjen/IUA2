@@ -8,7 +8,9 @@ import com.example.demo.repository.BasicRepository;
 import com.example.demo.repository.ChangeCourseHaveRepository;
 import com.example.demo.repository.ChangeCourseRepository;
 import com.example.demo.repository.SavedRepository;
+import jakarta.security.auth.message.AuthException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +54,14 @@ public class ChangeCourseController {
     }
 
     @PostMapping("/exchange_course_post")
-    public ChangeCourseEntity exchangeCoursePost(@RequestBody ChangeCourseEntity course){
+    public ResponseEntity<?> exchangeCoursePost(@RequestBody ChangeCourseEntity course, @RequestHeader("Authorization")String au){
+        System.out.println("/exchange_course_post, 換課發文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, course.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         if(changeCourseRepository.findFirstByOrderByIdDesc() == null)course.setPostId("C00001");
         else{
             String post_id; //get new post_id
@@ -60,6 +69,7 @@ public class ChangeCourseController {
             post_id = nextPostId.getNextCourseString(changeCourseRepository.findFirstByOrderByIdDesc().getPostId());
             course.setPostId(post_id);
         }
+        System.out.println("postId : "+course.getPostId());
         for(int i=0;i< course.getTime().length;i++){
             ChangeCourseHaveEntity thisTime = changeCourseHaveRepository.findByTime(course.getTime()[i]);
             thisTime.setHave(thisTime.getHave() + 1);
@@ -70,14 +80,23 @@ public class ChangeCourseController {
         course.setPost_time(dateTime);
         course.setNickname(basicRepository.findByStudentID(course.getStudentID()).getNickname());
         changeCourseRepository.save(course);
+        //加入到我的文章
         SavedEntity saved = savedRepository.findByStudentID(course.getStudentID());
         saved.setPosted(course.getPostId());//add
         savedRepository.save(saved);
-        return course;
+        System.out.println("發文成功");
+        return ResponseEntity.ok(course);
     }
 
     @PutMapping("/course_post_modify")
-    public ChangeCourseEntity coursePostModify(@RequestBody ChangeCourseEntity modifyCourse){
+    public ResponseEntity<?> coursePostModify(@RequestBody ChangeCourseEntity modifyCourse, @RequestHeader("Authorization")String au){
+        System.out.println("/course_post_modify, 修改換課貼文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, modifyCourse.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         ChangeCourseEntity original = changeCourseRepository.findByPostId(modifyCourse.getPostId());
         original.setCourse(modifyCourse.getCourse());
         original.setCategory(modifyCourse.getCategory());
@@ -95,11 +114,19 @@ public class ChangeCourseController {
         original.setTeacher(modifyCourse.getTeacher());
         original.setContent(modifyCourse.getContent());
         changeCourseRepository.save(original);
-        return original;
+        System.out.println("修改換課貼文成功");
+        return ResponseEntity.ok(original);
     }
 
     @DeleteMapping("/course_post_delete")
-    public ResponseEntity<String> coursePostDelete(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<String> coursePostDelete(@RequestBody Map<String, String> requestData, @RequestHeader("Authorization")String au){
+        System.out.println("/course_post_delete, 刪除換課貼文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, requestData.get("studentID"));
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         if(changeCourseRepository.findByPostId(requestData.get("postId")) != null){
             ChangeCourseEntity thisCourse = changeCourseRepository.findByPostId(requestData.get("postId"));
             for(int i=0;i< thisCourse.getTime().length;i++){
@@ -108,9 +135,17 @@ public class ChangeCourseController {
                 changeCourseHaveRepository.save(thisTime);
             }
             changeCourseRepository.delete(thisCourse);
+            //刪除我的貼文
+            SavedEntity saved = savedRepository.findByStudentID(requestData.get("studentID"));
+            saved.removePosted(requestData.get("postId"));
+            savedRepository.save(saved);
+            System.out.println("刪除成功");
             return ResponseEntity.ok("Success"); //200
         }
-        else return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+        else {
+            System.out.println("找不到換課貼文，刪除失敗");
+            return (ResponseEntity<String>) ResponseEntity.noContent(); //204
+        }
     }
 
     @GetMapping("/course_classify")

@@ -41,7 +41,7 @@ public class JwtToken implements Serializable {
             String user = (Jwts.parser()
                     .setSigningKey( SECRET )
                     .parseClaimsJws( token ).getBody().get("studentID")).toString();
-            System.out.println(user);
+            System.out.println("JWT : "+user);
             if (user != null && !user.equals(studentID)) {
                 System.out.println("JWT token user mismatch.");
                 throw new AuthException("JWT token user mismatch.");

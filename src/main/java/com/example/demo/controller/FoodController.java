@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.JwtToken;
 import com.example.demo.repository.BasicRepository;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.NextPostId;
@@ -7,6 +8,7 @@ import com.example.demo.repository.SavedRepository;
 import com.example.demo.dao.FoodDTO;
 import com.example.demo.dao.FoodEntity;
 import com.example.demo.dao.SavedEntity;
+import jakarta.security.auth.message.AuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,8 +34,15 @@ public class FoodController {
     @Autowired
     SavedRepository savedRepository;
     @PostMapping("/food_posts")//post a food post
-    public FoodEntity foodPosts(@RequestBody FoodEntity food){
-        //String post_id; //get new post_id
+    public ResponseEntity<?> foodPosts(@RequestBody FoodEntity food, @RequestHeader("Authorization") String au){
+        System.out.println("/food_posts, 發文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, food.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        //get new post_id
         if(foodRepository.findFirstByOrderByIdDesc()==null){food.setPostId("F00001");}
         else{
             NextPostId nextPostId = new NextPostId();
@@ -54,7 +63,7 @@ public class FoodController {
         SavedEntity savedEntity = savedRepository.findByStudentID(food.getStudentID());
         savedEntity.setPosted(food.getPostId());//add
         savedRepository.save(savedEntity);
-        return food;
+        return ResponseEntity.ok(food);
     }
 
     @PostMapping("/food_full_post")
@@ -107,8 +116,14 @@ public class FoodController {
         return shortenedPostList;
     }
     @PutMapping("/food_modify")
-    public FoodEntity foodModify(@RequestBody FoodEntity food){
-        System.out.println("/food_modify");
+    public ResponseEntity<?> foodModify(@RequestBody FoodEntity food, @RequestHeader("Authorization")String au){
+        System.out.println("/food_modify, 修改貼文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, food.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         FoodEntity modifyFoodPost = foodRepository.findByPostId(food.getPostId());
         //modify store name
         if(!Objects.equals(food.getStore(), "") )
@@ -128,25 +143,44 @@ public class FoodController {
         //modify district
         if(!Objects.equals(food.getDistrict(), ""))
             modifyFoodPost.setRoad(food.getDistrict());
+        //modify url
+        if(!Objects.equals(food.getURL(), ""))
+            modifyFoodPost.setRoad(food.getURL());
         foodRepository.save(modifyFoodPost);
-        return modifyFoodPost;
+        return ResponseEntity.ok(modifyFoodPost);
     }
 
     @DeleteMapping("/food_post_delete")
-    public ResponseEntity<String> foodPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
-        System.out.println("/food_post_delete");
+    public ResponseEntity<String> foodPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId, @RequestHeader("Authorization") String au){
+        System.out.println("/food_post_delete, 刪除貼文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         if(foodRepository.deleteByPostId(postId) !=null){
             SavedEntity savedEntity =  savedRepository.findByStudentID(studentID);
             savedEntity.removePosted(postId);
             savedRepository.save(savedEntity);
+            System.out.println("刪除成功");
             return ResponseEntity.ok("Success");//200
         }
-        else return ResponseEntity.badRequest().body("Invalid request");//400
+        else {
+            System.out.println("貼文未找到，刪除失敗");
+            return ResponseEntity.badRequest().body("Invalid request");//400
+        }
     }
 
     @PutMapping("/food_review_modify")
-    public FoodEntity.p foodReviewModify(@RequestBody Map<String, String> requestData) {
-        System.out.println("/food_review_modify");
+    public ResponseEntity<?> foodReviewModify(@RequestBody Map<String, String> requestData, @RequestHeader("Authorization")String au) {
+        System.out.println("/food_review_modify, 修改留言");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, requestData.get("studentID"));
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         int originalRate = 0;
         double newRate = 0;
         DecimalFormat decimalFormat = new DecimalFormat("#.0");
@@ -176,17 +210,23 @@ public class FoodController {
             thisPost.setRating(Double.parseDouble(decimalFormat.format(newRate)));
         }
         foodRepository.save(thisPost);
-        return newReview;
+        return ResponseEntity.ok(newReview);
     }
 
     @DeleteMapping("/food_review_delete")
-    public ResponseEntity<String> foodReviewDelete(@RequestBody Map<String, String> requestData){
-        System.out.println("/food_review_delete");
+    public ResponseEntity<String> foodReviewDelete(@RequestBody Map<String, String> requestData, @RequestHeader("Authorization")String au){
+        System.out.println("/food_review_delete, 刪除留言");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, requestData.get("studentID"));
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         double newRate = 0;
         boolean hasReview = false;
         DecimalFormat decimalFormat = new DecimalFormat("#.0");
         //find the post by postId
-        FoodEntity thisPost = foodRepository.deleteByPostId(requestData.get("postId"));
+        FoodEntity thisPost = foodRepository.findByPostId(requestData.get("postId"));
         if(thisPost == null)return ResponseEntity.badRequest().body("Invalid : post not found");//400
         //find the review by studentID
         FoodEntity.p thisReview = new FoodEntity.p();
@@ -198,8 +238,12 @@ public class FoodController {
         }
         if(!hasReview) return new ResponseEntity<>("Review not found", HttpStatus.NOT_FOUND);//404
         if(thisReview.getP_rate()!=0) { //this review has rating
-            newRate = (thisPost.getRating() * thisPost.getRating_num() - thisReview.getP_rate()) / (thisPost.getRating_num() - 1);
-            thisPost.setRating(Double.parseDouble(decimalFormat.format(newRate)));
+            if((thisPost.getRating_num() - 1)==0)thisPost.setRating(0);
+            else {
+                newRate = (thisPost.getRating() * thisPost.getRating_num() - thisReview.getP_rate()) / (thisPost.getRating_num() - 1);
+                System.out.println(newRate);
+                thisPost.setRating(Double.parseDouble(decimalFormat.format(newRate)));
+            }
             thisPost.setRating_num(thisPost.getRating_num() - 1);
         }
         thisPost.removeReview(thisReview);
@@ -209,16 +253,25 @@ public class FoodController {
     }
 
     @PostMapping("/food_review_add")
-    public ResponseEntity<String> foodReviewAdd(@RequestBody Map<String, String> requestData){
-        System.out.println("/food_review_add");
+    public ResponseEntity<String> foodReviewAdd(@RequestBody Map<String, String> requestData, @RequestHeader("Authorization")String au){
+        System.out.println("/food_review_add, 新增留言(一人只能留一次)");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, requestData.get("studentID"));
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         double newRate = 0;
         DecimalFormat decimalFormat = new DecimalFormat("#.0");
         //find the post by postId
         FoodEntity thisPost = foodRepository.findByPostId(requestData.get("postId"));
         //find out if the user has commented on the post
         for(FoodEntity.p review : thisPost.getReview()){
-            if(Objects.equals(review.getP_studentID(), requestData.get("studentID")))
-                return ResponseEntity.badRequest().body("Invalid request : user has commented on the post"); //400
+            if(Objects.equals(review.getP_studentID(), requestData.get("studentID"))){
+                System.out.println("留言過了!");
+                return ResponseEntity.badRequest().body("Invalid request : user has commented on the post");//400
+            }
+
         }
         //create a review structure, and add to the post
         FoodEntity.p newReview = new FoodEntity.p();
@@ -230,13 +283,14 @@ public class FoodController {
         if(Objects.equals(requestData.get("p_rate"), ""))newReview.setP_rate(0);
         else newReview.setP_rate(Integer.parseInt(requestData.get("p_rate")));
         thisPost.setReview(newReview);
-        //if user has rate, post : rate_num+1, rate adjust
+        //if user rate, post : rate_num+1, rate adjust
         if(!Objects.equals(requestData.get("p_rate"), "")) {
             newRate = (thisPost.getRating() * thisPost.getRating_num() + Integer.parseInt(requestData.get("p_rate"))) / (thisPost.getRating_num() + 1);
             thisPost.setRating(Double.parseDouble(decimalFormat.format(newRate)));
             thisPost.setRating_num(thisPost.getRating_num() + 1);
         }
         foodRepository.save(thisPost);
+        System.out.println("留言成功");
         return ResponseEntity.ok("Success");
     }
 
