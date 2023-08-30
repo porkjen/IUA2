@@ -127,6 +127,26 @@ function MyArticles() {
     fetch(url)
       .then(response => response.json())
       .then(data => {
+        console.log(queryParams.toString());
+        console.log(data);
+        setFoodData(data); 
+      })
+      .catch(error => {
+        console.error(error); 
+      });
+  }, []); 
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams({
+      studentID: "00957025",
+    });
+
+    const url = '/my_rent_posts?' + queryParams.toString();
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        console.log(queryParams.toString());
         console.log(data);
         setRentData(data); 
       })
@@ -137,14 +157,15 @@ function MyArticles() {
 
   useEffect(() => {
     const queryParams = new URLSearchParams({
-      studentID: "00957017",
+      studentID: "00957025",
     });
 
-    const url = '/my_rent_posts?' + queryParams.toString();
+    const url = '/my_course_posts?' + queryParams.toString();
 
     fetch(url)
       .then(response => response.json())
       .then(data => {
+        console.log(queryParams.toString());
         console.log(data);
         setRentData(data); 
       })

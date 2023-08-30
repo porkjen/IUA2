@@ -131,7 +131,7 @@ function Favorite() {
         .then(data => {
           // 從服務器獲取的 JSON 格式數據是一個物件，包含 food 和 rent 兩個屬性
           // 每個屬性的值都是一個物件的陣列，將這些陣列組合成一個新的陣列
-
+          console.log(data);
           const newFoodData = [...data.savedFood];
           const newHouseData = [...data.savedHouse];
           // const newChangeClassData = [...data.savedChangeClass];
