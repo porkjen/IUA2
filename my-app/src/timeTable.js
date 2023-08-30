@@ -178,12 +178,11 @@ const TimeTable=()=> {
       return (
 
         <div className="TimeTable">    
-        <Link to='/HomePage'>
+        <Link to='/CourseSelection'>
               <Back src={back} alt="回上一頁" />
           </Link>
             <div className="TimeTablebg">
                 <div className="TimeTable_draw"> 
-                        <img src={cat1} alt="IUA" className="TimeTableCat1" />
                         <img src={cat2} alt="IUA"  className="TimeTableCat2"/>
                     <div className="TimeTable_title">
                         <label className="TimeTable_title_font">課表查詢</label>

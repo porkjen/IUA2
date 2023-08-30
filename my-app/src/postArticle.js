@@ -237,7 +237,6 @@ const PostArticle=()=> {
         };
         const handleHwaterChange = event => {
           setHwater(event.target.value);
-          
         };
         const handleHwaterMoneyChange = event => {
           setHwaterMoney(event.target.value);

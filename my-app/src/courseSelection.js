@@ -26,7 +26,7 @@ const CourseSelection=()=> {
                     <div className="finger"><img src={finger} alt="IUA"></img></div>
                     <div className="courseSelection_allBtn">
                             <div class="flex">
-                                <Link to=''>
+                                <Link to='/timeTable'>
                                 <div className="searchScheduleBtn">
                                     <button className="searchScheduleButton">
                                         <img src={searchScheduleImg} className='courseSelectionpic'/>
