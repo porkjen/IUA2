@@ -132,4 +132,21 @@ const CoreField = styled.label`
     color:black;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo, CoreField} ;
+const GEinfo = styled.label`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    color:#008CBA;
+    margin-top:10px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+    width: 90%;
+    height: 20%;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 10px;
+`;
+
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo, CoreField, GEinfo} ;

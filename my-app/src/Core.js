@@ -15,7 +15,7 @@ const Core=()=>{
             <div className="Core">    
                 <div className='core_bg'>
                     <div>
-                        <Link to='/Credit'>
+                        <Link to='/coreSearch'>
                             <img src={back} alt="回上一頁" className="core_backicon"/>
                         </Link>
                     </div>
