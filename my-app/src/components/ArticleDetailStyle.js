@@ -130,6 +130,26 @@ const ArticleDetailContactdBtn = styled.button`
     height:30px;
     margin-left:60%;
     border-radius: 6px; 
+    margin-right:20px;
+`;
+
+/*修改評分 */
+const ArticleDetailCommentModifyBtn = styled.button`
+    color: rgba(249, 231, 193, 0.951);
+    background: transparent; 
+    border: 2px solid  rgba(249, 231, 193);
+    border-radius: 6px; 
+    color: black;
+    padding: 8px 16px;
+    font-size: 8px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-left:7%;
+    width:30%;
 `;
 
 /*刪除留言 */
@@ -147,7 +167,8 @@ const ArticleDetailCommentDeleteBtn = styled.button`
     cursor: pointer;
     text-decoration: none;
     text-transform: uppercase;
-    margin-left:70%;
+    margin-left:20px;
+    width:25%;
 `;
 
 const ArticleDetailComment = styled.div`
@@ -201,4 +222,6 @@ const ArticleDetailPostBtn = styled.button`
 
 export {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthorArea, ArticleDetailAuthorImg, ArticleDetailAuthor,
      ArticleDetailStar, ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailSavedBtn, 
-     ArticleDetailNormalBtn,  ArticleDetailAlreadySavedBtn, ArticleDetailReportdBtn, ArticleDetailAlreadyReportBtn, ArticleDetailContactdBtn,  ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, ArticleDetailPostBtn, ArticleDetailCommentDeleteBtn};
+     ArticleDetailNormalBtn,  ArticleDetailAlreadySavedBtn, ArticleDetailReportdBtn, ArticleDetailAlreadyReportBtn, ArticleDetailContactdBtn,  
+     ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailRatingdBtn, 
+     ArticleDetailPostBtn, ArticleDetailCommentDeleteBtn, ArticleDetailCommentModifyBtn};

@@ -51,9 +51,34 @@ const RemainText = styled.div`
     text-align:center;
 `;
 
+const Mustinfo = styled.label`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    color:#008CBA;
+    margin-top:10px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+    width: 350px;
+    height: 60px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 10px;
+`;
+
+const BackBtn = styled.img`
+    max-height: 40px;
+    max-width: 40px;
+    padding-top: 10px;
+    position: absolute;
+    z-index: 3;
+`;
+
 const Back = styled.img`
-    height: 40px;
-    width: 40px;
+    max-height: 40px;
+    max-width: 40px;
     padding-top: 10px;
     position: absolute;
     z-index: 3;
@@ -79,55 +104,5 @@ const MyclassText = styled.div`
     font-size:15px;
     text-align:center;
 `;
-const Mustinfo = styled.label`
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
-    font-family: 'Noto Serif TC', serif;
-    color:#008CBA;
-    margin-top:10px;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 2;
-    width: 350px;
-    height: 60px;
-    background-color: white;
-    border-radius: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 10px;
-`;
 
-const Coreinfo = styled.label`
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
-    font-family: 'Noto Serif TC', serif;
-    color:#008CBA;
-    margin-top:10px;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 2;
-    width: 350px;
-    height: 80px;
-    background-color: white;
-    border-radius: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 10px;
-`;
-
-const GEinfo = styled.label`
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
-    font-family: 'Noto Serif TC', serif;
-    color:#008CBA;
-    margin-top:10px;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 2;
-    width: 350px;
-    height: 150px;
-    background-color: white;
-    border-radius: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 10px;
-`;
-
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, Coreinfo, GEinfo, RemainText, RemainBody, Back, MyclassBody, MyclassText} ;
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText,Back} ;

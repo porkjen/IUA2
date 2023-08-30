@@ -3,32 +3,55 @@ import React from 'react';
 import dialog from './img/chatBubble.png';
 import cookie from './img/cookie.png';
 import toast from './img/toast.png';
+import cat1 from './img/SignIn1.png';
+import cat2 from './img/SignIn2.PNG';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useLocation } from 'react-router-dom';
 import {useState, useEffect} from "react";
+import { loginUser } from './cookie';
+import { useCookies } from 'react-cookie';
+import { getAuthToken } from "./utils";
 
 const TimeTable=()=> {
 
     
     function TimeTable() {
 
+        const userInfo = loginUser();
         const location = useLocation();
         const [data, setData] = useState(null);
         const [student_id, setStudent] = useState(null);
+        const [cookies, setCookie] = useCookies(['token']);
+        const token = getAuthToken();
 
         useEffect(() => {
-            if (!data) {
-              fetch(`/curriculum_search?studentID=${"00957025"}`)
-                .then(response => response.json())
-                .then(data => {
-                  console.log(data);
-                  setData(data);
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                });
-            }
-          }, [data]); // 添加依賴項data
+          if (!data) {
+            fetch(`/curriculum_search?studentID=${userInfo}`, {
+              headers: {
+                'Authorization': `${token}`  // 將 token 添加到請求頭中
+              }
+            })
+            .then(response => {
+              console.log(response.status);
+              if (response.status === 200) {
+                
+                return response.json(); // 解析回應為 JSON
+              } else {
+                throw new Error('Unauthorized'); // 或者在其他狀況處理錯誤
+              }
+            })
+            .then(data => {
+              console.log(data);
+              setData(data);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+          }
+        }, [data, userInfo]); // 添加依賴項data、userInfo和authHeader
+        
           
           function generateTableRows() {
             const rows = [];
@@ -155,19 +178,15 @@ const TimeTable=()=> {
       return (
 
         <div className="TimeTable">    
+        <Link to='/HomePage'>
+              <Back src={back} alt="回上一頁" />
+          </Link>
             <div className="TimeTablebg">
                 <div className="TimeTable_draw"> 
-                    <div className="TimeTablecookie">
-                        <img src={cookie} alt="IUA" />
-                    </div>
-                    <div className="TimeTabledialog">
-                        <img src={dialog} alt="IUA" />
-                    </div>
-                    <div className="TimeTabletoast">
-                        <img src={toast} alt="IUA" />
-                    </div>
+                        <img src={cat1} alt="IUA" className="TimeTableCat1" />
+                        <img src={cat2} alt="IUA"  className="TimeTableCat2"/>
                     <div className="TimeTable_title">
-                        <label>課表查詢</label>
+                        <label className="TimeTable_title_font">課表查詢</label>
                     </div>
                 </div>
 

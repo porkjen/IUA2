@@ -28,13 +28,28 @@ public class ChangeCourseController {
     ChangeCourseRepository changeCourseRepository;
     @Autowired
     BasicRepository basicRepository;
+
     @Autowired
     SavedRepository savedRepository;
+
     @GetMapping("/course_change_have") //whether there is class at this time
     public List<ChangeCourseHaveEntity> courseChangeHave(){
         List<ChangeCourseHaveEntity> courseTimeList = changeCourseHaveRepository.findAll();
         return courseTimeList;
     }
+
+    /*
+    @GetMapping("/course_change")
+    public List<ChangeCourseEntity> courseChange(@RequestParam("time") String time){
+        List<ChangeCourseEntity> thisTimeCourses = new ArrayList<>();
+        for(ChangeCourseEntity c : changeCourseRepository.findAll()){
+            String[] timeArray = c.getTime();
+            for(int i=0;i< timeArray.length;i++){
+                if(Objects.equals(timeArray[i], time))thisTimeCourses.add(c);
+            }
+        }
+        return thisTimeCourses;
+    }*/
 
     @GetMapping("/course_change")
     public List<ChangeCourseEntity> courseChange(@RequestParam("time") String time){

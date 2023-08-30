@@ -35,6 +35,7 @@ public class FinishedCourse{
         this.teacher = teacher;
     }
 
+
     public void setDepartment(String dept){
         this.department = dept;
     }

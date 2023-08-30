@@ -72,7 +72,11 @@ body{
     text-align: center;
     width: 100%;
     margin-top: 55px;
-    
+    padding-left: 20px;
+}
+
+.TimeTable_title_font{
+    font-size: 30px;
 }
 
 .TimeTable_title > label{
@@ -93,7 +97,7 @@ table, th, td {
     flex-wrap: wrap;
     z-index: 2;
     margin-top: 140px;
-    margin-left:50px;
+    
 }
 
 .timeTable_info{
@@ -113,4 +117,23 @@ table, th, td {
 .timeTable_info > tr > .break{
     font-size: 13px;
     text-align: center;
+}
+
+
+.TimeTableCat1{
+    position: absolute;
+    max-height: 250px;  
+    max-width: 250px; 
+    top: 20px;
+    right: -105px;
+    z-index: 1;
+}
+
+.TimeTableCat2{
+    position: absolute;
+    max-height: 200px;  
+    max-width: 200px; 
+    z-index: 1;
+    top: -60px;
+    left: -50px;
 }

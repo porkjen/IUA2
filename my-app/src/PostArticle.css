@@ -1,9 +1,9 @@
-html,#root,.PostArticle{
+html,#root{
     height: 100%;
     padding: 0;
     margin: 0;
     height: 100vh;
-    overflow: auto;
+
 }
 
 body {
@@ -12,6 +12,11 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    
+}
+
+.PostArticle{
+    overflow: hidden;
 }
 
 
@@ -55,6 +60,7 @@ body {
     margin-left: 20px;
     padding: 5px;
     width: 28%;
+    font-family: 'Noto Serif TC', serif;
 }
 
 /*美食發文*/
@@ -76,6 +82,7 @@ body {
     margin-left: 15px;
     width: 60%;
     margin-bottom: 15px;
+    font-family: 'Noto Serif TC', serif;
 }
 
 .articleFoodForm > .articleFoodFormSchoolRate > input{
@@ -87,6 +94,16 @@ body {
     margin-bottom: 15px;
 }
 
+
+.articleFoodFormSelect, .articleRentFormSelect{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    margin-left: 15px;
+    width: 200px;
+    font-family: 'Noto Serif TC', serif;
+}
+
 /*換課發文*/
 .articleChangeClassForm{
     padding-top: 30px;
@@ -95,22 +112,13 @@ body {
     border-radius: 5px;
 }
 
-.articleChangeClassForm > .articleChangeClassFormTitle > .articleChangeClassFormTitleInput,
-.articleChangeClassForm > .articleChangeClassFormCategory > .articleChangeClassFormCategoryInput,
-.articleChangeClassForm > .articleChangeClassFormTime > .articleChangeClassFormTimeInput,
-.articleChangeClassForm > .articleChangeClassFormTeacher > .articleChangeClassFormTeacherInput{
-    border: none;
-    border-bottom: 1px solid rgb(35, 35, 35);
-    border-radius: 0px;
-    margin-left: 15px;
-    width: 200px;
-}
+
 
 .articleChangeClassForm > .articleChangeClassFormText > .articleChangeClassFormTextInput{
     width: 250px;
     height: 200px;
     margin-left: 65px;
-
+    font-family: 'Noto Serif TC', serif;
 }
 
 /*租屋發文*/
@@ -134,8 +142,6 @@ body {
 .articleRentForm > .articleRentMoney > input,
 .articleRentForm > .articleRentFormPeople > input,
 .articleRentForm > .articleRentFormType > input,
-.articleRentForm > .articleRentFormPower > input,
-.articleRentForm > .articleRentFormWater > input,
 .articleRentForm > .articleRentFormFloor > input,
 .articleRentForm > .articleRentFormDate > input{
     border: none;
@@ -147,9 +153,19 @@ body {
 
 .articleRentForm > .articleRentFormCar > input,
 .articleRentForm > .articleRentFormGender > input,
+.articleRentForm > .articleRentFormPower > input,
+.articleRentForm > .articleRentFormWater > input,
 .articleRentForm > .articleRentFormRegion > select{
     margin-left: 15px;
 }
+
+.postArticle_waterMoney, .postArticle_powerMoney{
+    border: none;
+    border-bottom: 1px solid rgb(35, 35, 35);
+    border-radius: 0px;
+    width: 25px;
+}
+
 
 
 .articleRentForm > .articleRentFormText > .articleRentFormTextInput{
@@ -157,6 +173,7 @@ body {
     height: 200px;
     margin-left: 50px;
     margin-top: 5px;
+    font-family: 'Noto Serif TC', serif;
 }
 
 .articleFoodFormBtn{
@@ -177,4 +194,24 @@ body {
     position: absolute;
     z-index: 1;
     margin-top: 3.5%;
+}
+
+.post_cat1{
+    position: absolute;
+    max-height: 250px;  
+    max-width: 250px; 
+    top: 50px;
+    right: -85px;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.post_cat2{
+    position: absolute;
+    max-height: 200px;  
+    max-width: 200px; 
+    z-index: 1;
+    top: -60px;
+    left: -50px;
+    overflow: hidden;
 }

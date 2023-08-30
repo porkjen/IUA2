@@ -11,6 +11,8 @@ import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, Arti
 import {Back}  from './components/Style.js';
 import { Routes ,Route,Link,useNavigate,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 //列出該時段有的課
 const ChangeClassList=()=> {
@@ -23,7 +25,10 @@ const ChangeClassList=()=> {
     const [alreadyChange, setAlreadyChange] = useState(false);
     let navigate = useNavigate();
     const location = useLocation();
-    const { studentID, time } = location.state;
+    const { time } = location.state;
+    const userInfo = loginUser();
+    const token = getAuthToken();
+
 
     function Articleinfo({ author, className, category, postID, post_time, status }) {
 
@@ -37,7 +42,7 @@ const ChangeClassList=()=> {
         e.preventDefault();
         //const student_id = loginUser();
         const formData = {
-                        studentID: "00957017",
+                        studentID: userInfo,
                         time:time,
                       };
           fetch('/course_full_post', {
@@ -198,7 +203,7 @@ const ChangeClassList=()=> {
           <Link to='/changeClass'>
               <Back src={back} alt="回上一頁" />
           </Link>
-          {openModal && !setNotification && <Modal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={studentID} time={time} />}
+          {openModal && !setNotification && <Modal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={userInfo} time={time} />}
           {!openModal && !setNotification && < ChangeClassList_all/>}
           
         </Page>

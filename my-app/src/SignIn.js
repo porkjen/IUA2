@@ -10,11 +10,15 @@ import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 import {useState} from "react";
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
 import { onLogin } from "./cookie.js";
+import { setAuthToken } from "./utils";
 
 const SignIn=()=> {
 
     let navigate = useNavigate();
+    const [cookies, setCookie] = useCookies(['token']);
 
     function SignIn() {
       const [student_id, setStudent_id] = useState("");
@@ -63,6 +67,7 @@ const SignIn=()=> {
                           .then(data => {
                             onLogin(student_id);
                             console.log(data.token);//token
+                            setAuthToken(data.token);
                           })
                           .catch(error => {
                             console.error(error);

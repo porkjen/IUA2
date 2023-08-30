@@ -169,7 +169,7 @@ const ArticleBaiDistance= styled.div`
     width:40%;
     height:20%;
     margin-left:200px;
-    background-color:cornsilk ;
+    background-color:#E6FAEF ;
 `;
 
 const ArticleXiangDistance= styled.div`
@@ -209,7 +209,7 @@ const ArticleXingDistance= styled.div`
     width:40%;
     height:20%;
     margin-left:200px;
-    background-color:gainsboro;
+    background-color:#FAF0E6;
 `;
 
 

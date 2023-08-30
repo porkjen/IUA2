@@ -7,3 +7,4 @@ export const onLogin = (value) =>{
 export const loginUser = () => {
     return cookie.load('id');
 }
+

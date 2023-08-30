@@ -15,6 +15,8 @@ import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDe
 import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticleContainer, ArticleRentContainer, ArticleAuthor, ArticlePostTime, ArticleBody, ChangeClassCategorySelect}  from './components/ArticleStyle.js';
 import { Routes ,Route,Link ,useNavigate, useLocation} from 'react-router-dom';
 import {useEffect,useState} from "react";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 const Rent=()=> {
     
@@ -26,6 +28,8 @@ const Rent=()=> {
     let navigate = useNavigate();
     const location = useLocation();
     const { fromSearch, RSArea, RSGender, RSPeople, RSType, RSCar } = location.state;
+    const token = getAuthToken();
+    const userInfo = loginUser();
 
     function Articleinfo({ author, time, text, postID }) {
 
@@ -33,7 +37,7 @@ const Rent=()=> {
         e.preventDefault();
         //const student_id = loginUser();
         const formData = {
-                        studentID: "00957025",
+                        studentID: userInfo,
                         postId : postID,
                       };
           fetch('/rent_full_post', {
@@ -48,7 +52,6 @@ const Rent=()=> {
                        //Form submission happens here
             navigate("/rentArticle", {
               state: {
-                studentID: "00957025",
                 postId : postID,},});
       }
 
@@ -150,9 +153,11 @@ const Rent=()=> {
       
       return (
         <Page>
-           <Link to='/choose'>
+          {!openModal && 
+            <Link to='/choose'>
               <Back src={back} alt="回上一頁" />
           </Link>
+          }
           {openModal && rentSelect && <Modal closeModal={setOpenModal} type={"rent"}/>}
           {openModal && rentNotification && <Modal closeModal={setOpenModal} type={"setRentNotification"}/>}
           {!openModal && < Rent_all/>}

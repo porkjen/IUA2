@@ -168,10 +168,10 @@ public class TodoController {
             FinishedCourseList oriList = fRepository.findByStudentID(finished.getStudentID());
             ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
             String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
-            System.out.println("semester: " + sem);
-//            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
-//            oriList.setFinishedCourses(finishedCourse);
-//            fRepository.save(oriList);
+            // System.out.println("semester: " + sem);
+            // finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
+            // oriList.setFinishedCourses(finishedCourse);
+            fRepository.save(oriList);
         }
         else{
             finishedCourse = crawler.getFinishedCredict(finishedCourse, "");
@@ -184,7 +184,7 @@ public class TodoController {
         //return remainCredit;
     }
 
-    @PostMapping("/add_detect_course") 
+    @PostMapping("/add_detect_course")
     public void addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
         if(dRepository.existsByStudentID(requestData.getStudentID())){
@@ -205,7 +205,7 @@ public class TodoController {
         }
         crawler.detectCoureses(courses);
     }
-    
+
     @PostMapping("/detect_course")
     public void detectCourse()throws TesseractException, IOException, InterruptedException{
 
@@ -1441,5 +1441,4 @@ public class TodoController {
     }
 
 }
-
 

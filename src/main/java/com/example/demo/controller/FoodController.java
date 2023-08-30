@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+
 import com.example.demo.JwtToken;
 import com.example.demo.repository.BasicRepository;
 import com.example.demo.repository.FoodRepository;
@@ -305,8 +306,10 @@ public class FoodController {
         List<FoodDTO> resultList = new ArrayList<>();
         for(FoodEntity food : foodRepository.findAllByOrderByIdDesc()){
             if((Objects.equals(store, "") || food.getStore().toLowerCase().contains(store.toLowerCase())) &&
+
                (Objects.equals(area, "") || food.getDistrict().contains(area)) &&
                (Objects.equals(addr, "") || food.getAddress().contains(addr))
+
             ){
                 FoodDTO result = new FoodDTO(food.getPostId(), food.getNickname(), food.getStore(), food.getRating(), food.getPost_time(), food.getRoad() , food.getDistance());
                 resultList.add(result);
@@ -326,6 +329,7 @@ public class FoodController {
             return ResponseEntity.ok("Success");
         }
     }
+
 
     @GetMapping("/my_food_posts")
     public List<FoodDTO> myFoodPosts(@RequestParam("studentID") String studentID){
