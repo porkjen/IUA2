@@ -171,7 +171,7 @@ public class TodoController {
             // System.out.println("semester: " + sem);
             // finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
             // oriList.setFinishedCourses(finishedCourse);
-            fRepository.save(oriList);
+            //fRepository.save(oriList);
         }
         else{
             finishedCourse = crawler.getFinishedCredict(finishedCourse, "");

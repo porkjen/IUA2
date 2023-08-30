@@ -61,7 +61,7 @@ public class RemainedService {
                 }
                 else if(f.getCategory().equals("選修")){
                     if(!dept.isEmpty()){
-                        if(dept.equals("資訊工程學系") || dept.equals("電機工程學系") || dept.equals("電機資訊學院")){
+                        if(dept.equals("資訊工程學系") || dept.equals("電機工程學系") || dept.equals("電機資訊學院") || dept.equals("資訊工程學系碩士班")){
                             if(f.getName().contains("資工系專題") || f.getName().equals("資訊專題討論")){
                                 required -= credit;
                                 requiredList.add(item);
@@ -100,7 +100,7 @@ public class RemainedService {
                     }
 
                 }
-                else if(f.getCategory().equals("通識")){
+                else if(f.getCategory().equals("通識") || f.getDepartment().equals("共同教育中心博雅教育組")){
                     general -= credit;
                     generalList.add(item);
                     if(general < 0){
