@@ -14,17 +14,10 @@
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-}
-.Chatroom .user-online {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    font-size: 12px; /* 調整適當的字體大小 */
-    margin: 10px; /* 調整適當的邊距 */
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
 }
 
 .Chatroom h1 {
@@ -66,7 +59,7 @@
     word-break: break-all; /* 長單詞斷開換行 */
 }
 
-.Chatroom .enter {
+.Chatroom form {
     display: flex;
     align-items: center;
     position: absolute;

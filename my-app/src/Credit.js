@@ -25,11 +25,13 @@ const Credit=()=> {
             <div className="pencil"><img src={pencil} alt="IUA"></img></div>
             <div className="allcBtn">
                     <div class="flex">
+                    <Link to='/remain'>
                         <div className="remainBtn">
-                            <button className="remainButton">
+                            <button className="remainButton" >
                                 <img src={remainCreditImg} className='creditpic'/>
                             </button>
                         </div>
+                    </Link>
                         <Link to='/Search'>
                             <div className="mustclassBtn">
                                 <button className="mustclassButton">

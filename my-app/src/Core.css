@@ -28,30 +28,16 @@ html,body,#root,.Core{
     padding-top: 0px;
 }
 
-label{
-    font-size: 18px;
-    font-family: 'Noto Serif TC', serif;
-}
-
-/* .orangefox img{
-    position: absolute;
-    width: 250px;
-    height: 250px;
-    left: -75px;
-    bottom: 0px;
-    z-index: 1;
-} */
-
-.whitefox img{
-    position: fixed;
-    width: 200px;
-    height: 200px;
-    z-index: 1;
-    right: -60px;
-    bottom: -29px;
-}
-
 .c_scrollableContainer {
     height: 580px; /* 設置固定高度，根據需要調整 */
     overflow: auto;
   }
+
+.whitefox img{
+    position: fixed;
+    width: 55%;
+    height: 35%;
+    z-index: 1;
+    right: -20%;
+    bottom: -5%;
+}

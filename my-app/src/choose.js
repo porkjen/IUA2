@@ -1,5 +1,7 @@
 import './choose.css';
 import React from 'react';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useNavigate } from 'react-router-dom';
 import bee1 from './img/bee1.png';
@@ -26,12 +28,16 @@ const Choose=()=> {
         e.preventDefault();
         navigate("/food", {
           state: {
-            fromSearch:false,},});
+            fromSearch:false,
+            ArticleAS:"PostTimeNtoF"},});
       }
 
     function Choose() {
       return (
         <div className="Choose"> 
+          <Link to='/HomePage'>
+              <Back src={back} alt="回上一頁" />
+          </Link>
             <div><img src={bee1} className='bee1Img'></img></div>
             <div><img src={bee2} className='bee2Img'></img></div>
             <div className='ChoosePosition'>

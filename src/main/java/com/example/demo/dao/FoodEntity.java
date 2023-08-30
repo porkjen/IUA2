@@ -21,11 +21,11 @@ public class FoodEntity {
     private String address = "";
     private String URL = "";
     private int report;
-    private String road;
+    private String road = "";
     private List<p> review = new ArrayList<>();
     private List<String> saved = new ArrayList<>();
     private double distance;
-    private String district;
+    private String district = "";
 
     public static class p {
         private String p_studentID = "";

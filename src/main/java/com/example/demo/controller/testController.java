@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+/*package com.example.demo.controller;
 
 import com.example.demo.IntentManagement;
 import com.example.demo.QA;
@@ -111,6 +111,7 @@ public class testController {
 
         }
 */
+/*
         else{
             jsonObjectResponse.getJSONObject("queryResult").put("fulfillmentText","taetae love you");
             //System.out.println(jsonObjectResponse.getJSONObject("queryResult"));
@@ -277,3 +278,4 @@ public class testController {
     }
 
 }
+*/

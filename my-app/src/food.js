@@ -6,31 +6,50 @@ import star from './img/star.png';
 import redBall from './img/redBall.PNG';
 import logo from './img/IUAlogo.png';
 import student from './img/student.png';
-import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleDistance, 
-  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect } from './components/ArticleStyle.js';
+import back from './img/back.png';
+import cat from './img/SignIn4.PNG';
+import studentboy from './img/studentboy.png';
+import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, 
+  ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect 
+  ,ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance,ChangeClassCategorySelect} from './components/ArticleStyle.js';
+import {Back}  from './components/Style.js';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef,  } from "react";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 const Food = () => {
 
+  const location = useLocation();
+  const { fromSearch, FArea, FName, FAddr, ArticleAS } = location.state;
   const [data, setData] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [visibleData, setVisibleData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isIUA, setIsIUA] = useState(false);
-  const [AS, setAS] = useState("PostTimeNtoF");
+  const [AS, setAS] = useState(ArticleAS);
   const [isRate, setisRate] = useState(false);
-  const [isPostTime, setisPostTime] = useState(true);
+  const [isPostTime, setisPostTime] = useState(false);
+  const [isDistance, setisDistance] = useState(false);
+  const [isBai, setisBai] = useState(false);
+  const [isZhong, setisZhong] = useState(false);
+  const [isXiang, setisXiang] = useState(false);
+  const [isXing, setisXing] = useState(false);
+  const [isXi, setisXi] = useState(false);
+  const [noData, setNoData] = useState(false);
   let navigate = useNavigate();
   const articleListRef = useRef(null);
-  const location = useLocation();
-  const { fromSearch, FArea, FName, FAddr } = location.state;
+  //const location = useLocation();
+  //const { fromSearch, FArea, FName, FAddr, ArticleAS } = location.state;
   const scrollPositionRef = useRef(0);
+  const userInfo = loginUser();
+  const token = getAuthToken();
 
   const handlePostASChange = event => {
     setAS("PostTimeNtoF");
     setisPostTime(true);
     setisRate(false);
+    setisDistance(false);
     fetch(`/food_load?sort=PostTimeNtoF`)
       .then(response => response.json())
       .then(data => {
@@ -49,7 +68,27 @@ const Food = () => {
     setAS("rate_Decrease");
     setisPostTime(false);
     setisRate(true);
+    setisDistance(false);
     fetch(`/food_load?sort=rate_Decrease`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("NOTsearchIn");
+        setData(data);
+        setVisibleData(data.slice(0, 50));
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setIsLoading(false); 
+      });
+  };
+
+  const handleDistanceASChange = event => {
+    setAS("distance_Increase");
+    setisPostTime(false);
+    setisRate(false);
+    setisDistance(true);
+    fetch(`/food_load?sort=distance_Increase`)
       .then(response => response.json())
       .then(data => {
         console.log("NOTsearchIn");
@@ -75,10 +114,11 @@ const Food = () => {
 
   function Articleinfo({ author, post_time, store, rating, postID, road }) {
 
+
     const handleShowFoodSubmit = (e) => {
       e.preventDefault();
       const formData = {
-        studentID: "00957025",
+        studentID: userInfo,
         postId: postID,
       };
       fetch('/food_full_post', {
@@ -91,8 +131,8 @@ const Food = () => {
           console.log(data);
           navigate("/foodArticle", {
             state: {
-              studentID: "00957025",
-              postId: postID
+              postId: postID,
+              ArticleAS:AS,
             }
           });
         })
@@ -104,10 +144,14 @@ const Food = () => {
     return (
       <ArticleContainer>
         <ArticleText onClick={handleShowFoodSubmit}>
-          {road!==null &&  <ArticleDistance>{road}</ArticleDistance>}
+          {road.includes("北寧") &&  <ArticleBaiDistance >{road}</ArticleBaiDistance>}
+          {road.includes("中正") &&  <ArticleZhongDistance >{road}</ArticleZhongDistance>}
+          {road.includes("祥豐") &&  <ArticleXiangDistance >{road}</ArticleXiangDistance>}
+          {road.includes("新豐") && <ArticleXingDistance >{road}</ArticleXingDistance>}
+          {road.includes("深溪") &&  <ArticleXiDistance >{road}</ArticleXiDistance>}
           <ArticleAuthorArea>
-            {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
-            {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}
+            {author!=="IUA" &&  <img className='food_authorImg' src={student}/>}
+            {author==="IUA" &&  <img className='food_authorImg' src={logo}/>}
             <ArticleAuthor>{author}</ArticleAuthor>
           </ArticleAuthorArea>
           <ArticleBody>{store}</ArticleBody>
@@ -120,6 +164,31 @@ const Food = () => {
   }
 
   function Food_all() {
+    console.log(AS);
+    const handleRentFunctionSelect  = event => {
+
+      if(event.target.value==='AllArticle'){
+        fetch(`/food_search?area=${''}&store=${''}&addr=${''}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log("NOTsearchIn");
+          console.log(data);
+          console.log(AS);
+          setData(data);
+          setVisibleData(data.slice(0, 50));
+          setIsLoading(false);
+          setNoData(false);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          setIsLoading(false); 
+        });
+      }
+      else if(event.target.value==='FindArticle'){
+        setOpenModal(true);
+      }
+
+    };
     return (
       <Page>
         <Pagebg>
@@ -129,17 +198,27 @@ const Food = () => {
           <Link to='/postArticle'>
             <PostArticleBtn>我要發文</PostArticleBtn>
           </Link>
-          <ChooseArticleBtn onClick={() => setOpenModal(true)}>篩選貼文</ChooseArticleBtn>
+          <ChangeClassCategorySelect onChange={handleRentFunctionSelect}>
+                  <option >功能選單</option>
+                  <option value='AllArticle'>全部貼文</option>
+                  <option value='FindArticle'>篩選貼文</option>
+          </ChangeClassCategorySelect>
           <div className='ArticleSelect'>
-          {isPostTime && <input type="radio" id='distance' name='AS' value='PostTimeNtoF' onChange={handlePostASChange} checked></input>}
-          {!isPostTime && <input type="radio" id='distance' name='AS' value='PostTimeNtoF' onChange={handlePostASChange}></input>}
-          <label for="distance">發布時間近到遠</label>
+          {isPostTime && <input type="radio" id='postTime' name='AS' value='PostTimeNtoF' onChange={handlePostASChange} checked></input>}
+          {!isPostTime && <input type="radio" id='postTime' name='AS' value='PostTimeNtoF' onChange={handlePostASChange}></input>}
+          <label for="postTime">發布時間</label>
 
           {isRate && <input type="radio" id='rate' name='AS' value='rate_Decrease' onChange={handleRateASChange} checked></input>}
           {!isRate && <input type="radio" id='rate' name='AS' value='rate_Decrease' onChange={handleRateASChange}></input>}
-          <label for="rate">評分高到低</label>
+          <label for="rate">評分高低</label>
+
+          {isDistance && <input type="radio" id='distance' name='AS' value='distance_Increase' onChange={handleDistanceASChange} checked></input>}
+          {!isDistance && <input type="radio" id='distance' name='AS' value='distance_Increase' onChange={handleDistanceASChange}></input>}
+          <label for="distance">距離遠近</label>
+
           </div><br/>
           <ArticleList ref={articleListRef}>
+            {noData && <div className='food_noData'>沒有資料</div>}
             {visibleData.map(item => (
               <Articleinfo key={item.postId} author={item.nickname} post_time={item.post_time} store={item.store} rating={item.rating} road={item.road} postID={item.postId}></Articleinfo>
             ))}
@@ -153,7 +232,13 @@ const Food = () => {
     if(fromSearch===false){
       if (!data) {
         setIsLoading(true);
-        fetch(`/food_load?sort=${AS}`)
+        if(ArticleAS=='PostTimeNtoF')
+          setisPostTime(true);
+        else if(ArticleAS=='distance_Increase')
+          setisDistance(true);
+        else if(ArticleAS=='rate_Decrease')
+          setisRate(true);
+        fetch(`/food_load?sort=${ArticleAS}`)
           .then(response => response.json())
           .then(data => {
             console.log("NOTsearchIn");
@@ -172,14 +257,21 @@ const Food = () => {
     else{
       if (!data) {
         setIsLoading(true);
+        console.log(FArea);
         fetch(`/food_search?area=${FArea}&store=${FName}&addr=${FAddr}`)
         .then(response => response.json())
         .then(data => {
           console.log("searchIn");
           console.log(FArea);
           setData(data);
+          console.log(data);
           setVisibleData(data.slice(0, 50));
           setIsLoading(false);
+          if(data.length===0){
+            setNoData(true);
+          }
+          else
+            setNoData(false);
         })
         .catch(error => {
           console.error('Error:', error);
@@ -195,7 +287,7 @@ const Food = () => {
     const listHeight = articleListRef.current.clientHeight;
     const scrollThreshold = articleListRef.current.scrollHeight * 0.8 - listHeight;
 
-    if (scrollPosition >= scrollThreshold && !isLoading) {
+    if (scrollPosition >= scrollThreshold && !isLoading && data.length>50) {
       const nextBatch = data.slice(visibleData.length, visibleData.length + 50);
       setVisibleData(prevData => [...prevData, ...nextBatch]);
     }
@@ -208,13 +300,16 @@ const Food = () => {
     articleListRef.current.addEventListener("scroll", handleScroll);
 
    return () => {
-    // 移除滚动事件监听器
+  
     articleListRef.current?.removeEventListener("scroll", handleScroll);
   };
   }, [visibleData, isLoading]);
 
   return (
     <Page>
+      <Link to='/choose'>
+              <img src={back} className='food_back' alt="回上一頁" />
+      </Link>
       {openModal && <Modal closeModal={setOpenModal} type={"food"} />}
       {!openModal && <Food_all />}
     </Page>

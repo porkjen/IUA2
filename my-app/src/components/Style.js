@@ -30,6 +30,27 @@ const RemainList = styled.div`
     transform: translate(-50%, -50%);
 `;
 
+const RemainBody = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    width: 230px;
+    height: 50px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    margin-top:2%;
+    margin-left:7px;
+`;
+
+const RemainText = styled.div`
+    padding-top: 12px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size:15px;
+    text-align:center;
+`;
+
 const Mustinfo = styled.label`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
@@ -45,6 +66,43 @@ const Mustinfo = styled.label`
     display: flex;
     flex-wrap: wrap;
     padding-left: 10px;
+`;
+
+const BackBtn = styled.img`
+    max-height: 40px;
+    max-width: 40px;
+    padding-top: 10px;
+    position: absolute;
+    z-index: 3;
+`;
+
+const Back = styled.img`
+    max-height: 40px;
+    max-width: 40px;
+    padding-top: 10px;
+    position: absolute;
+    z-index: 3;
+`;
+
+const MyclassBody = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    width: 300px;
+    height: 60px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    margin-top:2%;
+    margin-left:7px;
+`;
+
+const MyclassText = styled.div`
+    padding-top: 12px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size:15px;
+    text-align:center;
 `;
 
 const Coreinfo = styled.label`
@@ -64,23 +122,6 @@ const Coreinfo = styled.label`
     padding-left: 2%;
 `;
 
-const GEinfo = styled.label`
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
-    font-family: 'Noto Serif TC', serif;
-    color:#008CBA;
-    margin-top:10px;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 2;
-    width: 350px;
-    height: 150px;
-    background-color: white;
-    border-radius: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 10px;
-`;
-
 const CoreField = styled.label`
     border-color:black;
     border-width:1px;
@@ -91,5 +132,4 @@ const CoreField = styled.label`
     color:black;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, Coreinfo, GEinfo, CoreField} ;
-
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo, CoreField} ;

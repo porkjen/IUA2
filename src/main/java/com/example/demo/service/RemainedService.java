@@ -27,7 +27,7 @@ public class RemainedService {
         int general = 16;        //通識
         int kernal = 12;         //核心選修
         int pe = 4;             //體育
-        
+
         ArrayList<CourseCredit> requiredList = new ArrayList<CourseCredit>();   //必修細項
         ArrayList<CourseCredit> deptList = new ArrayList<CourseCredit>();       //內選細項
         ArrayList<CourseCredit> optionalList = new ArrayList<CourseCredit>();   //其他細項

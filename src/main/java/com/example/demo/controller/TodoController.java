@@ -24,8 +24,6 @@ import java.util.List;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class TodoController {
     @Autowired
-    TodoService todoService;//取得Service物件
-    @Autowired
     RemainedService remainedService;
     @Autowired
     FinishedRepository fRepository;
@@ -100,7 +98,7 @@ public class TodoController {
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
+    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
         //password encrypt
         String studentID = user.get("studentID");
@@ -129,7 +127,9 @@ public class TodoController {
             System.out.println("New user!");
             JwtToken jwtToken = new JwtToken();
             String token = jwtToken.generateToken(user); // 取得token
-            return ResponseEntity.status(HttpStatus.CREATED).body(token);//201
+            Map<String, String> t = new HashMap<>();
+            t.put("token", token);
+            return ResponseEntity.status(HttpStatus.CREATED).body(t);//201
         }
         else {
             personalData.setPassword(encryptedpwd); //user may change password, update password everytime
@@ -137,7 +137,9 @@ public class TodoController {
             System.out.println("Old user!");
             JwtToken jwtToken = new JwtToken();
             String token = jwtToken.generateToken(user); // 取得token
-            return ResponseEntity.ok(token); // 回傳狀態碼 200
+            Map<String, String> t = new HashMap<>();
+            t.put("token", token);
+            return ResponseEntity.ok(t); // 回傳狀態碼 200
         }
     }
 
@@ -157,7 +159,6 @@ public class TodoController {
         try {
             jwtToken.validateToken(au, finished.getStudentID());
         } catch (AuthException e) {
-            //return null;
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
         ArrayList<FinishedCourse> finishedCourse = new ArrayList<FinishedCourse>();
@@ -167,10 +168,10 @@ public class TodoController {
             FinishedCourseList oriList = fRepository.findByStudentID(finished.getStudentID());
             ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
             String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
-            System.out.println("semester: " + sem);
-//            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
-//            oriList.setFinishedCourses(finishedCourse);
-//            fRepository.save(oriList);
+            // System.out.println("semester: " + sem);
+            // finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
+            // oriList.setFinishedCourses(finishedCourse);
+            fRepository.save(oriList);
         }
         else{
             finishedCourse = crawler.getFinishedCredict(finishedCourse, "");
@@ -183,7 +184,7 @@ public class TodoController {
         //return remainCredit;
     }
 
-    @PostMapping("/add_detect_course") 
+    @PostMapping("/add_detect_course")
     public void addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
         if(dRepository.existsByStudentID(requestData.getStudentID())){
@@ -204,7 +205,7 @@ public class TodoController {
         }
         crawler.detectCoureses(courses);
     }
-    
+
     @PostMapping("/detect_course")
     public void detectCourse()throws TesseractException, IOException, InterruptedException{
 
@@ -249,9 +250,15 @@ public class TodoController {
         return result;
     }
 
-    @PostMapping("/rent_post") //發文
-    public HouseEntity rentPost(@RequestBody HouseEntity house){
-        System.out.println("/rent_post");
+    @PostMapping("/rent_post")
+    public ResponseEntity<?> rentPost(@RequestBody HouseEntity house, @RequestHeader("Authorization")String au){
+        System.out.println("/rent_post, 租屋發文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, house.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         String dateTime = DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
                 .format(LocalDateTime.now());
         house.setPost_time(dateTime);
@@ -264,10 +271,12 @@ public class TodoController {
         house.setPostId(post_id);
         house.setName(basicRepository.findByStudentID(house.getStudentID()).getName());//real name
         houseRepository.save(house);
+        //加到我的文章
         SavedEntity savedEntity = savedRepository.findByStudentID(house.getStudentID());
         savedEntity.setPosted(post_id);//add
         savedRepository.save(savedEntity);
-        return house;
+        System.out.println("發文成功");
+        return ResponseEntity.ok(house);
     }
 
     @GetMapping("/rent_load") //list all house posts
@@ -308,25 +317,47 @@ public class TodoController {
     }
 
     @DeleteMapping("/rent_post_delete")
-    public ResponseEntity<String> rentPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId){
-        if(houseRepository.deleteByPostId(postId) !=null){
-            //200
-            return ResponseEntity.ok("Success");
+    public ResponseEntity<String> rentPostDelete(@RequestParam("studentID") String studentID, @RequestParam("postId") String postId, @RequestHeader("Authorization")String au){
+        System.out.println("/rent_post_delete, 刪除租屋發文");
+        HouseEntity house = houseRepository.findByPostId(postId);
+        if(house==null){
+            System.out.println("貼文沒有找到");
+            return ResponseEntity.badRequest().body("Invalid request"); // 400
         }
-        else return ResponseEntity.badRequest().body("Invalid request"); // 400
-
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, houseRepository.findByPostId(postId).getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        houseRepository.deleteByPostId(postId);
+        SavedEntity saved = savedRepository.findByStudentID(studentID);
+        saved.removePosted(postId);
+        savedRepository.save(saved);
+        System.out.println("貼文刪除成功");
+        return ResponseEntity.ok("Success");//200
     }
 
     @PutMapping("/rent_post_modify")
-    public ResponseEntity<String> rentPostModify(@RequestBody HouseEntity houseEntity){
+    public ResponseEntity<String> rentPostModify(@RequestBody HouseEntity houseEntity, @RequestHeader("Authorization")String au){
+        System.out.println("/rent_post_modify, 修改租屋發文");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, houseEntity.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         HouseEntity thisHouse = houseRepository.findByPostId(houseEntity.getPostId());
         houseEntity.setId(thisHouse.getId());
+        houseEntity.setName(thisHouse.getName());
         houseEntity.setPost_time(thisHouse.getPost_time());
         houseEntity.setName(thisHouse.getName());
         if(thisHouse.getSaved().size()!=0){
             for(String save : thisHouse.getSaved())houseEntity.setSaved(save);
         }
+        houseEntity.setStatus(thisHouse.getStatus());
         houseRepository.save(houseEntity);
+        System.out.println("修改成功");
         return ResponseEntity.ok("Success");
     }
 
@@ -1410,5 +1441,4 @@ public class TodoController {
     }
 
 }
-
 

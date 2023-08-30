@@ -15,7 +15,7 @@ const Core=()=>{
             <div className="Core">    
                 <div className='core_bg'>
                     <div>
-                        <Link to='/coreSearch'>
+                        <Link to='/Credit'>
                             <img src={back} alt="回上一頁" className="core_backicon"/>
                         </Link>
                     </div>
@@ -33,9 +33,6 @@ const Core=()=>{
                         </div>  
                     </div>
                     <div className="core_pic">
-                      {/* <div className="orangefox">
-                            <img src={orangefox} alt="IUA" />
-                        </div> */}
                         <div className="whitefox">
                             <img src={whitefox} alt="IUA" />
                         </div>  

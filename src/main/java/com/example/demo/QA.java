@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.chatbot;
 
 public class QA {
 

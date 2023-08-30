@@ -2,18 +2,23 @@ import './PostArticle.css';
 import React from 'react';
 import elmo from './img/elmo.png';
 import conversation from './img/conversation.png';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import {Title}  from './components/ArticleStyle.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
-import { loginUser } from "./cookie.js";
+import { loginUser } from './cookie';
+import { getAuthToken } from "./utils";
 
 const ModifyPost=()=> {
     let navigate = useNavigate();
     const location = useLocation();
     const [data, setData] = useState(null);
-    const { studentID, postId, fromSearch, ModifyType } = location.state;
+    const { studentID, postId, fromSearch, ModifyType, timeValue } = location.state;
+    const userInfo = loginUser();
+    const token = getAuthToken();
     
 
     function ArticleModifyFoodInput({ newData }) {
@@ -28,18 +33,27 @@ const ModifyPost=()=> {
         const [FtimeSaturday, setFtimeSaturday] = useState("");
         const [FtimeSunday, setFtimeSunday] = useState("");
         const [Faddress, setFaddress] = useState("");
+        const [Farea, setFarea] = useState("");
+        const [Froad, setFroad] = useState("");
+        const [Frate, setFrate] = useState("");
+
 
         useEffect(() => {
             if (newData) {
               setFtitle(newData.store);
-              setFtimeMonday(newData.weekday_text[0].split(':')[1].trim());
-              setFtimeTuesday(newData.weekday_text[1].split(':')[1].trim());
-              setFtimeWednesday(newData.weekday_text[2].split(':')[1].trim());
-              setFtimeThursday(newData.weekday_text[3].split(':')[1].trim());
-              setFtimeFriday(newData.weekday_text[4].split(':')[1].trim());
-              setFtimeSaturday(newData.weekday_text[5].split(':')[1].trim());
-              setFtimeSunday(newData.weekday_text[6].split(':')[1].trim());
+              console.log(newData.weekday_text[0].replace("星期一:", ""));
+              setFtimeMonday(newData.weekday_text[0].replace("星期一:", ""));
+              setFtimeTuesday(newData.weekday_text[1].replace("星期二:", ""));
+              setFtimeWednesday(newData.weekday_text[2].replace("星期三:", ""));
+              setFtimeThursday(newData.weekday_text[3].replace("星期四:", ""));
+              setFtimeFriday(newData.weekday_text[4].replace("星期五:", ""));
+              setFtimeSaturday(newData.weekday_text[5].replace("星期六:", ""));
+              setFtimeSunday(newData.weekday_text[6].replace("星期日:", ""));
               setFaddress(newData.address);
+              setFarea(newData.district);
+              setFroad(newData.road);
+              setFrate(newData.rating);
+
             }
           }, [newData]);
 
@@ -77,6 +91,18 @@ const ModifyPost=()=> {
         const handleFaddressChange = event => {
           setFaddress(event.target.value);
         };
+
+        const handleFareaChange = event => {
+          setFarea(event.target.value);
+        };
+
+        const handleFroadChange = event => {
+          setFroad(event.target.value);
+        };
+
+        const handleFrateChange = event => {
+          setFrate(event.target.value);
+        };
         
 
         const handleFoodSubmit = (e) => {
@@ -84,15 +110,19 @@ const ModifyPost=()=> {
             const student_id = loginUser();
             const formData = {
               postId: postId,
-              studentID: "00957025",
+              studentID: userInfo,
               store: Ftitle,
               weekday_text: openTime,
               address: Faddress,
+              road : Froad,
+              district : Farea,
+              
             };
             fetch('/food_modify', {
               method: 'PUT',
               headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `${token}`
               },
               body: JSON.stringify(formData)
             })
@@ -102,7 +132,6 @@ const ModifyPost=()=> {
                 navigate("/foodArticle", {
                   state: {
                     fromSearch: false,
-                    studentID: "00957025",
                     postId: postId
                   }
                 });
@@ -136,6 +165,23 @@ const ModifyPost=()=> {
               <label>&emsp;星期日:&emsp;</label>
               <input type='text' name = 'FtimeSunday' onChange={handleFtimeSundayChange} value={FtimeSunday}></input>
             </div><br/>
+            <div className='articleFoodFormArea'>
+            <label>店家地區:&emsp;</label>
+              <select name = 'Farea' className='articleFoodFormSelect' value={Farea} onChange={handleFareaChange}>
+                  <option>請選擇區域</option>
+                  <option value='中正區'>中正區</option>
+                  <option value='信義區'>信義區</option>
+                  <option value='仁愛區'>仁愛區</option>
+                  <option value='中山區'>中山區</option>
+                  <option value='安樂區'>安樂區</option>
+                  <option value='暖暖區'>暖暖區</option>
+                  <option value='七堵區'>七堵區</option>
+              </select>
+              </div><br/>
+            <div className='articleFoodFormAddress'>
+              <label>店家路名:&emsp;</label>
+              <input type='text' name = 'Faddress' onChange={handleFroadChange} value={Froad} required="required"></input>
+            </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家地址:&emsp;</label>
               <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress}></input>
@@ -157,7 +203,11 @@ const ModifyPost=()=> {
         const [Harea, setHarea] = useState("");
         const [haveCar, sethaveCar] = useState("");
         const [Hwater, setHwater] = useState("");
+        const [newHwater, setNewHwater] = useState("");
+        const [HwaterMoney, setHwaterMoney] = useState("");
         const [Hpower, setHpower] = useState("");
+        const [newHpower, setNewHpower] = useState("");
+        const [HpowerMoney, setHpowerMoney] = useState("");
         const [Hnote, setHnote] = useState("");
         const [Hfloor, setHfloor] = useState("");
         const [rent_date, setrent_date] = useState("");
@@ -173,14 +223,31 @@ const ModifyPost=()=> {
               setHtype(newData.style);
               sethaveCar(newData.car);
               setHwater(newData.water);
+              setNewHwater(newData.water);
+              setNewHpower(newData.power);
               setHpower(newData.power);
               setHnote(newData.note);
               setHfloor(newData.floor);
               setrent_date(newData.rent_date);
             }
+
+            if(Hwater.includes("月繳")){
+              const inputString = Hwater;
+              const numbers = inputString.match(/\d+/g);
+              setHwaterMoney(numbers);
+              setHwater("月繳");
+            }
+
+            if(Hpower.includes("一度")){
+              const inputPowerString = Hpower;
+              const powerNumbers = inputPowerString.match(/\d+/g);
+              setHpowerMoney(powerNumbers);
+              setHpower("一度");
+            }
+            
           }, [newData]);
 
-
+          
         const handleHtitleChange = event => {
           setHtitle(event.target.value);
         };
@@ -206,10 +273,26 @@ const ModifyPost=()=> {
           sethaveCar(event.target.value);
         };
         const handleHwaterChange = event => {
+          console.log(event.target.value);
           setHwater(event.target.value);
         };
+        const handleHwaterMoneyChange = event => {
+          setHwaterMoney(event.target.value);
+          console.log(event.target.value);
+          if(Hwater!=="台水" && Hwater!=="含房租內" && Hwater!==""){
+            setHwater("月繳"+event.target.value+"元");
+          }
+        };
         const handleHpowerChange = event => {
+          console.log(event.target.value);
           setHpower(event.target.value);
+        };
+        const handleHpowerMoneyChange = event => {
+          setHpowerMoney(event.target.value);
+          console.log(event.target.value);
+          if(Hpower!=="台電" && Hpower!=="含房租內" && Hpower!==""){
+            setHpower("一度"+event.target.value+"元");
+          }
         };
         const handleHnoteChange = event => {
           setHnote(event.target.value);
@@ -222,10 +305,11 @@ const ModifyPost=()=> {
         };
 
   const handleModifyHouseSubmit = (e) => {
+    console.log(Hpower);
     e.preventDefault();
     const student_id = loginUser();
     const formData = {
-                    studentID: "00957025",
+                    studentID: userInfo,
                     postId:postId,
                     title : Htitle,
                     money : Hmoney,
@@ -241,10 +325,18 @@ const ModifyPost=()=> {
                     rent_date : rent_date,
                     note : Hnote,
                   };
+                  
+                  if(Hwater==='月繳'){
+                    formData.water = "月繳"+HwaterMoney+"元";
+                  }
+                  if(Hpower==='一度'){
+                    formData.power = "一度"+HpowerMoney+"元";
+                  }
                   fetch('/rent_post_modify', {
                         method: 'PUT',
                         headers: {
-                          'Content-Type': 'application/json'
+                          'Content-Type': 'application/json',
+                          'Authorization': `${token}`
                         },
                         body: JSON.stringify(formData)
                       })
@@ -254,7 +346,7 @@ const ModifyPost=()=> {
                         navigate("/rentArticle", {
                             state: {
                               fromSearch:false,
-                              studentID: "00957025",
+                              studentID: userInfo,
                               postId: postId},});
                       })
                       .catch(error => {
@@ -292,11 +384,11 @@ const ModifyPost=()=> {
             </div><br/>
             <div className='articleRentFormType'>
               <label>房型:</label>
-              <input type='text' name = 'Htype' onChange={handleHtypeChange} value={Htype}></input>
+              <input type='text' name = 'Htype' className='articleRentFormTypeInput' onChange={handleHtypeChange} value={Htype}></input>
             </div><br/>
             <div className='articleRentFormRegion'>
               <label>地區:</label>
-              <select name = 'Harea' value={Harea} onChange={handleHareaChange}>
+              <select name = 'Harea' value={Harea} className='articleRentFormRegionInput' onChange={handleHareaChange}>
                   <option>請選擇區域</option>
                   <option value='中正區'>中正區</option>
                   <option value='信義區'>信義區</option>
@@ -320,11 +412,21 @@ const ModifyPost=()=> {
             </div><br/>
             <div className='articleRentFormWater'>
               <label>水費:</label>
-              <input type='text' name = 'Hwater' onChange={handleHwaterChange} value={Hwater}></input>
+              <input type="radio" id='postArticle_waterOfficial' value='台水' name='rentWater' checked={Hwater === '台水'} onChange={handleHwaterChange} ></input>
+              <label for="postArticle_waterOfficial">台水</label>
+              <input type="radio" id='postArticle_waterLandlord' value='含房租內' name='rentWater' checked={Hwater === '含房租內'} onChange={handleHwaterChange}></input>
+              <label for="postArticle_waterLandlord">含房租內</label>
+              <input type="radio" id='postArticle_waterOne' value='月繳' name='rentWater' checked={Hwater === '月繳'}   onChange={handleHwaterChange}></input>
+              <label for="postArticle_waterOne">月繳<input type='text' className='postArticle_waterMoney' value={HwaterMoney} onChange={handleHwaterMoneyChange}></input>元</label>
             </div><br/>
             <div className='articleRentFormPower'>
               <label>電費:</label>
-              <input type='text' name = 'Hpower' onChange={handleHpowerChange} value={Hpower}></input>
+              <input type="radio" id='postArticle_powerOfficial' value='台電' name='rentPower' checked={Hpower === '台電'} onChange={handleHpowerChange} ></input>
+              <label for="postArticle_powerOfficial">台電</label>
+              <input type="radio" id='postArticle_powerLandlord' value='含房租內' name='rentPower' checked={Hpower === '含房租內'} onChange={handleHpowerChange}></input>
+              <label for="postArticle_powerLandlord">含房租內</label>
+              <input type="radio" id='postArticle_powerOne' value='一度' name='rentPower' checked={Hpower === '一度'}  onChange={handleHpowerChange}></input>
+              <label for="postArticle_powerOne">一度<input type='text' className='postArticle_powerMoney' value={HpowerMoney} onChange={handleHpowerMoneyChange} ></input>元</label>
             </div><br/>
             <div className='articleRentFormDate'>
               <label>起租日期:</label>
@@ -341,13 +443,27 @@ const ModifyPost=()=> {
         );
       }
 
-      function ArticleChangeClassInput() {
+      function ArticleChangeClassInput({ newData }) {
 
         const [Ctitle, setCtitle] = useState("");
         const [Ctext, setCtext] = useState("");
         const [CCategory, setCCategory] = useState("");
-        const [Ctime, setCtime] = useState("");
+        const [Ctime, setCtime] = useState([]);
         const [Cteacher, setCteacher] = useState("");
+        const [timeArray, setTimeArray] = useState([]);
+        const [numberArray, setNumberArray] = useState([]);
+
+        useEffect(() => {
+          if (newData) {
+            setCtitle(newData.course);
+            setCtext(newData.content);
+            setCCategory(newData.category);
+            setCtime(newData.time.join('、 '));
+            setCteacher(newData.teacher);
+            setNumberArray(newData.time);
+          }
+        }, [newData]);
+
 
         const handleCtitleChange = event => {
           setCtitle(event.target.value);
@@ -357,6 +473,9 @@ const ModifyPost=()=> {
         };
         const handleCtimeChange = event => {
           setCtime(event.target.value);
+          const numbers = event.target.value.split('、').map(Number);
+          console.log(numbers);
+          setNumberArray(numbers);
         };
         const handleCteacherChange = event => {
           setCteacher(event.target.value);
@@ -368,28 +487,35 @@ const ModifyPost=()=> {
           e.preventDefault();
           const student_id = loginUser();
           const formData = {
-                          studentID: "00957025",
+                          studentID: userInfo,
+                          postId:postId,
                           course : Ctitle,
                           category:CCategory,
-                          time:[Ctime],
+                          time: numberArray,
                           teacher:Cteacher,
                           content : Ctext,
                         };
-                        fetch('/exchange_course_post', {
-                              method: 'POST',
+                        fetch('/course_post_modify', {
+                              method: 'PUT',
                               headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': `${token}`
                               },
                               body: JSON.stringify(formData)
                             })
                             .then(response => response.status)
                             .then(data => {
                               console.log(data);
+                              navigate("/changeClassList", {
+                                state: {
+                                  studentID: "00957017",
+                                        time:timeValue,},});
                             })
                             .catch(error => {
                               console.error(error);
                             });
-                            navigate("/changeClass")
+                            
+                     
                          //Form submission happens here
         }
 
@@ -397,26 +523,26 @@ const ModifyPost=()=> {
           <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
             <div className='articleChangeClassFormTitle'>
               <label>標題:</label>
-              <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle}></input>
+              <input type='text' className='articleChangeClassFormTitleInput'  value={Ctitle} disabled></input>
             </div><br/>
             <div className='articleChangeClassFormCategory'>
-              <label>分類:</label>
-              <input type='text' className='articleChangeClassFormCategoryInput' onChange={handleCCategoryChange} value={CCategory}></input>
-            </div><br/>
+            <label>分類:</label>
+              <input type='text' className='articleChangeClassFormCategoryInput' value={CCategory}  disabled></input>
+              </div><br/>
             <div className='articleChangeClassFormTime'>
               <label>時間:</label>
-              <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime}></input>
+              <input type='text' className='articleChangeClassFormTimeInput' value={Ctime} disabled></input>
             </div><br/>
             <div className='articleChangeClassFormTeacher'>
               <label>老師:</label>
-              <input type='text' className='articleChangeClassFormTeacherInput' onChange={handleCteacherChange} value={Cteacher}></input>
+              <input type='text' className='articleChangeClassFormTeacherInput'  value={Cteacher} disabled></input>
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
-              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange} value={Ctext}></textarea>
+              <textarea type='text' className='articleChangeClassFormTextInput'  value={Ctext}></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
-                <ArticleSubmitBtn>確認發文</ArticleSubmitBtn>
+                <ArticleSubmitBtn type="submit">確認修改</ArticleSubmitBtn>
             </ArticleSubmitBtnPosition>
           </form>  
         );
@@ -429,7 +555,7 @@ const ModifyPost=()=> {
         const [Fetchurl, setFetchurl] = useState("");
         const [data, setData] = useState(null);
         const formData = {
-          studentID: '00957025',
+          studentID: '00957017',
           postId: postId,
         };
       
@@ -498,11 +624,25 @@ const ModifyPost=()=> {
               }
             }
           }, [data]);
+
+          const handleBackChange = event => {
+            if(isFoodShown){
+              navigate("/foodArticle", {
+                state: {
+                  postId : postId,},});
+            }
+            else if(isRentShown){
+              navigate("/rentArticle", {
+                state: {
+                  postId : postId,},});
+            }
+          };
           
           
       
         return (
           <div className="PostArticle">
+            <Back src={back} onClick={handleBackChange} alt="回上一頁" />
             <div className="PostArticle_bg">
               <Title>修改</Title>
               <img className="post_elmo" src={elmo} />
@@ -512,7 +652,7 @@ const ModifyPost=()=> {
                   <div className="inputFormPosition">
                     {isFoodShown && data && <ArticleModifyFoodInput newData={data}/>}
                     {isRentShown && <ArticleModifyRentInput newData={data}/>}
-                    {isChangeClassShown && <ArticleChangeClassInput />}
+                    {isChangeClassShown && <ArticleChangeClassInput newData={data}/>}
                   </div>
                 </div>
               </div>

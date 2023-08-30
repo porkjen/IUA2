@@ -1,7 +1,8 @@
-html,body,#root,.GeneralEducation{
+html,body,#root,.GeneralEducaton{
     height: 100%;
     padding: 0;
     margin: 0;
+    
 }
 
 .g_education {
@@ -15,34 +16,45 @@ html,body,#root,.GeneralEducation{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    
 }
 
-.GeneralEducation .g_backicon{
+.g_education .g_backicon{
     height: 40px;
     width: 40px;
     padding-top: 10px;
 }
 
-.GeneralEducation .g_title{
+.g_education .g_title{
     text-align: center;
     padding-top: 0px;
 }
 
-.GeneralEducation .g_selectDiv{
-    padding-left: 75px;
+.g_education .selectDiv{
+    padding-left: 95px;
     padding-top: 20px;
 }
 
-.GeneralEducation .g_selectMust{
-    width: 250px;
+.g_education .selectMust{
+    width: 180px;
     font-size: 25px; 
     color: #afc2f8;
     border-radius: 10px;
     border: none;
 }
 
-.GeneralEducation .g_scrollableContainer {
-    height: 520px; /* 設置固定高度，根據需要調整 */
-    overflow: auto;
-  }
 
+.g_Lable label{
+    font-size: 18px;
+    font-family: 'Noto Serif TC', serif;
+}
+
+.g_education .g_Lable{
+    margin-top: 30px;
+    width: 300px;
+    height: 450px;
+    background-color: white;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
