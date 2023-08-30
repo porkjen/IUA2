@@ -28,7 +28,8 @@ const Choose=()=> {
         e.preventDefault();
         navigate("/food", {
           state: {
-            fromSearch:false,},});
+            fromSearch:false,
+            ArticleAS:"PostTimeNtoF"},});
       }
 
     function Choose() {

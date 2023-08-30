@@ -45,7 +45,9 @@ html,body,#root,.Favorite{
     margin-top: 5%;
 }
 
-.Favorite #div1 h1{
-    padding-top: 35px;
-    padding-left: 20px;
+.Favorite .selectType{
+    margin-top: 30%;
+    margin-left: 10%;
+    padding: 2%;
+    width: 28%;
 }

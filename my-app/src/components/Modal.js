@@ -43,7 +43,7 @@ function ChooseArticle(){
 
 
 
-function Modal({closeModal, type, postId, comment, alreadyComment, studentID, time, rating}){
+function Modal({closeModal, type, postId, comment, alreadyComment, studentID, time, rating, ArticleAS}){
 
     let navigate = useNavigate();
     const [isModalFood, setisModalFood] = useState(true);
@@ -460,7 +460,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                               navigate("/foodArticle", {
                                 state: {
                                   postId,postId,
-                                  fromSearch:false},});
+                                  fromSearch:false,
+                                  ArticleAS:ArticleAS,},});
                                   
                               
                            //Form submission happens here
