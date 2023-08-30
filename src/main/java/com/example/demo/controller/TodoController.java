@@ -168,9 +168,9 @@ public class TodoController {
             FinishedCourseList oriList = fRepository.findByStudentID(finished.getStudentID());
             ArrayList<FinishedCourse> oriCourses =  oriList.getFinishedCourses();
             String sem = oriCourses.get(oriCourses.size() - 1).getSemester();
-            System.out.println("semester: " + sem);
-            finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
-            oriList.setFinishedCourses(finishedCourse);
+            // System.out.println("semester: " + sem);
+            // finishedCourse = crawler.getFinishedCredict(oriCourses, sem);
+            // oriList.setFinishedCourses(finishedCourse);
             fRepository.save(oriList);
         }
         else{
