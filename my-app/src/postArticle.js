@@ -136,24 +136,23 @@ const PostArticle=()=> {
             <div className='articleFoodFormTime'>
               <label>營業時間&emsp;</label><br/>
               <label>&emsp;星期一:&emsp;</label>
-              <input type='text' name = 'FtimeMonday' onChange={handleFtimeMondayChange} value={FtimeMonday}></input><br/>
+              <input type='text' name = 'FtimeMonday' onChange={handleFtimeMondayChange} value={FtimeMonday} required="required"></input><br/>
               <label>&emsp;星期二:&emsp;</label>
-              <input type='text' name = 'FtimeTuesday' onChange={handleFtimeTuesdayChange} value={FtimeTuesday}></input><br/>
+              <input type='text' name = 'FtimeTuesday' onChange={handleFtimeTuesdayChange} value={FtimeTuesday} required="required"></input><br/>
               <label>&emsp;星期三:&emsp;</label>
-              <input type='text' name = 'FtimeWednesday' onChange={handleFtimeWednesdayChange} value={FtimeWednesday}></input><br/>
+              <input type='text' name = 'FtimeWednesday' onChange={handleFtimeWednesdayChange} value={FtimeWednesday} required="required"></input><br/>
               <label>&emsp;星期四:&emsp;</label>
-              <input type='text' name = 'FtimeThursday' onChange={handleFtimeThursdayChange} value={FtimeThursday}></input><br/>
+              <input type='text' name = 'FtimeThursday' onChange={handleFtimeThursdayChange} value={FtimeThursday} required="required"></input><br/>
               <label>&emsp;星期五:&emsp;</label>
-              <input type='text' name = 'FtimeFriday' onChange={handleFtimeFridayChange} value={FtimeFriday}></input><br/>
+              <input type='text' name = 'FtimeFriday' onChange={handleFtimeFridayChange} value={FtimeFriday} required="required"></input><br/>
               <label>&emsp;星期六:&emsp;</label>
-              <input type='text' name = 'FtimeSaturday' onChange={handleFtimeSaturdayChange} value={FtimeSaturday}></input><br/>
+              <input type='text' name = 'FtimeSaturday' onChange={handleFtimeSaturdayChange} value={FtimeSaturday} required="required"></input><br/>
               <label>&emsp;星期日:&emsp;</label>
-              <input type='text' name = 'FtimeSunday' onChange={handleFtimeSundayChange} value={FtimeSunday}></input>
+              <input type='text' name = 'FtimeSunday' onChange={handleFtimeSundayChange} value={FtimeSunday} required="required"></input>
             </div><br/>
             <div className='articleFoodFormArea'>
             <label>店家地區:&emsp;</label>
               <select name = 'Farea' className='articleFoodFormSelect' value={Farea} onChange={handleFareaChange}>
-                  <option>請選擇區域</option>
                   <option value='中正區'>中正區</option>
                   <option value='信義區'>信義區</option>
                   <option value='仁愛區'>仁愛區</option>
@@ -177,8 +176,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleFoodFormSchoolRate'>
               <label>我的評分:&emsp;</label>
-              <select name = 'Frate' className='articleFoodFormSelect' value={Frate} onChange={handleFrateChange}>
-                  <option>請選擇評分</option>
+              <select name = 'Frate' className='articleFoodFormSelect' value={Frate} onChange={handleFrateChange} > 
                   <option value='1'>1</option>
                   <option value='2'>2</option>
                   <option value='3'>3</option>
@@ -188,7 +186,7 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleFoodFormInfo'>
               <label>我的評論:&emsp;</label>
-              <input type='text' name = 'Finfo' onChange={handleFinfoChange} value={Finfo}></input>
+              <input type='text' name = 'Finfo' onChange={handleFinfoChange} value={Finfo} required="required"></input>
             </div><br/>
               <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn type="submit">確認發文</ArticleSubmitBtn>
@@ -201,14 +199,14 @@ const PostArticle=()=> {
         const [Htitle, setHtitle] = useState("");
         const [Haddress, setHaddress] = useState("");
         const [Hmoney, setHmoney] = useState("");
-        const [rentGender, setrentGender] = useState("");
+        const [rentGender, setrentGender] = useState("女");
         const [Hpeople, setHpeople] = useState("");
         const [Htype, setHtype] = useState("");
         const [Harea, setHarea] = useState("");
-        const [haveCar, sethaveCar] = useState("");
-        const [Hwater, setHwater] = useState("");
+        const [haveCar, sethaveCar] = useState("有");
+        const [Hwater, setHwater] = useState("台水");
         const [HwaterMoney, setHwaterMoney] = useState("");
-        const [Hpower, setHpower] = useState("");
+        const [Hpower, setHpower] = useState("台電");
         const [HpowerMoney, setHpowerMoney] = useState("");
         const [Hnote, setHnote] = useState("");
         const [Hfloor, setHfloor] = useState("");
@@ -335,12 +333,11 @@ const PostArticle=()=> {
             </div><br/>
             <div className='articleRentFormPeople'>
               <label>人數:</label>
-              <input type='text' name = 'Hpeople' onChange={handleHpeopleChange} value={Hpeople}></input>
+              <input type='text' name = 'Hpeople' onChange={handleHpeopleChange} value={Hpeople} required="required"></input>
             </div><br/>
             <div className='articleRentFormType'>
               <label>房型:</label>
               <select name = 'Htype' className='articleRentFormSelect' value={Htype} onChange={handleHtypeChange}>
-                  <option>請選擇房型</option>
                   <option value='套房'>套房</option>
                   <option value='雅房'>雅房</option>
                   <option value='家庭式'>家庭式</option>
@@ -349,7 +346,6 @@ const PostArticle=()=> {
             <div className='articleRentFormRegion'>
               <label>地區:</label>
               <select name = 'Harea' className='articleRentFormSelect' value={Harea} onChange={handleHareaChange}>
-                  <option>請選擇區域</option>
                   <option value='中正區'>中正區</option>
                   <option value='信義區'>信義區</option>
                   <option value='仁愛區'>仁愛區</option>

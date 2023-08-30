@@ -26,7 +26,7 @@ const FoodArticle=()=> {
     const location = useLocation();
     const [data, setData] = useState(null);
     const [openModal, setOpenModal] = useState(false);
-    const { postId } = location.state;
+    const { postId, ArticleAS } = location.state;
     const [isCreator, setIsCreator] = useState(false);
     const [isReviewCreator, setIsReviewCreator] = useState(false);
     const [isMeComment, setIsMeComment] = useState(false);
@@ -82,7 +82,7 @@ const FoodArticle=()=> {
 
       
 
-      if(commentCreator===true){
+      if(commentCreator===userInfo){
         setIsMeComment(text);
         setIsMeRating(commentRating)
         return (
@@ -419,7 +419,7 @@ const FoodArticle=()=> {
                             text={item.p_review}
                             commentTime={item.p_time}
                             commentRating={item.p_rate}
-                            commentCreator={true}
+                            commentCreator={item.p_studentID}
                           />
                         );
                       }
@@ -432,7 +432,7 @@ const FoodArticle=()=> {
                               text={item.p_review}
                               commentTime={item.p_time}
                               commentRating={item.p_rate}
-                              commentCreator={false}
+                              commentCreator={item.p_studentID}
                             />
                           );
                         }
@@ -445,13 +445,13 @@ const FoodArticle=()=> {
             <ArticleDetailPostCommentPosition>
               {isAlreadyComment? (
                      <form onSubmit={handleModifyCommentSubmit}>
-                     <ArticleDetailCommentImg src={banana}/>
+                     <ArticleDetailCommentImg src={student}/>
                      <ArticleDetailPostComment type='text' name = 'FComment'  placeholder='如留言過再次留言會更新舊有留言' onChange={handleFCommentChange} value={FComment}></ArticleDetailPostComment>
                      <ArticleDetailPostBtn type='submit'>送出</ArticleDetailPostBtn>
                    </form>
                     ) : (
                       <form onSubmit={handleCommentSubmit}>
-                    <ArticleDetailCommentImg src={dog}/>
+                    <ArticleDetailCommentImg src={student}/>
                     <ArticleDetailPostComment type='text' name = 'FComment' onChange={handleFCommentChange} value={FComment}></ArticleDetailPostComment>
                     <ArticleDetailPostBtn type='submit'>送出</ArticleDetailPostBtn>
                   </form>
@@ -472,6 +472,7 @@ const FoodArticle=()=> {
             studentID:  userInfo,
             postId : postId,
           };
+          console.log(ArticleAS);
 
         useEffect(() => {
             if (!data) {
@@ -515,13 +516,15 @@ const FoodArticle=()=> {
             e.preventDefault();
             navigate("/food", {
               state: {
-                fromSearch:false,},});
+                fromSearch:false,
+                ArticleAS:ArticleAS,
+                },});
           }
 
       return (
         <ArticleDetailPage>
            <img src={back} className='food_back' alt="回上一頁" onClick={handleBackSubmit}/>
-            {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment}/>}
+            {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment} ArticleAS={ArticleAS}/>}
             {!openModal && < FoodDetailInfo/>}
         </ArticleDetailPage>
       );

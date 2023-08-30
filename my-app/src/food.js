@@ -20,14 +20,16 @@ import { getAuthToken } from "./utils";
 
 const Food = () => {
 
+  const location = useLocation();
+  const { fromSearch, FArea, FName, FAddr, ArticleAS } = location.state;
   const [data, setData] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [visibleData, setVisibleData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isIUA, setIsIUA] = useState(false);
-  const [AS, setAS] = useState("PostTimeNtoF");
+  const [AS, setAS] = useState(ArticleAS);
   const [isRate, setisRate] = useState(false);
-  const [isPostTime, setisPostTime] = useState(true);
+  const [isPostTime, setisPostTime] = useState(false);
   const [isDistance, setisDistance] = useState(false);
   const [isBai, setisBai] = useState(false);
   const [isZhong, setisZhong] = useState(false);
@@ -37,8 +39,8 @@ const Food = () => {
   const [noData, setNoData] = useState(false);
   let navigate = useNavigate();
   const articleListRef = useRef(null);
-  const location = useLocation();
-  const { fromSearch, FArea, FName, FAddr } = location.state;
+  //const location = useLocation();
+  //const { fromSearch, FArea, FName, FAddr, ArticleAS } = location.state;
   const scrollPositionRef = useRef(0);
   const userInfo = loginUser();
   const token = getAuthToken();
@@ -129,7 +131,8 @@ const Food = () => {
           console.log(data);
           navigate("/foodArticle", {
             state: {
-              postId: postID
+              postId: postID,
+              ArticleAS:AS,
             }
           });
         })
@@ -147,8 +150,8 @@ const Food = () => {
           {road.includes("新豐") && <ArticleXingDistance >{road}</ArticleXingDistance>}
           {road.includes("深溪") &&  <ArticleXiDistance >{road}</ArticleXiDistance>}
           <ArticleAuthorArea>
-            {author!=="IUA" &&  <ArticleAuthorImg src={student}></ArticleAuthorImg>}
-            {author==="IUA" &&  <ArticleAuthorImg src={logo}></ArticleAuthorImg>}
+            {author!=="IUA" &&  <img className='food_authorImg' src={student}/>}
+            {author==="IUA" &&  <img className='food_authorImg' src={logo}/>}
             <ArticleAuthor>{author}</ArticleAuthor>
           </ArticleAuthorArea>
           <ArticleBody>{store}</ArticleBody>
@@ -161,6 +164,7 @@ const Food = () => {
   }
 
   function Food_all() {
+    console.log(AS);
     const handleRentFunctionSelect  = event => {
 
       if(event.target.value==='AllArticle'){
@@ -208,8 +212,8 @@ const Food = () => {
           {!isRate && <input type="radio" id='rate' name='AS' value='rate_Decrease' onChange={handleRateASChange}></input>}
           <label for="rate">評分高低</label>
 
-          {isDistance && <input type="radio" id='distance' name='AS' value='distance' onChange={handleDistanceASChange} checked></input>}
-          {!isDistance && <input type="radio" id='distance' name='AS' value='distance' onChange={handleDistanceASChange}></input>}
+          {isDistance && <input type="radio" id='distance' name='AS' value='distance_Increase' onChange={handleDistanceASChange} checked></input>}
+          {!isDistance && <input type="radio" id='distance' name='AS' value='distance_Increase' onChange={handleDistanceASChange}></input>}
           <label for="distance">距離遠近</label>
 
           </div><br/>
@@ -228,7 +232,13 @@ const Food = () => {
     if(fromSearch===false){
       if (!data) {
         setIsLoading(true);
-        fetch(`/food_load?sort=${AS}`)
+        if(ArticleAS=='PostTimeNtoF')
+          setisPostTime(true);
+        else if(ArticleAS=='distance_Increase')
+          setisDistance(true);
+        else if(ArticleAS=='rate_Decrease')
+          setisRate(true);
+        fetch(`/food_load?sort=${ArticleAS}`)
           .then(response => response.json())
           .then(data => {
             console.log("NOTsearchIn");

@@ -196,7 +196,7 @@ const ArticleDetailCommentImg = styled.img`
     border-radius: 50%;
     overflow: hidden;
     margin-left: 20px;
-    padding-top: 25px;
+    padding-top: 30px;
 `;
 
 
@@ -205,7 +205,8 @@ const ArticleDetailPostComment = styled.input`
     border-bottom: 1px solid rgb(35, 35, 35);
     border-radius: 0px;
     width: 60%;
-    margin-right:20px;
+    margin-left:10px;
+    margin-right:10px;
     padding-top:35px;
     &:focus {
         outline: none;
