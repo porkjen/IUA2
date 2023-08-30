@@ -90,3 +90,10 @@
     margin-top: -150px;
     margin-left: 150px;
 }
+
+.food_authorImg{
+    width: 15%; /* 設定頭像的寬度和高度 */
+    height: 15%;
+    border-radius: 50%;
+    overflow: hidden;
+}

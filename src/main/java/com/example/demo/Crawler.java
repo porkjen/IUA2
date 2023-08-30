@@ -44,8 +44,8 @@ public class Crawler {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
+        //C:\Program Files\Google\Chrome\Application
         //C:\Program Files\Google\Chrome\Application  //白
-        //C:\Program Files (x86)\Google\chromedriver.exe
 
         ChromeOptions options = new ChromeOptions();
 

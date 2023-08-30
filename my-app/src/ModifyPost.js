@@ -305,6 +305,7 @@ const ModifyPost=()=> {
         };
 
   const handleModifyHouseSubmit = (e) => {
+    console.log(Hpower);
     e.preventDefault();
     const student_id = loginUser();
     const formData = {
@@ -324,6 +325,13 @@ const ModifyPost=()=> {
                     rent_date : rent_date,
                     note : Hnote,
                   };
+                  
+                  if(Hwater==='月繳'){
+                    formData.water = "月繳"+HwaterMoney+"元";
+                  }
+                  if(Hpower==='一度'){
+                    formData.power = "一度"+HpowerMoney+"元";
+                  }
                   fetch('/rent_post_modify', {
                         method: 'PUT',
                         headers: {
@@ -338,7 +346,7 @@ const ModifyPost=()=> {
                         navigate("/rentArticle", {
                             state: {
                               fromSearch:false,
-                              studentID: "00957025",
+                              studentID: userInfo,
                               postId: postId},});
                       })
                       .catch(error => {
@@ -515,30 +523,23 @@ const ModifyPost=()=> {
           <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
             <div className='articleChangeClassFormTitle'>
               <label>標題:</label>
-              <input type='text' className='articleChangeClassFormTitleInput' onChange={handleCtitleChange} value={Ctitle}></input>
+              <input type='text' className='articleChangeClassFormTitleInput'  value={Ctitle} disabled></input>
             </div><br/>
             <div className='articleChangeClassFormCategory'>
             <label>分類:</label>
-              <select className='articleChangeClassFormCategoryInput' value={CCategory} onChange={handleCCategoryChange}>
-                  <option>請選擇你所擁有的課分類</option>
-                  <option value='體育'>體育</option>
-                  <option value='通識'>通識</option>
-                  <option value='英文'>英文</option>
-                  <option value='第二外語'>第二外語</option>
-                  <option value='必修'>必修</option>
-                  <option value='選修'>選修</option>
-              </select></div><br/>
+              <input type='text' className='articleChangeClassFormCategoryInput' value={CCategory}  disabled></input>
+              </div><br/>
             <div className='articleChangeClassFormTime'>
               <label>時間:</label>
-              <input type='text' className='articleChangeClassFormTimeInput' onChange={handleCtimeChange} value={Ctime} ></input>
+              <input type='text' className='articleChangeClassFormTimeInput' value={Ctime} disabled></input>
             </div><br/>
             <div className='articleChangeClassFormTeacher'>
               <label>老師:</label>
-              <input type='text' className='articleChangeClassFormTeacherInput' onChange={handleCteacherChange} value={Cteacher}></input>
+              <input type='text' className='articleChangeClassFormTeacherInput'  value={Cteacher} disabled></input>
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
-              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange} value={Ctext}></textarea>
+              <textarea type='text' className='articleChangeClassFormTextInput'  value={Ctext}></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn type="submit">確認修改</ArticleSubmitBtn>
@@ -623,14 +624,25 @@ const ModifyPost=()=> {
               }
             }
           }, [data]);
+
+          const handleBackChange = event => {
+            if(isFoodShown){
+              navigate("/foodArticle", {
+                state: {
+                  postId : postId,},});
+            }
+            else if(isRentShown){
+              navigate("/rentArticle", {
+                state: {
+                  postId : postId,},});
+            }
+          };
           
           
       
         return (
           <div className="PostArticle">
-             <Link to='/choose'>
-                    <Back src={back} alt="回上一頁" />
-                </Link>
+            <Back src={back} onClick={handleBackChange} alt="回上一頁" />
             <div className="PostArticle_bg">
               <Title>修改</Title>
               <img className="post_elmo" src={elmo} />

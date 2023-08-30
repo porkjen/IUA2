@@ -1,4 +1,4 @@
-package com.example.demo.service;
+/*package com.example.demo.service;
 
 import java.io.IOException;
 import javax.annotation.PostConstruct;
@@ -29,4 +29,4 @@ public class FCMInitializer {
             logger.error(e.getMessage());
         }
     }
-}
+}*/
