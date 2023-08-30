@@ -697,10 +697,9 @@ public class Crawler {
     public static void main(String[] args) throws Exception {
 
 
-        String account = "00957025";
-        String password = "20230607";
+        String account = "";
+        String password = "";
 
-        CrawlerHandle(account,password);
 /*
         String account = "00957030";
         String password = "0baf254b";
