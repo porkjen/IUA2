@@ -193,6 +193,7 @@ public class FoodController {
                 //user modify rating
                 if(!Objects.equals(requestData.get("p_rate"), "")){
                     originalRate = thisPost.getReview().get(i).getP_rate();
+                    if(originalRate==0)thisPost.setRating_num(thisPost.getRating_num()+1);
                     thisPost.getReview().get(i).setP_rate(Integer.parseInt(requestData.get("p_rate")));
                 }
                 //user modify review content
@@ -205,8 +206,9 @@ public class FoodController {
             }
         }
         //Post rate update
-        if(originalRate!=0) {
-            newRate = (thisPost.getRating() * thisPost.getRating_num() - originalRate + Integer.parseInt(requestData.get("p_rate"))) / thisPost.getRating_num();
+        if(Integer.parseInt(requestData.get("p_rate"))!=0) {
+            if(originalRate==0)newRate = (thisPost.getRating() * (thisPost.getRating_num()-1) + Integer.parseInt(requestData.get("p_rate"))) / thisPost.getRating_num();
+            else newRate = (thisPost.getRating() * thisPost.getRating_num() - originalRate + Integer.parseInt(requestData.get("p_rate"))) / thisPost.getRating_num();
             thisPost.setRating(Double.parseDouble(decimalFormat.format(newRate)));
         }
         foodRepository.save(thisPost);
@@ -284,11 +286,11 @@ public class FoodController {
         else newReview.setP_rate(Integer.parseInt(requestData.get("p_rate")));
         thisPost.setReview(newReview);
         //if user rate, post : rate_num+1, rate adjust
-        if(!Objects.equals(requestData.get("p_rate"), "")) {
+        /*if(!Objects.equals(requestData.get("p_rate"), "")) {
             newRate = (thisPost.getRating() * thisPost.getRating_num() + Integer.parseInt(requestData.get("p_rate"))) / (thisPost.getRating_num() + 1);
             thisPost.setRating(Double.parseDouble(decimalFormat.format(newRate)));
             thisPost.setRating_num(thisPost.getRating_num() + 1);
-        }
+        }*/
         foodRepository.save(thisPost);
         System.out.println("留言成功");
         return ResponseEntity.ok("Success");
