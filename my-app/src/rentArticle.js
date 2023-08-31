@@ -13,6 +13,7 @@ import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
 import { getAuthToken } from "./utils";
+import { Link } from 'react-router-dom';
 
 const RentArticle=()=> {
 
