@@ -550,7 +550,7 @@ const ModifyPost=()=> {
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
-              <textarea type='text' className='articleChangeClassFormTextInput'  value={Ctext}></textarea>
+              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange}  value={Ctext}></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn type="submit">確認修改</ArticleSubmitBtn>

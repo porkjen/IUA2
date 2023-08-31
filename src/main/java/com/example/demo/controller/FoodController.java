@@ -264,18 +264,16 @@ public class FoodController {
         } catch (AuthException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
-        double newRate = 0;
-        DecimalFormat decimalFormat = new DecimalFormat("#.0");
         //find the post by postId
         FoodEntity thisPost = foodRepository.findByPostId(requestData.get("postId"));
-        //find out if the user has commented on the post
+        /*//find out if the user has commented on the post
         for(FoodEntity.p review : thisPost.getReview()){
             if(Objects.equals(review.getP_studentID(), requestData.get("studentID"))){
                 System.out.println("留言過了!");
                 return ResponseEntity.badRequest().body("Invalid request : user has commented on the post");//400
             }
 
-        }
+        }*/
         //create a review structure, and add to the post
         FoodEntity.p newReview = new FoodEntity.p();
         newReview.setP_studentID(requestData.get("studentID"));
@@ -283,8 +281,7 @@ public class FoodController {
         newReview.setP_review(requestData.get("p_review"));
         newReview.setP_time(DateTimeFormatter.ofPattern("yyyy/MM/dd")//date today
                 .format(LocalDateTime.now()));
-        if(Objects.equals(requestData.get("p_rate"), ""))newReview.setP_rate(0);
-        else newReview.setP_rate(Integer.parseInt(requestData.get("p_rate")));
+        newReview.setP_rate(Integer.parseInt(requestData.get("p_rate")));
         thisPost.setReview(newReview);
         //if user rate, post : rate_num+1, rate adjust
         /*if(!Objects.equals(requestData.get("p_rate"), "")) {

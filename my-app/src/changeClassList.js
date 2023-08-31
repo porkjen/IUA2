@@ -200,9 +200,10 @@ const ChangeClassList=()=> {
 
       return (
         <Page>
+          {!openModal &&
           <Link to='/changeClass'>
               <Back src={back} alt="回上一頁" />
-          </Link>
+          </Link>}
           {openModal && !setNotification && <Modal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={userInfo} time={time} />}
           {!openModal && !setNotification && < ChangeClassList_all/>}
           

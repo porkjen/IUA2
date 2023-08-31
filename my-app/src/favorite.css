@@ -46,8 +46,13 @@ html,body,#root,.Favorite{
 }
 
 .Favorite .selectType{
-    margin-top: 30%;
+    margin-top: 35%;
     margin-left: 10%;
     padding: 2%;
     width: 28%;
+}
+
+.Favorite .scrollableContainer {
+    height: 50%; /* 設置固定高度，根據需要調整 */
+    overflow: auto;
 }

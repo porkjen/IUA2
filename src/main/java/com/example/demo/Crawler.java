@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,13 +50,13 @@ public class Crawler {
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
         //C:\Program Files\Google\Chrome\Application
         //C:\Program Files\Google\Chrome\Application  //白
+        //C:\\Program Files (x86)\\Google
 
         ChromeOptions options = new ChromeOptions();
 
-        //options = new ChromeOptions();
-
-        options.addArguments("–incognito");
+        options.addArguments("–incognito"); //無痕
         options.addArguments("remote-allow-origins=*");
+        options.addArguments("-headless");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.get("https://ais.ntou.edu.tw/Default.aspx");
@@ -64,40 +68,31 @@ public class Crawler {
             boolean flag = false;
             String captchaText = "";
             while (!flag) {
-                WebElement element = driver.findElement(By.xpath("//img[@id='importantImg']"));
+                WebElement element = driver.findElement(By.xpath("//img[@id='importantImg']"));//驗證碼圖片
+                /*String imageUrl = element.getAttribute("src");//驗證碼圖片網址
+                System.out.println(imageUrl);
+                try (InputStream in = new URL(imageUrl).openStream()) {
+                    Path path = Path.of("image.png");
+                    Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
+                    System.out.println("驗證碼圖片已下載!!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
                 File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
                 BufferedImage image = ImageIO.read(screenshot);
+                ImageIO.write(image, "png", screenshot);
+                File screenshotLocation = new File("ttt.png");
+                FileUtils.copyFile(screenshot, screenshotLocation);
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-
-
-
-
-                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-
-                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);
-
-                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
-
-
+                BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
-
-
-                //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);
-
-
-                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
-
-               // BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
-
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
 
                 ImageIO.write(subImage, "png", screenshot);
-                File screenshotLocation = new File("test.png");
+                screenshotLocation = new File("test.png");
                 FileUtils.copyFile(screenshot, screenshotLocation);
                 System.out.println("驗證碼圖片已下載!!");
                 //圖片辨識
@@ -217,6 +212,7 @@ public class Crawler {
         personalInformation.setGrade(grade);
         personalInformation.setTeam(team);
         personalInformation.setBirth(birth);
+        driver.quit();
         return personalInformation;
     }
 
@@ -705,7 +701,6 @@ public class Crawler {
         String account = "";
         String password = "";
 
-       // CrawlerHandle(account,password);
 /*
         String account = "00957030";
         String password = "0baf254b";
