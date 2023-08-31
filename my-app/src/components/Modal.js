@@ -708,7 +708,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
 
        
           const formData = {
-                          studentID: "00957025",
+                          studentID: userInfo,
                           money : Hmoney,
                           people : Hpeople,
                           address : Haddress,
@@ -852,7 +852,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                       });
                       navigate("/changeClassList", {
                         state: {
-                          studentID: "00957017",
+                          studentID: userInfo,
                           time:time,},});
                 window.location.reload();
                 

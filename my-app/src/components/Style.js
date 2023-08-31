@@ -47,7 +47,7 @@ const RemainText = styled.div`
     padding-top: 12px;
     word-break: break-all;
     white-space: pre-line;
-    font-size:15px;
+    font-size:14px;
     text-align:center;
 `;
 

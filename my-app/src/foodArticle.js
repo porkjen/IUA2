@@ -26,7 +26,7 @@ const FoodArticle=()=> {
     const location = useLocation();
     const [data, setData] = useState(null);
     const [openModal, setOpenModal] = useState(false);
-    const { postId, ArticleAS } = location.state;
+    const { postId, ArticleAS,fromFood,fromMyPost } = location.state;
     const [isCreator, setIsCreator] = useState(false);
     const [isReviewCreator, setIsReviewCreator] = useState(false);
     const [isMeComment, setIsMeComment] = useState(false);
@@ -94,6 +94,20 @@ const FoodArticle=()=> {
                 <ArticleDetailCommentModifyBtn onClick={() => setOpenModal(true)}>修改評分</ArticleDetailCommentModifyBtn>
                 <ArticleDetailCommentDeleteBtn onClick={handleCommentDeleteSubmit}>刪除</ArticleDetailCommentDeleteBtn>
               </CommentAuthorBtn>
+                <CommentBody>{text}</CommentBody>
+                <CommentTimeRating><RatingFood rating={commentRating} commentStar={true}></RatingFood>{commentTime}</CommentTimeRating>
+            </CommentText>
+          </CommentContainer>
+        );
+      }
+      else if(commentCreator==='IUA'){
+        return (
+          <CommentContainer>
+            <CommentText>
+            <CommentAuthorBtn>
+                 <CommentAuthorImg src={logo}></CommentAuthorImg>
+                <CommentAuthor>{author}</CommentAuthor>
+            </CommentAuthorBtn>
                 <CommentBody>{text}</CommentBody>
                 <CommentTimeRating><RatingFood rating={commentRating} commentStar={true}></RatingFood>{commentTime}</CommentTimeRating>
             </CommentText>
@@ -288,6 +302,7 @@ const FoodArticle=()=> {
                               postId:postId,
                               fromSearch:false,
                               ModifyType:"food",
+                              ArticleAS:ArticleAS,
                                },});
                        //Form submission happens here
       }
@@ -315,8 +330,9 @@ const FoodArticle=()=> {
                             });
                             navigate("/food", {
                               state: {
-                                studentID:"00957025",
-                                fromSearch:false},});
+                                studentID:userInfo,
+                                fromSearch:false,
+                                ArticleAS:ArticleAS,},});
                          //Form submission happens here
         }
   
@@ -521,9 +537,21 @@ const FoodArticle=()=> {
                 },});
           }
 
+          const handleBackToFavoriteSubmit = (e) => {
+            e.preventDefault();
+            navigate("/favorite");
+          }
+
+          const handleBackToMyPostSubmit = (e) => {
+            e.preventDefault();
+            navigate("/MyArticles")
+          }
+
       return (
         <ArticleDetailPage>
-           <img src={back} className='food_back' alt="回上一頁" onClick={handleBackSubmit}/>
+            {!openModal && fromFood && !fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackSubmit}/>}
+            {!openModal && !fromFood && !fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackToFavoriteSubmit}/>}
+            {!openModal && !fromFood && fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackToMyPostSubmit}/>}
             {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment} ArticleAS={ArticleAS}/>}
             {!openModal && < FoodDetailInfo/>}
         </ArticleDetailPage>

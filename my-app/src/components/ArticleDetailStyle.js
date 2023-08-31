@@ -128,7 +128,6 @@ const ArticleDetailContactdBtn = styled.button`
     width:60px;
     text-align:center;
     height:30px;
-    margin-left:60%;
     border-radius: 6px; 
     margin-right:20px;
 `;

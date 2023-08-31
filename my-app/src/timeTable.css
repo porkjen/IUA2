@@ -6,11 +6,12 @@ html,body,#root,.TimeTable{
     margin: 0;
 }
 
-body{
- background-image: url("img/background.PNG");
+.TimeTable,.TimeTablebg{
+ /*background-image: url("img/background.PNG");*/
  background-position: center;
  background-repeat: repeat-y;
- background-size: cover;
+ background-size: auto;
+ background-color: 	#EDF4FF;
  
 }
 
@@ -72,7 +73,6 @@ body{
     text-align: center;
     width: 100%;
     margin-top: 55px;
-    padding-left: 20px;
 }
 
 .TimeTable_title_font{
@@ -97,7 +97,6 @@ table, th, td {
     flex-wrap: wrap;
     z-index: 2;
     margin-top: 140px;
-    
 }
 
 .timeTable_info{
@@ -107,6 +106,7 @@ table, th, td {
     width:100%;
     overflow-x: auto;
     border: 1px solid black;
+    background-color: 	#EDF4FF;
 }
 
 

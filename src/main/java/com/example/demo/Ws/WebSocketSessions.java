@@ -17,6 +17,10 @@ public class WebSocketSessions {
         return "[WebSocketSessions] sessionUsers: " + sessionUsers.size();
     }
 
+    public String getHowMany() {
+        return "How many people online at now: " + sessionUsers.size()/2;
+    }
+
     public synchronized void registerSessionId(String user, String sessionId) {
         Assert.notNull(user, "user must not be null");
         Assert.notNull(sessionId, "sessionId must not be null");

@@ -39,6 +39,7 @@ public class ConnectEventListener implements ApplicationListener<SessionConnectE
         sessions.registerSessionId(user, sessionId);
         LogAssist.logInfo(logger, "user login, user:{}, sessionId:{}", user, sessionId);
         LogAssist.logInfo(logger, sessions.toString());
+        System.out.println(sessions.getHowMany());
 
     }
 

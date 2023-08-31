@@ -127,7 +127,7 @@ function Favorite() {
   
     useEffect(() => {
       const formData = {
-        studentID: "00957025",
+        studentID: userInfo,
       };
   
       fetch('/favorites_load', {
