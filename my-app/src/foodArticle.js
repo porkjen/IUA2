@@ -331,7 +331,8 @@ const FoodArticle=()=> {
                             navigate("/food", {
                               state: {
                                 studentID:userInfo,
-                                fromSearch:false},});
+                                fromSearch:false,
+                                ArticleAS:ArticleAS,},});
                          //Form submission happens here
         }
   

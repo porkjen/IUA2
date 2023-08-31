@@ -201,8 +201,8 @@ const PostArticle=()=> {
         const [Hmoney, setHmoney] = useState("");
         const [rentGender, setrentGender] = useState("女");
         const [Hpeople, setHpeople] = useState("");
-        const [Htype, setHtype] = useState("");
-        const [Harea, setHarea] = useState("");
+        const [Htype, setHtype] = useState("套房");
+        const [Harea, setHarea] = useState("中正區");
         const [haveCar, sethaveCar] = useState("有");
         const [Hwater, setHwater] = useState("台水");
         const [HwaterMoney, setHwaterMoney] = useState("");
