@@ -13,6 +13,7 @@ import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
 import { getAuthToken } from "./utils";
+import { Link } from 'react-router-dom';
 
 const RentArticle=()=> {
 
@@ -267,7 +268,12 @@ const RentArticle=()=> {
                   </ButtonContainer>)}
                 {!isCreator && (
                   <ButtonContainer>
-                    <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    <Link to={`/chatroom/${postId}`} onClick={() => {
+                                                localStorage.setItem('nowRoom', postId);
+                                                localStorage.setItem('nowRoomName', data.title)
+                                                localStorage.setItem('userName', 'White')}}>
+                      <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    </Link>
                     {isRentSaved ? (
                       <ArticleDetailAlreadySavedBtn onClick={handleRemovedRentSavedSubmit}>
                         已收藏

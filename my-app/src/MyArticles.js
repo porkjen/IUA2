@@ -196,7 +196,7 @@ function MyArticles() {
   
   useEffect(() => {
     const queryParams = new URLSearchParams({
-      studentID: "00957017"
+      studentID: userInfo
     });
 
     const url = '/my_food_posts?' + queryParams.toString();
@@ -215,7 +215,7 @@ function MyArticles() {
 
   useEffect(() => {
     const queryParams = new URLSearchParams({
-      studentID: "00957017",
+      studentID: userInfo
     });
 
     const url = '/my_rent_posts?' + queryParams.toString();
@@ -234,7 +234,7 @@ function MyArticles() {
 
   useEffect(() => {
     const queryParams = new URLSearchParams({
-      studentID: "00957017",
+      studentID: userInfo
     });
 
     const url = '/my_course_posts?' + queryParams.toString();
