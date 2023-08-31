@@ -267,7 +267,12 @@ const RentArticle=()=> {
                   </ButtonContainer>)}
                 {!isCreator && (
                   <ButtonContainer>
-                    <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    <Link to={`/chatroom/${postId}`} onClick={() => {
+                                                localStorage.setItem('nowRoom', postId);
+                                                localStorage.setItem('nowRoomName', data.title)
+                                                localStorage.setItem('userName', 'White')}}>
+                      <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    </Link>
                     {isRentSaved ? (
                       <ArticleDetailAlreadySavedBtn onClick={handleRemovedRentSavedSubmit}>
                         已收藏
