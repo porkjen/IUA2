@@ -122,7 +122,7 @@ const Coreinfo = styled.label`
     padding-left: 2%;
 `;
 
-const CoreField = styled.label`
+const CoreHardwareField = styled.label`
     border-color:black;
     border-width:1px;
     border-style:solid;
@@ -130,6 +130,18 @@ const CoreField = styled.label`
     height:20%;
     margin-top:2%;
     color:black;
+    background-color:#E6FAEF;
+`;
+
+const CoreSoftwareField = styled.label`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-top:2%;
+    color:black;
+    background-color:#FAF0E6;
 `;
 
 const GEinfo = styled.label`
@@ -149,4 +161,4 @@ const GEinfo = styled.label`
     padding-left: 10px;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo, CoreField, GEinfo} ;
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField} ;

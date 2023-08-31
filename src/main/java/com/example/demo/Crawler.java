@@ -50,6 +50,8 @@ public class Crawler {
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
         //C:\Program Files\Google\Chrome\Application\chromedriver.exe  //白
         //C:\\Program Files (x86)\\Google
+        //C:\Program Files (x86)\Google\Chrome\Application
+        //C:\Program Files\Google\Chrome\Application
 
         ChromeOptions options = new ChromeOptions();
 

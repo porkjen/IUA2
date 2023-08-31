@@ -8,6 +8,7 @@ import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
 import student from './img/student.png';
 import cat from './img/SignIn4.PNG';
+import Modal from "./components/Modal";
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, 
   ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect 
   ,ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance,ChangeClassCategorySelect, ArticleDistance,AlreadyArticleText} from './components/ArticleStyle.js';
@@ -29,8 +30,10 @@ function MyArticles() {
     const [isChangeClassShown, setIsChangeClassShown] = useState(false);
     const [data, setData] = useState(null);
     const [alreadyChange, setAlreadyChange] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     let navigate = useNavigate();
     const userInfo = loginUser();
+    const [Postid, setPostid] = useState('');
   
   function RatingFood({ rating }) {
     const stars = [];
@@ -151,6 +154,8 @@ function MyArticles() {
                       console.log(data);})
                 .catch(error => {
                       console.error(error);});
+                      setOpenModal(true);
+                      setPostid(postID);
     }
 
     function NotChange(){
@@ -291,18 +296,20 @@ function MyArticles() {
         <Link to='/choose'>
               <Back src={back} alt="回上一頁" />
         </Link>
-        <div>
-          <Title>我的貼文</Title>
-          <img className='heart' src={yolk}/>
-          <img className='stars' src={redBall}/>
-        </div>
-        <div>
-          <select className='selectType' onChange={handleSelectChange}> 
-              <option value="food">美食版</option>
-              <option value="rent">租屋版</option>
-              <option value="changeClass">換課版</option>
-          </select>
-        </div>
+        {!openModal && <div>
+          <div>
+            <Title>我的貼文</Title>
+            <img className='heart' src={yolk}/>
+            <img className='stars' src={redBall}/>
+          </div>
+          <div>
+            <select className='selectType' onChange={handleSelectChange}> 
+                <option value="food">美食版</option>
+                <option value="rent">租屋版</option>
+                <option value="changeClass">換課版</option>
+            </select>
+          </div>
+        </div>}
         {isFoodShown && <ArticleList>
           {FoodData.map((item, index) => (
             <MineFinfo
@@ -327,7 +334,7 @@ function MyArticles() {
               />
             ))}
           </ArticleList>}
-          {isChangeClassShown && <ArticleList>
+          {!openModal && isChangeClassShown && <ArticleList>
             {ChangeClassData.map((item, index) => (
               <MineCinfo
               key={item.postId} 
@@ -340,6 +347,7 @@ function MyArticles() {
               />
             ))}
           </ArticleList>}
+          {openModal && <Modal closeModal={setOpenModal} type={"classArticle"} postId={Postid} studentID={userInfo} />}
         </div>
     );
   }

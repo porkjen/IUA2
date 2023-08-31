@@ -40,8 +40,8 @@
 
 .pic{
     position: relative;
-    height: 120px;
-    width: 120px;
+    height: 100%;
+    width: 100%;
 }
 .creditBtn{
     padding-left: 50px;
