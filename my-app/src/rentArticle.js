@@ -1,18 +1,13 @@
 //import './changeClass.css';
 import React from 'react';
 import dog from './img/dog.png';
-import banana from './img/banana.png';
-import back from './img/back.png';
-import cat from './img/SignIn4.PNG';
-import {Back}  from './components/Style.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, 
   ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailNormalBtn, ArticleDetailSavedBtn, 
-  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn}  from './components/ArticleDetailStyle.js';
+  ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn, ArticleDetailComment, ArticleDetailPostCommentPosition, ArticleDetailCommentImg, ArticleDetailPostComment, ArticleDetailPostBtn}  from './components/ArticleDetailStyle.js';
 import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
-import { loginUser } from './cookie';
-import { getAuthToken } from "./utils";
+import { Link } from 'react-router-dom';
 
 const RentArticle=()=> {
 
@@ -21,10 +16,7 @@ const RentArticle=()=> {
     const [data, setData] = useState(null);
     const [isCreator, setIsCreator] = useState(false);
     const [isRentSaved, setIsRentSaved] = useState(false);
-    const [isRentDelete, setIsRentDelete] = useState(false);
-    const {postId,fromRent } = location.state;
-    const userInfo = loginUser();
-    const token = getAuthToken();
+    const { studentID, postId } = location.state;
 
     function Commentinfo({ author, text }) {
         return (
@@ -41,7 +33,7 @@ const RentArticle=()=> {
         return (
             <div>
                 <ArticleDetailAuthorArea>
-                <ArticleDetailAuthorImg src={cat}></ArticleDetailAuthorImg>
+                <ArticleDetailAuthorImg src={dog}></ArticleDetailAuthorImg>
                 <ArticleDetailAuthor>{author}</ArticleDetailAuthor>
               </ArticleDetailAuthorArea>
                 <ArticleDetailTitle>{title}</ArticleDetailTitle>
@@ -73,7 +65,7 @@ const RentArticle=()=> {
     function RentArticle() {
 
         const formData = {
-            studentID:  userInfo,
+            studentID:  '00957025',
             postId : postId,
           };
 
@@ -95,7 +87,7 @@ const RentArticle=()=> {
                 .then(response => response.json())
                 .then(data => {
                   setData(data);
-                  if(data.studentID==userInfo){
+                  if(data.studentID==studentID){
                     console.log("same");
                     setIsCreator(true);
                   }
@@ -119,7 +111,7 @@ const RentArticle=()=> {
             e.preventDefault();
             //const student_id = loginUser();
             const savedFormData = {
-                            studentID: userInfo,
+                            studentID: "00957025",
                             postId:postId,
                           };
                           fetch('/favorites', {
@@ -144,7 +136,7 @@ const RentArticle=()=> {
             e.preventDefault();
             //const student_id = loginUser();
             const savedFormData = {
-                            studentID: userInfo,
+                            studentID: "00957025",
                             postId:postId,
                           };
                           fetch('/favorites_delete', {
@@ -162,106 +154,68 @@ const RentArticle=()=> {
                            //Form submission happens here
           }
 
+          const handleRemovedRentPostSubmit = (e) => {
+            e.preventDefault();
+            //const student_id = loginUser();
+            const savedFormData = {
+                            studentID: "00957025",
+                            postId:postId,
+                          };
+                          fetch(`/rent_post_delete?studentID=${studentID}&postId=${postId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(savedFormData)
+                              })
+                              .then(response => response.status)
+                              .catch(error => {
+                                console.error(error);
+                              });
+                              navigate("/rent", {
+                                state: {
+                                  studentID:"00957025",
+                                  fromSearch:false},});
+                           //Form submission happens here
+          }
 
           const handleModifyRentPostSubmit = (e) => {
             e.preventDefault();
             //const student_id = loginUser();
                               navigate("/modifyPost", {
                                 state: {
-                                  studentID:userInfo,
+                                  studentID:"00957025",
                                   postId:postId,
                                   fromSearch:false,
                                   ModifyType:"rent",
                                    },});
                            //Form submission happens here
           }
-
-          function ConfirmRentDelete(){
-
-            const handleRemovedRentPostSubmit = (e) => {
-              e.preventDefault();
-              //const student_id = loginUser();
-              const savedFormData = {
-                              studentID: userInfo,
-                              postId:postId,
-                            };
-                            fetch(`/rent_post_delete?studentID=${userInfo}&postId=${postId}`, {
-                                  method: 'DELETE',
-                                  headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `${token}`
-                                  },
-                                  body: JSON.stringify(savedFormData)
-                                })
-                                .then(response => response.status)
-                                .catch(error => {
-                                  console.error(error);
-                                });
-                                navigate("/rent", {
-                                  state: {
-                                    fromSearch:false},});
-                             //Form submission happens here
-            }
-      
-            const handleCancelRemovedRentPostSubmit = (e) => {
-              e.preventDefault();
-      
-              setIsRentDelete(false);
-                      
-            }
-            
-            return(
-                    <div className='deleteModal'>
-                      <label className='deleteText'>確定要刪除嗎!!</label>
-                      <button className='modal_yes' onClick={handleRemovedRentPostSubmit}>確定</button>
-                      <button className='modal_no' onClick={handleCancelRemovedRentPostSubmit}>取消</button>
-                    </div>
-            );
-        }
     
     
           if (!data) {
             return <div>Loading...</div>;
           }
 
-          const handleBackSubmit = (e) => {
-            e.preventDefault();
-            navigate("/rent", {
-              state: {
-                fromSearch:false,},});
-          }
-          const handleBackToFavoriteSubmit = (e) => {
-            e.preventDefault();
-            navigate("/favorite");
-          }
-
-          const handleRemovedRentPostConfirmSubmit = (e) => {
-            e.preventDefault();
-            //const student_id = loginUser();
-            setIsRentDelete(true);
-          }
-
       return (
         <ArticleDetailPage>
-          {fromRent && <Back src={back} alt="回上一頁" onClick={handleBackSubmit}/>}
-          {!fromRent && <Back src={back} alt="回上一頁" onClick={handleBackToFavoriteSubmit}/>}
             <ArticleDetailPosition>
                 <ArticleTitleinfo author={data.name} title={data.title} post_time={data.post_time}></ArticleTitleinfo>
                 <hr></hr>
                 <ArticleDetailInfo  address={data.address} area={data.area} car={data.car} floor={data.floor} gender={data.gender} money={data.money} people={data.people} power={data.power} water={data.water} style={data.style} rent_date={data.rent_date} note={data.note} >拜託跟我換課，我請你吃雞排</ArticleDetailInfo>
                 <hr></hr>
-                {isRentDelete && <ConfirmRentDelete/>}
-                {isCreator && isRentDelete && (<ButtonContainer>
-                  <ArticleDetailNormalBtn onClick={handleModifyRentPostSubmit} disabled>修改貼文</ArticleDetailNormalBtn>
-                  <ArticleDetailNormalBtn onClick={handleRemovedRentPostConfirmSubmit} disabled>刪除貼文</ArticleDetailNormalBtn>
-                  </ButtonContainer>)}
-                {isCreator && !isRentDelete && (<ButtonContainer>
+                {isCreator && (<ButtonContainer>
                   <ArticleDetailNormalBtn onClick={handleModifyRentPostSubmit}>修改貼文</ArticleDetailNormalBtn>
-                  <ArticleDetailNormalBtn onClick={handleRemovedRentPostConfirmSubmit}>刪除貼文</ArticleDetailNormalBtn>
+                  <ArticleDetailNormalBtn onClick={handleRemovedRentPostSubmit}>刪除貼文</ArticleDetailNormalBtn>
                   </ButtonContainer>)}
                 {!isCreator && (
                   <ButtonContainer>
-                    <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    <Link to={`/chatroom/${postId}`} onClick={() => {
+                                                localStorage.setItem('nowRoom', postId);
+                                                localStorage.setItem('nowRoomName', data.title)
+                                                localStorage.setItem('userName', 'White')}}>
+                      <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    </Link>
                     {isRentSaved ? (
                       <ArticleDetailAlreadySavedBtn onClick={handleRemovedRentSavedSubmit}>
                         已收藏
@@ -289,3 +243,5 @@ const RentArticle=()=> {
 }
 
 export default RentArticle;
+
+//${postId}
