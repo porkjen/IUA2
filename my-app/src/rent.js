@@ -52,7 +52,8 @@ const Rent=()=> {
                        //Form submission happens here
             navigate("/rentArticle", {
               state: {
-                postId : postID,},});
+                postId : postID,
+                fromRent:true},});
       }
 
         return (

@@ -26,7 +26,7 @@ const FoodArticle=()=> {
     const location = useLocation();
     const [data, setData] = useState(null);
     const [openModal, setOpenModal] = useState(false);
-    const { postId, ArticleAS,fromFood } = location.state;
+    const { postId, ArticleAS,fromFood,fromMyPost } = location.state;
     const [isCreator, setIsCreator] = useState(false);
     const [isReviewCreator, setIsReviewCreator] = useState(false);
     const [isMeComment, setIsMeComment] = useState(false);
@@ -331,7 +331,8 @@ const FoodArticle=()=> {
                             navigate("/food", {
                               state: {
                                 studentID:userInfo,
-                                fromSearch:false},});
+                                fromSearch:false,
+                                ArticleAS:ArticleAS,},});
                          //Form submission happens here
         }
   
@@ -541,10 +542,16 @@ const FoodArticle=()=> {
             navigate("/favorite");
           }
 
+          const handleBackToMyPostSubmit = (e) => {
+            e.preventDefault();
+            navigate("/MyArticles")
+          }
+
       return (
         <ArticleDetailPage>
-            {!openModal && fromFood && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackSubmit}/>}
-            {!openModal && !fromFood && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackToFavoriteSubmit}/>}
+            {!openModal && fromFood && !fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackSubmit}/>}
+            {!openModal && !fromFood && !fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackToFavoriteSubmit}/>}
+            {!openModal && !fromFood && fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackToMyPostSubmit}/>}
             {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment} ArticleAS={ArticleAS}/>}
             {!openModal && < FoodDetailInfo/>}
         </ArticleDetailPage>

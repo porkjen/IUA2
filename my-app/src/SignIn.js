@@ -19,6 +19,7 @@ const SignIn=()=> {
 
     let navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['token']);
+    const [error, setError] = useState(false);
 
     function SignIn() {
       const [student_id, setStudent_id] = useState("");
@@ -53,6 +54,7 @@ const SignIn=()=> {
                             }
                             else if(response.status==400){
                               alert("輸入錯誤");
+                              setError(true);
                             }
                             else if(response.status==201){
                               navigate('/nickName', {

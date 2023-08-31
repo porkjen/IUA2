@@ -188,11 +188,12 @@ const ChangeClass=()=> {
 
       return (
         <Page>
+           {!openModal &&
           <Link to='/choose'>
               <Back src={back} alt="回上一頁" />
-          </Link>
+          </Link>}
       <Pagebg>
-        <Title>換課板</Title>
+      {!openModal && <Title>換課板</Title>}
         <div className='ChangeClassSelect'>
           {myClass && !openModal &&  <input type="radio" id='myclass' name='selectTable' onChange={handleMyClassTableChange} checked></input>}
           {!myClass && !openModal &&  <input type="radio" id='myclass' name='selectTable'  onChange={handleMyClassTableChange}></input>}

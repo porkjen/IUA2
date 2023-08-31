@@ -59,6 +59,7 @@ function MyArticles() {
           navigate("/foodArticle", {
             state: {
               postId: postID,
+              fromMyPost :true,
             }
           });
         })
@@ -109,7 +110,8 @@ function MyArticles() {
                      //Form submission happens here
           navigate("/rentArticle", {
             state: {
-              postId : postID,},});
+              postId : postID,
+              fromMyPost : true,},});
     }
 
       return (
