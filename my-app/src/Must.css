@@ -32,3 +32,8 @@ html,body,#root,.Must{
     height: 580px; /* 設置固定高度，根據需要調整 */
     overflow: auto;
   }
+
+.moodbg{
+    height: 100%;
+    background-color: aliceblue;
+}

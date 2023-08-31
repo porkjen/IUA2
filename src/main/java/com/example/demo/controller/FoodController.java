@@ -143,10 +143,10 @@ public class FoodController {
             modifyFoodPost.setRoad(food.getRoad());
         //modify district
         if(!Objects.equals(food.getDistrict(), ""))
-            modifyFoodPost.setRoad(food.getDistrict());
+            modifyFoodPost.setDistrict(food.getDistrict());
         //modify url
         if(!Objects.equals(food.getURL(), ""))
-            modifyFoodPost.setRoad(food.getURL());
+            modifyFoodPost.setURL(food.getURL());
         foodRepository.save(modifyFoodPost);
         return ResponseEntity.ok(modifyFoodPost);
     }

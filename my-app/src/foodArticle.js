@@ -100,6 +100,20 @@ const FoodArticle=()=> {
           </CommentContainer>
         );
       }
+      else if(commentCreator==='IUA'){
+        return (
+          <CommentContainer>
+            <CommentText>
+            <CommentAuthorBtn>
+                 <CommentAuthorImg src={logo}></CommentAuthorImg>
+                <CommentAuthor>{author}</CommentAuthor>
+            </CommentAuthorBtn>
+                <CommentBody>{text}</CommentBody>
+                <CommentTimeRating><RatingFood rating={commentRating} commentStar={true}></RatingFood>{commentTime}</CommentTimeRating>
+            </CommentText>
+          </CommentContainer>
+        );
+      }
       else{
         return (
           <CommentContainer>
@@ -288,6 +302,7 @@ const FoodArticle=()=> {
                               postId:postId,
                               fromSearch:false,
                               ModifyType:"food",
+                              ArticleAS:ArticleAS,
                                },});
                        //Form submission happens here
       }
