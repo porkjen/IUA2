@@ -358,7 +358,8 @@ const ModifyPost=()=> {
                             state: {
                               fromSearch:false,
                               studentID: userInfo,
-                              postId: postId},});
+                              postId: postId,
+                              fromRent:true},});
                       })
                       .catch(error => {
                         console.error(error);
@@ -566,7 +567,7 @@ const ModifyPost=()=> {
         const [Fetchurl, setFetchurl] = useState("");
         const [data, setData] = useState(null);
         const formData = {
-          studentID: '00957017',
+          studentID: userInfo,
           postId: postId,
         };
       
