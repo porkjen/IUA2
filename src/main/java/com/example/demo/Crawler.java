@@ -48,8 +48,7 @@ public class Crawler {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
-        //C:\Program Files\Google\Chrome\Application
-        //C:\Program Files\Google\Chrome\Application  //白
+        //C:\Program Files\Google\Chrome\Application\chromedriver.exe  //白
         //C:\\Program Files (x86)\\Google
 
         ChromeOptions options = new ChromeOptions();
@@ -573,28 +572,18 @@ public class Crawler {
         WebElement selectedOption2 = driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='"+ takingMajor +"']"));
         String selectedOptionText2 = selectedOption2.getText();
         System.out.println("->"+ selectedOptionText2);
-        /*
-        driver.findElement(By.id("Q_GRADE")).click();
-        {
-            WebElement dropdown = driver.findElement(By.id("Q_GRADE"));
-            dropdown.findElement(By.xpath("//option[. = '2']")).click();
-        }
-        */
+        
         driver.findElement(By.id("Q_GRADE")).findElement(By.xpath("//option[. ='"+ takingGrade +"']")).click();
         System.out.println(takingGrade);
         WebElement selectedOption3 = driver.findElement(By.id("Q_GRADE")).findElement(By.xpath("//option[. ='"+ takingGrade +"']"));
         String selectedOptionText3 = selectedOption3.getText();
-        System.out.println("->"+ selectedOptionText3);
-
-
-        //driver.findElement(By.xpath("//*[@id='Q_GRADE']")).findElement(By.xpath("//option[@value='2']")).click();
-        
+        System.out.println("->"+ selectedOptionText3);        
 
         driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click();  //開課單位查詢
         Thread.sleep(3000);
         //show_25
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].value = '90';", driver.findElement(By.id("PC_PageSize"))); //商船有86筆(Max)
+        js.executeScript("arguments[0].value = '50';", driver.findElement(By.id("PC_PageSize"))); //商船有86筆(Max)
         Thread.sleep(3000);
         driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
         Thread.sleep(3000);

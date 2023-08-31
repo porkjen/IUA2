@@ -95,6 +95,8 @@ public class TodoController {
     String secretKey = "au4a83";
 
     static Crawler crawler = new Crawler();
+    String account = "";
+    String pwd = "";
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
@@ -102,7 +104,9 @@ public class TodoController {
         System.out.println("/login");
         //password encrypt
         String studentID = user.get("studentID");
+        account = studentID;
         String password = user.get("password");
+        pwd = password;
         System.out.println(studentID);
         System.out.println(password);
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
@@ -440,8 +444,8 @@ public class TodoController {
     public List<RequiredCourseEntity> course_search( @RequestParam(value = "major") String major, @RequestParam(value = "category") String category,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException  {
 
         System.out.println("/course_search");
-        String studentID ="00957039";
-        String password = "";
+        String studentID = account;
+        String password = pwd;
         //Convert grade code
         if(grade.equals("大一")) {
             grade = "1";

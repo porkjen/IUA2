@@ -6,9 +6,9 @@ import back from './img/back.png';
 import cat from './img/SignIn4.PNG';
 import {Back}  from './components/Style.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, 
-  ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailNormalBtn, ArticleDetailSavedBtn, 
+  ArticleDetailTitle, ArticleDetailPostDate, ButtonContainer, ArticleDetailNormalBtn, ArticleDetailSavedBtn, 
   ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn}  from './components/ArticleDetailStyle.js';
-import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
+import{CommentText, CommentContainer, CommentAuthor, CommentBody} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
@@ -77,14 +77,7 @@ const RentArticle=()=> {
             postId : postId,
           };
 
-        const [RComment, setRComment] = useState("");
-        const handleRCommentChange = event => {
-            setRComment(event.target.value);
-        };
-
-        const commentData = {
-
-        };
+       
 
         useEffect(() => {
             if (!data) {
