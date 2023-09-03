@@ -1,39 +1,59 @@
 import './ChatRoomList.css';
-import React from 'react';
-import { useEffect, useState, useRef,  } from "react";
 import { Link } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import {useEffect,useState} from "react";
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 
-const ChatRoomList = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredChatRooms, setFilteredChatRooms] = useState([]);
-
-  const chatRooms = [
-    { id: 'R1', name: 'room1' },
-    { id: 'R2', name: 'room2' },
+function ChatRoomList() {
+  const [userName, setUserName] = useState('');
+  const [connected, setConnected] = useState(false);
+  const [chatRooms, setChatRooms] = useState([
+    { id: 'R1', name: '缺體育' },
+    { id: 'R2', name: '山海觀山缺一' },
     { id: 'R3', name: '徵室友' },
-    { id: 'R4', name: 'room4' },
-];
-  var stompClient = null;
-  var socket = new SockJS('/chatroom');
-            stompClient = Stomp.over(socket);
-            console.log("Connected!!");
-            // userName = document.getElementById('from').value;
-            // stompClient.connect({user:userName}, function(frame) {
-                // setConnected(true);
-                
+    { id: 'R4', name: '403、404換課' }
+  ]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredChatRooms, setFilteredChatRooms] = useState(chatRooms);
+  const updatedChatRoomId = localStorage.getItem('nowRoom');
+  const updatedChatRoomName = localStorage.getItem('nowRoomName');
 
-                // stompClient.subscribe('/topic/'+ chatRoom.name, function(messageOutput) {
-                //     showMessageOutput(JSON.parse(messageOutput.body));
-                // });
+  // 從 localStorage 讀取新的聊天室資訊，但僅在頁面第一次加載時執行
+    useEffect(() => {
+      if (updatedChatRoomId && updatedChatRoomName) {
+        const newChatRoom = {
+          id: updatedChatRoomId,
+          name: updatedChatRoomName
+        };
 
-                // // 私人
-                // stompClient.subscribe('/user/subscribe', function(messageOutput) {
-                //     showMessageOutput(JSON.parse(messageOutput.body));
-                // });
-            // });
-  
+        const isDuplicateRoom = chatRooms.some(room => room.id === updatedChatRoomId);
+
+        if (!isDuplicateRoom) {
+          const updatedChatRooms = [...chatRooms, newChatRoom];
+          setChatRooms(updatedChatRooms);
+        }
+      }
+    }, []); // 空的依賴數組表示只在第一次加載時執行
+/*
+  const connectWebSocket = () => {
+    const socket = new SockJS('/chatroom');
+    const stompClient = Stomp.over(socket);
+    stompClient.connect({ user: userName }, (frame) => {
+      setConnected(true);
+      console.log('Connected: ' + frame);
+      // 訂閱相關主題
+      stompClient.subscribe('/topic/messages', (messageOutput) => {
+        this.showMessageOutput(JSON.parse(messageOutput.body));// 處理訊息
+      });
+      // 私人
+      stompClient.subscribe('/user/subscribe', (messageOutput) => {
+        this.showMessageOutput(JSON.parse(messageOutput.body));// 處理訊息
+      });
+    });
+  };
+*/
   const handleSearch = (event) => {
     const searchTerm = event.target.value;
     setSearchTerm(searchTerm);
@@ -45,37 +65,88 @@ const ChatRoomList = () => {
   };
 
   const linkStyle = {
-    color: 'black', 
-    textDecoration: 'none' // 去除底線
+    color: 'black',
+    textDecoration: 'none', // Remove underline
   };
 
-  return (
-    <div className='ChatRoomList'>
-      <input
-        type="text"
-        placeholder="Search chat rooms"
-        value={searchTerm}
-        onChange={handleSearch}
-      />
-      <ul>
+  const handleDeleteRoom = (event, roomId) => {
+    event.stopPropagation(); // 阻止事件冒泡
+    const updatedChatRooms = chatRooms.filter((room) => room.id !== roomId);
+    setChatRooms(updatedChatRooms);
+    // 如果要刪除的是新建的聊天室，則從列表中移除它
+    /*  if (roomId === updatedChatRoomId) {
+        const updatedChatRooms = chatRooms.filter((room) => room.id !== roomId);
+        setChatRooms(updatedChatRooms);
+      } else {
+        // 否則只是將它隱藏
+        const updatedChatRooms = chatRooms.map((room) => {
+          if (room.id === roomId) {
+            return { ...room, hidden: true };
+          }
+          return room;
+        });
+        setChatRooms(updatedChatRooms);
+      }*/
+  };
+
+return (
+  <div className="ChatRoomList">
+    <Link to='/homePage'>
+        <Back src={back} alt="回上一頁" />
+    </Link>
+    <div className='div1'>
+    <input
+      type="text"
+      placeholder="Search chat rooms"
+      value={searchTerm}
+      onChange={handleSearch}
+    />
+    <ul>
       {searchTerm
-          ? filteredChatRooms.map((chatRoom) => (
-            <Link to={`/chatroom/${chatRoom.id}`} style={linkStyle}  key={chatRoom.id}>
-              <li>
-                <span className="link-text">{chatRoom.name}</span>
-              </li>
-            </Link>
+        ? filteredChatRooms.map((chatRoom) => (
+            !chatRoom.hidden && (
+              <div key={chatRoom.id}>
+                <Link to={`/chatroom/${chatRoom.id}`} style={linkStyle}
+                      key={chatRoom.id} onClick={() => {
+                        localStorage.setItem('nowRoom', chatRoom.id);
+                        // connectWebSocket();
+                      }}>
+                  <li>
+                    <span className="link-text">{chatRoom.name}</span>
+                  </li>
+                </Link>
+                <button onClick={(event) => handleDeleteRoom(event, chatRoom.id)}
+                        style={{ marginLeft: '320px', border: 'none', backgroundColor:'#FF7575', borderRadius:'10px'}}>Delete</button>
+                <hr style={{ margin: '8px 0' }} />
+              </div>
+            )
           ))
-          : chatRooms.map((chatRoom) => (
-            <Link to={`/chatroom/${chatRoom.id}`} style={linkStyle}  key={chatRoom.id}>
-              <li>
-                <span className="link-text">{chatRoom.name}</span>
-              </li>
-            </Link>
+        : chatRooms.map((chatRoom) => (
+            !chatRoom.hidden && (
+              <div key={chatRoom.id}>
+                <Link to={`/chatroom/${chatRoom.id}`} style={linkStyle}
+                    key={chatRoom.id} onClick={() => {
+                      localStorage.setItem('nowRoom', chatRoom.id);
+                      localStorage.setItem('nowRoomName', chatRoom.name);
+                      localStorage.setItem('userName', 'White');
+                      // connectWebSocket();
+                    }}>
+                  <li>
+                    <span className="link-text">{chatRoom.name}</span>
+                  </li>
+                </Link>
+                <button onClick={(event) => handleDeleteRoom(event, chatRoom.id)}
+                        style={{ marginLeft: '320px', border: 'none', backgroundColor:'#FF7575', borderRadius:'10px'}}>Delete</button>
+                <hr style={{ margin: '8px 0' }} />
+              </div>
+            )
           ))}
-      </ul>
+    </ul>
     </div>
-  );
-};
+    
+  </div>
+);
+
+}
 
 export default ChatRoomList;

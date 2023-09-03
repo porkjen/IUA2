@@ -47,7 +47,7 @@ const RemainText = styled.div`
     padding-top: 12px;
     word-break: break-all;
     white-space: pre-line;
-    font-size:15px;
+    font-size:14px;
     text-align:center;
 `;
 
@@ -122,7 +122,7 @@ const Coreinfo = styled.label`
     padding-left: 2%;
 `;
 
-const CoreField = styled.label`
+const CoreHardwareField = styled.label`
     border-color:black;
     border-width:1px;
     border-style:solid;
@@ -130,6 +130,35 @@ const CoreField = styled.label`
     height:20%;
     margin-top:2%;
     color:black;
+    background-color:#E6FAEF;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo, CoreField} ;
+const CoreSoftwareField = styled.label`
+    border-color:black;
+    border-width:1px;
+    border-style:solid;
+    width:40%;
+    height:20%;
+    margin-top:2%;
+    color:black;
+    background-color:#FAF0E6;
+`;
+
+const GEinfo = styled.label`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    color:#008CBA;
+    margin-top:10px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+    width: 90%;
+    height: 20%;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 10px;
+`;
+
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField} ;

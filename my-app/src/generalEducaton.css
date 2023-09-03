@@ -1,11 +1,11 @@
-html,body,#root,.GeneralEducaton{
+html,body,#root,.GeneralEducation{
     height: 100%;
     padding: 0;
     margin: 0;
     
 }
 
-.g_education {
+.GeneralEducation {
     /* The image used */
     background-image: url("img/background.PNG");
   
@@ -16,45 +16,34 @@ html,body,#root,.GeneralEducaton{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    
+    background-attachment: fixed;
 }
 
-.g_education .g_backicon{
+.GeneralEducation .g_backicon{
     height: 40px;
     width: 40px;
     padding-top: 10px;
 }
 
-.g_education .g_title{
+.GeneralEducation .g_title{
     text-align: center;
     padding-top: 0px;
 }
 
-.g_education .selectDiv{
-    padding-left: 95px;
-    padding-top: 20px;
+.GeneralEducation .selectDiv{
+    padding-left: 10%;
+    padding-top: 5%;
 }
 
-.g_education .selectMust{
-    width: 180px;
+.GeneralEducation .selectMust{
+    width: 90%;
     font-size: 25px; 
-    color: #afc2f8;
+    color: #008CBA;
     border-radius: 10px;
     border: none;
 }
 
-
-.g_Lable label{
-    font-size: 18px;
-    font-family: 'Noto Serif TC', serif;
-}
-
-.g_education .g_Lable{
-    margin-top: 30px;
-    width: 300px;
-    height: 450px;
-    background-color: white;
-    border-radius: 10px;
-    margin-left: auto;
-    margin-right: auto;
+.GeneralEducation .g_Lable {
+    height: 530px; /* 設置固定高度，根據需要調整 */
+    overflow: auto;
 }

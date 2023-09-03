@@ -13,6 +13,7 @@ import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
 import { getAuthToken } from "./utils";
+import { Link } from 'react-router-dom';
 
 const RentArticle=()=> {
 
@@ -22,7 +23,7 @@ const RentArticle=()=> {
     const [isCreator, setIsCreator] = useState(false);
     const [isRentSaved, setIsRentSaved] = useState(false);
     const [isRentDelete, setIsRentDelete] = useState(false);
-    const {postId } = location.state;
+    const {postId,fromRent,fromMyPost } = location.state;
     const userInfo = loginUser();
     const token = getAuthToken();
 
@@ -230,6 +231,10 @@ const RentArticle=()=> {
               state: {
                 fromSearch:false,},});
           }
+          const handleBackToFavoriteSubmit = (e) => {
+            e.preventDefault();
+            navigate("/favorite");
+          }
 
           const handleRemovedRentPostConfirmSubmit = (e) => {
             e.preventDefault();
@@ -237,9 +242,16 @@ const RentArticle=()=> {
             setIsRentDelete(true);
           }
 
+          const handleBackToMyPostSubmit = (e) => {
+            e.preventDefault();
+            navigate("/MyArticles")
+          }
+
       return (
         <ArticleDetailPage>
-          <Back src={back} alt="回上一頁" onClick={handleBackSubmit}/>
+          {fromRent && !fromMyPost && <Back src={back} alt="回上一頁" onClick={handleBackSubmit}/>}
+          {!fromRent && !fromMyPost && <Back src={back} alt="回上一頁" onClick={handleBackToFavoriteSubmit}/>}
+          {!fromRent && fromMyPost && <Back src={back} alt="回上一頁" onClick={handleBackToMyPostSubmit}/>}
             <ArticleDetailPosition>
                 <ArticleTitleinfo author={data.name} title={data.title} post_time={data.post_time}></ArticleTitleinfo>
                 <hr></hr>
@@ -256,7 +268,12 @@ const RentArticle=()=> {
                   </ButtonContainer>)}
                 {!isCreator && (
                   <ButtonContainer>
-                    <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    <Link to={`/chatroom/${postId}`} onClick={() => {
+                                                localStorage.setItem('nowRoom', postId);
+                                                localStorage.setItem('nowRoomName', data.title)
+                                                localStorage.setItem('userName', 'White')}}>
+                      <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
+                    </Link>
                     {isRentSaved ? (
                       <ArticleDetailAlreadySavedBtn onClick={handleRemovedRentSavedSubmit}>
                         已收藏

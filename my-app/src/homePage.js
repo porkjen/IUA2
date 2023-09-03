@@ -6,7 +6,7 @@ import graduateImg from "./img/graduate.png";
 import courseSelectImg from "./img/selectcourse.png";
 import socialImg from "./img/social.png";
 import chatroomImg from "./img/chatroom.png";
-import calendarImg from "./img/calendar.png";
+import treeImg from "./img/tree.png";
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route } from 'react-router-dom';
 
@@ -36,9 +36,11 @@ const HomePage=()=> {
                     </div>
                     <div class="flex">
                         <div className="courseSelectBtn">
-                            <button className="courseSelectButton">
-                                <img src={courseSelectImg} className='pic'/>
-                            </button>
+                            <Link to='/CourseSelection'>
+                                <button className="courseSelectButton">
+                                    <img src={courseSelectImg} className='pic'/>
+                                </button>
+                            </Link>
                         </div>
                         <div className="socialBtn">
                             <Link to="/choose">
@@ -50,16 +52,19 @@ const HomePage=()=> {
                     </div>
                     <div class="flex">
                         <div className="chatRoomBtn">
-                            <button className="chatRoomButton">
-                                <img src={chatroomImg} className='pic'/>
-                            </button>
-                        </div>
-                        <div className="othersBtn">
-                            <Link to="/timeTable">
-                                <button className="othersButton">
-                                    <img src={calendarImg} className='pic'/>
+                            <Link to="/ChatRoomList">
+                                <button className="chatRoomButton">
+                                    <img src={chatroomImg} className='pic'/>
                                 </button>
                             </Link>
+                        </div>
+                        <div className="othersBtn">
+                            <Link to="/moodChat">
+                                <button className="othersButton">
+                                    <img src={treeImg} className='pic'/>
+                                </button>
+                            </Link>
+                            
                         </div>
                     </div>
                 </div>

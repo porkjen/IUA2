@@ -32,6 +32,16 @@ const Choose=()=> {
             ArticleAS:"PostTimeNtoF"},});
       }
 
+      const toMine = (e) => {
+        e.preventDefault();
+        navigate("/MyArticles")
+      }
+
+      const toLove = (e) => {
+        e.preventDefault();
+        navigate("/favorite")
+      }
+
     function Choose() {
       return (
         <div className="Choose"> 
@@ -44,6 +54,8 @@ const Choose=()=> {
                 <button className='chooseToRent' onClick={toRent}>租屋版</button>
                 <button className='chooseToChangeClass' onClick={toChangeClass}>換課版</button>
                 <button className='chooseToFood' onClick={toFood}>美食版</button>
+                <button className='myPosts' onClick={toMine}>我的貼文</button>
+                <button className='myLoves' onClick={toLove}>我的收藏</button>
             </div>
             <div><img src={bear} className='bearImg'></img></div>
         </div>

@@ -133,6 +133,7 @@ const Food = () => {
             state: {
               postId: postID,
               ArticleAS:AS,
+              fromFood:true,
             }
           });
         })

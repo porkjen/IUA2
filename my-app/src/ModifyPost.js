@@ -16,7 +16,7 @@ const ModifyPost=()=> {
     let navigate = useNavigate();
     const location = useLocation();
     const [data, setData] = useState(null);
-    const { studentID, postId, fromSearch, ModifyType, timeValue } = location.state;
+    const { studentID, postId, fromSearch, ModifyType, timeValue, ArticleAS } = location.state;
     const userInfo = loginUser();
     const token = getAuthToken();
     
@@ -36,6 +36,7 @@ const ModifyPost=()=> {
         const [Farea, setFarea] = useState("");
         const [Froad, setFroad] = useState("");
         const [Frate, setFrate] = useState("");
+        const [FLink, setFLink] = useState("");
 
 
         useEffect(() => {
@@ -53,7 +54,7 @@ const ModifyPost=()=> {
               setFarea(newData.district);
               setFroad(newData.road);
               setFrate(newData.rating);
-
+              setFLink(newData.url);
             }
           }, [newData]);
 
@@ -100,6 +101,10 @@ const ModifyPost=()=> {
           setFroad(event.target.value);
         };
 
+        const handleFLinkChange = event => {
+          setFLink(event.target.value);
+        };
+
         const handleFrateChange = event => {
           setFrate(event.target.value);
         };
@@ -115,6 +120,7 @@ const ModifyPost=()=> {
               weekday_text: openTime,
               address: Faddress,
               road : Froad,
+              url : FLink,
               district : Farea,
               
             };
@@ -132,7 +138,8 @@ const ModifyPost=()=> {
                 navigate("/foodArticle", {
                   state: {
                     fromSearch: false,
-                    postId: postId
+                    postId: postId,
+                    ArticleAS:ArticleAS,
                   }
                 });
               })
@@ -180,11 +187,15 @@ const ModifyPost=()=> {
               </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家路名:&emsp;</label>
-              <input type='text' name = 'Faddress' onChange={handleFroadChange} value={Froad} required="required"></input>
+              <input type='text' name = 'Faddress' onChange={handleFroadChange} value={Froad} ></input>
             </div><br/>
             <div className='articleFoodFormAddress'>
               <label>店家地址:&emsp;</label>
               <input type='text' name = 'Faddress' onChange={handleFaddressChange} value={Faddress}></input>
+            </div><br/>
+            <div className='articleFoodFormAddress'>
+              <label>店家連結:&emsp;</label>
+              <input type='text' name = 'FLink' onChange={handleFLinkChange} value={FLink}></input>
             </div><br/>
               <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn type="submit">確認修改</ArticleSubmitBtn>
@@ -347,7 +358,8 @@ const ModifyPost=()=> {
                             state: {
                               fromSearch:false,
                               studentID: userInfo,
-                              postId: postId},});
+                              postId: postId,
+                              fromRent:true},});
                       })
                       .catch(error => {
                         console.error(error);
@@ -508,7 +520,7 @@ const ModifyPost=()=> {
                               console.log(data);
                               navigate("/changeClassList", {
                                 state: {
-                                  studentID: "00957017",
+                                  studentID: userInfo,
                                         time:timeValue,},});
                             })
                             .catch(error => {
@@ -539,7 +551,7 @@ const ModifyPost=()=> {
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
-              <textarea type='text' className='articleChangeClassFormTextInput'  value={Ctext}></textarea>
+              <textarea type='text' className='articleChangeClassFormTextInput' onChange={handleCtextChange}  value={Ctext}></textarea>
             </div><br/>
             <ArticleSubmitBtnPosition>
                 <ArticleSubmitBtn type="submit">確認修改</ArticleSubmitBtn>
@@ -555,7 +567,7 @@ const ModifyPost=()=> {
         const [Fetchurl, setFetchurl] = useState("");
         const [data, setData] = useState(null);
         const formData = {
-          studentID: '00957017',
+          studentID: userInfo,
           postId: postId,
         };
       

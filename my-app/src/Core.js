@@ -5,7 +5,7 @@ import whitefox from './img/whitefox.PNG';
 import back from './img/back.png';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { Coreinfo, CoreField } from './components/Style';
+import { Coreinfo, CoreHardwareField, CoreSoftwareField} from './components/Style';
 
 const Core=()=>{
     function Core() {
@@ -15,7 +15,7 @@ const Core=()=>{
             <div className="Core">    
                 <div className='core_bg'>
                     <div>
-                        <Link to='/Credit'>
+                        <Link to='/coreSearch'>
                             <img src={back} alt="回上一頁" className="core_backicon"/>
                         </Link>
                     </div>
@@ -26,7 +26,8 @@ const Core=()=>{
                         <div className="c_scrollableContainer">
                             {CResult.map((item) => (
                                 <Coreinfo key={item.id}>
-                                    {<CoreField>{item.field}</CoreField>}
+                                    {item.field.includes("計算機") &&  <CoreHardwareField>{item.field}</CoreHardwareField>}
+                                    {item.field.includes("軟體") &&  <CoreSoftwareField>{item.field}</CoreSoftwareField>}
                                     {item.name}<br />{item.number}&emsp;{item.teacher}<br />學期: {item.semester}<br />上課時間: {item.time}
                                 </Coreinfo>
                             ))}
