@@ -1259,8 +1259,6 @@ public class TodoController {
         return RC_result;
     }
 
-
-
     @PostMapping("/favorites")
     public ResponseEntity<String> favorites(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites");
@@ -1352,14 +1350,13 @@ public class TodoController {
         return ResponseEntity.badRequest().body("Invalid request");//400
     }
 
-    @PutMapping("/change_post_status")
+    @PutMapping("/change_post_status") //both house and change course posts
     public ResponseEntity<String> changePostStatus(@RequestBody Map<String, String> requestData){
         if(requestData.get("postId").startsWith("H")){
             HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
             if(!Objects.equals(house.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
             house.setStatus("已租");
             houseRepository.save(house);
-            return ResponseEntity.ok("Success");
         }
         //requestData.get("postId").startsWith("C")
         else {
@@ -1367,8 +1364,8 @@ public class TodoController {
             if(!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
             changeCourse.setStatus("已換");
             changeCourseRepository.save(changeCourse);
-            return ResponseEntity.ok("Success");
         }
+        return ResponseEntity.ok("Success");
     }
 
     @PostMapping("/pre_curriculum_search")

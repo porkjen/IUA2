@@ -130,19 +130,19 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                             <label>人數: </label>
                             <select value={RSPeople} onChange={handleRSPeopleChange}>
                                 <option>請選擇人數</option>
-                                <option value='one'>1</option>
-                                <option value='two'>2</option>
-                                <option value='three'>3</option>
-                                <option value='four'>4</option>
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
                             </select>
                         </div><br/>
                         <div className='ModalRentFormType'>
                         <label>房型: </label>
                             <select value={RSType} onChange={handleRSTypeChange}>
                                 <option>請選擇房型</option>
-                                <option value='studio'>套房</option>
-                                <option value='room'>雅房</option>
-                                <option value='family'>家庭式</option>
+                                <option value='套房'>套房</option>
+                                <option value='雅房'>雅房</option>
+                                <option value='家庭式'>家庭式</option>
                             </select>
                         </div><br/>
                         <div className='ModalRentFormCar'>
