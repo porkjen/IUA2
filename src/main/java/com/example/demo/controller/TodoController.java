@@ -411,11 +411,12 @@ public class TodoController {
             //return null;
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
-
+        List<TimeTableDTO> shortTT = new ArrayList<>();
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
         if(timeTable!=null && timeTable.getInfo().size()!=0){
-            return ResponseEntity.ok(timeTable.getInfo());
-            //return timeTable.getInfo();
+            for(TimeTableEntity.Info i : timeTable.getInfo()){
+                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
+            }
         }
         else{
             String password = basicRepository.findByStudentID(studentID).getPassword();
@@ -431,14 +432,28 @@ public class TodoController {
             else table.setStudentID(studentID); //create a new one
             for(TimeTableEntity.Info i : myClassList){
                 System.out.println(i.getName());
+                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
                 table.setInfo(i);
             }
             timeTableRepository.save(table);
-            return ResponseEntity.ok(myClassList);
-            //return myClassList;
         }
+        return ResponseEntity.ok(shortTT);
     }
 
+    @GetMapping("/curriculum_search_detail")
+    public ResponseEntity<?> curriculumSearchDetail(@RequestParam("studentID") String studentID, @RequestParam("Cname")String name, @RequestHeader("Authorization") String au){
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        for(TimeTableEntity.Info i : timeTable.getInfo()){
+            if(Objects.equals(i.getName(), name))return ResponseEntity.ok(i);
+        }
+        return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
+    }
 
     @PostMapping("/course_search")
     public List<RequiredCourseEntity> course_search( @RequestParam(value = "major") String major, @RequestParam(value = "category") String category,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException  {
