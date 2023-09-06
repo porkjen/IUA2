@@ -12,6 +12,16 @@ public class RequiredCourseEntityOuterMajorBT {
     String c_credit = "";
     String c_teacher = "";
     String c_major = "";
+    String c_time = "";
+    String c_location = "";
+    String c_people = "";
+    String c_objective = "";
+    String c_precourse = "";
+    String c_outline = "";
+    String c_tmethod = "";
+    String c_reference = "";
+    String c_syllabus = "";
+    String c_evaluation = "";
 
 
     public String getCName() {
@@ -69,4 +79,42 @@ public class RequiredCourseEntityOuterMajorBT {
     public void setCMajor(String c_major) {
         this.c_major = c_major;
     }
+    public  String getCTime(){ return c_time;}
+    public void setCTime(String c_time){this.c_time = c_time;}
+
+    public  String getCLocation(){ return c_location;}
+
+    public void setCLocation(String c_location){this.c_location = c_location;}
+
+    public  String getCPeople(){ return c_people;}
+
+    public void setCPeople(String c_people){this.c_people = c_people;}
+
+    public  String getCObjective(){ return c_objective;}
+
+    public void setCObjective(String c_objective){this.c_objective = c_objective;}
+
+    public  String getCPrecourse(){ return c_precourse;}
+
+    public void setCPrecourse(String c_precourse){this.c_precourse = c_precourse;}
+
+    public  String getCOutline(){ return c_outline;}
+
+    public void setCOutline(String c_outline){this.c_outline = c_outline;}
+
+    public  String getCTmethod(){ return c_tmethod;}
+
+    public void setCTmethod(String c_tmethod){this.c_tmethod = c_tmethod;}
+
+    public  String getCReference(){ return c_reference;}
+
+    public void setCReference(String c_reference){this.c_reference = c_reference;}
+
+    public  String getCSyllabus(){ return c_syllabus;}
+
+    public void setCSyllabus(String c_syllabus){this.c_syllabus = c_syllabus;}
+
+    public  String getCEvaluation(){ return c_evaluation;}
+
+    public void setCEvaluation(String c_evaluation){this.c_evaluation = c_evaluation;}
 }
