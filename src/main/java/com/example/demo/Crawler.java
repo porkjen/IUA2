@@ -602,7 +602,7 @@ public class Crawler {
 
         driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click();  //開課單位查詢
         Thread.sleep(3000);
-        //show_25
+        //show_50
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].value = '50';", driver.findElement(By.id("PC_PageSize"))); //商船有86筆(Max)
         Thread.sleep(3000);
@@ -612,13 +612,14 @@ public class Crawler {
         System.out.println(takingCategory);
         for(int i = 1;i < rcReault.size();i++){
             System.out.println(i);
-            WebElement itemCourse = rcReault.get(i);
+            WebElement itemCourse = driver.findElements(By.cssSelector("#DataGrid > tbody > tr")).get(i);
             List<WebElement> item = itemCourse.findElements(By.tagName("td"));
             Thread.sleep(3000);
             System.out.println(item.get(10).getText());
             //System.out.println(takingCategory);
             if(item.get(10).getText().equals(takingCategory))
             {
+                RequiredCourseEntityMajorCSE rcDetail = new RequiredCourseEntityMajorCSE();
                 System.out.println("課名 : " + item.get(3).getText());
                 System.out.println("年班級 : " + item.get(5).getText());
 
@@ -630,13 +631,73 @@ public class Crawler {
                 courseEntity.setCCredit(item.get(9).getText());
                 courseEntity.setCCategory(item.get(10).getText());
 
+                Integer index= 1;
+                index += i;
+                if(i<9){
+                    driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+index+"$COSID','')\"]")).click();
+                }
+                else{
+                    driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+index+"$COSID','')\"]")).click();
+                }
+                Thread.sleep(3000);
+                driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                //switch iframe
+                WebElement iframe = driver.findElement(By.tagName("iframe"));
+                driver.switchTo().frame(iframe);
+                driver.switchTo().frame("mainFrame");
+                Thread.sleep(1500);
+
+                WebElement time = driver.findElement(By.id("M_SEG"));
+                System.out.println("上課時間 : " + time.getText());
+                courseEntity.setCTime(time.getText());
+
+                WebElement location = driver.findElement(By.id("M_CLSSRM_ID"));
+                System.out.println("上課地點 : " + location.getText());
+                courseEntity.setCLocation(location.getText());
+
+                WebElement people = driver.findElement(By.id("M_CHOICE_QTY"));
+                System.out.println("選課人數 : " + people.getText());
+                courseEntity.setCPeople(people.getText());
+
+                WebElement objective = driver.findElement(By.id("M_CH_TARGET"));
+                System.out.println("教學目標 : " + objective.getText());
+                courseEntity.setCObjective(objective.getText());
+
+                WebElement pre_course = driver.findElement(By.id("M_CLSSRM_ID"));
+                System.out.println("先修科目 : " + pre_course.getText());
+                courseEntity.setCPrecourse(pre_course.getText());
+
+                WebElement outline = driver.findElement(By.id("M_CH_OBJECT"));
+                System.out.println("教材內容 : " + outline.getText());
+                courseEntity.setCOutline(outline.getText());
+
+                WebElement teaching_method = driver.findElement(By.id("M_CH_TEACH"));
+                System.out.println("教學方式 : " + teaching_method.getText());
+                courseEntity.setCTmethod(teaching_method.getText());
+
+                WebElement reference = driver.findElement(By.id("M_CH_REF"));
+                System.out.println("參考書目 : " + reference.getText());
+                courseEntity.setCReference(reference.getText());
+
+                WebElement syllabus = driver.findElement(By.id("M_CH_TEACHSCH"));
+                System.out.println("教學進度 : " + syllabus.getText());
+                courseEntity.setCSyllabus(syllabus.getText());
+
+                WebElement evaluation = driver.findElement(By.id("M_CH_TYPE"));
+                System.out.println("評量方式 : " + evaluation.getText());
+                courseEntity.setCEvaluation(evaluation.getText());
+
                 RCourseList.add(courseEntity);
 
+                driver.switchTo().defaultContent();
+                driver.switchTo().frame("mainFrame");
+                driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
+                //driver.switchTo().defaultContent();
+                //driver.switchTo().frame("mainFrame");
             }
         }
         return RCourseList;
     }
-
     public static List<CourseEntity> getCourses() throws InterruptedException{
         driver.switchTo().defaultContent();
         Thread.sleep(1000);
