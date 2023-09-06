@@ -663,7 +663,7 @@ public class Crawler {
                 System.out.println("教學目標 : " + objective.getText());
                 courseEntity.setCObjective(objective.getText());
 
-                WebElement pre_course = driver.findElement(By.id("M_CLSSRM_ID"));
+                WebElement pre_course = driver.findElement(By.id("M_CH_PREOBJ"));
                 System.out.println("先修科目 : " + pre_course.getText());
                 courseEntity.setCPrecourse(pre_course.getText());
 
