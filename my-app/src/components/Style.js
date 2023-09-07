@@ -161,4 +161,5 @@ const GEinfo = styled.label`
     padding-left: 10px;
 `;
 
+
 export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField} ;

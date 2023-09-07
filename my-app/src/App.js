@@ -27,7 +27,6 @@ import Favorite from './favorite';
 import DetectCourse from './DetectCourse';
 import ModifyPost from './ModifyPost';
 import MyNotification from './myNotification';
-
 import Chatroom from './chatroom';
 import ChatRoomList from './ChatRoomList';
 import MoodChat from './moodChat';  
