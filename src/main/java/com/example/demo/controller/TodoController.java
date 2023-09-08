@@ -18,11 +18,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.List;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class TodoController {
+    @Autowired
+    PushNotificationService pushNotificationService;
     @Autowired
     RemainedService remainedService;
     @Autowired
@@ -119,6 +120,7 @@ public class TodoController {
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
+            sendTestNotification(token);
             return ResponseEntity.status(HttpStatus.CREATED).body(t);//201
         }
         else {
@@ -129,8 +131,15 @@ public class TodoController {
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
+            sendTestNotification(token);
             return ResponseEntity.ok(t); // 回傳狀態碼 200
         }
+    }
+
+    private ResponseEntity<?> sendTestNotification(String token){
+        PushNotificationRequest request = new PushNotificationRequest("Welcome!", "This is IUA", "welcome", token);
+        pushNotificationService.sendPushNotificationToToken(request);
+        return new ResponseEntity<>(new PushNotificationResponse(HttpStatus.OK.value(), "Notification has been sent."), HttpStatus.OK);
     }
 
     @PostMapping("/nickname")
@@ -193,7 +202,7 @@ public class TodoController {
             newList.setDetectedCourse(courses);
             dRepository.save(newList);
         }
-        crawler.detectCoureses(courses);
+        // crawler.detectCoureses(courses);
     }
 
     @PostMapping("/detect_course")
