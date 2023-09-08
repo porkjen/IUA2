@@ -84,6 +84,10 @@ public class TodoController {
     static Crawler crawler = new Crawler();
     String account = "";
     String pwd = "";
+
+    @Autowired
+    private TodoService todoService;
+    
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
@@ -448,6 +452,391 @@ public class TodoController {
             if(Objects.equals(i.getName(), name))return ResponseEntity.ok(i);
         }
         return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
+    }
+
+    @PostMapping("/course_search_detail")
+    public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {
+
+        System.out.println("/course_search_detail");
+        String studentID = account;
+        String password = pwd;
+        List<RequiredCourseEntity> RC_detail = new ArrayList<>();
+        if(major.equals("資工")){
+            System.out.println("Detail*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityMajorCSE> rCourseEntityMajorCSE = rCourseMajorCSERepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityMajorCSE rcDetail : rCourseEntityMajorCSE) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("商船")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorMS> rCourseEntityOMajorMS = rCourseOMajorMSRepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorMS rcDetail : rCourseEntityOMajorMS) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("航管")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorTC> rCourseEntityOMajorTC = rCourseOMajorTCRepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorTC rcDetail : rCourseEntityOMajorTC) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("運輸")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorTS> rCourseEntityOMajorTS = rCourseOMajorTSRepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorTS rcDetail : rCourseEntityOMajorTS) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("輪機")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorTE> rCourseEntityOMajorTE = rCourseOMajorTERepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorTE rcDetail : rCourseEntityOMajorTE) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("食科")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorFS> rCourseEntityOMajorFS = rCourseOMajorFSRepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorFS rcDetail : rCourseEntityOMajorFS) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("養殖")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorDA> rCourseEntityOMajorDA = rCourseOMajorDARepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorDA rcDetail : rCourseEntityOMajorDA) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("生科")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorBT> rCourseEntityOMajorBT = rCourseOMajorBTRepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorBT rcDetail : rCourseEntityOMajorBT) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("環漁")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorRF> rCourseEntityOMajorRF = rCourseOMajorRFRepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorRF rcDetail : rCourseEntityOMajorRF) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("機械")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorME> rCourseEntityOMajorME = rCourseOMajorMERepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorME rcDetail : rCourseEntityOMajorME) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("系工")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorSE> rCourseEntityOMajorSE = rCourseOMajorSERepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorSE rcDetail : rCourseEntityOMajorSE) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("河工")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorRW> rCourseEntityOMajorRW = rCourseOMajorRWRepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorRW rcDetail : rCourseEntityOMajorRW) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("電機")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorEE> rCourseEntityOMajorEE = rCourseOMajorEERepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorEE rcDetail : rCourseEntityOMajorEE) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("通訊")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorCE> rCourseEntityOMajorCE = rCourseOMajorCERepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorCE rcDetail : rCourseEntityOMajorCE) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        else if(major.equals("光電")){
+            System.out.println("*"+major+"*"+number+"*"+grade);
+            List<RequiredCourseEntityOuterMajorPE> rCourseEntityOMajorPE = rCourseOMajorPERepository.findByNumberAndGrade(number,grade);
+            for (RequiredCourseEntityOuterMajorPE rcDetail : rCourseEntityOMajorPE) {
+                RequiredCourseEntity result = new RequiredCourseEntity();
+                result.setCNumber(rcDetail.getCNumber());
+                result.setCTeacher(rcDetail.getCTeacher());
+                result.setCCredit(rcDetail.getCCredit());
+                result.setCGrade(rcDetail.getCGrade());
+                result.setCName(rcDetail.getCName());
+                result.setCCategory(rcDetail.getCCategory());
+                result.setCMajor(rcDetail.getCMajor());
+                result.setCTime(rcDetail.getCTime());
+                result.setCLocation(rcDetail.getCLocation());
+                result.setCPeople(rcDetail.getCPeople());
+                result.setCObjective(rcDetail.getCObjective());
+                result.setCReference(rcDetail.getCReference());
+                result.setCPrecourse(rcDetail.getCPrecourse());
+                result.setCOutline(rcDetail.getCOutline());
+                result.setCTmethod(rcDetail.getCTmethod());
+                result.setCSyllabus(rcDetail.getCSyllabus());
+                result.setCEvaluation(rcDetail.getCEvaluation());  //total is 17
+                RC_detail.add(result);
+            }
+        }
+        return RC_detail;
     }
 
     @PostMapping("/course_search")
