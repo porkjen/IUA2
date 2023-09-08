@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import {useEffect,useState} from "react";
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 
 function ChatRoomList() {
   const [userName, setUserName] = useState('');
@@ -89,6 +91,10 @@ function ChatRoomList() {
 
 return (
   <div className="ChatRoomList">
+    <Link to='/homePage'>
+        <Back src={back} alt="回上一頁" />
+    </Link>
+    <div className='div1'>
     <input
       type="text"
       placeholder="Search chat rooms"
@@ -136,6 +142,8 @@ return (
             )
           ))}
     </ul>
+    </div>
+    
   </div>
 );
 

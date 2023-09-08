@@ -186,7 +186,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                     fromSearch:true,
                     FArea:FSArea,
                     FName:FSName,
-                    FAddr:FSAddress,},});
+                    FAddr:FSAddress,
+                    ArticleAS:ArticleAS,},});
                     //closeModal(false);
                     window.location.reload();
           }
@@ -303,14 +304,36 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
           e.preventDefault();
           //const student_id = loginUser();
           setConfirm(true);
-          
-        
+        }
+
+        const handleClassPostStatusSubmit = (e) => {
+          e.preventDefault();
+          const formData = {
+            studentID: userInfo,
+            postId:postId,
+          };
+          fetch('/change_post_status', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+              })
+              .then(response => response.status)
+              .then(data => {
+                console.log(data);
+                closeModal(false);
+              })
+              .catch(error => {
+                console.error(error);
+              });
         }
 
 
       return(
-             <div><br/>
-              <label>發文者:&ensp;{data.studentID}</label><br/>
+             <div>
+             {isCreator && <button className='alreadyChangeBtn' onClick={handleClassPostStatusSubmit}>換課完成</button>}
+             <label>發文者:&ensp;{data.studentID}</label><br/>
               <label>標題:&ensp;{data.course}</label><br/>
               <label>課程分類:&ensp;{data.category}</label><br/>
               <label>課程老師:&ensp;{data.teacher}</label><br/>

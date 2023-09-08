@@ -32,12 +32,6 @@ const ChangeClassList=()=> {
 
     function Articleinfo({ author, className, category, postID, post_time, status }) {
 
-      if(status==="未換"){
-        setAlreadyChange(false);
-      }
-      else{
-        setAlreadyChange(true);
-      }
       const handleShowClassSubmit = (e) => {
         e.preventDefault();
         //const student_id = loginUser();
@@ -65,42 +59,37 @@ const ChangeClassList=()=> {
             */
       }
 
-      function NotChange(){
+      if(status==="未換"){
         return(
-            <ArticleText onClick={handleShowClassSubmit}>
-                <ArticleDistance>{category}</ArticleDistance>
-                <ArticleAuthorArea>
-                  <ArticleAuthorImg src={student}></ArticleAuthorImg>
-                  <ArticleAuthor>{author}</ArticleAuthor>
-                </ArticleAuthorArea>
-                <ArticleBody>{className}</ArticleBody>
-                <ArticlePostTime>{post_time}</ArticlePostTime>
-            </ArticleText>
-        );
-      }
-
-      function Change(){
-        return(
-            <AlreadyArticleText onClick={handleShowClassSubmit} disabled>
-                <ArticleDistance>{status}</ArticleDistance>
-                <ArticleAuthorArea>
-                  <ArticleAuthorImg src={student}></ArticleAuthorImg>
-                  <ArticleAuthor>{author}</ArticleAuthor>
-                </ArticleAuthorArea>
-                <ArticleBody>{className}</ArticleBody>
-                <ArticlePostTime>{post_time}</ArticlePostTime>
-            </AlreadyArticleText>
-        );
-      }
-
-
-        return (
           <ArticleContainer>
-            {alreadyChange && <Change/>}
-            {!alreadyChange && <NotChange/>}
-            
+            <ArticleText onClick={handleShowClassSubmit}>
+              <ArticleDistance>{category}</ArticleDistance>
+              <ArticleAuthorArea>
+                <ArticleAuthorImg src={student}></ArticleAuthorImg>
+                <ArticleAuthor>{author}</ArticleAuthor>
+              </ArticleAuthorArea>
+              <ArticleBody>{className}</ArticleBody>
+              <ArticlePostTime>{post_time}</ArticlePostTime>
+          </ArticleText>
           </ArticleContainer>
-        );
+          
+      );
+      }
+      else if(status==="已換"){
+        return(
+          <ArticleContainer>
+            <AlreadyArticleText onClick={handleShowClassSubmit} disabled>
+                  <ArticleDistance>{status}</ArticleDistance>
+                  <ArticleAuthorArea>
+                    <ArticleAuthorImg src={student}></ArticleAuthorImg>
+                    <ArticleAuthor>{author}</ArticleAuthor>
+                  </ArticleAuthorArea>
+                  <ArticleBody>{className}</ArticleBody>
+                  <ArticlePostTime>{post_time}</ArticlePostTime>
+              </AlreadyArticleText>
+          </ArticleContainer>
+      );
+      }
       }
 
       function ChangeClassList_all(){

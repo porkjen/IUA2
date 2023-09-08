@@ -200,3 +200,26 @@ html,body,#root{
 .modalChangeClassNotificationSelect{
     text-align: center;
 }
+
+.alreadyChangeBtn{
+    color: rgba(249, 231, 193, 0.951);
+    background: transparent; 
+    border: 2px solid  rgba(249, 231, 193);
+    border-radius: 6px; 
+    color: black;
+    padding: 8px 16px;
+    font-size: 8px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-left: 67%;
+    width:30%;
+}
+
+.acBtn{
+    display:flex;
+    justify-content:space-between;
+}
