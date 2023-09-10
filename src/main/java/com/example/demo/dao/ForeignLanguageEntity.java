@@ -3,9 +3,9 @@ package com.example.demo.dao;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Arrays;
+@Document("ForeignLanguageCollection")
+public class ForeignLanguageEntity {
 
-@Document("PECourseCollection")
-public class PECourseEntity {
     private String id;
     private String classNum = ""; //課號*
     private String department = ""; //開課系所

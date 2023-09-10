@@ -91,7 +91,12 @@ public class TodoController {
     RCourseOMajorCERepository rCourseOMajorCERepository;
     @Autowired
     RCourseOMajorPERepository rCourseOMajorPERepository;
-
+    @Autowired
+    PECourseRepository peCourseRepository; //體育
+    @Autowired
+    ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
+    @Autowired
+    EnglishCourseRepository englishCourseRepository;//英文
     String secretKey = "au4a83";
 
     static Crawler crawler = new Crawler();
@@ -401,7 +406,21 @@ public class TodoController {
         }
         return shortened;
     }
-
+    @GetMapping("/courses")
+    public List<?> courses(@RequestParam("category") String category){
+        if(Objects.equals(category, "general")){
+            return generalRepository.findAll();
+        }
+        else if(Objects.equals(category, "PE")){
+            return peCourseRepository.findAll();
+        }
+        else if(Objects.equals(category, "foreign_language")){
+            return foreignLanguageCourseRepository.findAll();
+        }
+        else{ //english
+            return englishCourseRepository.findAll();
+        }
+    }
     @GetMapping("/curriculum_search")
     public ResponseEntity<?> curriculumSearch(@RequestParam("studentID") String studentID, @RequestHeader("Authorization") String au) throws TesseractException, IOException, InterruptedException {
         JwtToken jwtToken = new JwtToken();
@@ -1455,6 +1474,38 @@ public class TodoController {
         List<GeneralCourseEntity> result = crawler.getAllGeneralClass();
         return result;
     }
-
+    @GetMapping("/PECoursesData")
+    public void getPECourse(@RequestParam("studentID") String studentID, @RequestParam("password") String password) throws InterruptedException, TesseractException, IOException {
+        crawler.CrawlerHandle(studentID, password);
+        List<PECourseEntity> peCourseEntityList = crawler.getPE();
+        System.out.println(peCourseEntityList.size());
+        for(PECourseEntity pe : peCourseEntityList){
+            System.out.println(pe.getName());
+            peCourseRepository.save(pe);
+        }
+        System.out.println("done");
+    }
+    @GetMapping("/foreign_language_courses_data")
+    public void foreignLanguageCoursesData(@RequestParam("studentID") String studentID, @RequestParam("password") String password) throws InterruptedException, TesseractException, IOException {
+        crawler.CrawlerHandle(studentID, password);
+        List<ForeignLanguageEntity> fCourseEntityList = crawler.getForeignLanguageClass();
+        System.out.println(fCourseEntityList.size());
+        for(ForeignLanguageEntity f : fCourseEntityList){
+            System.out.println(f.getName());
+            foreignLanguageCourseRepository.save(f);
+        }
+        System.out.println("done");
+    }
+    @GetMapping("/english_courses_data")
+    public void englishCoursesData(@RequestParam("studentID") String studentID, @RequestParam("password") String password) throws InterruptedException, TesseractException, IOException {
+        crawler.CrawlerHandle(studentID, password);
+        List<EnglishCourseEntity> eCourseEntityList = crawler.getEnglishClass();
+        System.out.println(eCourseEntityList.size());
+        for(EnglishCourseEntity e : eCourseEntityList){
+            System.out.println(e.getName());
+            englishCourseRepository.save(e);
+        }
+        System.out.println("done");
+    }
 }
 

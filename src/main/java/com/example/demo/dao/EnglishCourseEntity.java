@@ -4,8 +4,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Arrays;
 
-@Document("PECourseCollection")
-public class PECourseEntity {
+@Document("EnglishCourseCollection")
+public class EnglishCourseEntity {
     private String id;
     private String classNum = ""; //課號*
     private String department = ""; //開課系所
