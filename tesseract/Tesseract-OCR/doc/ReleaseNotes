@@ -212,7 +212,7 @@ the API correctly.
 
 The adaptive classifier was not operating correctly. This bug, and several
 others have been fixed, including poor chopping, an indefinite (if not quite
-infinite) loop in the number parser, and a couple of crash bugs. Thanks to
+infinite) loop in the classNum parser, and a couple of crash bugs. Thanks to
 all that have contributed bugs and bug fixes.
 
 It is now possible to build without any of the graphics support to save code

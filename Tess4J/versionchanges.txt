@@ -112,7 +112,7 @@ Version 3.4.2 (14 November 2017)
 - Update Lept4J to 1.6.2
 - Update GhostScript to 9.22
 - Improve handling of PDF files in multi-threaded environment
-- Lift limits on number of pages in PDF
+- Lift limits on classNum of pages in PDF
 - Use TESSDATA_PREFIX environment variable by default, if defined
 
 Version 3.4.3 (14 January 2018)

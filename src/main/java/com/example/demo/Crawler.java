@@ -2,21 +2,17 @@ package com.example.demo;
 
 import com.example.demo.dao.*;
 import com.example.demo.repository.PECourseRepository;
-import com.example.demo.repository.TimeTableRepository;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import org.openqa.selenium.support.ui.Select;
-import org.springframework.stereotype.Component;
 
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
-import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,8 +28,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
 
 
 @EnableScheduling
@@ -57,10 +51,12 @@ public class Crawler {
 
         options.addArguments("–incognito"); //無痕
         options.addArguments("remote-allow-origins=*");
-        options.addArguments("-headless");
+        //options.addArguments("-headless");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.get("https://ais.ntou.edu.tw/Default.aspx");
+        //driver.get("https://140.121.99.104/Default.aspx");
+
         driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS);
 
         //登入
@@ -79,8 +75,8 @@ public class Crawler {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-                BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);//headless
-                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                //BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);//headless
+                BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
 
@@ -469,22 +465,6 @@ public class Crawler {
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
         for(int i = 1; i < trList.size(); i++){
             GeneralCourseEntity gc = new GeneralCourseEntity();
-            // WebElement row = trList.get(i);
-            // Duration duration = Duration.ofSeconds(5);
-            // WebDriverWait wait = new WebDriverWait(driver, duration);
-            //wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("td")));
-            // wait.ignoring(StaleElementReferenceException.class).until(
-            //     (WebDriver d) -> {
-                    // List<WebElement> cols = row.findElements(By.tagName("td"));
-                    // Thread.sleep(1500);
-                    // System.out.println("///course number: " + cols.get(2).getText());
-                    // gc.setNumber(cols.get(2).getText());
-                    // gc.setName(cols.get(3).getText());
-                    // gc.setTeacher(cols.get(6).getText());
-                    // driver.findElement(By.linkText(cols.get(2).getText())).click();
-            //         return true;
-            //     }
-            // );
             if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
             else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();
             //switch iframe
@@ -503,18 +483,24 @@ public class Crawler {
             String time = tr.get(11).findElement(By.id("M_SEG")).getText();
             String room = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();
             String subfield = tr.get(12).findElement(By.id("M_CHILD_NAME")).getText();
+            String category = tr.get(10).findElement(By.id("M_MUST")).getText();
             List<WebElement> tr2 = tablelist.get(2).findElements(By.tagName("tr"));
             String eva = tr2.get(13).findElement(By.id("M_CH_TYPE")).getText();
+            String target = tr2.get(1).findElement(By.id("M_CH_TARGET")).getText();
+            String syllabus = tr2.get(11).findElement(By.id("M_CH_TEACHSCH")).getText();
             System.out.println("///course number: " + number);
             System.out.println("///subfield: " + subfield);
             gc.setSemester(semester);
-            gc.setNumber(number);
+            gc.setClassNum(number);
             gc.setName(name);
             gc.setTeacher(teacher);
             gc.setTime(time);
             gc.setClassroom(room);
             gc.setSubfield(subfield);
             gc.setEvaluation(eva);
+            gc.setCategory(category);
+            gc.setTarget(target);
+            gc.setSyllabus(syllabus);
             gCourses.add(gc);
             driver.switchTo().defaultContent();
             driver.switchTo().frame("mainFrame");
