@@ -1655,7 +1655,6 @@ public class TodoController {
     }
 
     private static List<GeneralCourseEntity> getGeneralCourses() throws InterruptedException, TesseractException, IOException {
-        crawler.CrawlerHandle("00957025", "20230607");
         List<GeneralCourseEntity> result = crawler.getAllGeneralClass();
         return result;
     }
