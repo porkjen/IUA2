@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import back from './img/back.png';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { Mustinfo } from './components/Style';
+import { Mustinfo, DetailBtn } from './components/Style';
 import Modal from 'react-modal'; 
 
 const Must = () => {
@@ -13,15 +13,32 @@ const Must = () => {
     const location = useLocation();
     const RCResult = location.state?.RCResult || []; // 獲取查詢結果
 
-    const openModal = (course) => {
-      fetch('/course_search_detail', {
+    const openModal = (courseNumber, courseMajor, cousrGrade) => {
+      const queryParams = new URLSearchParams({
+        number: courseNumber,
+        department: courseMajor,
+        grade: cousrGrade
+      });
+
+      const url = '/course_search_detail?' + queryParams.toString();
+
+      const formData = {
+        "number": courseNumber,
+        "department": courseMajor,
+        "grade": cousrGrade
+      };
+      fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData) 
       })
         .then(response => response.json())
         .then(data => {
+          console.log(queryParams.toString());
           console.log(data);
-          setSelectedCourse(course);
+          setSelectedCourse(data);
           setModalIsOpen(true);
         })
         .catch(error => {
@@ -36,7 +53,7 @@ const Must = () => {
 
     const linkStyle = {
       color: 'black',
-      textDecoration: 'none', // Remove underline
+      textDecoration: 'none',
     };
 
     return (
@@ -53,8 +70,9 @@ const Must = () => {
           <div className='mustLable'>
             <div className="scrollableContainer">
               {RCResult.map((item) => (
-                  <Mustinfo key={item.id} onClick={() => openModal(item.cnumber)}>
+                  <Mustinfo key={item.id}>
                     {item.cname}<br />{item.cnumber}&emsp;{item.cgrade}&emsp;{item.cteacher}&emsp;{item.ccredit}學分
+                    <DetailBtn onClick={() => openModal(item.cnumber, item.cmajor, item.cgrade)}>詳細資訊</DetailBtn>
                   </Mustinfo>
               ))}
             </div>

@@ -47,21 +47,7 @@ public class TodoController {
     CourseRepository courseRepository;
     //必選修課程DB
     @Autowired
-    RCourseG1MustRepository rcourseG1MustRepository;
-    @Autowired
-    RCourseG1SelectRepository rcourseG1SelectRepository;
-    @Autowired
-    RCourseG2MustRepository rcourseG2MustRepository;
-    @Autowired
-    RCourseG2SelectRepository rcourseG2SelectRepository;
-    @Autowired
-    RCourseG3MustRepository rcourseG3MustRepository;
-    @Autowired
-    RCourseG3SelectRepository rcourseG3SelectRepository;
-    @Autowired
-    RCourseG4MustRepository rcourseG4MustRepository;
-    @Autowired
-    RCourseG4SelectRepository rcourseG4SelectRepository;
+    RCourseMajorCSERepository rCourseMajorCSERepository;
     //必選修課程系外DB
     @Autowired
     RCourseOMajorMSRepository rCourseOMajorMSRepository;
@@ -411,11 +397,12 @@ public class TodoController {
             //return null;
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
-
+        List<TimeTableDTO> shortTT = new ArrayList<>();
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
         if(timeTable!=null && timeTable.getInfo().size()!=0){
-            return ResponseEntity.ok(timeTable.getInfo());
-            //return timeTable.getInfo();
+            for(TimeTableEntity.Info i : timeTable.getInfo()){
+                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
+            }
         }
         else{
             String password = basicRepository.findByStudentID(studentID).getPassword();
@@ -431,14 +418,28 @@ public class TodoController {
             else table.setStudentID(studentID); //create a new one
             for(TimeTableEntity.Info i : myClassList){
                 System.out.println(i.getName());
+                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
                 table.setInfo(i);
             }
             timeTableRepository.save(table);
-            return ResponseEntity.ok(myClassList);
-            //return myClassList;
         }
+        return ResponseEntity.ok(shortTT);
     }
 
+    @GetMapping("/curriculum_search_detail")
+    public ResponseEntity<?> curriculumSearchDetail(@RequestParam("studentID") String studentID, @RequestParam("Cname")String name, @RequestHeader("Authorization") String au){
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        for(TimeTableEntity.Info i : timeTable.getInfo()){
+            if(Objects.equals(i.getName(), name))return ResponseEntity.ok(i);
+        }
+        return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
+    }
 
     @PostMapping("/course_search")
     public List<RequiredCourseEntity> course_search( @RequestParam(value = "major") String major, @RequestParam(value = "category") String category,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException  {
@@ -446,6 +447,7 @@ public class TodoController {
         System.out.println("/course_search");
         String studentID = account;
         String password = pwd;
+
         //Convert grade code
         if(grade.equals("大一")) {
             grade = "1";
@@ -459,286 +461,52 @@ public class TodoController {
         else if(grade.equals("大四")) {
             grade = "4";
         }
-
         List<RequiredCourseEntity> RC_result = new ArrayList<>();
-        if(major.equals("資工")) {
+        if(major.equals("資工")){
+            //List<RequiredCourseEntityOuterMajor> RC_result = new ArrayList<>();
             System.out.println("*"+major+"*"+category+"*"+grade);
-            if (grade.equals("1")) {
-                System.out.println("大一");
-                if (category.equals("必修")) {
-                    System.out.println("必修");
-                    List<RequiredCourseEntityG1must> rCourseEntityG1must = rcourseG1MustRepository.findByc_category(category);
-                    if (rCourseEntityG1must != null && !rCourseEntityG1must.isEmpty()) {
-                        System.out.println("find it G1M");
-                        for (RequiredCourseEntityG1must G1must : rCourseEntityG1must) {
-                            RequiredCourseEntity result = new RequiredCourseEntity();
-                            result.setCNumber(G1must.getCNumber());
-                            result.setCTeacher(G1must.getCTeacher());
-                            result.setCCredit(G1must.getCCredit());
-                            result.setCGrade(G1must.getCGrade());
-                            result.setCName(G1must.getCName());
-                            result.setCCategory(G1must.getCCategory());
-                            RC_result.add(result);
-                        }
-                    } else {
-                        crawler.CrawlerHandle(studentID, password);
-
-                        RC_result = crawler.findRCourse(major, category, grade);
-
-                        for (RequiredCourseEntity course : RC_result) {
-                            RequiredCourseEntityG1must RCourseEntityG1must = new RequiredCourseEntityG1must();
-                            RCourseEntityG1must.setCNumber(course.getCNumber());
-                            RCourseEntityG1must.setCTeacher(course.getCTeacher());
-                            RCourseEntityG1must.setCCredit(course.getCCredit());
-                            RCourseEntityG1must.setCGrade(course.getCGrade());
-                            RCourseEntityG1must.setCName(course.getCName());
-                            RCourseEntityG1must.setCCategory(course.getCCategory());
-
-                            rcourseG1MustRepository.save(RCourseEntityG1must);
-                        }
-                        System.out.println("Total : " + RC_result.size());
-                    }
-                } else if (category.equals("選修")) {
-                    System.out.println("選修");
-                    List<RequiredCourseEntityG1select> rCourseEntityG1select = rcourseG1SelectRepository.findByc_category(category);
-                    if (rCourseEntityG1select != null && !rCourseEntityG1select.isEmpty()) {
-                        System.out.println("find it G1S");
-                        for (RequiredCourseEntityG1select G1select : rCourseEntityG1select) {
-                            RequiredCourseEntity result = new RequiredCourseEntity();
-                            result.setCNumber(G1select.getCNumber());
-                            result.setCTeacher(G1select.getCTeacher());
-                            result.setCCredit(G1select.getCCredit());
-                            result.setCGrade(G1select.getCGrade());
-                            result.setCName(G1select.getCName());
-                            result.setCCategory(G1select.getCCategory());
-                            RC_result.add(result);
-                        }
-                    } else {
-                        crawler.CrawlerHandle(studentID, password);
-
-                        RC_result = crawler.findRCourse(major, category, grade);
-
-                        for (RequiredCourseEntity course : RC_result) {
-                            RequiredCourseEntityG1select RCourseEntityG1select = new RequiredCourseEntityG1select();
-                            RCourseEntityG1select.setCNumber(course.getCNumber());
-                            RCourseEntityG1select.setCTeacher(course.getCTeacher());
-                            RCourseEntityG1select.setCCredit(course.getCCredit());
-                            RCourseEntityG1select.setCGrade(course.getCGrade());
-                            RCourseEntityG1select.setCName(course.getCName());
-                            RCourseEntityG1select.setCCategory(course.getCCategory());
-
-                            rcourseG1SelectRepository.save(RCourseEntityG1select);
-                        }
-                        System.out.println("Total : " + RC_result.size());
-                    }
+            List<RequiredCourseEntityMajorCSE> rCourseEntityMajorCSE = rCourseMajorCSERepository.findByCategoryAndGrade(category,grade);
+            if (rCourseEntityMajorCSE != null && !rCourseEntityMajorCSE.isEmpty()) {
+                System.out.println("find it MajorCSE");
+                for (RequiredCourseEntityMajorCSE mCSE : rCourseEntityMajorCSE) {
+                    RequiredCourseEntity result = new RequiredCourseEntity();
+                    result.setCNumber(mCSE.getCNumber());
+                    result.setCTeacher(mCSE.getCTeacher());
+                    result.setCCredit(mCSE.getCCredit());
+                    result.setCGrade(mCSE.getCGrade());
+                    result.setCName(mCSE.getCName());
+                    result.setCCategory(mCSE.getCCategory());
+                    result.setCMajor(mCSE.getCMajor());
+                    RC_result.add(result);
                 }
-            } else if (grade.equals("2")) {
-                System.out.println("大二");
-                if (category.equals("必修")) {
-                    System.out.println("必修");
-                    List<RequiredCourseEntityG2must> rCourseEntityG2must = rcourseG2MustRepository.findByc_category(category);
-                    if (rCourseEntityG2must != null && !rCourseEntityG2must.isEmpty()) {
-                        System.out.println("find it G2M");
-                        for (RequiredCourseEntityG2must G2must : rCourseEntityG2must) {
-                            RequiredCourseEntity result = new RequiredCourseEntity();
-                            result.setCNumber(G2must.getCNumber());
-                            result.setCTeacher(G2must.getCTeacher());
-                            result.setCCredit(G2must.getCCredit());
-                            result.setCGrade(G2must.getCGrade());
-                            result.setCName(G2must.getCName());
-                            result.setCCategory(G2must.getCCategory());
-                            RC_result.add(result);
-                        }
-                    } else {
-                        crawler.CrawlerHandle(studentID, password);
+            } else {
+                crawler.CrawlerHandle(studentID, password);
 
-                        RC_result = crawler.findRCourse(major, category, grade);
+                RC_result = crawler.findRCourse(major, category, grade);
 
-                        for (RequiredCourseEntity course : RC_result) {
-                            RequiredCourseEntityG2must RCourseEntityG2must = new RequiredCourseEntityG2must();
-                            RCourseEntityG2must.setCNumber(course.getCNumber());
-                            RCourseEntityG2must.setCTeacher(course.getCTeacher());
-                            RCourseEntityG2must.setCCredit(course.getCCredit());
-                            RCourseEntityG2must.setCGrade(course.getCGrade());
-                            RCourseEntityG2must.setCName(course.getCName());
-                            RCourseEntityG2must.setCCategory(course.getCCategory());
+                for (RequiredCourseEntity course : RC_result) {
+                    RequiredCourseEntityMajorCSE RCourseEntityMajorCSE = new RequiredCourseEntityMajorCSE();
+                    RCourseEntityMajorCSE.setCNumber(course.getCNumber());
+                    RCourseEntityMajorCSE.setCTeacher(course.getCTeacher());
+                    RCourseEntityMajorCSE.setCCredit(course.getCCredit());
+                    RCourseEntityMajorCSE.setCGrade(course.getCGrade());
+                    RCourseEntityMajorCSE.setCName(course.getCName());
+                    RCourseEntityMajorCSE.setCCategory(course.getCCategory());
+                    RCourseEntityMajorCSE.setCMajor(major);
+                    RCourseEntityMajorCSE.setCTime(course.getCTime());
+                    RCourseEntityMajorCSE.setCLocation(course.getCLocation());
+                    RCourseEntityMajorCSE.setCPeople(course.getCPeople());
+                    RCourseEntityMajorCSE.setCReference(course.getCReference());
+                    RCourseEntityMajorCSE.setCObjective(course.getCObjective());
+                    RCourseEntityMajorCSE.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityMajorCSE.setCOutline(course.getCOutline());
+                    RCourseEntityMajorCSE.setCTmethod(course.getCTmethod());
+                    RCourseEntityMajorCSE.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityMajorCSE.setCEvaluation(course.getCEvaluation()); //total is 17
 
-                            rcourseG2MustRepository.save(RCourseEntityG2must);
-                        }
-                        System.out.println("Total : " + RC_result.size());
-                    }
-                } else if (category.equals("選修")) {
-                    System.out.println("選修");
-                    List<RequiredCourseEntityG2select> rCourseEntityG2select = rcourseG2SelectRepository.findByc_category(category);
-                    if (rCourseEntityG2select != null && !rCourseEntityG2select.isEmpty()) {
-                        System.out.println("find it G2S");
-                        for (RequiredCourseEntityG2select G2select : rCourseEntityG2select) {
-                            RequiredCourseEntity result = new RequiredCourseEntity();
-                            result.setCNumber(G2select.getCNumber());
-                            result.setCTeacher(G2select.getCTeacher());
-                            result.setCCredit(G2select.getCCredit());
-                            result.setCGrade(G2select.getCGrade());
-                            result.setCName(G2select.getCName());
-                            result.setCCategory(G2select.getCCategory());
-                            RC_result.add(result);
-                        }
-                    } else {
-                        crawler.CrawlerHandle(studentID, password);
-
-                        RC_result = crawler.findRCourse(major, category, grade);
-
-                        for (RequiredCourseEntity course : RC_result) {
-                            RequiredCourseEntityG2select RCourseEntityG2select = new RequiredCourseEntityG2select();
-                            RCourseEntityG2select.setCNumber(course.getCNumber());
-                            RCourseEntityG2select.setCTeacher(course.getCTeacher());
-                            RCourseEntityG2select.setCCredit(course.getCCredit());
-                            RCourseEntityG2select.setCGrade(course.getCGrade());
-                            RCourseEntityG2select.setCName(course.getCName());
-                            RCourseEntityG2select.setCCategory(course.getCCategory());
-
-                            rcourseG2SelectRepository.save(RCourseEntityG2select);
-                        }
-                        System.out.println("Total : " + RC_result.size());
-                    }
+                    rCourseMajorCSERepository.save(RCourseEntityMajorCSE);
                 }
-            } else if (grade.equals("3")) {
-                System.out.println("大三");
-                if (category.equals("必修")) {
-                    System.out.println("必修");
-                    List<RequiredCourseEntityG3must> rCourseEntityG3must = rcourseG3MustRepository.findByc_category(category);
-                    if (rCourseEntityG3must != null && !rCourseEntityG3must.isEmpty()) {
-                        System.out.println("find it G3M");
-                        for (RequiredCourseEntityG3must G3must : rCourseEntityG3must) {
-                            RequiredCourseEntity result = new RequiredCourseEntity();
-                            result.setCNumber(G3must.getCNumber());
-                            result.setCTeacher(G3must.getCTeacher());
-                            result.setCCredit(G3must.getCCredit());
-                            result.setCGrade(G3must.getCGrade());
-                            result.setCName(G3must.getCName());
-                            result.setCCategory(G3must.getCCategory());
-                            RC_result.add(result);
-                        }
-                    } else {
-                        crawler.CrawlerHandle(studentID, password);
-
-                        RC_result = crawler.findRCourse(major, category, grade);
-
-                        for (RequiredCourseEntity course : RC_result) {
-                            RequiredCourseEntityG3must RCourseEntityG3must = new RequiredCourseEntityG3must();
-                            RCourseEntityG3must.setCNumber(course.getCNumber());
-                            RCourseEntityG3must.setCTeacher(course.getCTeacher());
-                            RCourseEntityG3must.setCCredit(course.getCCredit());
-                            RCourseEntityG3must.setCGrade(course.getCGrade());
-                            RCourseEntityG3must.setCName(course.getCName());
-                            RCourseEntityG3must.setCCategory(course.getCCategory());
-
-                            rcourseG3MustRepository.save(RCourseEntityG3must);
-                        }
-                        System.out.println("Total : " + RC_result.size());
-                    }
-                } else if (category.equals("選修")) {
-                    System.out.println("選修");
-                    List<RequiredCourseEntityG3select> rCourseEntityG3select = rcourseG3SelectRepository.findByc_category(category);
-                    if (rCourseEntityG3select != null && !rCourseEntityG3select.isEmpty()) {
-                        System.out.println("find it G3S");
-                        for (RequiredCourseEntityG3select G3select : rCourseEntityG3select) {
-                            RequiredCourseEntity result = new RequiredCourseEntity();
-                            result.setCNumber(G3select.getCNumber());
-                            result.setCTeacher(G3select.getCTeacher());
-                            result.setCCredit(G3select.getCCredit());
-                            result.setCGrade(G3select.getCGrade());
-                            result.setCName(G3select.getCName());
-                            result.setCCategory(G3select.getCCategory());
-                            RC_result.add(result);
-                        }
-                    } else {
-                        crawler.CrawlerHandle(studentID, password);
-
-                        RC_result = crawler.findRCourse(major, category, grade);
-
-                        for (RequiredCourseEntity course : RC_result) {
-                            RequiredCourseEntityG3select RCourseEntityG3select = new RequiredCourseEntityG3select();
-                            RCourseEntityG3select.setCNumber(course.getCNumber());
-                            RCourseEntityG3select.setCTeacher(course.getCTeacher());
-                            RCourseEntityG3select.setCCredit(course.getCCredit());
-                            RCourseEntityG3select.setCGrade(course.getCGrade());
-                            RCourseEntityG3select.setCName(course.getCName());
-                            RCourseEntityG3select.setCCategory(course.getCCategory());
-
-                            rcourseG3SelectRepository.save(RCourseEntityG3select);
-                        }
-                        System.out.println("Total : " + RC_result.size());
-                    }
-                }
-            } else if (grade.equals("4")) {
-                System.out.println("大四");
-                if (category.equals("必修")) {
-                    System.out.println("必修");
-                    List<RequiredCourseEntityG4must> rCourseEntityG4must = rcourseG4MustRepository.findByc_category(category);
-                    if (rCourseEntityG4must != null && !rCourseEntityG4must.isEmpty()) {
-                        System.out.println("find it G4M");
-                        for (RequiredCourseEntityG4must G4must : rCourseEntityG4must) {
-                            RequiredCourseEntity result = new RequiredCourseEntity();
-                            result.setCNumber(G4must.getCNumber());
-                            result.setCTeacher(G4must.getCTeacher());
-                            result.setCCredit(G4must.getCCredit());
-                            result.setCGrade(G4must.getCGrade());
-                            result.setCName(G4must.getCName());
-                            result.setCCategory(G4must.getCCategory());
-                            RC_result.add(result);
-                        }
-                    } else {
-                        crawler.CrawlerHandle(studentID, password);
-
-                        RC_result = crawler.findRCourse(major, category, grade);
-
-                        for (RequiredCourseEntity course : RC_result) {
-                            RequiredCourseEntityG4must RCourseEntityG4must = new RequiredCourseEntityG4must();
-                            RCourseEntityG4must.setCNumber(course.getCNumber());
-                            RCourseEntityG4must.setCTeacher(course.getCTeacher());
-                            RCourseEntityG4must.setCCredit(course.getCCredit());
-                            RCourseEntityG4must.setCGrade(course.getCGrade());
-                            RCourseEntityG4must.setCName(course.getCName());
-                            RCourseEntityG4must.setCCategory(course.getCCategory());
-
-                            rcourseG4MustRepository.save(RCourseEntityG4must);
-                        }
-                        System.out.println("Total : " + RC_result.size());
-                    }
-                } else if (category.equals("選修")) {
-                    System.out.println("選修");
-                    List<RequiredCourseEntityG4select> rCourseEntityG4select = rcourseG4SelectRepository.findByc_category(category);
-                    if (rCourseEntityG4select != null && !rCourseEntityG4select.isEmpty()) {
-                        System.out.println("find it G4S");
-                        for (RequiredCourseEntityG4select G4select : rCourseEntityG4select) {
-                            RequiredCourseEntity result = new RequiredCourseEntity();
-                            result.setCNumber(G4select.getCNumber());
-                            result.setCTeacher(G4select.getCTeacher());
-                            result.setCCredit(G4select.getCCredit());
-                            result.setCGrade(G4select.getCGrade());
-                            result.setCName(G4select.getCName());
-                            result.setCCategory(G4select.getCCategory());
-                            RC_result.add(result);
-                        }
-                    } else {
-                        crawler.CrawlerHandle(studentID, password);
-
-                        RC_result = crawler.findRCourse(major, category, grade);
-
-                        for (RequiredCourseEntity course : RC_result) {
-                            RequiredCourseEntityG4select RCourseEntityG4select = new RequiredCourseEntityG4select();
-                            RCourseEntityG4select.setCNumber(course.getCNumber());
-                            RCourseEntityG4select.setCTeacher(course.getCTeacher());
-                            RCourseEntityG4select.setCCredit(course.getCCredit());
-                            RCourseEntityG4select.setCGrade(course.getCGrade());
-                            RCourseEntityG4select.setCName(course.getCName());
-                            RCourseEntityG4select.setCCategory(course.getCCategory());
-
-                            rcourseG4SelectRepository.save(RCourseEntityG4select);
-                        }
-                        System.out.println("Total : " + RC_result.size());
-                    }
-                }
+                System.out.println("Total : " + RC_result.size());
             }
         }
         else if(major.equals("商船")){
@@ -771,7 +539,16 @@ public class TodoController {
                     RCourseEntityOuterMajorMS.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorMS.setCName(course.getCName());
                     RCourseEntityOuterMajorMS.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorMS.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorMS.setCMajor(major);
+                    RCourseEntityOuterMajorMS.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorMS.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorMS.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorMS.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorMS.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorMS.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorMS.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorMS.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorMS.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorMSRepository.save(RCourseEntityOuterMajorMS);
                 }
@@ -807,7 +584,16 @@ public class TodoController {
                     RCourseEntityOuterMajorTC.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorTC.setCName(course.getCName());
                     RCourseEntityOuterMajorTC.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorTC.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorTC.setCMajor(major);
+                    RCourseEntityOuterMajorTC.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorTC.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorTC.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorTC.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorTC.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorTC.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorTC.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorTC.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorTC.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorTCRepository.save(RCourseEntityOuterMajorTC);
                 }
@@ -843,7 +629,16 @@ public class TodoController {
                     RCourseEntityOuterMajorTS.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorTS.setCName(course.getCName());
                     RCourseEntityOuterMajorTS.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorTS.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorTS.setCMajor(major);
+                    RCourseEntityOuterMajorTS.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorTS.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorTS.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorTS.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorTS.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorTS.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorTS.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorTS.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorTS.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorTSRepository.save(RCourseEntityOuterMajorTS);
                 }
@@ -880,7 +675,16 @@ public class TodoController {
                     RCourseEntityOuterMajorTE.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorTE.setCName(course.getCName());
                     RCourseEntityOuterMajorTE.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorTE.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorTE.setCMajor(major);
+                    RCourseEntityOuterMajorTE.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorTE.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorTE.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorTE.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorTE.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorTE.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorTE.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorTE.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorTE.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorTERepository.save(RCourseEntityOuterMajorTE);
                 }
@@ -917,7 +721,16 @@ public class TodoController {
                     RCourseEntityOuterMajorFS.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorFS.setCName(course.getCName());
                     RCourseEntityOuterMajorFS.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorFS.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorFS.setCMajor(major);
+                    RCourseEntityOuterMajorFS.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorFS.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorFS.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorFS.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorFS.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorFS.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorFS.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorFS.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorFS.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorFSRepository.save(RCourseEntityOuterMajorFS);
                 }
@@ -954,7 +767,16 @@ public class TodoController {
                     RCourseEntityOuterMajorDA.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorDA.setCName(course.getCName());
                     RCourseEntityOuterMajorDA.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorDA.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorDA.setCMajor(major);
+                    RCourseEntityOuterMajorDA.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorDA.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorDA.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorDA.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorDA.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorDA.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorDA.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorDA.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorDA.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorDARepository.save(RCourseEntityOuterMajorDA);
                 }
@@ -991,7 +813,16 @@ public class TodoController {
                     RCourseEntityOuterMajorBT.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorBT.setCName(course.getCName());
                     RCourseEntityOuterMajorBT.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorBT.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorBT.setCMajor(major);
+                    RCourseEntityOuterMajorBT.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorBT.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorBT.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorBT.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorBT.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorBT.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorBT.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorBT.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorBT.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorBTRepository.save(RCourseEntityOuterMajorBT);
                 }
@@ -1028,7 +859,16 @@ public class TodoController {
                     RCourseEntityOuterMajorRF.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorRF.setCName(course.getCName());
                     RCourseEntityOuterMajorRF.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorRF.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorRF.setCMajor(major);
+                    RCourseEntityOuterMajorRF.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorRF.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorRF.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorRF.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorRF.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorRF.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorRF.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorRF.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorRF.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorRFRepository.save(RCourseEntityOuterMajorRF);
                 }
@@ -1065,7 +905,16 @@ public class TodoController {
                     RCourseEntityOuterMajorME.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorME.setCName(course.getCName());
                     RCourseEntityOuterMajorME.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorME.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorME.setCMajor(major);
+                    RCourseEntityOuterMajorME.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorME.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorME.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorME.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorME.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorME.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorME.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorME.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorME.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorMERepository.save(RCourseEntityOuterMajorME);
                 }
@@ -1102,7 +951,17 @@ public class TodoController {
                     RCourseEntityOuterMajorSE.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorSE.setCName(course.getCName());
                     RCourseEntityOuterMajorSE.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorSE.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorSE.setCMajor(major);
+                    RCourseEntityOuterMajorSE.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorSE.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorSE.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorSE.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorSE.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorSE.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorSE.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorSE.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorSE.setCEvaluation(course.getCEvaluation());
+
 
                     rCourseOMajorSERepository.save(RCourseEntityOuterMajorSE);
                 }
@@ -1139,7 +998,16 @@ public class TodoController {
                     RCourseEntityOuterMajorRW.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorRW.setCName(course.getCName());
                     RCourseEntityOuterMajorRW.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorRW.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorRW.setCMajor(major);
+                    RCourseEntityOuterMajorRW.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorRW.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorRW.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorRW.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorRW.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorRW.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorRW.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorRW.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorRW.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorRWRepository.save(RCourseEntityOuterMajorRW);
                 }
@@ -1176,7 +1044,16 @@ public class TodoController {
                     RCourseEntityOuterMajorEE.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorEE.setCName(course.getCName());
                     RCourseEntityOuterMajorEE.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorEE.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorEE.setCMajor(major);
+                    RCourseEntityOuterMajorEE.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorEE.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorEE.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorEE.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorEE.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorEE.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorEE.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorEE.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorEE.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorEERepository.save(RCourseEntityOuterMajorEE);
                 }
@@ -1213,7 +1090,16 @@ public class TodoController {
                     RCourseEntityOuterMajorCE.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorCE.setCName(course.getCName());
                     RCourseEntityOuterMajorCE.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorCE.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorCE.setCMajor(major);
+                    RCourseEntityOuterMajorCE.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorCE.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorCE.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorCE.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorCE.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorCE.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorCE.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorCE.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorCE.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorCERepository.save(RCourseEntityOuterMajorCE);
                 }
@@ -1250,7 +1136,16 @@ public class TodoController {
                     RCourseEntityOuterMajorPE.setCGrade(course.getCGrade());
                     RCourseEntityOuterMajorPE.setCName(course.getCName());
                     RCourseEntityOuterMajorPE.setCCategory(course.getCCategory());
-                    RCourseEntityOuterMajorPE.setCMajor(course.getCMajor());
+                    RCourseEntityOuterMajorPE.setCMajor(major);
+                    RCourseEntityOuterMajorPE.setCTime(course.getCTime());
+                    RCourseEntityOuterMajorPE.setCLocation(course.getCLocation());
+                    RCourseEntityOuterMajorPE.setCPeople(course.getCPeople());
+                    RCourseEntityOuterMajorPE.setCObjective(course.getCObjective());
+                    RCourseEntityOuterMajorPE.setCPrecourse(course.getCPrecourse());
+                    RCourseEntityOuterMajorPE.setCOutline(course.getCOutline());
+                    RCourseEntityOuterMajorPE.setCTmethod(course.getCTmethod());
+                    RCourseEntityOuterMajorPE.setCSyllabus(course.getCSyllabus());
+                    RCourseEntityOuterMajorPE.setCEvaluation(course.getCEvaluation());
 
                     rCourseOMajorPERepository.save(RCourseEntityOuterMajorPE);
                 }
@@ -1356,14 +1251,13 @@ public class TodoController {
         return ResponseEntity.badRequest().body("Invalid request");//400
     }
 
-    @PutMapping("/change_post_status")
+    @PutMapping("/change_post_status") //both house and change course posts
     public ResponseEntity<String> changePostStatus(@RequestBody Map<String, String> requestData){
         if(requestData.get("postId").startsWith("H")){
             HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
             if(!Objects.equals(house.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
             house.setStatus("已租");
             houseRepository.save(house);
-            return ResponseEntity.ok("Success");
         }
         //requestData.get("postId").startsWith("C")
         else {
@@ -1371,8 +1265,8 @@ public class TodoController {
             if(!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
             changeCourse.setStatus("已換");
             changeCourseRepository.save(changeCourse);
-            return ResponseEntity.ok("Success");
         }
+        return ResponseEntity.ok("Success");
     }
 
     @PostMapping("/pre_curriculum_search")

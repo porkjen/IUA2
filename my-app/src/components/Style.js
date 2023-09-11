@@ -60,7 +60,7 @@ const Mustinfo = styled.label`
     margin-right: auto;
     z-index: 2;
     width: 350px;
-    height: 60px;
+    height: 90px;
     background-color: white;
     border-radius: 10px;
     display: flex;
@@ -161,5 +161,14 @@ const GEinfo = styled.label`
     padding-left: 10px;
 `;
 
+const DetailBtn = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+    background-color: #2d92b4;
+    color: white;
+`;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField} ;
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField, DetailBtn} ;
