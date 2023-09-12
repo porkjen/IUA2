@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -88,6 +89,7 @@ public class TodoController {
     String account = "";
     String pwd = "";
 
+
     @Autowired
     private TodoService todoService;
     
@@ -127,7 +129,7 @@ public class TodoController {
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
-            sendTestNotification(token);
+            //sendTestNotification(token);
             return ResponseEntity.status(HttpStatus.CREATED).body(t);//201
         }
         else {
@@ -138,7 +140,7 @@ public class TodoController {
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
-            sendTestNotification(token);
+            //sendTestNotification(token);
             return ResponseEntity.ok(t); // 回傳狀態碼 200
         }
     }
@@ -191,30 +193,58 @@ public class TodoController {
     }
 
     @PostMapping("/add_detect_course")
-    public void addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
+    public ResponseEntity<String> addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{   
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
+        DetectedCoursesList courseList = new DetectedCoursesList();
+        Boolean isExist = false;
+        System.out.println("course number: " + requestData.getNumber());
+
         if(dRepository.existsByStudentID(requestData.getStudentID())){
-            DetectedCoursesList oriList = dRepository.findByStudentID(requestData.getStudentID());
-            System.out.println("course number: " + requestData.getNumber());
-            courses = oriList.getDetectedCourses();
-            courses.add(requestData);
-            oriList.setDetectedCourse(courses);
-            dRepository.save(oriList);
+            courseList = dRepository.findByStudentID(requestData.getStudentID());
+            courses = courseList.getDetectedCourses();
         }
         else{
-            DetectedCoursesList newList = new DetectedCoursesList();
-            newList.setStudentID(requestData.getStudentID());
-            System.out.println("course number: " + requestData.getNumber());
-            courses.add(requestData);
-            newList.setDetectedCourse(courses);
-            dRepository.save(newList);
+            courseList.setStudentID(requestData.getStudentID());
         }
-        // crawler.detectCoureses(courses);
+        for(CourseToBeDetected c : courses){
+            if(c.getNumber().equals(requestData.getNumber())){
+                isExist = true;
+                break;
+            }
+        }
+        if(!isExist){
+            courses.add(requestData);
+            courseList.setDetectedCourse(courses);
+            dRepository.save(courseList);
+        }
+        detectCourse(courseList);
+        return ResponseEntity.ok("Success");
     }
 
-    @PostMapping("/detect_course")
-    public void detectCourse()throws TesseractException, IOException, InterruptedException{
+    // @Scheduled(fixedRate = 5000)    //間隔5秒
+    // private static void startDetect() throws InterruptedException {
+    //     System.out.println("Start detection.");
+    //     crawler.detectCoureses(courses);
+    // }
 
+    @PostMapping("/detect_course")
+    public void detectCourse(DetectedCoursesList courseList)throws TesseractException, IOException, InterruptedException{
+        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
+        while(!courses.isEmpty()){
+            System.out.println("Start detection.");
+            crawler.detectCoureses(courses);
+            for(int i = 0; i < courses.size(); i++){
+                if(!courses.get(i).getIsFull()){
+                    System.out.println("Remove [" + courses.get(i).getNumber() + "]");
+                    courses.remove(i);
+                    courseList.setDetectedCourse(courses);
+                    dRepository.save(courseList);
+                }
+                else{
+                    System.out.println("[" + courses.get(i).getNumber() + "] is full, keep detecting.");
+                }
+            }
+        }
     }
 
     @GetMapping("/core_elective")
@@ -246,6 +276,19 @@ public class TodoController {
                     rc.setField(kernalCourseG3[i][1]);
                     result.add(rc);
                 }
+            }
+        }
+        return result;
+    }
+
+    @GetMapping("/core_elective_detail")
+    public CourseEntity coreElectiveDetail(@RequestParam("number") String number, @RequestParam("grade") String grade)throws InterruptedException {
+        List<CourseEntity> list = courseRepository.findByc_number(number);
+        CourseEntity result = new CourseEntity();
+        for(CourseEntity c : list){
+            if(c.getGrade().equals(grade)){
+                result = c;
+                break;
             }
         }
         return result;
