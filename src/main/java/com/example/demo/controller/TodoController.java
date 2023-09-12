@@ -1590,18 +1590,29 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
+    public static Map<Integer, List<TimeTableEntity.Pre_Info>> groupPreInfoByWeekday(List<TimeTableEntity.Pre_Info> preInfoList) {
+        Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = new HashMap<>();
+        int lastweekday;
+        for (TimeTableEntity.Pre_Info preInfo : preInfoList) {
+            lastweekday = 0;
+            for (String time : preInfo.getP_time()) {
+                int weekday = Integer.parseInt(time.substring(0, 1));
+                groupedByWeekday.putIfAbsent(weekday, new ArrayList<>());
+                if(lastweekday!=weekday)groupedByWeekday.get(weekday).add(preInfo);
+                lastweekday = weekday;
+            }
+        }
+        return groupedByWeekday;
+    }
     @PostMapping("/my_pre_curriculum")
-    public List<TimeTableEntity.Pre_Info> myPreCurriculumSearch(@RequestBody Map<String, String> requestData){
+    public Map<Integer, List<TimeTableEntity.Pre_Info>> myPreCurriculumSearch(@RequestBody Map<String, String> requestData){
         System.out.println("/my_pre_curriculum");
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
-        if(timeTable==null){
-            /*timeTable = new TimeTableEntity();
-            timeTable.setStudentID(requestData.get("studentID"));
-            timeTableRepository.save(timeTable);*/
-            List<TimeTableEntity.Pre_Info> list = new ArrayList<>();
-            return list; //empty
-        }
-        return timeTable.getPre_info();
+        if(timeTable==null)return null;
+        List<TimeTableEntity.Pre_Info> preInfoList = timeTable.getPre_info();
+        List<TimeTableEntity.Pre_Info> orderedList = new ArrayList<>();
+        //Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = groupPreInfoByWeekday(preInfoList);
+        return groupPreInfoByWeekday(preInfoList);
     }
 
     @PostMapping("/pre_curriculum")
