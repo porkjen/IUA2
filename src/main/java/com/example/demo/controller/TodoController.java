@@ -1620,18 +1620,29 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
-    @PostMapping("/pre_curriculum_search")
-    public List<TimeTableEntity.Pre_Info> preCurriculumSearch(@RequestBody Map<String, String> requestData){
-        System.out.println("/pre_curriculum_search");
-        TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
-        if(timeTable==null){
-            /*timeTable = new TimeTableEntity();
-            timeTable.setStudentID(requestData.get("studentID"));
-            timeTableRepository.save(timeTable);*/
-            List<TimeTableEntity.Pre_Info> list = new ArrayList<>();
-            return list; //empty
+    public static Map<Integer, List<TimeTableEntity.Pre_Info>> groupPreInfoByWeekday(List<TimeTableEntity.Pre_Info> preInfoList) {
+        Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = new HashMap<>();
+        int lastweekday;
+        for (TimeTableEntity.Pre_Info preInfo : preInfoList) {
+            lastweekday = 0;
+            for (String time : preInfo.getP_time()) {
+                int weekday = Integer.parseInt(time.substring(0, 1));
+                groupedByWeekday.putIfAbsent(weekday, new ArrayList<>());
+                if(lastweekday!=weekday)groupedByWeekday.get(weekday).add(preInfo);
+                lastweekday = weekday;
+            }
         }
-        return timeTable.getPre_info();
+        return groupedByWeekday;
+    }
+    @PostMapping("/my_pre_curriculum")
+    public Map<Integer, List<TimeTableEntity.Pre_Info>> myPreCurriculumSearch(@RequestBody Map<String, String> requestData){
+        System.out.println("/my_pre_curriculum");
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
+        if(timeTable==null)return null;
+        List<TimeTableEntity.Pre_Info> preInfoList = timeTable.getPre_info();
+        List<TimeTableEntity.Pre_Info> orderedList = new ArrayList<>();
+        //Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = groupPreInfoByWeekday(preInfoList);
+        return groupPreInfoByWeekday(preInfoList);
     }
 
     @PostMapping("/pre_curriculum")
@@ -1672,6 +1683,85 @@ public class TodoController {
         else return ResponseEntity.badRequest().body("Invalid request : Class not found"); //400
     }
 
+    @GetMapping("/pre_curriculum_search")
+    public List<CourseDTO> preCurriculumSearch(@RequestParam("name") String name, @RequestParam("category") String category){
+        List<CourseDTO> courseDTOList = new ArrayList<>();
+        if(Objects.equals(category, "general")){
+            List<GeneralCourseEntity> generalCourseEntityList = generalRepository.findAll();
+            for(GeneralCourseEntity g : generalCourseEntityList){
+                if(g.getName().contains(name)){
+                    CourseDTO courseDTO = new CourseDTO();
+                    courseDTO.setName(g.getName());
+                    courseDTO.setClassNum(g.getClassNum());
+                    courseDTO.setTeacher(g.getTeacher());
+                    courseDTO.setTime(g.getTime().split(","));
+                    courseDTO.setClassroom(g.getClassroom());
+                    courseDTO.setTarget(g.getTarget());
+                    courseDTO.setEvaluation(g.getEvaluation());
+                    courseDTO.setSyllabus(g.getSyllabus());
+                    courseDTOList.add(courseDTO);
+                }
+            }
+            return courseDTOList;
+        }
+        else if(Objects.equals(category, "PE")){
+            List<PECourseEntity> peCourseEntityList = peCourseRepository.findAll();
+            for(PECourseEntity pe : peCourseEntityList){
+                if(pe.getName().contains(name)){
+                    CourseDTO courseDTO = new CourseDTO();
+                    courseDTO.setName(pe.getName());
+                    courseDTO.setClassNum(pe.getClassNum());
+                    courseDTO.setCategory(pe.getCategory());
+                    courseDTO.setTeacher(pe.getTeacher());
+                    courseDTO.setTime(pe.getTime());
+                    courseDTO.setClassroom(pe.getClassroom());
+                    courseDTO.setTarget(pe.getTarget());
+                    courseDTO.setEvaluation(pe.getEvaluation());
+                    courseDTO.setSyllabus(pe.getSyllabus());
+                    courseDTOList.add(courseDTO);
+                }
+            }
+            return courseDTOList;
+        }
+        else if(Objects.equals(category, "english")){
+            List<EnglishCourseEntity> englishCourseEntityList = englishCourseRepository.findAll();
+            for(EnglishCourseEntity en : englishCourseEntityList){
+                if(en.getName().contains(name)){
+                    CourseDTO courseDTO = new CourseDTO();
+                    courseDTO.setName(en.getName());
+                    courseDTO.setClassNum(en.getClassNum());
+                    courseDTO.setCategory(en.getCategory());
+                    courseDTO.setTeacher(en.getTeacher());
+                    courseDTO.setTime(en.getTime());
+                    courseDTO.setClassroom(en.getClassroom());
+                    courseDTO.setTarget(en.getTarget());
+                    courseDTO.setEvaluation(en.getEvaluation());
+                    courseDTO.setSyllabus(en.getSyllabus());
+                    courseDTOList.add(courseDTO);
+                }
+            }
+            return courseDTOList;
+        }
+        else {//foreign_language
+            List<ForeignLanguageEntity> foreignLanguageEntityList = foreignLanguageCourseRepository.findAll();
+            for(ForeignLanguageEntity f : foreignLanguageEntityList){
+                if(f.getName().contains(name)){
+                    CourseDTO courseDTO = new CourseDTO();
+                    courseDTO.setName(f.getName());
+                    courseDTO.setClassNum(f.getClassNum());
+                    courseDTO.setCategory(f.getCategory());
+                    courseDTO.setTeacher(f.getTeacher());
+                    courseDTO.setTime(f.getTime());
+                    courseDTO.setClassroom(f.getClassroom());
+                    courseDTO.setTarget(f.getTarget());
+                    courseDTO.setEvaluation(f.getEvaluation());
+                    courseDTO.setSyllabus(f.getSyllabus());
+                    courseDTOList.add(courseDTO);
+                }
+            }
+            return courseDTOList;
+        }
+    }
     @PostMapping("/general_education")
     public List<GeneralCourseEntity> generalEducation(@RequestParam("field") String field) throws InterruptedException, TesseractException, IOException {
         if(generalRepository.count() == 0){
