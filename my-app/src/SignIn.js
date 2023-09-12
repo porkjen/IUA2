@@ -21,6 +21,17 @@ const SignIn=()=> {
     const [cookies, setCookie] = useCookies(['token']);
     const [error, setError] = useState(false);
 
+    function ErrorPassword(){
+      return(
+        <div className='signIn_error'>
+          <div className='error_text'>密碼錯誤!請重試</div><br/>
+          <Link to="/signIn">
+            <button className='signIn_error_yes' onClick={setError(false)}>確定</button>
+          </Link>
+        </div>
+      );
+    }
+
     function SignIn() {
       const [student_id, setStudent_id] = useState("");
       const [password, setPassword] = useState("");
@@ -85,7 +96,7 @@ const SignIn=()=> {
             <div className='SignIn_bg'>
                 <div className='SignIn_signIn'>
                     <br/>
-                    {!waiting && 
+                    {!waiting && !error &&
                     <div>
                       <div className="SignIn_title">
                         <div className="SignIn_title-img">
@@ -117,7 +128,7 @@ const SignIn=()=> {
 
                       
                     }
-                    {waiting &&
+                    {waiting && !error &&
                       <div className='LoadingText'>
                           <div class="preloader">
                             Loading
@@ -127,6 +138,10 @@ const SignIn=()=> {
                           </div>
                     </div>
                     }
+                    {error && 
+                      <ErrorPassword/>
+                    }
+
                     
                 </div>
                     <div className="SignIn_img1">

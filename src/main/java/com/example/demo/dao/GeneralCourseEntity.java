@@ -6,13 +6,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class GeneralCourseEntity {
     String semester;
     String name = "";
-    String number = "";
-    float rate;
+    String classNum = "";
     String classroom;
     String time; //"306、307"
     String teacher = "";
     String evaluation = ""; //評量方式
     String subfield;
+    String category = "";
+    String target = "";
+    String syllabus = "";
 
     public String getSemester(){
         return semester;
@@ -30,20 +32,12 @@ public class GeneralCourseEntity {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public String getClassNum() {
+        return classNum;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public float getRate() {
-        return rate;
-    }
-
-    public void setRate(float rate) {
-        this.rate = rate;
+    public void setClassNum(String classNum) {
+        this.classNum = classNum;
     }
 
     public String getClassroom() {
@@ -84,5 +78,29 @@ public class GeneralCourseEntity {
 
     public void setSubfield(String subfield){
         this.subfield = subfield;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public String getSyllabus() {
+        return syllabus;
+    }
+
+    public void setSyllabus(String syllabus) {
+        this.syllabus = syllabus;
     }
 }

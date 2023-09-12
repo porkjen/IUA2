@@ -33,6 +33,7 @@ import ChatRoomList from './ChatRoomList';
 import MoodChat from './moodChat';  
 import CoreSearch from './coreSearch';
 import MyArticles from './MyArticles';
+import PreTimeTable from './preTimeTable';
 
 const App=()=> {
 
@@ -71,6 +72,7 @@ const App=()=> {
                     <Route path="/moodChat" element={<MoodChat />} />
                     <Route path="/coreSearch" element={<CoreSearch />} />
                     <Route path="/MyArticles" element={<MyArticles />} />
+                    <Route path="/preTimeTable" element={<PreTimeTable />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
                 
