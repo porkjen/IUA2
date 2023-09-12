@@ -281,6 +281,19 @@ public class TodoController {
         return result;
     }
 
+    @GetMapping("/core_elective_datail")
+    public CourseEntity coreElectiveDetail(@RequestParam("number") String number, @RequestParam("grade") String grade)throws InterruptedException {
+        List<CourseEntity> list = courseRepository.findByc_number(number);
+        CourseEntity result = new CourseEntity();
+        for(CourseEntity c : list){
+            if(c.getGrade().equals(grade)){
+                result = c;
+                break;
+            }
+        }
+        return result;
+    }
+
     private static List<CourseEntity> getCourses() throws InterruptedException {
         List<CourseEntity> result = crawler.getCourses();
         return result;
