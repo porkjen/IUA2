@@ -161,4 +161,17 @@ const GEinfo = styled.label`
     padding-left: 10px;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField} ;
+const DetailBtn = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    border: none;
+    margin-left:10px;
+    margin-top:5px;
+    width: 80px;
+    height: 20px;
+    background-color: #C4E1FF;
+    color: 	#005AB5;
+`;
+
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField, DetailBtn} ;
