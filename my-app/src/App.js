@@ -32,6 +32,7 @@ import ChatRoomList from './ChatRoomList';
 import MoodChat from './moodChat';  
 import CoreSearch from './coreSearch';
 import MyArticles from './MyArticles';
+import Rules from './rules';
 
 const App=()=> {
 
@@ -69,6 +70,7 @@ const App=()=> {
                     <Route path="/moodChat" element={<MoodChat />} />
                     <Route path="/coreSearch" element={<CoreSearch />} />
                     <Route path="/MyArticles" element={<MyArticles />} />
+                    <Route path="/rules" element={<Rules />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
                 

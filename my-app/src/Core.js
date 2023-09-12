@@ -11,6 +11,7 @@ const Core=()=>{
     function Core() {
         const location = useLocation();
         const CResult = location.state?.CResult || []; // 獲取查詢結果
+        console.log(CResult);
         return (
             <div className="Core">    
                 <div className='core_bg'>

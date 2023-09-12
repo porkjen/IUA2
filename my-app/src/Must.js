@@ -10,13 +10,15 @@ const Must = () => {
   function MustComponent() {
     const [modalIsOpen, setModalIsOpen] = useState(false); // 控制彈出視窗的狀態
     const [selectedCourse, setSelectedCourse] = useState(null); // 存儲選中的課程
+    const [data, setData] = useState([]);
     const location = useLocation();
     const RCResult = location.state?.RCResult || []; // 獲取查詢結果
 
     const openModal = (courseNumber, courseMajor, cousrGrade) => {
+      console.log(RCResult);
       const queryParams = new URLSearchParams({
         number: courseNumber,
-        department: courseMajor,
+        major: courseMajor,
         grade: cousrGrade
       });
 
@@ -24,7 +26,7 @@ const Must = () => {
 
       const formData = {
         "number": courseNumber,
-        "department": courseMajor,
+        "major": courseMajor,
         "grade": cousrGrade
       };
       fetch(url, {
@@ -39,6 +41,7 @@ const Must = () => {
           console.log(queryParams.toString());
           console.log(data);
           setSelectedCourse(data);
+          setData(data);
           setModalIsOpen(true);
         })
         .catch(error => {
@@ -79,21 +82,33 @@ const Must = () => {
           </div>
         </div>
         <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="課程詳細資訊"
-      >
-        {selectedCourse && (
-          <div>
-            <h2>{selectedCourse.cname}</h2> 
-            <p>課程代號: {selectedCourse.cnumber}</p>
-            <p>授課教師: {selectedCourse.cteacher}</p>
-            <p>評分方式:</p>
-          </div>
-        )}
+                      isOpen={modalIsOpen}
+                      onRequestClose={closeModal}
+                      contentLabel="課程詳細資訊"
+                    >
+                      {data.map((item) => (
+                        <div>
+                          <h2>{item.cname}</h2> 
+                          <p>課程代號：{item.cnumber}</p>
+                          <p>選課類別：{item.ccategory}</p>
+                          <p>課程學分：{item.ccredit}</p>
+                          <p>授課教師：{item.cteacher}</p>
+                          <p>開課年班：{item.cgrade}</p>
+                          <p>上課時間：{item.ctime}</p>
+                          <p>上課地點：{item.clocation}</p>
+                          <p>人數上限：{item.cpeople}</p>
+                          <p>教學目標：{item.cobjective}</p>
+                          <p>先修科目：{item.cprecourse}</p>
+                          <p>教材內容：{item.coutline}</p>
+                          <p>教學方式：{item.ctmethod}</p>
+                          <p>參考書目：{item.creference}</p>
+                          <p>教學進度：{item.csyllabus}</p>
+                          <p>評分方式:{item.cevaluation}</p>
+                        </div>
+                      ))}
 
-        <button onClick={closeModal}>關閉</button>
-      </Modal>
+                      <button onClick={closeModal}>關閉</button>
+                    </Modal>
       </div>
       
     );

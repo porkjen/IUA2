@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 @Document(collection = "DetectedCourses")
 public class DetectedCoursesList {
+    private String id;
     private String studentID;
     private ArrayList<CourseToBeDetected> dCourse;
 
     public DetectedCoursesList(){}
 
-    public void setStudentID(String id){
-        this.studentID = id;
+    public void setStudentID(String studentID){
+        this.studentID = studentID;
     }
 
     public void setDetectedCourse(ArrayList<CourseToBeDetected> dCourse){

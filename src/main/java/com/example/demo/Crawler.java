@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.dao.*;
+import com.example.demo.repository.PECourseRepository;
 import com.example.demo.repository.TimeTableRepository;
 
 import org.apache.commons.io.FileUtils;
@@ -15,8 +16,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -43,7 +42,7 @@ public class Crawler {
     static WebDriver driver;
     public static String loginMessage = "";
     @Autowired
-    TimeTableRepository timeTableRepository;
+    PECourseRepository peCourseRepository;
     public static void CrawlerHandle(String userAccount, String userPassword) throws IOException, TesseractException, InterruptedException {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
@@ -389,7 +388,9 @@ public class Crawler {
             if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
             else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
             //switch iframe
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+            //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             WebElement iframe = driver.findElement(By.tagName("iframe"));
             driver.switchTo().frame(iframe);
             driver.switchTo().frame("mainFrame");
@@ -765,6 +766,273 @@ public class Crawler {
         return courseList;
     }
 
+    public static List<PECourseEntity> getPE() throws InterruptedException{
+        System.out.println("getPE class");
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        System.out.println("教務系統");
+        Thread.sleep(2000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        System.out.println("選課系統");
+        Thread.sleep(2000);
+        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        System.out.println("課程課表查詢");
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        System.out.println("mainframe");
+        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='0902']")).click();
+        System.out.println("體育室");
+        driver.findElement(By.id("QUERY_BTN1")).click();
+        System.out.println("開課單位查詢");
+        //顯示150筆
+        Thread.sleep(3000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = '150';", driver.findElement(By.id("PC_PageSize")));
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
+        Thread.sleep(3000);
+        System.out.println("顯示150筆");
+        List<PECourseEntity> peCourseEntityList = new ArrayList<>();
+        List<WebElement> PE = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        for(int i=1;i<PE.size();i++){
+            PECourseEntity peCourse = new PECourseEntity();
+            if(i+1<10)driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
+            else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();
+            //switch iframe
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            WebElement iframe = driver.findElement(By.tagName("iframe"));
+            driver.switchTo().frame(iframe);
+            driver.switchTo().frame("mainFrame");
+            List<WebElement> tr = driver.findElements(By.cssSelector("#QTable2 > tbody > tr")).get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table")).get(0).findElements(By.tagName("tr"));
+            peCourse.setClassNum(tr.get(4).findElement(By.id("M_COSID")).getText());
+            peCourse.setDepartment(tr.get(4).findElement(By.id("M_FACULTY_NAME")).getText());
+            String temp = tr.get(5).findElement(By.id("M_LECTR_TCH_CH")).getText();
+            peCourse.setTeacher(temp.substring(0, 3));
+            peCourse.setName(tr.get(6).findElement(By.id("CH_LESSON")).getText());
+            peCourse.setENname(tr.get(7).findElement(By.id("M_ENG_LESSON")).getText());
+            peCourse.setYearClass(tr.get(8).findElement(By.id("M_GRADE")).getText());
+            peCourse.setCredit(tr.get(8).findElement(By.id("M_CRD")).getText());
+            peCourse.setUpper(tr.get(9).findElement(By.id("M_MAX_ST")).getText());
+            peCourse.setLower(tr.get(9).findElement(By.id("M_MIN_ST")).getText());
+            temp = tr.get(10).findElement(By.id("M_MUST")).getText();//選課類別
+            peCourse.setCategory(temp.substring(0, temp.indexOf('(')));
+            peCourse.setDuration(tr.get(10).findElement(By.id("M_COSTERM")).getText());
+            temp = tr.get(11).findElement(By.id("M_SEG")).getText();//上課時間
+            String[] timeArray = temp.split(",");
+            peCourse.setTime(timeArray);
+            temp = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();//上課地點
+            if(temp.indexOf(',')!=-1)temp = temp.substring(0, temp.indexOf(','));
+            peCourse.setClassroom(temp);
+            peCourse.setOnline(tr.get(11).findElement(By.id("M_IS_LONGDIST_CURRI")).getText());
+            peCourse.setMainField(tr.get(12).findElement(By.id("M_MAIN_NAME")).getText());
+            peCourse.setNote(tr.get(14).findElement(By.id("M_DESCRIPTION")).getText());
+            List<WebElement> tr2 = driver.findElements(By.cssSelector("#QTable2 > tbody > tr")).get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table")).get(2).findElements(By.tagName("tr"));
+            peCourse.setTarget(tr2.get(1).findElement(By.id("M_CH_TARGET")).getText());
+            peCourse.setTargetE(tr2.get(2).findElement(By.id("M_ENG_TARGET")).getText());
+            peCourse.setPrerequisites(tr2.get(3).findElement(By.id("M_CH_PREOBJ")).getText());
+            peCourse.setPrerequisitesE(tr2.get(4).findElement(By.id("M_ENG_PREOBJ")).getText());
+            peCourse.setOutline(tr2.get(5).findElement(By.id("M_CH_OBJECT")).getText());
+            peCourse.setOutlineE(tr2.get(6).findElement(By.id("M_ENG_OBJECT")).getText());
+            peCourse.setTeachingMethod(tr2.get(7).findElement(By.id("M_CH_TEACH")).getText());
+            peCourse.setTeachingMethodE(tr2.get(8).findElement(By.id("M_ENG_TEACH")).getText());
+            peCourse.setReference(tr2.get(9).findElement(By.id("M_CH_REF")).getText());
+            peCourse.setReferenceE(tr2.get(10).findElement(By.id("M_ENG_REF")).getText());
+            peCourse.setSyllabus(tr2.get(11).findElement(By.id("M_CH_TEACHSCH")).getText());
+            peCourse.setSyllabusE(tr2.get(12).findElement(By.id("M_ENG_TEACHSCH")).getText());
+            peCourse.setEvaluation(tr2.get(13).findElement(By.id("M_CH_TYPE")).getText());
+            peCourse.setEvaluationE(tr2.get(14).findElement(By.id("M_ENG_TYPE")).getText());
+            peCourseEntityList.add(peCourse);
+            //back to main frame
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            System.out.println(peCourse);
+        }
+        System.out.println(peCourseEntityList.size());
+        return peCourseEntityList;
+    }
+    public static List<ForeignLanguageEntity> getForeignLanguageClass() throws InterruptedException{
+        System.out.println("getForeignLanguage class");
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        System.out.println("教務系統");
+        Thread.sleep(2000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        System.out.println("選課系統");
+        Thread.sleep(2000);
+        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        System.out.println("課程課表查詢");
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        System.out.println("mainframe");
+        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='090K']")).click();
+        System.out.println("共同教育中心語文教育組");
+        driver.findElement(By.id("QUERY_BTN1")).click();
+        System.out.println("開課單位查詢");
+        //顯示100筆
+        Thread.sleep(3000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = '100';", driver.findElement(By.id("PC_PageSize")));
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
+        Thread.sleep(3000);
+        System.out.println("顯示100筆");
+        List<ForeignLanguageEntity> fCourseEntityList = new ArrayList<>();
+        List<WebElement> PE = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        for(int i=1;i<PE.size();i++){
+            ForeignLanguageEntity fCourse = new ForeignLanguageEntity();
+            if(i+1<10)driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
+            else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();
+            //switch iframe
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            WebElement iframe = driver.findElement(By.tagName("iframe"));
+            driver.switchTo().frame(iframe);
+            driver.switchTo().frame("mainFrame");
+            List<WebElement> tr = driver.findElements(By.cssSelector("#QTable2 > tbody > tr")).get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table")).get(0).findElements(By.tagName("tr"));
+            fCourse.setClassNum(tr.get(4).findElement(By.id("M_COSID")).getText());
+            fCourse.setDepartment(tr.get(4).findElement(By.id("M_FACULTY_NAME")).getText());
+            String temp = tr.get(5).findElement(By.id("M_LECTR_TCH_CH")).getText();
+            fCourse.setTeacher(temp.substring(0, 3));
+            fCourse.setName(tr.get(6).findElement(By.id("CH_LESSON")).getText());
+            fCourse.setENname(tr.get(7).findElement(By.id("M_ENG_LESSON")).getText());
+            fCourse.setYearClass(tr.get(8).findElement(By.id("M_GRADE")).getText());
+            fCourse.setCredit(tr.get(8).findElement(By.id("M_CRD")).getText());
+            fCourse.setUpper(tr.get(9).findElement(By.id("M_MAX_ST")).getText());
+            fCourse.setLower(tr.get(9).findElement(By.id("M_MIN_ST")).getText());
+            temp = tr.get(10).findElement(By.id("M_MUST")).getText();//選課類別
+            fCourse.setCategory(temp.substring(0, temp.indexOf('(')));
+            fCourse.setDuration(tr.get(10).findElement(By.id("M_COSTERM")).getText());
+            temp = tr.get(11).findElement(By.id("M_SEG")).getText();//上課時間
+            String[] timeArray = temp.split(",");
+            fCourse.setTime(timeArray);
+            temp = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();//上課地點
+            if(temp.indexOf(',')!=-1)temp = temp.substring(0, temp.indexOf(','));
+            fCourse.setClassroom(temp);
+            fCourse.setOnline(tr.get(11).findElement(By.id("M_IS_LONGDIST_CURRI")).getText());
+            fCourse.setMainField(tr.get(12).findElement(By.id("M_MAIN_NAME")).getText());
+            fCourse.setNote(tr.get(14).findElement(By.id("M_DESCRIPTION")).getText());
+            List<WebElement> tr2 = driver.findElements(By.cssSelector("#QTable2 > tbody > tr")).get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table")).get(2).findElements(By.tagName("tr"));
+            fCourse.setTarget(tr2.get(1).findElement(By.id("M_CH_TARGET")).getText());
+            fCourse.setTargetE(tr2.get(2).findElement(By.id("M_ENG_TARGET")).getText());
+            fCourse.setPrerequisites(tr2.get(3).findElement(By.id("M_CH_PREOBJ")).getText());
+            fCourse.setPrerequisitesE(tr2.get(4).findElement(By.id("M_ENG_PREOBJ")).getText());
+            fCourse.setOutline(tr2.get(5).findElement(By.id("M_CH_OBJECT")).getText());
+            fCourse.setOutlineE(tr2.get(6).findElement(By.id("M_ENG_OBJECT")).getText());
+            fCourse.setTeachingMethod(tr2.get(7).findElement(By.id("M_CH_TEACH")).getText());
+            fCourse.setTeachingMethodE(tr2.get(8).findElement(By.id("M_ENG_TEACH")).getText());
+            fCourse.setReference(tr2.get(9).findElement(By.id("M_CH_REF")).getText());
+            fCourse.setReferenceE(tr2.get(10).findElement(By.id("M_ENG_REF")).getText());
+            fCourse.setSyllabus(tr2.get(11).findElement(By.id("M_CH_TEACHSCH")).getText());
+            fCourse.setSyllabusE(tr2.get(12).findElement(By.id("M_ENG_TEACHSCH")).getText());
+            fCourse.setEvaluation(tr2.get(13).findElement(By.id("M_CH_TYPE")).getText());
+            fCourse.setEvaluationE(tr2.get(14).findElement(By.id("M_ENG_TYPE")).getText());
+            fCourseEntityList.add(fCourse);
+            //back to main frame
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            System.out.println(fCourse);
+        }
+        System.out.println(fCourseEntityList.size());
+        return fCourseEntityList;
+    }
+    public static List<EnglishCourseEntity> getEnglishClass() throws InterruptedException{
+        System.out.println("getEnglish class");
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        System.out.println("教務系統");
+        Thread.sleep(2000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        System.out.println("選課系統");
+        Thread.sleep(2000);
+        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        System.out.println("課程課表查詢");
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        System.out.println("mainframe");
+        driver.findElement(By.id("Q_FACULTY_CODE")).findElement(By.xpath("//option[@value='090D']")).click();
+        System.out.println("大學部英語課程(原外語中心)");
+        driver.findElement(By.id("QUERY_BTN1")).click();
+        System.out.println("開課單位查詢");
+        //顯示100筆
+        Thread.sleep(3000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = '100';", driver.findElement(By.id("PC_PageSize")));
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
+        Thread.sleep(3000);
+        System.out.println("顯示100筆");
+        List<EnglishCourseEntity> eCourseEntityList = new ArrayList<>();
+        List<WebElement> PE = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        for(int i=1;i<PE.size();i++){
+            EnglishCourseEntity eCourse = new EnglishCourseEntity();
+            if(i+1<10)driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
+            else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();
+            //switch iframe
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            WebElement iframe = driver.findElement(By.tagName("iframe"));
+            driver.switchTo().frame(iframe);
+            driver.switchTo().frame("mainFrame");
+            List<WebElement> tr = driver.findElements(By.cssSelector("#QTable2 > tbody > tr")).get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table")).get(0).findElements(By.tagName("tr"));
+            eCourse.setClassNum(tr.get(4).findElement(By.id("M_COSID")).getText());
+            eCourse.setDepartment(tr.get(4).findElement(By.id("M_FACULTY_NAME")).getText());
+            String temp = tr.get(5).findElement(By.id("M_LECTR_TCH_CH")).getText();
+            eCourse.setTeacher(temp.substring(0, 3));
+            eCourse.setName(tr.get(6).findElement(By.id("CH_LESSON")).getText());
+            eCourse.setENname(tr.get(7).findElement(By.id("M_ENG_LESSON")).getText());
+            eCourse.setYearClass(tr.get(8).findElement(By.id("M_GRADE")).getText());
+            eCourse.setCredit(tr.get(8).findElement(By.id("M_CRD")).getText());
+            eCourse.setUpper(tr.get(9).findElement(By.id("M_MAX_ST")).getText());
+            eCourse.setLower(tr.get(9).findElement(By.id("M_MIN_ST")).getText());
+            temp = tr.get(10).findElement(By.id("M_MUST")).getText();//選課類別
+            eCourse.setCategory(temp.substring(0, temp.indexOf('(')));
+            eCourse.setDuration(tr.get(10).findElement(By.id("M_COSTERM")).getText());
+            temp = tr.get(11).findElement(By.id("M_SEG")).getText();//上課時間
+            String[] timeArray = temp.split(",");
+            eCourse.setTime(timeArray);
+            temp = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();//上課地點
+            if(temp.indexOf(',')!=-1)temp = temp.substring(0, temp.indexOf(','));
+            eCourse.setClassroom(temp);
+            eCourse.setOnline(tr.get(11).findElement(By.id("M_IS_LONGDIST_CURRI")).getText());
+            eCourse.setMainField(tr.get(12).findElement(By.id("M_MAIN_NAME")).getText());
+            eCourse.setNote(tr.get(14).findElement(By.id("M_DESCRIPTION")).getText());
+            List<WebElement> tr2 = driver.findElements(By.cssSelector("#QTable2 > tbody > tr")).get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table")).get(2).findElements(By.tagName("tr"));
+            eCourse.setTarget(tr2.get(1).findElement(By.id("M_CH_TARGET")).getText());
+            eCourse.setTargetE(tr2.get(2).findElement(By.id("M_ENG_TARGET")).getText());
+            eCourse.setPrerequisites(tr2.get(3).findElement(By.id("M_CH_PREOBJ")).getText());
+            eCourse.setPrerequisitesE(tr2.get(4).findElement(By.id("M_ENG_PREOBJ")).getText());
+            eCourse.setOutline(tr2.get(5).findElement(By.id("M_CH_OBJECT")).getText());
+            eCourse.setOutlineE(tr2.get(6).findElement(By.id("M_ENG_OBJECT")).getText());
+            eCourse.setTeachingMethod(tr2.get(7).findElement(By.id("M_CH_TEACH")).getText());
+            eCourse.setTeachingMethodE(tr2.get(8).findElement(By.id("M_ENG_TEACH")).getText());
+            eCourse.setReference(tr2.get(9).findElement(By.id("M_CH_REF")).getText());
+            eCourse.setReferenceE(tr2.get(10).findElement(By.id("M_ENG_REF")).getText());
+            eCourse.setSyllabus(tr2.get(11).findElement(By.id("M_CH_TEACHSCH")).getText());
+            eCourse.setSyllabusE(tr2.get(12).findElement(By.id("M_ENG_TEACHSCH")).getText());
+            eCourse.setEvaluation(tr2.get(13).findElement(By.id("M_CH_TYPE")).getText());
+            eCourse.setEvaluationE(tr2.get(14).findElement(By.id("M_ENG_TYPE")).getText());
+            eCourseEntityList.add(eCourse);
+            //back to main frame
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            System.out.println(eCourse);
+        }
+        System.out.println(eCourseEntityList.size());
+        return eCourseEntityList;
+    }
     public static void main(String[] args) throws Exception {
 
 
@@ -780,7 +1048,10 @@ public class Crawler {
 
         //getBasicData(account,password);
         CrawlerHandle(account,password);
-        getMyClass(account,password);
+        getForeignLanguageClass();
+        //getPE();
+        //getMyClass(account,password);
+
         //getAllGeneralClass();
         //getFinishedCredict();
         //findRCourse("必修","3");
