@@ -23,7 +23,7 @@ const RentArticle=()=> {
     const [isCreator, setIsCreator] = useState(false);
     const [isRentSaved, setIsRentSaved] = useState(false);
     const [isRentDelete, setIsRentDelete] = useState(false);
-    const {postId,fromRent,fromMyPost } = location.state;
+    const {postId,fromRent,fromMyPost,fromSearch,RSArea, RSGender, RSPeople, RSType, RSCar  } = location.state;
     const userInfo = loginUser();
     const token = getAuthToken();
 
@@ -222,7 +222,12 @@ const RentArticle=()=> {
             e.preventDefault();
             navigate("/rent", {
               state: {
-                fromSearch:false,},});
+                fromSearch:fromSearch,
+                RSArea:RSArea,
+                RSGender:RSGender,
+                RSPeople:RSPeople,
+                RSType:RSType,
+                RSCar:RSCar},});
           }
           const handleBackToFavoriteSubmit = (e) => {
             e.preventDefault();

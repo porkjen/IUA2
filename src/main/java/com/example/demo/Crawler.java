@@ -48,6 +48,9 @@ public class Crawler {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
+
+        //System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");//白
+
         //C:\Program Files\Google\Chrome\Application\chromedriver.exe  //白
         //C:\\Program Files (x86)\\Google
         //C:\Program Files (x86)\Google\Chrome\Application
@@ -70,15 +73,7 @@ public class Crawler {
             String captchaText = "";
             while (!flag) {
                 WebElement element = driver.findElement(By.xpath("//img[@id='importantImg']"));//驗證碼圖片
-                /*String imageUrl = element.getAttribute("src");//驗證碼圖片網址
-                System.out.println(imageUrl);
-                try (InputStream in = new URL(imageUrl).openStream()) {
-                    Path path = Path.of("image.png");
-                    Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
-                    System.out.println("驗證碼圖片已下載!!");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
+
                 File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
                 BufferedImage image = ImageIO.read(screenshot);
                 ImageIO.write(image, "png", screenshot);
@@ -87,7 +82,7 @@ public class Crawler {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-                BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);
+                BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);//headless
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
@@ -351,13 +346,17 @@ public class Crawler {
     }
 
     public static List<TimeTableEntity.Info> getMyClass(String studentID, String password) throws InterruptedException{
+        System.out.println("getMyClass");
         List<TimeTableEntity.Info> myClassList = new ArrayList<>();
         driver.switchTo().frame("menuFrame");
         driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        System.out.println("教務系統");
         Thread.sleep(3000);
         driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        System.out.println("選課系統");
         Thread.sleep(3000);
         driver.findElement(By.linkText("學生個人選課清單課表列印")).click(); //學生個人選課清單課表列印
+        System.out.println("學生個人選課清單課表列印");
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
         String nowYear = driver.findElement(By.id("AYEAR")).getText();//取得現在學年
@@ -367,14 +366,15 @@ public class Crawler {
         driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='"+nowSemester+"']")).click();
 
         driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click(); //選課清單
-        //顯示20筆
+        System.out.println("調整為目前學期");
+        //顯示30筆
         Thread.sleep(3000);
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].value = '20';", driver.findElement(By.id("PC_PageSize")));
-        //driver.findElement(By.id("PC_PageSize")).sendKeys("20");
-        Thread.sleep(3000);
+        js.executeScript("arguments[0].value = '30';", driver.findElement(By.id("PC_PageSize")));
+        Thread.sleep(2000);
         driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
         Thread.sleep(3000);
+        System.out.println("顯示30筆");
         //已選課程表格
         List<WebElement> trList = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
         for(int i = 1;i< trList.size();i++){
@@ -383,32 +383,53 @@ public class Crawler {
             WebElement row = trList.get(i);
             List<WebElement> cols= row.findElements(By.tagName("td"));
             Thread.sleep(1000);
-            System.out.println("課名 : " + cols.get(3).getText());
             myClass.setName(cols.get(3).getText());
-            System.out.println("課號 : " + cols.get(2).getText());
             myClass.setClassNum(cols.get(2).getText());
-            System.out.println("授課老師 : " + cols.get(6).getText());
             myClass.setTeacher(cols.get(6).getText());
-            System.out.println("類別 : " + cols.get(9).getText());
             myClass.setCategory(cols.get(9).getText());
             driver.findElement(By.linkText(cols.get(2).getText())).click();
 
             if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
             else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
             //switch iframe
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
             WebElement iframe = driver.findElement(By.tagName("iframe"));
             driver.switchTo().frame(iframe);
             driver.switchTo().frame("mainFrame");
-            List<WebElement> tr = driver.findElements(By.cssSelector("#QTable2 > tbody > tr"));
-            String time = tr.get(1).findElements(By.tagName("td")).get(1).findElement(By.tagName("table")).findElements(By.tagName("tr")).get(11).findElement(By.id("M_SEG")).getText();
-            System.out.println("時間 : " + time);
+            List<WebElement> tr = driver.findElements(By.cssSelector("#QTable2 > tbody > tr")).get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table")).get(0).findElements(By.tagName("tr"));
+            String time = tr.get(11).findElement(By.id("M_SEG")).getText();
             String[] timeArray = time.split(",");
             myClass.setTime(timeArray);
-            String classroom = tr.get(1).findElements(By.tagName("td")).get(1).findElement(By.tagName("table")).findElements(By.tagName("tr")).get(11).findElement(By.id("M_CLSSRM_ID")).getText();
-            System.out.println("教室 : " + classroom);
+            String classroom = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();
             if(classroom.indexOf(',')!=-1)classroom = classroom.substring(0, classroom.indexOf(','));
             myClass.setClassroom(classroom);
+            myClass.setOnline(tr.get(11).findElement(By.id("M_IS_LONGDIST_CURRI")).getText());
+            myClass.setENname(tr.get(7).findElement(By.id("M_ENG_LESSON")).getText());
+            myClass.setYearClass(tr.get(8).findElement(By.id("M_GRADE")).getText());
+            myClass.setCredit(tr.get(8).findElement(By.id("M_CRD")).getText());
+            myClass.setCredit(tr.get(8).findElement(By.id("M_CRD")).getText());
+            myClass.setUpper(tr.get(9).findElement(By.id("M_MAX_ST")).getText());
+            myClass.setLower(tr.get(9).findElement(By.id("M_MIN_ST")).getText());
+            myClass.setDepartment(tr.get(4).findElement(By.id("M_FACULTY_NAME")).getText());
+            myClass.setDuration(tr.get(10).findElement(By.id("M_COSTERM")).getText());
+            // 課程大綱
+            List<WebElement> tr2 = driver.findElements(By.cssSelector("#QTable2 > tbody > tr")).get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table")).get(2).findElements(By.tagName("tr"));
+            myClass.setTarget(tr2.get(1).findElement(By.id("M_CH_TARGET")).getText());
+            myClass.setTargetE(tr2.get(2).findElement(By.id("M_ENG_TARGET")).getText());
+            myClass.setPrerequisites(tr2.get(3).findElement(By.id("M_CH_PREOBJ")).getText());
+            myClass.setPrerequisitesE(tr2.get(4).findElement(By.id("M_ENG_PREOBJ")).getText());
+            myClass.setOutline(tr2.get(5).findElement(By.id("M_CH_OBJECT")).getText());
+            myClass.setOutlineE(tr2.get(6).findElement(By.id("M_ENG_OBJECT")).getText());
+            myClass.setTeachingMethod(tr2.get(7).findElement(By.id("M_CH_TEACH")).getText());
+            myClass.setTeachingMethodE(tr2.get(8).findElement(By.id("M_ENG_TEACH")).getText());
+            myClass.setReference(tr2.get(9).findElement(By.id("M_CH_REF")).getText());
+            myClass.setReferenceE(tr2.get(10).findElement(By.id("M_ENG_REF")).getText());
+            myClass.setSyllabus(tr2.get(11).findElement(By.id("M_CH_TEACHSCH")).getText());
+            myClass.setSyllabusE(tr2.get(12).findElement(By.id("M_ENG_TEACHSCH")).getText());
+            myClass.setEvaluation(tr2.get(13).findElement(By.id("M_CH_TYPE")).getText());
+            myClass.setEvaluationE(tr2.get(14).findElement(By.id("M_ENG_TYPE")).getText());
+            //back to main frame
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             driver.switchTo().defaultContent();
             driver.switchTo().frame("mainFrame");
@@ -416,6 +437,7 @@ public class Crawler {
             driver.switchTo().defaultContent();
             driver.switchTo().frame("mainFrame");
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            System.out.println(myClass.toString());
             myClassList.add(myClass);
         }
 
@@ -583,7 +605,7 @@ public class Crawler {
 
         driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click();  //開課單位查詢
         Thread.sleep(3000);
-        //show_25
+        //show_50
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].value = '50';", driver.findElement(By.id("PC_PageSize"))); //商船有86筆(Max)
         Thread.sleep(3000);
@@ -593,13 +615,14 @@ public class Crawler {
         System.out.println(takingCategory);
         for(int i = 1;i < rcReault.size();i++){
             System.out.println(i);
-            WebElement itemCourse = rcReault.get(i);
+            WebElement itemCourse = driver.findElements(By.cssSelector("#DataGrid > tbody > tr")).get(i);
             List<WebElement> item = itemCourse.findElements(By.tagName("td"));
             Thread.sleep(3000);
             System.out.println(item.get(10).getText());
             //System.out.println(takingCategory);
             if(item.get(10).getText().equals(takingCategory))
             {
+                RequiredCourseEntityMajorCSE rcDetail = new RequiredCourseEntityMajorCSE();
                 System.out.println("課名 : " + item.get(3).getText());
                 System.out.println("年班級 : " + item.get(5).getText());
 
@@ -611,13 +634,73 @@ public class Crawler {
                 courseEntity.setCCredit(item.get(9).getText());
                 courseEntity.setCCategory(item.get(10).getText());
 
+                Integer index= 1;
+                index += i;
+                if(i<9){
+                    driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+index+"$COSID','')\"]")).click();
+                }
+                else{
+                    driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+index+"$COSID','')\"]")).click();
+                }
+                Thread.sleep(3000);
+                driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                //switch iframe
+                WebElement iframe = driver.findElement(By.tagName("iframe"));
+                driver.switchTo().frame(iframe);
+                driver.switchTo().frame("mainFrame");
+                Thread.sleep(1500);
+
+                WebElement time = driver.findElement(By.id("M_SEG"));
+                System.out.println("上課時間 : " + time.getText());
+                courseEntity.setCTime(time.getText());
+
+                WebElement location = driver.findElement(By.id("M_CLSSRM_ID"));
+                System.out.println("上課地點 : " + location.getText());
+                courseEntity.setCLocation(location.getText());
+
+                WebElement people = driver.findElement(By.id("M_CHOICE_QTY"));
+                System.out.println("選課人數 : " + people.getText());
+                courseEntity.setCPeople(people.getText());
+
+                WebElement objective = driver.findElement(By.id("M_CH_TARGET"));
+                System.out.println("教學目標 : " + objective.getText());
+                courseEntity.setCObjective(objective.getText());
+
+                WebElement pre_course = driver.findElement(By.id("M_CH_PREOBJ"));
+                System.out.println("先修科目 : " + pre_course.getText());
+                courseEntity.setCPrecourse(pre_course.getText());
+
+                WebElement outline = driver.findElement(By.id("M_CH_OBJECT"));
+                System.out.println("教材內容 : " + outline.getText());
+                courseEntity.setCOutline(outline.getText());
+
+                WebElement teaching_method = driver.findElement(By.id("M_CH_TEACH"));
+                System.out.println("教學方式 : " + teaching_method.getText());
+                courseEntity.setCTmethod(teaching_method.getText());
+
+                WebElement reference = driver.findElement(By.id("M_CH_REF"));
+                System.out.println("參考書目 : " + reference.getText());
+                courseEntity.setCReference(reference.getText());
+
+                WebElement syllabus = driver.findElement(By.id("M_CH_TEACHSCH"));
+                System.out.println("教學進度 : " + syllabus.getText());
+                courseEntity.setCSyllabus(syllabus.getText());
+
+                WebElement evaluation = driver.findElement(By.id("M_CH_TYPE"));
+                System.out.println("評量方式 : " + evaluation.getText());
+                courseEntity.setCEvaluation(evaluation.getText());
+
                 RCourseList.add(courseEntity);
 
+                driver.switchTo().defaultContent();
+                driver.switchTo().frame("mainFrame");
+                driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
+                //driver.switchTo().defaultContent();
+                //driver.switchTo().frame("mainFrame");
             }
         }
         return RCourseList;
     }
-
     public static List<CourseEntity> getCourses() throws InterruptedException{
         driver.switchTo().defaultContent();
         Thread.sleep(1000);
@@ -689,8 +772,8 @@ public class Crawler {
     public static void main(String[] args) throws Exception {
 
 
-        String account = "";
-        String password = "";
+        String account = "00957025";
+        String password = "20230607";
 
 /*
         String account = "00957030";
@@ -700,7 +783,8 @@ public class Crawler {
 
 
         //getBasicData(account,password);
-        //getMyClass(account,password);
+        CrawlerHandle(account,password);
+        getMyClass(account,password);
         //getAllGeneralClass();
         //getFinishedCredict();
         //findRCourse("必修","3");

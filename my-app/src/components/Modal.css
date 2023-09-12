@@ -16,6 +16,14 @@ html,body,#root{
     overflow: auto;
 }
 
+.modalCourseInfoBackground{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: #EDF4FF;
+    overflow: auto;
+}
+
 .modalClose{
     background-color: transparent;
     border: 0;
@@ -33,6 +41,20 @@ html,body,#root{
     z-index: 1;
 }
 
+.modalCourseInfoContainer{
+    background-color: white;
+    width:350px;
+    margin-top: 100px;
+    position: absolute;
+    top: 30%;  
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    overflow: auto;
+    height: 65%;
+    will-change: transform;
+}
+
 .modal_tilte{
     font-family: 'Noto Serif TC', serif;
     text-align: center;
@@ -48,57 +70,6 @@ html,body,#root{
     border: none;
     border-bottom: 1px solid rgb(35, 35, 35);
     border-radius: 0px;
-}
-
-
-
-.modal_sandwich{
-    max-width: 23%;
-    padding-left: 1%;
-    position: absolute;
-    z-index: 2;
-    margin-top: 90%;
-}
-
-.modal_pizza{
-    max-width: 20%;
-    margin-left: 80%;
-    position: absolute;
-    z-index: 2;
-    margin-top: 30%;
-    
-}
-
-.modal_cookiemonster{
-    max-width: 40%;
-    padding-left: 8%;
-    position: absolute;
-    z-index: 2;
-    margin-top: 140%;
-}
-
-.modal_cookiem{
-    max-width: 20%;
-    padding-left: 50%;
-    position: absolute;
-    z-index: 2;
-    margin-top: 130%;
-}
-
-.modal_minion{
-    max-width: 40%;
-    padding-left: 55%;
-    position: absolute;
-    z-index: 2;
-    margin-top: 133%;
-}
-
-.modal_banana{
-    max-width: 35%;
-    padding-left: 12%;
-    position: absolute;
-    z-index: 2;
-    margin-top: 160%;
 }
 
 .modal_dogpic{
@@ -222,4 +193,8 @@ html,body,#root{
 .acBtn{
     display:flex;
     justify-content:space-between;
+}
+
+.courseLabel{
+    font-size: 15px;
 }

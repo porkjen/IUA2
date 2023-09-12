@@ -141,3 +141,43 @@ html,body,#root,.SignIn{
     max-width: 380px; 
     z-index: 1;
 }
+
+.LoadingText{
+    z-index: 3;
+    color: #7ea6e1;
+    font-size: 35px;
+    font-family: 'Permanent Marker', cursive;
+    text-align: center;
+    margin-top: 70%;
+}
+
+.preloader > div{
+    background-color: #7ea6e1;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    animation: stretchdelay 0.7s infinite ease-in-out;
+}
+
+@keyframes stretchdelay {
+    0%, 40%, 100% { 
+         transform: translateY(0px);
+    }
+    20% {
+         transform: translateY(-10px);
+    }
+ }
+
+ .preloader .dot1 {
+    animation-delay: 0;
+  }
+  
+  .preloader .dot2 {
+    animation-delay: 0.1s;
+  }
+  
+  .preloader .dot3 {
+    animation-delay: 0.2s;
+  }
+  

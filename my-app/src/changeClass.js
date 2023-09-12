@@ -81,7 +81,7 @@ const ChangeClass=()=> {
           console.log(name);
           navigate("/postArticle", {
             state: {
-              studentID:"00957025",
+              studentID:userInfo,
               changeClassClassName:{name},
               changeClassClassTeacher:{teacher},
               changeClassClassTime:{time},

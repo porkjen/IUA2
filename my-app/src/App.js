@@ -27,7 +27,7 @@ import Favorite from './favorite';
 import DetectCourse from './DetectCourse';
 import ModifyPost from './ModifyPost';
 import MyNotification from './myNotification';
-
+import NTOULink from './NTOULink';
 import Chatroom from './chatroom';
 import ChatRoomList from './ChatRoomList';
 import MoodChat from './moodChat';  
@@ -60,6 +60,7 @@ const App=()=> {
                     <Route path="/Must" element={<Must />} />
                     <Route path="/Graduation" element={<Graduation />} />
                     <Route path="/Search" element={<Search />} />
+                    <Route path="/NTOULink" element={<NTOULink />} />
                     <Route path="/CourseSelection" element={<CourseSelection />} />
                     <Route path="/generalEducation" element={<GeneralEducaton />} />
                     <Route path="/favorite" element={<Favorite />} />

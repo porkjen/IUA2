@@ -17,8 +17,8 @@ public class HouseEntity {
     private String people = "";
     private String address = "";
     private String area = "";
-    private String gender = "";
-    private String style = "";
+    private String gender = "";//男 女 不限
+    private String style = "";//套房 雅房 家庭式
     private String water = "";
     private String power = "";
     private String car = "";

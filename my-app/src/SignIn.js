@@ -24,6 +24,7 @@ const SignIn=()=> {
     function SignIn() {
       const [student_id, setStudent_id] = useState("");
       const [password, setPassword] = useState("");
+      const [waiting, setWaiting] = useState(false);
       const [responseStatus, setResponseStatus] = useState("");
       const navigate = useNavigate();
       const handleStudent_idChange = (event) => {
@@ -35,7 +36,8 @@ const SignIn=()=> {
       };
       const handleSubmit = (e) => {
         e.preventDefault();
-        alert(`The name you entered was: ${student_id}`);
+        //alert(`The name you entered was: ${student_id}`);
+        setWaiting(true);
         const formData = {
                         studentID: student_id,
                         password: password,
@@ -78,20 +80,22 @@ const SignIn=()=> {
          
       }
       return (
+        
         <div className="SignIn">    
             <div className='SignIn_bg'>
                 <div className='SignIn_signIn'>
-                    <div className="SignIn_title">
-                        
+                    <br/>
+                    {!waiting && 
+                    <div>
+                      <div className="SignIn_title">
                         <div className="SignIn_title-img">
                             <img src={Signlogo} alt="IUA" />
                         </div>
                         <div className="SignIn_title-text">
                             <img src={signIn} alt="IUA" />
                         </div>
-                    </div>
-                    <br/>
-                    <form className="SignIn_submitForm" onSubmit={handleSubmit}>
+                     </div>
+                      <form className="SignIn_submitForm" onSubmit={handleSubmit}>
                         <label>學號:</label><br/>
                         <input type="text" name="student_id" 
                         onChange={handleStudent_idChange}
@@ -108,7 +112,22 @@ const SignIn=()=> {
                                 <span className="button_text">登入</span>
                             </button>
                         </div>
-                    </form>
+                      </form>
+                    </div>
+
+                      
+                    }
+                    {waiting &&
+                      <div className='LoadingText'>
+                          <div class="preloader">
+                            Loading
+                            <div class="dot1"></div>
+                            <div class="dot2"></div>
+                            <div class="dot3"></div>
+                          </div>
+                    </div>
+                    }
+                    
                 </div>
                     <div className="SignIn_img1">
                         <img src={cat1} alt="IUA" />
