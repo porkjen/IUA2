@@ -1659,18 +1659,14 @@ public class TodoController {
     }
 
     @PostMapping("/pre_curriculum")
-    public ResponseEntity<String> preCurriculum(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<String> preCurriculum(@RequestBody TimeTableEntity t){
         System.out.println("/pre_curriculum");
-        TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
-        TimeTableEntity.Pre_Info pre_info = new TimeTableEntity.Pre_Info();
-        pre_info.setP_class(requestData.get("p_class"));
-        pre_info.setP_classNum(requestData.get("p_classNum"));
-        String[] timeArray = requestData.get("p_time").split(",");
-        pre_info.setP_time(timeArray);
-        pre_info.setP_classroom(requestData.get("p_classroom"));
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(t.getStudentID());
+        TimeTableEntity.Pre_Info pre_info = t.getPre_info().get(0);
+
         if (timeTable == null) {
             timeTable = new TimeTableEntity();
-            timeTable.setStudentID(requestData.get("studentID"));
+            timeTable.setStudentID(t.getStudentID());
             timeTable.setPre_info(pre_info);
         }
         else{timeTable.setPre_info(pre_info);}
