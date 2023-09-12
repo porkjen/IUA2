@@ -55,7 +55,6 @@ public class Crawler {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.get("https://ais.ntou.edu.tw/Default.aspx");
-        //driver.get("https://140.121.99.104/Default.aspx");
 
         driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS);
 
@@ -1023,8 +1022,8 @@ public class Crawler {
     public static void main(String[] args) throws Exception {
 
 
-        String account = "00957025";
-        String password = "20230607";
+        String account = "";
+        String password = "";
 
 /*
         String account = "00957030";
