@@ -59,8 +59,8 @@ const Mustinfo = styled.label`
     margin-left: auto;
     margin-right: auto;
     z-index: 2;
-    width: 350px;
-    height: 90px;
+    width: 90%;
+    height: 12%;
     background-color: white;
     border-radius: 10px;
     display: flex;
@@ -114,7 +114,7 @@ const Coreinfo = styled.label`
     margin-right: auto;
     z-index: 2;
     width: 90%;
-    height: 25%;
+    height: 35%;
     background-color: white;
     border-radius: 10px;
     display: flex;
@@ -127,7 +127,7 @@ const CoreHardwareField = styled.label`
     border-width:1px;
     border-style:solid;
     width:40%;
-    height:20%;
+    height:15%;
     margin-top:2%;
     color:black;
     background-color:#E6FAEF;
@@ -138,7 +138,7 @@ const CoreSoftwareField = styled.label`
     border-width:1px;
     border-style:solid;
     width:40%;
-    height:20%;
+    height:15%;
     margin-top:2%;
     color:black;
     background-color:#FAF0E6;
@@ -161,7 +161,20 @@ const GEinfo = styled.label`
     padding-left: 10px;
 `;
 
-const DetailBtn = styled.button`
+const MustDetailBtn = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    border: none;
+    margin-left:10px;
+    margin-top:5px;
+    width: 80px;
+    height: 20px;
+    background-color: #C4E1FF;
+    color: 	#005AB5;
+`;
+
+const CoreDetailBtn = styled.button`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
     border-radius: 5px;
@@ -171,4 +184,4 @@ const DetailBtn = styled.button`
     color: white;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField, DetailBtn} ;
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField, MustDetailBtn, CoreDetailBtn} ;
