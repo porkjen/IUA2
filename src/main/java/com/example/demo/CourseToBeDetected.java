@@ -6,6 +6,7 @@ public class CourseToBeDetected{
     private String courseName;
     private String courseNumber;
     private String semester;
+    private Boolean isFull = true;
 
     public CourseToBeDetected(){}
 
@@ -13,16 +14,20 @@ public class CourseToBeDetected{
         this.studentID = id;
     }
 
-    public void setName(String name){
+    public void setCourseName(String name){
         this.courseName = name;
     }
 
-    public void setNumber(String number){
+    public void setCourseNumber(String number){
         this.courseNumber = number;
     }
 
     public void setSemester(String smemster){
         this.semester = smemster;
+    }
+
+    public void setIsFull(Boolean isFull){
+        this.isFull = isFull;
     }
 
     public String getStudentID(){
@@ -39,5 +44,9 @@ public class CourseToBeDetected{
 
     public String getSemester(){
         return semester;
+    }
+
+    public Boolean getIsFull(){
+        return isFull;
     }
 }
