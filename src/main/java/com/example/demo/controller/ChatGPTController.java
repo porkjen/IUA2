@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 import com.example.demo.repository.KeyRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
@@ -18,15 +21,27 @@ public class ChatGPTController {
     @PostMapping("/chat")
     public ResponseEntity<String> chatWithGPT(@RequestBody Map<String, String> requestData) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + "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");
+        headers.set("Authorization", "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");
         headers.set("Content-Type", "application/json");
 
-        String requestBody = "{\"messages\": [{\"role\": \"user\", \"content\": \"" + requestData.get("content") + "\"}], \"model\": \"gpt-3.5-turbo\"}";
+        JSONObject requestJson = new JSONObject();
+        JSONArray messagesArray = new JSONArray();
+
+        JSONObject userMessage = new JSONObject();
+        userMessage.put("role", "user");
+        userMessage.put("content", requestData.get("content"));
+
+        messagesArray.put(userMessage);
+
+        requestJson.put("messages", messagesArray);
+        requestJson.put("model", "gpt-3.5-turbo");
+
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+        HttpEntity<String> request = new HttpEntity<>(requestJson.toString(), headers);
 
         ResponseEntity<String> response = restTemplate.exchange(API_ENDPOINT, HttpMethod.POST, request, String.class);
 
         return response;
     }
+
 }
