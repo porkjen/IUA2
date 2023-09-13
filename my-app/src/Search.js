@@ -13,7 +13,6 @@ const Search = () => {
     const [selectedDepartment, setSelectedDepartment] = useState('資工');
     const [selectedType, setSelectedType] = useState('必修');
     const [selectedGrade, setSelectedGrade] = useState('大一');
-
     const handleSubmit = (e) => {
       e.preventDefault();
       const queryParams = new URLSearchParams({

@@ -18,7 +18,7 @@ public class ChatGPTController {
     @PostMapping("/chat")
     public ResponseEntity<String> chatWithGPT(@RequestBody Map<String, String> requestData) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + "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");
+        headers.set("Authorization", "Bearer " + "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");
         headers.set("Content-Type", "application/json");
 
         String requestBody = "{\"messages\": [{\"role\": \"user\", \"content\": \"" + requestData.get("content") + "\"}], \"model\": \"gpt-3.5-turbo\"}";

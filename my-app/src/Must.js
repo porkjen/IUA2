@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import back from './img/back.png';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { Mustinfo, DetailBtn } from './components/Style';
+import { Mustinfo, MustDetailBtn } from './components/Style';
 import Modal from 'react-modal';
 
 const Must = () => {
@@ -73,8 +73,8 @@ const Must = () => {
           <div className='mustLable'>
             <div className="scrollableContainer">
               {RCResult.map((item) => (
-                  <Mustinfo key={item.id} onClick={() => openModal(item.cnumber, item.cmajor, item.cgrade)}>
-                    {item.cname}<DetailBtn>詳細資訊</DetailBtn>{item.cnumber}&emsp;{item.cgrade}&emsp;{item.cteacher}&emsp;{item.ccredit}學分
+                  <Mustinfo key={item.id}>
+                    {item.cname}<MustDetailBtn  onClick={() => openModal(item.cnumber, item.cmajor, item.cgrade)}>詳細資訊</MustDetailBtn>{item.cnumber}&emsp;{item.cgrade}&emsp;{item.cteacher}&emsp;{item.ccredit}學分
 
                   </Mustinfo>
               ))}
