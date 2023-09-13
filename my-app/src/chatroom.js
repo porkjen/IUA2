@@ -24,12 +24,13 @@ class ChatRoom extends React.Component {
      };
 
      this.stompClient = null;
+     this.messageListRef = React.createRef();
    }
 
    componentDidMount() {
     this.fetchData();
-    this.initializeStompClient();
     this.fetchMessageData();
+    this.initializeStompClient();
    }
 
    initializeStompClient = () => {
@@ -159,6 +160,20 @@ class ChatRoom extends React.Component {
    handleMessageChange = (event) => {
      this.setState({ newMessage: event.target.value });
    };
+
+   scrollToBottom = () => {
+    // Scroll to the bottom of the message list
+    if (this.messageListRef.current) {
+      this.messageListRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    // Check if new messages have been added
+    if (prevState.messages.length !== this.state.messages.length) {
+      this.scrollToBottom(); // Scroll to the bottom when new messages arrive
+    }
+  }
    
 
    render() {
