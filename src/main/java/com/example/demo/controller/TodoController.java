@@ -78,6 +78,8 @@ public class TodoController {
     @Autowired
     RCourseOMajorPERepository rCourseOMajorPERepository;
     @Autowired
+    ChatroomRecordRepository chatroomRecordRepository;
+    @Autowired
     PECourseRepository peCourseRepository; //體育
     @Autowired
     ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
@@ -1820,6 +1822,21 @@ public class TodoController {
             englishCourseRepository.save(e);
         }
         System.out.println("done");
+    }
+    
+    @PostMapping("/loadChatRecord")
+    public List<ChatroomRecordEntity> loadChatRecord(@RequestParam(value = "where") String where){
+        List<ChatroomRecordEntity> load_chat = new ArrayList<>();
+        List<ChatroomRecordEntity> chatRecord = chatroomRecordRepository.findByRoom(where);
+        for(ChatroomRecordEntity cRecord: chatRecord){
+            ChatroomRecordEntity record = new ChatroomRecordEntity();
+            record.setfrom(cRecord.getfrom());
+            record.settext(cRecord.gettext());
+            record.setatWhere(cRecord.getatWhere());
+            load_chat.add(record);
+        }
+        System.out.println("Loading is finished! ->(ChatRoomRecord)");
+        return load_chat;
     }
 }
 
