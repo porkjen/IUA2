@@ -33,7 +33,7 @@ const CourseSelection=()=> {
                                     </button>
                                 </div>
                                 </Link>
-                                <Link to=''>
+                                <Link to='/rules'>
                                     <div className="rulesBtn">
                                         <button className="rulesButton">
                                             <img src={rulesImg} className='courseSelectionpic'/>

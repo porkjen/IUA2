@@ -78,6 +78,8 @@ public class TodoController {
     @Autowired
     RCourseOMajorPERepository rCourseOMajorPERepository;
     @Autowired
+    ChatroomRecordRepository chatroomRecordRepository;
+    @Autowired
     PECourseRepository peCourseRepository; //體育
     @Autowired
     ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
@@ -333,6 +335,7 @@ public class TodoController {
                 CourseDTO courseDTO = new CourseDTO();
                 courseDTO.setName(g.getName());
                 courseDTO.setClassNum(g.getClassNum());
+                courseDTO.setCategory(g.getCategory());
                 courseDTO.setTeacher(g.getTeacher());
                 courseDTO.setTime(g.getTime().split(","));
                 courseDTO.setClassroom(g.getClassroom());
@@ -1674,19 +1677,29 @@ public class TodoController {
         return groupedByWeekday;
     }
     @PostMapping("/my_pre_curriculum")
-    public Map<Integer, List<TimeTableEntity.Pre_Info>> myPreCurriculumSearch(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<?> myPreCurriculumSearch(@RequestBody Map<String, String> requestData, @RequestHeader("Authorization") String au){
         System.out.println("/my_pre_curriculum");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, requestData.get("studentID"));
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
         if(timeTable==null)return null;
         List<TimeTableEntity.Pre_Info> preInfoList = timeTable.getPre_info();
-        List<TimeTableEntity.Pre_Info> orderedList = new ArrayList<>();
-        //Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = groupPreInfoByWeekday(preInfoList);
-        return groupPreInfoByWeekday(preInfoList);
+        return ResponseEntity.ok(groupPreInfoByWeekday(preInfoList));
     }
 
     @PostMapping("/pre_curriculum")
-    public ResponseEntity<String> preCurriculum(@RequestBody TimeTableEntity t){
-        System.out.println("/pre_curriculum");
+    public ResponseEntity<String> preCurriculum(@RequestBody TimeTableEntity t, @RequestHeader("Authorization") String au){
+        System.out.println("/pre_curriculum : 加入預選課程");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, t.getStudentID());
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(t.getStudentID());
         TimeTableEntity.Pre_Info pre_info = t.getPre_info().get(0);
 
@@ -1701,8 +1714,14 @@ public class TodoController {
     }
 
     @DeleteMapping("/cancel_pre_curriculum")
-    public ResponseEntity<String> cancelPreCurriculum(@RequestParam("studentID") String studentID, @RequestParam("p_classNum") String p_classNum){
+    public ResponseEntity<String> cancelPreCurriculum(@RequestParam("studentID") String studentID, @RequestParam("p_classNum") String p_classNum, @RequestHeader("Authorization") String au){
         System.out.println("/cancel_pre_curriculum");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
         boolean deleted = false;
         if(timeTable == null)return ResponseEntity.badRequest().body("Invalid request : Entity not found"); //400
@@ -1714,88 +1733,73 @@ public class TodoController {
                 break;
             }
         }
-        if(deleted)return ResponseEntity.ok("Success"); //400
+        if(deleted)return ResponseEntity.ok("Success"); //200
         else return ResponseEntity.badRequest().body("Invalid request : Class not found"); //400
     }
 
     @GetMapping("/pre_curriculum_search")
     public List<CourseDTO> preCurriculumSearch(@RequestParam("name") String name, @RequestParam("category") String category){
         List<CourseDTO> courseDTOList = new ArrayList<>();
-        if(Objects.equals(category, "general")){
-            List<GeneralCourseEntity> generalCourseEntityList = generalRepository.findAll();
-            for(GeneralCourseEntity g : generalCourseEntityList){
-                if(g.getName().contains(name)){
-                    CourseDTO courseDTO = new CourseDTO();
-                    courseDTO.setName(g.getName());
-                    courseDTO.setClassNum(g.getClassNum());
-                    courseDTO.setTeacher(g.getTeacher());
-                    courseDTO.setTime(g.getTime().split(","));
-                    courseDTO.setClassroom(g.getClassroom());
-                    courseDTO.setTarget(g.getTarget());
-                    courseDTO.setEvaluation(g.getEvaluation());
-                    courseDTO.setSyllabus(g.getSyllabus());
-                    courseDTOList.add(courseDTO);
-                }
-            }
-            return courseDTOList;
+        List<GeneralCourseEntity> generalCourseEntityList = generalRepository.findByNameContaining(name);
+        for(GeneralCourseEntity g : generalCourseEntityList){
+            CourseDTO courseDTO = new CourseDTO();
+            courseDTO.setName(g.getName());
+            courseDTO.setCategory(g.getCategory());
+            courseDTO.setClassNum(g.getClassNum());
+            courseDTO.setTeacher(g.getTeacher());
+            courseDTO.setTime(g.getTime().split(","));
+            courseDTO.setClassroom(g.getClassroom());
+            courseDTO.setTarget(g.getTarget());
+            courseDTO.setEvaluation(g.getEvaluation());
+            courseDTO.setSyllabus(g.getSyllabus());
+            courseDTOList.add(courseDTO);
         }
-        else if(Objects.equals(category, "PE")){
-            List<PECourseEntity> peCourseEntityList = peCourseRepository.findAll();
-            for(PECourseEntity pe : peCourseEntityList){
-                if(pe.getName().contains(name)){
-                    CourseDTO courseDTO = new CourseDTO();
-                    courseDTO.setName(pe.getName());
-                    courseDTO.setClassNum(pe.getClassNum());
-                    courseDTO.setCategory(pe.getCategory());
-                    courseDTO.setTeacher(pe.getTeacher());
-                    courseDTO.setTime(pe.getTime());
-                    courseDTO.setClassroom(pe.getClassroom());
-                    courseDTO.setTarget(pe.getTarget());
-                    courseDTO.setEvaluation(pe.getEvaluation());
-                    courseDTO.setSyllabus(pe.getSyllabus());
-                    courseDTOList.add(courseDTO);
-                }
-            }
-            return courseDTOList;
+
+        List<PECourseEntity> peCourseEntityList = peCourseRepository.findByNameContaining(name);
+        for(PECourseEntity pe : peCourseEntityList){
+            CourseDTO courseDTO = new CourseDTO();
+            courseDTO.setName(pe.getName());
+            courseDTO.setClassNum(pe.getClassNum());
+            courseDTO.setCategory(pe.getCategory());
+            courseDTO.setTeacher(pe.getTeacher());
+            courseDTO.setTime(pe.getTime());
+            courseDTO.setClassroom(pe.getClassroom());
+            courseDTO.setTarget(pe.getTarget());
+            courseDTO.setEvaluation(pe.getEvaluation());
+            courseDTO.setSyllabus(pe.getSyllabus());
+            courseDTOList.add(courseDTO);
+
         }
-        else if(Objects.equals(category, "english")){
-            List<EnglishCourseEntity> englishCourseEntityList = englishCourseRepository.findAll();
-            for(EnglishCourseEntity en : englishCourseEntityList){
-                if(en.getName().contains(name)){
-                    CourseDTO courseDTO = new CourseDTO();
-                    courseDTO.setName(en.getName());
-                    courseDTO.setClassNum(en.getClassNum());
-                    courseDTO.setCategory(en.getCategory());
-                    courseDTO.setTeacher(en.getTeacher());
-                    courseDTO.setTime(en.getTime());
-                    courseDTO.setClassroom(en.getClassroom());
-                    courseDTO.setTarget(en.getTarget());
-                    courseDTO.setEvaluation(en.getEvaluation());
-                    courseDTO.setSyllabus(en.getSyllabus());
-                    courseDTOList.add(courseDTO);
-                }
-            }
-            return courseDTOList;
+        List<EnglishCourseEntity> englishCourseEntityList = englishCourseRepository.findByNameContaining(name);
+        for(EnglishCourseEntity en : englishCourseEntityList){
+            CourseDTO courseDTO = new CourseDTO();
+            courseDTO.setName(en.getName());
+            courseDTO.setClassNum(en.getClassNum());
+            courseDTO.setCategory(en.getCategory());
+            courseDTO.setTeacher(en.getTeacher());
+            courseDTO.setTime(en.getTime());
+            courseDTO.setClassroom(en.getClassroom());
+            courseDTO.setTarget(en.getTarget());
+            courseDTO.setEvaluation(en.getEvaluation());
+            courseDTO.setSyllabus(en.getSyllabus());
+            courseDTOList.add(courseDTO);
+
         }
-        else {//foreign_language
-            List<ForeignLanguageEntity> foreignLanguageEntityList = foreignLanguageCourseRepository.findAll();
-            for(ForeignLanguageEntity f : foreignLanguageEntityList){
-                if(f.getName().contains(name)){
-                    CourseDTO courseDTO = new CourseDTO();
-                    courseDTO.setName(f.getName());
-                    courseDTO.setClassNum(f.getClassNum());
-                    courseDTO.setCategory(f.getCategory());
-                    courseDTO.setTeacher(f.getTeacher());
-                    courseDTO.setTime(f.getTime());
-                    courseDTO.setClassroom(f.getClassroom());
-                    courseDTO.setTarget(f.getTarget());
-                    courseDTO.setEvaluation(f.getEvaluation());
-                    courseDTO.setSyllabus(f.getSyllabus());
-                    courseDTOList.add(courseDTO);
-                }
-            }
-            return courseDTOList;
+        List<ForeignLanguageEntity> foreignLanguageEntityList = foreignLanguageCourseRepository.findByNameContaining(name);
+        for(ForeignLanguageEntity f : foreignLanguageEntityList){
+            CourseDTO courseDTO = new CourseDTO();
+            courseDTO.setName(f.getName());
+            courseDTO.setClassNum(f.getClassNum());
+            courseDTO.setCategory(f.getCategory());
+            courseDTO.setTeacher(f.getTeacher());
+            courseDTO.setTime(f.getTime());
+            courseDTO.setClassroom(f.getClassroom());
+            courseDTO.setTarget(f.getTarget());
+            courseDTO.setEvaluation(f.getEvaluation());
+            courseDTO.setSyllabus(f.getSyllabus());
+            courseDTOList.add(courseDTO);
         }
+        return courseDTOList;
     }
     @PostMapping("/general_education")
     public List<GeneralCourseEntity> generalEducation(@RequestParam("field") String field) throws InterruptedException, TesseractException, IOException {
@@ -1845,6 +1849,21 @@ public class TodoController {
             englishCourseRepository.save(e);
         }
         System.out.println("done");
+    }
+    
+    @PostMapping("/loadChatRecord")
+    public List<ChatroomRecordEntity> loadChatRecord(@RequestParam(value = "where") String where){
+        List<ChatroomRecordEntity> load_chat = new ArrayList<>();
+        List<ChatroomRecordEntity> chatRecord = chatroomRecordRepository.findByRoom(where);
+        for(ChatroomRecordEntity cRecord: chatRecord){
+            ChatroomRecordEntity record = new ChatroomRecordEntity();
+            record.setfrom(cRecord.getfrom());
+            record.settext(cRecord.gettext());
+            record.setatWhere(cRecord.getatWhere());
+            load_chat.add(record);
+        }
+        System.out.println("Loading is finished! ->(ChatRoomRecord)");
+        return load_chat;
     }
 }
 

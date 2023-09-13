@@ -45,7 +45,7 @@ const CoreSearch = () => {
             </Link>
           </div>
           <div className="search_title">
-            <label className="titleText">核心課程查詢</label>
+            <label className="titleText">核心選修課程查詢</label>
           </div>
           <div className="selectDiv">
             <select
