@@ -2,7 +2,7 @@ import './homePage.css';
 import React from 'react';
 import back from './img/back.png';
 import creditImg from "./img/credit.png";
-import graduateImg from "./img/graduate.png";
+import graduateImg from "./img/information.png";
 import courseSelectImg from "./img/selectcourse.png";
 import socialImg from "./img/social.png";
 import chatroomImg from "./img/chatroom.png";

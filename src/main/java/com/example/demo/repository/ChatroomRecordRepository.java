@@ -9,6 +9,6 @@ import java.util.List;
 public interface ChatroomRecordRepository extends MongoRepository<ChatroomRecordEntity, String> {
 
     //在資料庫item內查找atWhere
-    @Query(value = "{'c_category': ?0}")
+    @Query(value = "{'atWhere': ?0}")
     List<ChatroomRecordEntity> findByRoom(String atWhere);
 }
