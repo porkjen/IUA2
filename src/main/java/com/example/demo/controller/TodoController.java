@@ -103,6 +103,7 @@ public class TodoController {
         //password encrypt
         String studentID = user.get("studentID");
         account = studentID;
+        todoService.setAccount(account);
         String password = user.get("password");
         pwd = password;
         System.out.println(studentID);
