@@ -306,6 +306,7 @@ public class TodoController {
                 CourseDTO courseDTO = new CourseDTO();
                 courseDTO.setName(g.getName());
                 courseDTO.setClassNum(g.getClassNum());
+                courseDTO.setCategory(g.getCategory());
                 courseDTO.setTeacher(g.getTeacher());
                 courseDTO.setTime(g.getTime().split(","));
                 courseDTO.setClassroom(g.getClassroom());
@@ -1759,7 +1760,7 @@ public class TodoController {
                 courseDTOList.add(courseDTO);
             }
         }
-        if(Objects.equals(category, "foreign_language")||Objects.equals(category, "")){
+        if(Objects.equals(category, "foreign_  language")||Objects.equals(category, "")){
             List<ForeignLanguageEntity> foreignLanguageEntityList = foreignLanguageCourseRepository.findByNameContaining(name);
             for(ForeignLanguageEntity f : foreignLanguageEntityList){
                 CourseDTO courseDTO = new CourseDTO();
@@ -1767,7 +1768,7 @@ public class TodoController {
                 courseDTO.setClassNum(f.getClassNum());
                 courseDTO.setCategory(f.getCategory());
                 courseDTO.setTeacher(f.getTeacher());
-                courseDTO.setTime(f.getTime());
+                courseDTO.setTime(f.getTime());  
                 courseDTO.setClassroom(f.getClassroom());
                 courseDTO.setTarget(f.getTarget());
                 courseDTO.setEvaluation(f.getEvaluation());

@@ -1,5 +1,7 @@
 import './DetectCourse.css';
 import React from 'react';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
 import logo from './img/IUAlogo.png';
 import {Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleDCText, ArticleText, ArticlePostTimeRating, ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
@@ -86,6 +88,9 @@ const DetectCourse=()=> {
       return (
         <div className="DetectCourse"> 
             <div className="DetectCourse_bg">
+            <Link to='/CourseSelection'>
+              <Back src={back} alt="回上一頁" />
+            </Link> 
                 <Title className='DetectCourse_title'>偵測課程</Title>
                 <div className='DetectCourse_search_position'>
                     <input type='text' className='DetectCourse_search_number' value={isCourseNum} onChange={handleNumChange} placeholder="請輸入課號"></input>

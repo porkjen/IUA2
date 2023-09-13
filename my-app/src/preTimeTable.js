@@ -30,13 +30,12 @@ const PreTimeTable=()=> {
     const [error, setError] = useState(false);
     const [preSearch, setPreSearch] = useState(false);
     const [preTable, setPreTable] = useState(true);
+    
     const userInfo = loginUser();
     const token = getAuthToken();
 
 
-      const closeModal = () => {
-        setModalIsOpen(false);
-      };
+     
 
       const handlePreCourseInfo = (courseName,classNum,classTime,classRoom,category,teacher,target,syllabus,evaluation) =>{
 
@@ -208,11 +207,16 @@ const PreTimeTable=()=> {
 
 
     function PreTimeTable() {
-        const [searchTerm, setSearchTerm] = useState('');
-        const [searchCategory, setSearchCategory] = useState('');
+        
         const [searchResults, setSearchResults] = useState([]);
         const [predata, setPreData] = useState([]);
+        const [searchTerm, setSearchTerm] = useState('');
+        const [searchCategory, setSearchCategory] = useState('');
 
+        const closeModal = () => {
+            setModalIsOpen(false);
+            
+          };
 
         const handlePTTFunctionSelect  = event => {
 
@@ -243,7 +247,7 @@ const PreTimeTable=()=> {
                     setPreData(data);
                 })
                 .catch((error) => {
-                  console.error('搜索错误:', error);
+                  console.error('error:', error);
                 });
             } else {
            
@@ -294,11 +298,11 @@ const PreTimeTable=()=> {
                 }
                 {preSearch &&
                     <div>
-                        <select className='preCategorySelect' onChange={handlePTTCategorySelect}>
+                        <select className='preCategorySelect' onChange={handlePTTCategorySelect} value={searchCategory}>
                             <option>分類</option>
                             <option value=''>全部</option>
                             <option value='PE'>體育</option>
-                            <option value='foreign_language '>第二外語</option>
+                            <option value='foreign_language'>第二外語</option>
                             <option value='general'>通識</option>
                             <option value='english'>英語</option>
                         </select>
@@ -308,6 +312,7 @@ const PreTimeTable=()=> {
                             isOpen={modalIsOpen}
                             onRequestClose={closeModal}
                             contentLabel="課程詳細資訊"
+                            searchCategory={searchCategory}
                         >
                             <div>
                                 <h2>{pcourseName}</h2>
