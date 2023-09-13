@@ -30,40 +30,35 @@ public class PushNotificationController {
     }
 
     @PostMapping("/exchange_notification_add")
-    public ResponseEntity<String> addExchangePushCondition(@RequestBody Map<String, String> received){
+    public ResponseEntity<String> addExchangePushCondition(@RequestBody ExchangePushCondition received){
         System.out.println("/exchange_notification_add");
-        if(notificationRepository.existsByStudentID(received.get("studentID"))){
-            NotificationCondition condition = notificationRepository.findByStudentID(received.get("studentID"));
-            ExchangePushCondition exCond = new ExchangePushCondition(received.get("c_number"), received.get("c_time"), received.get("c_category"));
-            condition.getExchangeCondition().add(exCond);
-            notificationRepository.save(condition);
+        NotificationCondition condition = new NotificationCondition();
+        if(notificationRepository.existsByStudentID(received.getStudentID())){
+            condition = notificationRepository.findByStudentID(received.getStudentID());
+            condition.getExchangeCondition().add(received);
         }
         else{
-            NotificationCondition condition = new NotificationCondition(received.get("studentID"));
-            ExchangePushCondition exCond = new ExchangePushCondition(received.get("c_number"), received.get("c_time"), received.get("c_category"));
+            condition = new NotificationCondition(received.getStudentID());
             ArrayList<ExchangePushCondition> exList = new ArrayList<ExchangePushCondition>();
-            exList.add(exCond);
+            exList.add(received);
             condition.setExchangeCondition(exList);
-            notificationRepository.save(condition);
         }
+        notificationRepository.save(condition);
         return ResponseEntity.ok("success");
     }
 
     @PostMapping("/rent_notification_add")
-    public ResponseEntity<String> addRentPushCondition(@RequestBody Map<String, String> received){
+    public ResponseEntity<String> addRentPushCondition(@RequestBody RentPushCondition received){
         System.out.println("/rent_notification_add");
-        if(notificationRepository.existsByStudentID(received.get("studentID"))){
-            NotificationCondition condition = notificationRepository.findByStudentID(received.get("studentID"));
-            //RentPushCondition rCond = new RentPushCondition(received.get("h_rent"), received.get("h_gender"), received.get("h_people"), received.get("h_style"), received.get("h_region"), received.get("h_floor"), received.get("h_parking"), received.get("h_water"), received.get("h_power"));
-            //condition.setRentCondition(rCond);
-            notificationRepository.save(condition);
+        NotificationCondition condition = new NotificationCondition();
+        if(notificationRepository.existsByStudentID(received.getStudentID())){
+            condition = notificationRepository.findByStudentID(received.getStudentID());
         }
         else{
-            NotificationCondition condition = new NotificationCondition(received.get("studentID"));
-            //RentPushCondition rCond = new RentPushCondition(received.get("h_rent"), received.get("h_gender"), received.get("h_people"), received.get("h_style"), received.get("h_region"), received.get("h_floor"), received.get("h_parking"), received.get("h_water"), received.get("h_power"));
-            //condition.setRentCondition(rCond);
-            notificationRepository.save(condition);
+            condition = new NotificationCondition(received.getStudentID());
         }
+        condition.setRentCondition(received);
+        notificationRepository.save(condition);
         return ResponseEntity.ok("success");
     }
 
