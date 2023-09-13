@@ -182,8 +182,6 @@ class ChatRoom extends React.Component {
        </div>
        <div className="chatroom-messages" >
          <div className="message-list" >
-           <Message content="歡迎來到這個聊天室!" isSent={false} />
-           <Message content="嗨嗨" isSent={false} />
            {messageData.map((message, index) => {
                console.log("message:", message);
                return (

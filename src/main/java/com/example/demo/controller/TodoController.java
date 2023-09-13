@@ -223,14 +223,41 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
-    // @Scheduled(fixedRate = 5000)    //間隔5秒
-    // private static void startDetect() throws InterruptedException {
-    //     System.out.println("Start detection.");
-    //     crawler.detectCoureses(courses);
-    // }
+    @DeleteMapping("/delete_detect_course")
+    public ResponseEntity<String> deleteDetectCourse(@RequestParam("studentID") String studentID, @RequestParam("number") String number){
+        System.out.println("/delete_detect_course");
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
+        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
+        boolean isFound = false;
+        for(int i = 0; i < courses.size(); i++){
+            if(courses.get(i).getNumber().equals(number)){
+                courses.remove(i);
+                courseList.setDetectedCourse(courses);
+                dRepository.save(courseList);
+                isFound = true;
+            }
+        }
+        if(isFound){
+            System.out.println("Successfully delete!");
+            return ResponseEntity.ok("Success");
+        }
+        else{
+            System.out.println("Not found.");
+            return ResponseEntity.badRequest().body("Invalid request");
+        }
+    }
+
+    @GetMapping("/load_detect_course")
+    public ArrayList<CourseToBeDetected> loadDetectCourse(@RequestParam("studentID") String studentID){
+        System.out.println("/load_detect_course");
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
+        return courseList.getDetectedCourses();
+    }
 
     @PostMapping("/detect_course")
-    public void detectCourse(@RequestBody DetectedCoursesList courseList)throws TesseractException, IOException, InterruptedException{
+    public void detectCourse(@RequestBody String studentID)throws TesseractException, IOException, InterruptedException{
+        System.out.println("/detect_course");
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
         ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
         while(!courses.isEmpty()){
             System.out.println("Start detection.");

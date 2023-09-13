@@ -1,25 +1,44 @@
 package com.example.demo.dao;
 
 public class ExchangePushCondition {
-    private String c_number;
-    private String c_time;
-    private String c_category;
+    private String studentID;
+    private String number;
+    private String[] time;
+    private String[] category;
 
     public ExchangePushCondition(){}
 
-    public ExchangePushCondition(String number, String time, String category){
-        this.c_number = number;
-        this.c_time = time;
-        this.c_category = category;
+    public ExchangePushCondition(String studentID){
+        this.studentID = studentID;
+    }
+
+    public void setNumber(String number){
+        this.number = number;
+    }
+
+    public void setStudentID(String studentID){
+        this.studentID = studentID;
+    }
+
+    public void setTime(String[] time){
+        this.time = time;
+    }
+
+    public void setCategory(String[] category){
+        this.category = category;
+    }
+
+    public String getStudentID(){
+        return studentID;
     }
 
     public String getNumber(){
-        return c_number;
+        return number;
     }
-    public String getTime(){
-        return c_time;
+    public String[] getTime(){
+        return time;
     }
-    public String getCategory(){
-        return c_category;
+    public String[] getCategory(){
+        return category;
     }
 }
