@@ -217,7 +217,6 @@ public class TodoController {
             courseList.setDetectedCourse(courses);
             dRepository.save(courseList);
         }
-        detectCourse(courseList);
         return ResponseEntity.ok("Success");
     }
 
@@ -228,7 +227,7 @@ public class TodoController {
     // }
 
     @PostMapping("/detect_course")
-    public void detectCourse(DetectedCoursesList courseList)throws TesseractException, IOException, InterruptedException{
+    public void detectCourse(@RequestBody DetectedCoursesList courseList)throws TesseractException, IOException, InterruptedException{
         ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
         while(!courses.isEmpty()){
             System.out.println("Start detection.");
