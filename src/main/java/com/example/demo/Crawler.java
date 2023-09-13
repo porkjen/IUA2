@@ -30,7 +30,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 
-@EnableScheduling
+
 public class Crawler {
     static ChromeOptions options;
     static WebDriver driver;
@@ -40,9 +40,12 @@ public class Crawler {
     public static void CrawlerHandle(String userAccount, String userPassword) throws IOException, TesseractException, InterruptedException {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
+
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
 
         //System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");//白
+
+        //System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
 
         //C:\Program Files\Google\Chrome\Application\chromedriver.exe  //白
         //C:\\Program Files (x86)\\Google
@@ -57,7 +60,6 @@ public class Crawler {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.get("https://ais.ntou.edu.tw/Default.aspx");
-        //driver.get("https://140.121.99.104/Default.aspx");
 
         driver.manage().timeouts().pageLoadTimeout(40, TimeUnit.SECONDS);
 
@@ -77,9 +79,9 @@ public class Crawler {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-                BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);//headless
+                //BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);//headless
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
+                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
 
                 ImageIO.write(subImage, "png", screenshot);
@@ -314,30 +316,61 @@ public class Crawler {
         return fCourses;
     }
 
-    @Scheduled(fixedRate = 5000)    //間隔5秒
+    
     public static void detectCoureses(ArrayList<CourseToBeDetected> courses) throws InterruptedException{
         String tDate = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()); //today
 
         driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
         Thread.sleep(1000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(3000);
         driver.findElement(By.linkText("選課系統")).click(); //選課系統
         Thread.sleep(3000);
-        driver.findElement(By.linkText("歷年課程課表查詢")).click();
+        driver.findElement(By.linkText("線上即時加退選")).click();
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
 
-        driver.findElement(By.id("Q_AYEAR")).findElement(By.xpath("//option[@value='111']")).click();
-        driver.findElement(By.id("Q_SMS")).findElement(By.xpath("//option[@value='1']")).click();
-        driver.findElement(By.id("radioButtonClass_0")).click();
-        driver.findElement(By.id("Q_CH_LESSON")).clear();
-        driver.findElement(By.id("Q_CH_LESSON")).sendKeys("B5703N54");
-        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN7\"]")).click(); //關鍵字查詢
-
-        Thread.sleep(500);
-        List<WebElement> trList2 = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
-        List<WebElement> col = trList2.get(1).findElements(By.tagName("td"));
-        System.out.println("***" + col.get(2) + "***");
+        for(CourseToBeDetected c : courses){
+            Thread.sleep(1000);
+            driver.findElement(By.id("Q_COSID")).clear();
+            driver.findElement(By.id("Q_COSID")).sendKeys(c.getNumber());
+            driver.findElement(By.xpath("//*[@id=\"QUERY_COSID_BTN\"]")).click();
+            Thread.sleep(1500);
+            driver.findElement(By.xpath("//a[@href=\"javascript:__doPostBack('DataGrid1$ctl02$dolink','')\"]")).click();
+            //switch iframe
+            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            WebElement iframe = driver.findElement(By.tagName("iframe"));
+            driver.switchTo().frame(iframe);
+            driver.switchTo().frame("mainFrame");
+            Thread.sleep(1500);
+            List<WebElement> trList2 = driver.findElements(By.cssSelector("#QTable2 > tbody > tr"));
+            List<WebElement> tablelist = trList2.get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table"));
+            List<WebElement> tr = tablelist.get(0).findElements(By.tagName("tr"));
+            String maxST = tr.get(9).findElement(By.id("M_MAX_ST")).getText();
+            String nowST = tr.get(13).findElement(By.id("M_CHOICE_QTY")).getText();
+            System.out.println("Maximum: " + maxST + ", now: " + nowST);
+            if(Integer.parseInt(nowST) < Integer.parseInt(maxST)){
+                System.out.println(c.getNumber() + " has place now!");
+                c.setIsFull(false);
+            }
+            else{
+                System.out.println(c.getNumber() + " is full now.");
+                c.setIsFull(true);
+            }
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+            driver.findElement(By.xpath("//*[@title=\"Close\"]")).click();
+            driver.switchTo().defaultContent();
+            driver.switchTo().frame("mainFrame");
+        }
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("menuFrame");
+        driver.findElement(By.linkText("線上即時加退選")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(1000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
     }
 
     public static List<TimeTableEntity.Info> getMyClass(String studentID, String password) throws InterruptedException{
@@ -737,6 +770,7 @@ public class Crawler {
             List<WebElement> trlist = driver.findElements(By.cssSelector("#QTable2 > tbody > tr"));
             List<WebElement> tablelist = trlist.get(1).findElements(By.tagName("td")).get(1).findElements(By.tagName("table"));
             List<WebElement> tr = tablelist.get(0).findElements(By.tagName("tr"));
+            List<WebElement> tr2 = tablelist.get(2).findElements(By.tagName("tr"));
             String semester = tr.get(0).findElement(By.id("M_AYEARSMS")).getText();
             String number = tr.get(4).findElement(By.id("M_COSID")).getText();
             String dept = tr.get(4).findElement(By.id("M_FACULTY_NAME")).getText();
@@ -744,12 +778,20 @@ public class Crawler {
             String name = tr.get(6).findElement(By.id("CH_LESSON")).getText();
             System.out.println("///course name: " + name);
             String grade = tr.get(8).findElement(By.id("M_GRADE")).getText();
+            String credit = tr.get(8).findElement(By.id("M_CRD")).getText();
             String people = tr.get(9).findElement(By.id("M_MAX_ST")).getText();
             String category = tr.get(10).findElement(By.id("M_MUST")).getText();
             String time = tr.get(11).findElement(By.id("M_SEG")).getText();
             String room = tr.get(11).findElement(By.id("M_CLSSRM_ID")).getText();
             System.out.println("///course number: " + number);
-            CourseEntity ce = new CourseEntity(semester, name, category, number, time, room, teacher, grade, people, dept);
+            String objective = tr2.get(1).findElement(By.id("M_CH_TARGET")).getText();
+            String precourse = tr2.get(3).findElement(By.id("M_CH_PREOBJ")).getText();
+            String outline = tr2.get(5).findElement(By.id("M_CH_OBJECT")).getText();
+            String method = tr2.get(7).findElement(By.id("M_CH_TEACH")).getText();
+            String reference = tr2.get(9).findElement(By.id("M_CH_REF")).getText();
+            String syllabus = tr2.get(11).findElement(By.id("M_CH_TEACHSCH")).getText();
+            String evaluation = tr2.get(13).findElement(By.id("M_CH_TYPE")).getText();
+            CourseEntity ce = new CourseEntity(semester, name, category, number, time, room, teacher, grade, people, dept, credit, objective, precourse, outline, method, reference, syllabus, evaluation);
             courseList.add(ce);
             driver.switchTo().defaultContent();
             driver.switchTo().frame("mainFrame");
@@ -1030,8 +1072,8 @@ public class Crawler {
     public static void main(String[] args) throws Exception {
 
 
-        String account = "00957025";
-        String password = "20230607";
+        String account = "";
+        String password = "";
 
 /*
         String account = "00957030";

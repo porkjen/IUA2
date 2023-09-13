@@ -13,6 +13,7 @@ import { Routes ,Route,Link,useNavigate,useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
 import { getAuthToken } from "./utils";
+import Modal from 'react-modal';
 
 //列出該時段有的課
 const ChangeClassList=()=> {

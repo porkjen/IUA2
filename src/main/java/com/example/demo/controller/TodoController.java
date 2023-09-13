@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -88,6 +89,7 @@ public class TodoController {
     String account = "";
     String pwd = "";
 
+
     @Autowired
     private TodoService todoService;
     
@@ -127,7 +129,7 @@ public class TodoController {
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
-            sendTestNotification(token);
+            //sendTestNotification(token);
             return ResponseEntity.status(HttpStatus.CREATED).body(t);//201
         }
         else {
@@ -138,7 +140,7 @@ public class TodoController {
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
-            sendTestNotification(token);
+            //sendTestNotification(token);
             return ResponseEntity.ok(t); // 回傳狀態碼 200
         }
     }
@@ -191,30 +193,58 @@ public class TodoController {
     }
 
     @PostMapping("/add_detect_course")
-    public void addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
+    public ResponseEntity<String> addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{   
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
+        DetectedCoursesList courseList = new DetectedCoursesList();
+        Boolean isExist = false;
+        System.out.println("course number: " + requestData.getNumber());
+
         if(dRepository.existsByStudentID(requestData.getStudentID())){
-            DetectedCoursesList oriList = dRepository.findByStudentID(requestData.getStudentID());
-            System.out.println("course number: " + requestData.getNumber());
-            courses = oriList.getDetectedCourses();
-            courses.add(requestData);
-            oriList.setDetectedCourse(courses);
-            dRepository.save(oriList);
+            courseList = dRepository.findByStudentID(requestData.getStudentID());
+            courses = courseList.getDetectedCourses();
         }
         else{
-            DetectedCoursesList newList = new DetectedCoursesList();
-            newList.setStudentID(requestData.getStudentID());
-            System.out.println("course number: " + requestData.getNumber());
-            courses.add(requestData);
-            newList.setDetectedCourse(courses);
-            dRepository.save(newList);
+            courseList.setStudentID(requestData.getStudentID());
         }
-        // crawler.detectCoureses(courses);
+        for(CourseToBeDetected c : courses){
+            if(c.getNumber().equals(requestData.getNumber())){
+                isExist = true;
+                break;
+            }
+        }
+        if(!isExist){
+            courses.add(requestData);
+            courseList.setDetectedCourse(courses);
+            dRepository.save(courseList);
+        }
+        detectCourse(courseList);
+        return ResponseEntity.ok("Success");
     }
 
-    @PostMapping("/detect_course")
-    public void detectCourse()throws TesseractException, IOException, InterruptedException{
+    // @Scheduled(fixedRate = 5000)    //間隔5秒
+    // private static void startDetect() throws InterruptedException {
+    //     System.out.println("Start detection.");
+    //     crawler.detectCoureses(courses);
+    // }
 
+    @PostMapping("/detect_course")
+    public void detectCourse(DetectedCoursesList courseList)throws TesseractException, IOException, InterruptedException{
+        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
+        while(!courses.isEmpty()){
+            System.out.println("Start detection.");
+            crawler.detectCoureses(courses);
+            for(int i = 0; i < courses.size(); i++){
+                if(!courses.get(i).getIsFull()){
+                    System.out.println("Remove [" + courses.get(i).getNumber() + "]");
+                    courses.remove(i);
+                    courseList.setDetectedCourse(courses);
+                    dRepository.save(courseList);
+                }
+                else{
+                    System.out.println("[" + courses.get(i).getNumber() + "] is full, keep detecting.");
+                }
+            }
+        }
     }
 
     @GetMapping("/core_elective")
@@ -246,6 +276,19 @@ public class TodoController {
                     rc.setField(kernalCourseG3[i][1]);
                     result.add(rc);
                 }
+            }
+        }
+        return result;
+    }
+
+    @GetMapping("/core_elective_detail")
+    public CourseEntity coreElectiveDetail(@RequestParam("number") String number, @RequestParam("grade") String grade)throws InterruptedException {
+        List<CourseEntity> list = courseRepository.findByc_number(number);
+        CourseEntity result = new CourseEntity();
+        for(CourseEntity c : list){
+            if(c.getGrade().equals(grade)){
+                result = c;
+                break;
             }
         }
         return result;
@@ -1590,33 +1633,40 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
+    public static Map<Integer, List<TimeTableEntity.Pre_Info>> groupPreInfoByWeekday(List<TimeTableEntity.Pre_Info> preInfoList) {
+        Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = new HashMap<>();
+        int lastweekday;
+        for (TimeTableEntity.Pre_Info preInfo : preInfoList) {
+            lastweekday = 0;
+            for (String time : preInfo.getP_time()) {
+                int weekday = Integer.parseInt(time.substring(0, 1));
+                groupedByWeekday.putIfAbsent(weekday, new ArrayList<>());
+                if(lastweekday!=weekday)groupedByWeekday.get(weekday).add(preInfo);
+                lastweekday = weekday;
+            }
+        }
+        return groupedByWeekday;
+    }
     @PostMapping("/my_pre_curriculum")
-    public List<TimeTableEntity.Pre_Info> myPreCurriculumSearch(@RequestBody Map<String, String> requestData){
+    public Map<Integer, List<TimeTableEntity.Pre_Info>> myPreCurriculumSearch(@RequestBody Map<String, String> requestData){
         System.out.println("/my_pre_curriculum");
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
-        if(timeTable==null){
-            /*timeTable = new TimeTableEntity();
-            timeTable.setStudentID(requestData.get("studentID"));
-            timeTableRepository.save(timeTable);*/
-            List<TimeTableEntity.Pre_Info> list = new ArrayList<>();
-            return list; //empty
-        }
-        return timeTable.getPre_info();
+        if(timeTable==null)return null;
+        List<TimeTableEntity.Pre_Info> preInfoList = timeTable.getPre_info();
+        List<TimeTableEntity.Pre_Info> orderedList = new ArrayList<>();
+        //Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = groupPreInfoByWeekday(preInfoList);
+        return groupPreInfoByWeekday(preInfoList);
     }
 
     @PostMapping("/pre_curriculum")
-    public ResponseEntity<String> preCurriculum(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<String> preCurriculum(@RequestBody TimeTableEntity t){
         System.out.println("/pre_curriculum");
-        TimeTableEntity timeTable = timeTableRepository.findByStudentID(requestData.get("studentID"));
-        TimeTableEntity.Pre_Info pre_info = new TimeTableEntity.Pre_Info();
-        pre_info.setP_class(requestData.get("p_class"));
-        pre_info.setP_classNum(requestData.get("p_classNum"));
-        String[] timeArray = requestData.get("p_time").split(",");
-        pre_info.setP_time(timeArray);
-        pre_info.setP_classroom(requestData.get("p_classroom"));
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(t.getStudentID());
+        TimeTableEntity.Pre_Info pre_info = t.getPre_info().get(0);
+
         if (timeTable == null) {
             timeTable = new TimeTableEntity();
-            timeTable.setStudentID(requestData.get("studentID"));
+            timeTable.setStudentID(t.getStudentID());
             timeTable.setPre_info(pre_info);
         }
         else{timeTable.setPre_info(pre_info);}
