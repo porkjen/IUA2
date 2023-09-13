@@ -86,6 +86,7 @@ const Core=()=>{
                     {data && (
                     <div>
                         <h2>{data.name}</h2>
+                        <p>開課學期：{data.semester}</p>
                         <p>課程代號：{data.number}</p>
                         <p>選課類別：{data.category}</p>
                         <p>課程學分：{data.ccredit}</p>
