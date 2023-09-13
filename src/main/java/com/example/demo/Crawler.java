@@ -41,11 +41,13 @@ public class Crawler {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
 
+
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
 
         //System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");//白
 
         //System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+
 
         //C:\Program Files\Google\Chrome\Application\chromedriver.exe  //白
         //C:\\Program Files (x86)\\Google
@@ -79,9 +81,9 @@ public class Crawler {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-                //BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);//headless
+                BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);//headless
                 //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
-                BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
+                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
 
                 ImageIO.write(subImage, "png", screenshot);

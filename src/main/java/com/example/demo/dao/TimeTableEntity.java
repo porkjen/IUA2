@@ -12,7 +12,7 @@ public class TimeTableEntity {
     private String id;
     private String studentID;
     private List<Info> info = new ArrayList<>();
-    private List<Pre_Info> pre_info = new ArrayList<>();;
+    private List<Pre_Info> pre_info = new ArrayList<>();
 
 
     // Nested class for the taken coursed
@@ -308,8 +308,13 @@ public class TimeTableEntity {
     public static class Pre_Info {
         private String p_class = "";
         private String p_classNum = "";
+        private String p_category = "";
         private String[] p_time = new String[3];
         private String p_classroom = "";
+        private String p_teacher = "";
+        private String p_target = "";
+        private String p_evaluation = "";
+        private String p_syllabus = "";
 
         public String getP_class() {
             return p_class;
@@ -343,6 +348,45 @@ public class TimeTableEntity {
             this.p_classroom = p_classroom;
         }
 
+        public String getP_category() {
+            return p_category;
+        }
+
+        public void setP_category(String p_category) {
+            this.p_category = p_category;
+        }
+
+        public String getP_teacher() {
+            return p_teacher;
+        }
+
+        public void setP_teacher(String p_teacher) {
+            this.p_teacher = p_teacher;
+        }
+
+        public String getP_target() {
+            return p_target;
+        }
+
+        public void setP_target(String p_target) {
+            this.p_target = p_target;
+        }
+
+        public String getP_evaluation() {
+            return p_evaluation;
+        }
+
+        public void setP_evaluation(String p_evaluation) {
+            this.p_evaluation = p_evaluation;
+        }
+
+        public String getP_syllabus() {
+            return p_syllabus;
+        }
+
+        public void setP_syllabus(String p_syllabus) {
+            this.p_syllabus = p_syllabus;
+        }
     }
     public String getId() {
         return id;

@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("CourseCollection")
 public class CourseEntity{
+    private String id;
     private String c_semester;
     private String c_name;
     private String c_category;  //選課類別(必選修)

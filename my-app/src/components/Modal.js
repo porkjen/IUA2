@@ -544,9 +544,9 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
           //const student_id = loginUser();
           const formData = {
             studentID: userInfo,
-            c_number : classNum,
-            c_time : time,
-            c_category : selectedType,
+            number : classNum,
+            time : time,
+            category : selectedType,
           };
                         fetch('/exchange_notification_add', {
                               method: 'POST',
@@ -556,10 +556,10 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                               },
                               body: JSON.stringify(formData)
                             })
-                            .then(response => response.json())
-                            .then(data => {
-                              console.log(data);
-                            })
+                            .then(response => {
+                              console.log(formData);
+                                  console.log(response.status);
+                                })
                             .catch(error => {
                               console.error(error);
                             });
@@ -744,18 +744,18 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
        
           const formData = {
                           studentID: userInfo,
-                          money : Hmoney,
-                          people : Hpeople,
+                          h_rent : Hmoney,
+                          h_people : Hpeople,
                           address : Haddress,
-                          area : selectedArea,
-                          gender : rentGender,
-                          style : selectedType,
+                          h_region : selectedArea,
+                          h_gender : rentGender,
+                          h_style : selectedType,
                           water : selectedHwater,
                           power : selectedHpower,
-                          car : haveCar,
-                          floor : Hfloor,
-                          HwaterMoney: HwaterMoney,
-                          HpowerMoney: HpowerMoney,
+                          h_parking : haveCar,
+                          h_floor : Hfloor,
+                          h_water: HwaterMoney,
+                          h_power: HpowerMoney,
                         };
                         fetch('/rent_notification_add', {
                               method: 'POST',
@@ -771,10 +771,10 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                             .catch(error => {
                               console.error(error);
                             });
-                            navigate("/rent", {
+                            /*navigate("/rent", {
                               state: {
                                 fromSearch:false,},});
-                                window.location.reload();
+                                window.location.reload();*/
                          //Form submission happens here
         }
 

@@ -14,6 +14,7 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { onLogin } from "./cookie.js";
 import { setAuthToken } from "./utils";
+import { getMessaging, getToken } from "firebase/messaging";
 
 const SignIn=()=> {
 
@@ -21,7 +22,37 @@ const SignIn=()=> {
     const [cookies, setCookie] = useCookies(['token']);
     const [error, setError] = useState(false);
 
-  
+    function resetUI(){
+      // Get registration token. Initially this makes a network call, once retrieved
+      // subsequent calls to getToken will return from cache.
+      const messaging = getMessaging();
+      getToken(messaging, { vapidKey: 'BEKPWgmGQLVbo8wj_8_AmRSB-T2UOpgX-HYIrOYYKDLteQx8syLkeb8vrL8PhHdPE4iQNYhbzf7hqYAnHkx6X2U' }).then((currentToken) => {
+        if (currentToken) {
+          // Send the token to your server and update the UI if necessary
+          // ...
+        } else {
+          // Show permission request UI
+          console.log('No registration token available. Request permission to generate one.');
+          // ...
+        }
+      }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+        // ...
+      });
+    }
+
+    function requestPermission() {
+      console.log('Requesting permission...');
+      Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+          console.log('Notification permission granted.');
+          resetUI();
+      } else {
+          console.log('Unable to get permission to notify.');
+        }
+      });
+    }
+
 
     function ErrorPassword(){
       return(
