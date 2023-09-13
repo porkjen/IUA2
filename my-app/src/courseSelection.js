@@ -49,7 +49,7 @@ const CourseSelection=()=> {
                                         </button>
                                     </div>
                                 </Link>
-                                <Link to=''>
+                                <Link to='/DetectCourse'>
                                     <div className="detectionCourseBtn">
                                         <button className="detectionCourseButton">
                                             <img src={detectionCourseImg} className='courseSelectionpic'/>

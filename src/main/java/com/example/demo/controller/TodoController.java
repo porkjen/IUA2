@@ -1710,11 +1710,12 @@ public class TodoController {
     @GetMapping("/pre_curriculum_search")
     public List<CourseDTO> preCurriculumSearch(@RequestParam("name") String name, @RequestParam("category") String category){
         List<CourseDTO> courseDTOList = new ArrayList<>();
-        List<GeneralCourseEntity> generalCourseEntityList = generalRepository.findAll();
-        for(GeneralCourseEntity g : generalCourseEntityList){
-            if(g.getName().contains(name)){
+        if(Objects.equals(category, "general")||Objects.equals(category, "")){
+            List<GeneralCourseEntity> generalCourseEntityList = generalRepository.findByNameContaining(name);
+            for(GeneralCourseEntity g : generalCourseEntityList){
                 CourseDTO courseDTO = new CourseDTO();
                 courseDTO.setName(g.getName());
+                courseDTO.setCategory(g.getCategory());
                 courseDTO.setClassNum(g.getClassNum());
                 courseDTO.setTeacher(g.getTeacher());
                 courseDTO.setTime(g.getTime().split(","));
@@ -1725,10 +1726,9 @@ public class TodoController {
                 courseDTOList.add(courseDTO);
             }
         }
-
-        List<PECourseEntity> peCourseEntityList = peCourseRepository.findAll();
-        for(PECourseEntity pe : peCourseEntityList){
-            if(pe.getName().contains(name)){
+        if(Objects.equals(category, "PE")||Objects.equals(category, "")){
+            List<PECourseEntity> peCourseEntityList = peCourseRepository.findByNameContaining(name);
+            for(PECourseEntity pe : peCourseEntityList){
                 CourseDTO courseDTO = new CourseDTO();
                 courseDTO.setName(pe.getName());
                 courseDTO.setClassNum(pe.getClassNum());
@@ -1740,11 +1740,12 @@ public class TodoController {
                 courseDTO.setEvaluation(pe.getEvaluation());
                 courseDTO.setSyllabus(pe.getSyllabus());
                 courseDTOList.add(courseDTO);
+
             }
         }
-        List<EnglishCourseEntity> englishCourseEntityList = englishCourseRepository.findAll();
-        for(EnglishCourseEntity en : englishCourseEntityList){
-            if(en.getName().contains(name)){
+        if(Objects.equals(category, "english")||Objects.equals(category, "")){
+            List<EnglishCourseEntity> englishCourseEntityList = englishCourseRepository.findByNameContaining(name);
+            for(EnglishCourseEntity en : englishCourseEntityList){
                 CourseDTO courseDTO = new CourseDTO();
                 courseDTO.setName(en.getName());
                 courseDTO.setClassNum(en.getClassNum());
@@ -1758,9 +1759,9 @@ public class TodoController {
                 courseDTOList.add(courseDTO);
             }
         }
-        List<ForeignLanguageEntity> foreignLanguageEntityList = foreignLanguageCourseRepository.findAll();
-        for(ForeignLanguageEntity f : foreignLanguageEntityList){
-            if(f.getName().contains(name)){
+        if(Objects.equals(category, "foreign_language")||Objects.equals(category, "")){
+            List<ForeignLanguageEntity> foreignLanguageEntityList = foreignLanguageCourseRepository.findByNameContaining(name);
+            for(ForeignLanguageEntity f : foreignLanguageEntityList){
                 CourseDTO courseDTO = new CourseDTO();
                 courseDTO.setName(f.getName());
                 courseDTO.setClassNum(f.getClassNum());

@@ -11,11 +11,21 @@ import { loginUser } from './cookie';
 import { getAuthToken } from "./utils";
 import { Page, Pagebg, Title,ArticleContainer} from './components/ArticleStyle.js';
 import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody,PreBody,PreText ,PreList, PreClassBody, PreSearchList, PreSearchBody} from './components/Style.js';
-
+import Modal from 'react-modal';
 const PreTimeTable=()=> {
 
     let navigate = useNavigate();
+    const [modalIsOpen, setModalIsOpen] = useState(false); // 控制彈出視窗的狀態
     const [data, setData] = useState([]);
+    const [pcourseName, setCourseName] = useState('');
+    const [pclassNum, setClassNum] = useState('');
+    const [pclassTime, setClassTime] = useState('');
+    const [pclassRoom, setClassRoom] = useState('');
+    const [pcategory, setCategory] = useState('');
+    const [pteacher, setTeacher] = useState('');
+    const [ptarget, setTarget] = useState('');
+    const [psyllabus, setSyllabus] = useState('');
+    const [pevaluation, setEvaluation] = useState('');
     const [cookies, setCookie] = useCookies(['token']);
     const [error, setError] = useState(false);
     const [preSearch, setPreSearch] = useState(false);
@@ -23,7 +33,28 @@ const PreTimeTable=()=> {
     const userInfo = loginUser();
     const token = getAuthToken();
 
+
+      const closeModal = () => {
+        setModalIsOpen(false);
+      };
+
+      const handlePreCourseInfo = (courseName,classNum,classTime,classRoom,category,teacher,target,syllabus,evaluation) =>{
+
+        setModalIsOpen(true);
+        setCourseName(courseName);
+        setClassNum(classNum);
+        setClassTime(classTime);
+        setClassRoom(classRoom);
+        setCategory(category);
+        setTeacher(teacher);
+        setTarget(target);
+        setSyllabus(syllabus);
+        setEvaluation(evaluation);
+
+      };
+
     function CourseList({ list }) {
+
 
         //加入預選
         const handleAddPreCourse = (courseName,classNum,classTime,classRoom,category,teacher,target,syllabus,evaluation) =>{
@@ -49,6 +80,7 @@ const PreTimeTable=()=> {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json' ,
+                    'Authorization': `${token}`,
                 },
                 body: JSON.stringify(formData)
             })
@@ -63,7 +95,9 @@ const PreTimeTable=()=> {
                 <ArticleContainer>
                     {list.map((item, index) => (
                         <PreSearchBody key={index}>
-                            <PreText>{item.name}&nbsp;<br/><button className='preInfo' onClick={() => handleAddPreCourse(item.name,item.classNum,item.time,item.classroom,item.category,item.teacher,item.target,item.syllabus,item.evaluation)}>加入預選</button></PreText>
+                            <PreText>{item.name}&nbsp;<br/>{item.time}<br/>
+                            <button className='preInfol' onClick={() => handlePreCourseInfo(item.name,item.classNum,item.time,item.classroom,item.category,item.teacher,item.target,item.syllabus,item.evaluation)}>詳細資訊</button>
+                            <button className='preInfor' onClick={() => handleAddPreCourse(item.name,item.classNum,item.time,item.classroom,item.category,item.teacher,item.target,item.syllabus,item.evaluation)}>加入預選</button></PreText>
                         </PreSearchBody>
                     ))}
                 </ArticleContainer>
@@ -73,16 +107,17 @@ const PreTimeTable=()=> {
 
     function PreShowData({ShowData}){
         //刪除預選
-        const handleDelPreCourse = (e,classNum) =>{
+        const handleDelPreCourse = (classNum) =>{
             console.log(classNum);
             fetch(`/cancel_pre_curriculum?studentID=${userInfo}&p_classNum=${classNum}`, {
                 method: 'DELETE',
                 headers: { 
                     'Content-Type': 'application/json' ,
+                    'Authorization': `${token}`,
                     
                 },
             })
-                .then(response => response.json())
+                .then(response => response.status)
                 .catch(error => {
                     console.error(error);
                 });
@@ -91,7 +126,9 @@ const PreTimeTable=()=> {
             <ArticleContainer>
                 {ShowData.map((item, index) => (
                     <PreClassBody key={index}>
-                        <RemainText>{item.p_class}&nbsp;{item.p_time}<br/><button onClick={() => handleDelPreCourse(item.p_classNum)} className='preDel'>刪除</button></RemainText>
+                        <PreText>{item.p_class}&nbsp;{item.p_time}<br/>
+                        <button className='preShowInfo' onClick={() => handlePreCourseInfo(item.p_name,item.p_classNum,item.p_time,item.p_classroom,item.p_category,item.p_teacher,item.p_target,item.p_syllabus,item.p_evaluation)}>詳細資訊</button>
+                        <button className='preDel' onClick={() => handleDelPreCourse(item.p_classNum)} >刪除</button></PreText>
                     </PreClassBody>
                 ))}
             </ArticleContainer>
@@ -110,12 +147,13 @@ const PreTimeTable=()=> {
         useEffect(() => {
             if (!PreTableShowData) {
                 const formData = {
-                    studentID:"00957025",
+                    studentID:userInfo,
                 };
               fetch(`/my_pre_curriculum`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json' ,
+                    'Authorization': `${token}`,
                 },
                 body: JSON.stringify(formData)
               })
@@ -129,7 +167,7 @@ const PreTimeTable=()=> {
                 }
               })
               .then(data => {
-                console.log(data[1]);
+                console.log(data[2]);
                 //setPreTableShowData(data);
                 setPreTableShowDataMon(data[1]);
                 setPreTableShowDataTue(data[2]);
@@ -171,6 +209,7 @@ const PreTimeTable=()=> {
 
     function PreTimeTable() {
         const [searchTerm, setSearchTerm] = useState('');
+        const [searchCategory, setSearchCategory] = useState('');
         const [searchResults, setSearchResults] = useState([]);
         const [predata, setPreData] = useState([]);
 
@@ -188,14 +227,18 @@ const PreTimeTable=()=> {
     
           };
 
+          const handlePTTCategorySelect  = event => {
+            setSearchCategory(event.target.value);
+          };
+
 
         
         useEffect(() => {
-            if (searchTerm) {          
-              fetch(`/pre_curriculum_search?category=&name=${searchTerm}`)
+            console.log(searchCategory);
+            if (searchTerm||searchCategory) {          
+              fetch(`/pre_curriculum_search?category=${searchCategory}&name=${searchTerm}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    setSearchResults(data);
                     console.log(data);
                     setPreData(data);
                 })
@@ -206,7 +249,7 @@ const PreTimeTable=()=> {
            
               setSearchResults([]);
             }
-          }, [searchTerm]);
+          }, [searchTerm,searchCategory,data]);
           
         
 
@@ -216,22 +259,69 @@ const PreTimeTable=()=> {
             <Link to='/CourseSelection'>
               <Back src={back} alt="回上一頁" />
             </Link> 
-            <Title>預選課表</Title>
+            {!modalIsOpen && <Title>預選課表</Title>}
+            {!modalIsOpen && 
             <select className='preTtimeTableSelect' onChange={handlePTTFunctionSelect}>
                 <option>功能選單</option>
                   <option value='preSearch'>預選課程查詢</option>
                   <option value='preTimeTable'>預選課表</option>
             </select>
+            }
                 {preTable && 
                     <div>
                         <PreTableShow/>
+                        <Modal
+                            isOpen={modalIsOpen}
+                            onRequestClose={closeModal}
+                            contentLabel="課程詳細資訊"
+                        >
+                            <div>
+                                <h2>{pcourseName}</h2>
+                                <p>課程代號：{pclassNum}</p>
+                                <p>選課類別：{pcategory}</p>
+                                <p>授課教師：{pteacher}</p>
+                                <p>上課時間：{pclassTime}</p>
+                                <p>上課地點：{pclassRoom}</p>
+                                <p>教學目標：{ptarget}</p>
+                                <p>教學進度：{psyllabus}</p>
+                                <p>評分方式:{pevaluation}</p>
+                            </div>
+                            <button onClick={closeModal}>關閉</button>
+                        </Modal>
                     </div>
+                    
                     
                 }
                 {preSearch &&
                     <div>
+                        <select className='preCategorySelect' onChange={handlePTTCategorySelect}>
+                            <option>分類</option>
+                            <option value=''>全部</option>
+                            <option value='PE'>體育</option>
+                            <option value='foreign_language '>第二外語</option>
+                            <option value='general'>通識</option>
+                            <option value='english'>英語</option>
+                        </select>
                         <input type="text" className='PreTimeTable_input' placeholder="輸入關鍵字" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                         <CourseList list={predata} />
+                        <Modal
+                            isOpen={modalIsOpen}
+                            onRequestClose={closeModal}
+                            contentLabel="課程詳細資訊"
+                        >
+                            <div>
+                                <h2>{pcourseName}</h2>
+                                <p>課程代號：{pclassNum}</p>
+                                <p>選課類別：{pcategory}</p>
+                                <p>授課教師：{pteacher}</p>
+                                <p>上課時間：{pclassTime}</p>
+                                <p>上課地點：{pclassRoom}</p>
+                                <p>教學目標：{ptarget}</p>
+                                <p>教學進度：{psyllabus}</p>
+                                <p>評分方式:{pevaluation}</p>
+                            </div>
+                            <button onClick={closeModal}>關閉</button>
+                        </Modal>
                     </div>
 
                 }

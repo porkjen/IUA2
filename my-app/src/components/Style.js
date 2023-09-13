@@ -94,7 +94,7 @@ const PreText = styled.div`
     padding-top: 12px;
     word-break: break-all;
     white-space: pre-line;
-    font-size:14px;
+    font-size:12px;
     text-align:center;
     
 `;
@@ -104,12 +104,12 @@ const PreSearchList = styled.div`
     flex-direction: column;
     margin-top: 30px;
     overflow: auto;
-    height: 75%;
+    height: 60%;
     width:90%;
     will-change: transform;
     position: absolute;
     left: 50%;
-    top: 62%;
+    top: 63%;
     transform: translate(-50%, -50%);
 `;
 
@@ -117,7 +117,7 @@ const PreSearchBody = styled.div`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
     width: 230px;
-    height: 60px;
+    height: 70px;
     background-color: white;
     border-radius: 10px;
     padding: 16px;

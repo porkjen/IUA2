@@ -21,7 +21,7 @@ html,body,#root,.PreTimeTable{
     background-color: 	#EDF4FF;
 }
 
-.PreTimeTable_input{
+.preCategorySelect{
     font-family: 'Noto Serif TC', serif;
     margin-left: 10%;
     height: 30px;
@@ -30,7 +30,16 @@ html,body,#root,.PreTimeTable{
     margin-top: 40%;
 }
 
-.preInfo{
+.PreTimeTable_input{
+    font-family: 'Noto Serif TC', serif;
+    margin-left: 10%;
+    height: 30px;
+    border-radius: 5px;
+    width: 300px;
+    margin-top: 10px;
+}
+
+.preInfol{
     font-family: 'Noto Serif TC', serif;
     font-size: 8px;
     background-color: rgba(204, 235, 236, 0.951);
@@ -38,8 +47,36 @@ html,body,#root,.PreTimeTable{
     text-align:center;
     height:30px;
     border-radius: 6px; 
-    margin-left: 160px;
+    margin-left: 60px;
     margin-top: 1px;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.preInfor{
+    font-family: 'Noto Serif TC', serif;
+    font-size: 8px;
+    background-color: rgba(204, 235, 236, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    border-radius: 6px; 
+    margin-left: 10px;
+    margin-top: 1px;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.preShowInfo{
+    font-family: 'Noto Serif TC', serif;
+    font-size: 8px;
+    background-color: rgba(204, 235, 236, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    border-radius: 6px; 
+    margin-left: 100px;
+    margin-top: 3px;
     border: 1px solid transparent;
     outline: none;
 }
@@ -52,9 +89,9 @@ html,body,#root,.PreTimeTable{
     text-align:center;
     height:30px;
     border-radius: 6px; 
-    margin-left: 220px;
+    margin-left: 20px;
     margin-top: 1px;
-    border: 1px solid transparent;
+    border: 3px solid transparent;
     outline: none;
 }
 

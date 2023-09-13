@@ -566,10 +566,10 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                             console.log(classNum);
                             console.log(time);
                             console.log(selectedType);
-                            /*navigate("/changeClass", {
+                            navigate("/changeClass", {
                               state: {
                                 fromSearch:false,},});
-                                window.location.reload();*/
+                                window.location.reload();
                          //Form submission happens here
         }
 
@@ -746,16 +746,15 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                           studentID: userInfo,
                           h_rent : Hmoney,
                           h_people : Hpeople,
-                          address : Haddress,
                           h_region : selectedArea,
                           h_gender : rentGender,
                           h_style : selectedType,
-                          water : selectedHwater,
-                          power : selectedHpower,
+                          h_water : selectedHwater,
+                          h_power : selectedHpower,
                           h_parking : haveCar,
                           h_floor : Hfloor,
-                          h_water: HwaterMoney,
-                          h_power: HpowerMoney,
+                          h_water_money: HwaterMoney,
+                          h_power_money: HpowerMoney,
                         };
                         fetch('/rent_notification_add', {
                               method: 'POST',
@@ -764,17 +763,17 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                               },
                               body: JSON.stringify(formData)
                             })
-                            .then(response => response.json())
-                            .then(data => {
-                              console.log(data);
-                            })
+                            .then(response => {
+                              console.log(formData);
+                                  console.log(response.status);
+                                })
                             .catch(error => {
                               console.error(error);
                             });
-                            /*navigate("/rent", {
+                            navigate("/rent", {
                               state: {
                                 fromSearch:false,},});
-                                window.location.reload();*/
+                                window.location.reload();
                          //Form submission happens here
         }
 
