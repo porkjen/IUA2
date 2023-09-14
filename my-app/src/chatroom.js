@@ -1,8 +1,11 @@
 import './chatroom.css';
 import React from "react";
-import { useParams } from "react-router-dom";
+import {useEffect,useState} from "react";
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import back from './img/back.png';
+import {Back}  from './components/Style.js';
+import { Link } from 'react-router-dom';
 
 class ChatRoom extends React.Component {
    constructor(props) {
@@ -17,14 +20,17 @@ class ChatRoom extends React.Component {
        apiRoom: localStorage.getItem('nowRoom'),
        apiRoomName: localStorage.getItem('nowRoomName'),
        inputName: '', // 新增的姓名輸入狀態
+       messageData: [],
      };
 
      this.stompClient = null;
+     this.messageListRef = React.createRef();
    }
 
    componentDidMount() {
-     this.fetchData();
-     this.initializeStompClient();
+    this.fetchData();
+    this.fetchMessageData();
+    this.initializeStompClient();
    }
 
    initializeStompClient = () => {
@@ -75,6 +81,33 @@ class ChatRoom extends React.Component {
                }).catch(error =>
                   console.error(error)
                );
+      }
+
+      fetchMessageData() {
+        const { apiRoom } = this.state;
+        const queryParams = new URLSearchParams({
+          where: apiRoom 
+        });
+    
+        const url = '/loadChatRecord?' + queryParams.toString();
+    
+        const formData = {
+          "where": apiRoom
+        };
+    
+        fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            this.setState({ messageData: data });
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
 
    sendMessage = () => {
@@ -128,26 +161,52 @@ class ChatRoom extends React.Component {
      this.setState({ newMessage: event.target.value });
    };
 
+   scrollToBottom = () => {
+    // Scroll to the bottom of the message list
+    if (this.messageListRef.current) {
+      this.messageListRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    // Check if new messages have been added
+    if (prevState.messages.length !== this.state.messages.length) {
+      this.scrollToBottom(); // Scroll to the bottom when new messages arrive
+    }
+  }
+   
+
    render() {
-     const { messages, newMessage, connected, userName, apiRoomName, inputName } = this.state;
-     console.log("this.state.userName in render:", this.state.userName);
-     const Message = ({ content, isSent }) => (
-       <div className={`message ${isSent ? 'sent' : 'received'}`}>
-         {content}
-       </div>
-     );
+    const { messages, newMessage, connected, userName, apiRoomName, inputName, messageData } = this.state;
+    console.log("this.state.userName in render:", this.state.userName);
+    const Message = ({ content, isSent }) => (
+      <div className={`message ${isSent ? 'sent' : 'received'}`}>
+        {content}
+      </div>
+    );
 
      return (
      <div className="Chatroom">
        <div className="chatroom-header">
+       <Link to='/ChatRoomList'>
+              <Back src={back} alt="回上一頁" />
+          </Link>
          <h1>{this.state.apiRoomName}
          <span className="user-online">{userName} is online</span>
          </h1>
        </div>
        <div className="chatroom-messages" >
          <div className="message-list" >
-           <Message content="歡迎來到這個聊天室!" isSent={false} />
-           <Message content="嗨嗨" isSent={false} />
+           {messageData.map((message, index) => {
+               console.log("message:", message);
+               return (
+                 <Message
+                   key={index}
+                   content={message.text}
+                   isSent={message.from === userName}
+                 />
+               );
+             })}
            {messages.map((message, index) => {
                console.log("message:", message);
                return (

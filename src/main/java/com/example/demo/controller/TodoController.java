@@ -1865,6 +1865,7 @@ public class TodoController {
         for(ChatroomRecordEntity cRecord: chatRecord){
             ChatroomRecordEntity record = new ChatroomRecordEntity();
             record.setfrom(cRecord.getfrom());
+            System.out.println(record.getfrom());
             record.settext(cRecord.gettext());
             record.setatWhere(cRecord.getatWhere());
             load_chat.add(record);
