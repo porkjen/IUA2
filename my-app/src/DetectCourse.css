@@ -69,3 +69,23 @@ html,body,#root,.DetectCourse{
 .DetectCourse_delete{
     margin-left: 80%;
 }
+
+.detectedDelBtn{
+    font-family: 'Noto Serif TC', serif;
+    color: #0099CC; 
+    background: transparent; 
+    border: 2px solid #0099CC;
+    border-radius: 6px; 
+    color: black;
+    padding: 8px 16px;
+    text-align: center;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-left: 150px;
+}

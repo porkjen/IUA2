@@ -1,10 +1,8 @@
 import './chatroom.css';
 import React from "react";
+import { useParams } from "react-router-dom";
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import back from './img/back.png';
-import {Back}  from './components/Style.js';
-import { Link } from 'react-router-dom';
 
 class ChatRoom extends React.Component {
    constructor(props) {
@@ -15,7 +13,7 @@ class ChatRoom extends React.Component {
        newMessage: '',
        from:'',
        connected: false,
-       userName: '',
+       userName: localStorage.getItem('userName'),
        apiRoom: localStorage.getItem('nowRoom'),
        apiRoomName: localStorage.getItem('nowRoomName'),
        inputName: '', // 新增的姓名輸入狀態
@@ -25,6 +23,7 @@ class ChatRoom extends React.Component {
    }
 
    componentDidMount() {
+     this.fetchData();
      this.initializeStompClient();
    }
 
@@ -52,13 +51,41 @@ class ChatRoom extends React.Component {
      });
    };
 
+      fetchData() {
+          const { apiRoom } = this.state;
+          const queryParams = new URLSearchParams({
+            where: apiRoom
+          });
+
+          const url = '/updateRoom?' + queryParams.toString();
+
+          const data = {
+             "where": apiRoom
+          };
+
+          fetch(url, {
+            method: 'POST',
+             headers: {
+               'Content-Type': 'application/json'
+             },
+                body: JSON.stringify(data)
+             }).then(response => response.json())
+               .then(data => {
+                  console.log("success!!!")
+               }).catch(error =>
+                  console.error(error)
+               );
+      }
+
    sendMessage = () => {
      const { userName, apiRoom, newMessage } = this.state;
 
      if (newMessage !== '') {
        //this.stompClient.send(`/app/${apiRoom}`, {}, JSON.stringify({ from: userName, text: newMessage }));
-       console.log("sN"+userName)
-       this.stompClient.send(`/app/${apiRoom}`, {}, JSON.stringify({ from: userName, text: newMessage }));
+       console.log("I want to say1 : "+newMessage);
+       console.log("I want to say2 : "+apiRoom);
+       //const myData = localStorage.getItem('nowRoom');
+       this.stompClient.send(`/app/${apiRoom}`, {}, JSON.stringify({ from: userName, text: newMessage}));
        this.setState({ newMessage: '' });
      }
    };
@@ -113,27 +140,9 @@ class ChatRoom extends React.Component {
      return (
      <div className="Chatroom">
        <div className="chatroom-header">
-          <Link to='/ChatRoomList'>
-              <Back src={back} alt="回上一頁" />
-          </Link>
-          <div className='div1'>
-            <h1>{this.state.apiRoomName}
-              {userName ? (
-                <span className="user-online">{userName} is online</span>
-                ) : (
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Who is online?"
-                    value={inputName}
-                    onChange={this.handleNameChange}
-                  />
-                  <button onClick={this.handleNameSubmit}>Tell me!</button>
-                </div>
-                )}
-            </h1>
-         </div>
-         
+         <h1>{this.state.apiRoomName}
+         <span className="user-online">{userName} is online</span>
+         </h1>
        </div>
        <div className="chatroom-messages" >
          <div className="message-list" >
@@ -169,7 +178,3 @@ class ChatRoom extends React.Component {
    }
  }
 export default ChatRoom;
-
-//<span className="user-online">{this.state.userName} is online</span>
-//console.log("from:", this.state.from);
-//console.log("this.state.userName:", this.state.userName);

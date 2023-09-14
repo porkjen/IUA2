@@ -239,7 +239,7 @@ const PreTimeTable=()=> {
         
         useEffect(() => {
             console.log(searchCategory);
-            if (searchTerm||searchCategory) {          
+            if (searchTerm||searchCategory||searchCategory=='') {          
               fetch(`/pre_curriculum_search?category=${searchCategory}&name=${searchTerm}`)
                 .then((response) => response.json())
                 .then((data) => {

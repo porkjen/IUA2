@@ -126,6 +126,7 @@ const SignIn=()=> {
       return (
         
         <div className="SignIn">    
+        <requestPermission/>
             <div className='SignIn_bg'>
                 <div className='SignIn_signIn'>
                     <br/>
