@@ -78,6 +78,8 @@ public class TodoController {
     @Autowired
     RCourseOMajorPERepository rCourseOMajorPERepository;
     @Autowired
+    ChatroomRecordRepository chatroomRecordRepository;
+    @Autowired
     PECourseRepository peCourseRepository; //體育
     @Autowired
     ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
@@ -101,6 +103,7 @@ public class TodoController {
         //password encrypt
         String studentID = user.get("studentID");
         account = studentID;
+        todoService.setAccount(account);
         String password = user.get("password");
         pwd = password;
         System.out.println(studentID);
@@ -193,7 +196,7 @@ public class TodoController {
     }
 
     @PostMapping("/add_detect_course")
-    public ResponseEntity<String> addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{   
+    public ResponseEntity<String> addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
         DetectedCoursesList courseList = new DetectedCoursesList();
         Boolean isExist = false;
@@ -202,15 +205,15 @@ public class TodoController {
         if(dRepository.existsByStudentID(requestData.getStudentID())){
             courseList = dRepository.findByStudentID(requestData.getStudentID());
             courses = courseList.getDetectedCourses();
+            for(CourseToBeDetected c : courses){
+                if(c.getNumber().equals(requestData.getNumber())){
+                    isExist = true;
+                    break;
+                }
+            }
         }
         else{
             courseList.setStudentID(requestData.getStudentID());
-        }
-        for(CourseToBeDetected c : courses){
-            if(c.getNumber().equals(requestData.getNumber())){
-                isExist = true;
-                break;
-            }
         }
         if(!isExist){
             courses.add(requestData);
@@ -220,14 +223,41 @@ public class TodoController {
         return ResponseEntity.ok("Success");
     }
 
-    // @Scheduled(fixedRate = 5000)    //間隔5秒
-    // private static void startDetect() throws InterruptedException {
-    //     System.out.println("Start detection.");
-    //     crawler.detectCoureses(courses);
-    // }
+    @DeleteMapping("/delete_detect_course")
+    public ResponseEntity<String> deleteDetectCourse(@RequestParam("studentID") String studentID, @RequestParam("number") String number){
+        System.out.println("/delete_detect_course");
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
+        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
+        boolean isFound = false;
+        for(int i = 0; i < courses.size(); i++){
+            if(courses.get(i).getNumber().equals(number)){
+                courses.remove(i);
+                courseList.setDetectedCourse(courses);
+                dRepository.save(courseList);
+                isFound = true;
+            }
+        }
+        if(isFound){
+            System.out.println("Successfully delete!");
+            return ResponseEntity.ok("Success");
+        }
+        else{
+            System.out.println("Not found.");
+            return ResponseEntity.badRequest().body("Invalid request");
+        }
+    }
+
+    @GetMapping("/load_detect_course")
+    public ArrayList<CourseToBeDetected> loadDetectCourse(@RequestParam("studentID") String studentID){
+        System.out.println("/load_detect_course");
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
+        return courseList.getDetectedCourses();
+    }
 
     @PostMapping("/detect_course")
-    public void detectCourse(@RequestBody DetectedCoursesList courseList)throws TesseractException, IOException, InterruptedException{
+    public void detectCourse(@RequestBody String studentID)throws TesseractException, IOException, InterruptedException{
+        System.out.println("/detect_course");
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
         ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
         while(!courses.isEmpty()){
             System.out.println("Start detection.");
@@ -1826,6 +1856,22 @@ public class TodoController {
             englishCourseRepository.save(e);
         }
         System.out.println("done");
+    }
+    
+    @PostMapping("/loadChatRecord")
+    public List<ChatroomRecordEntity> loadChatRecord(@RequestParam(value = "where") String where){
+        List<ChatroomRecordEntity> load_chat = new ArrayList<>();
+        List<ChatroomRecordEntity> chatRecord = chatroomRecordRepository.findByRoom(where);
+        for(ChatroomRecordEntity cRecord: chatRecord){
+            ChatroomRecordEntity record = new ChatroomRecordEntity();
+            record.setfrom(cRecord.getfrom());
+            System.out.println(record.getfrom());
+            record.settext(cRecord.gettext());
+            record.setatWhere(cRecord.getatWhere());
+            load_chat.add(record);
+        }
+        System.out.println("Loading is finished! ->(ChatRoomRecord)");
+        return load_chat;
     }
 }
 

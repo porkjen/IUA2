@@ -22,6 +22,7 @@ function ChatRoomList() {
 
   // 從 localStorage 讀取新的聊天室資訊，但僅在頁面第一次加載時執行
     useEffect(() => {
+      fetchData();
       if (updatedChatRoomId && updatedChatRoomName) {
         const newChatRoom = {
           id: updatedChatRoomId,
@@ -36,6 +37,22 @@ function ChatRoomList() {
         }
       }
     }, []); // 空的依賴數組表示只在第一次加載時執行
+
+   function fetchData() {
+       // 执行您的fetch请求
+       fetch('/system/namecast')
+         .then(response => response.text()) // 解析 text 回應
+         .then(data => {
+           const userNameTemp = data; // 此處 data 將是 "White"
+           setUserName(userNameTemp);
+           localStorage.setItem('userName', userNameTemp);
+           console.log(userNameTemp);
+         })
+         .catch(error => {
+           console.error('Fetch error:', error);
+         });
+
+   }
 /*
   const connectWebSocket = () => {
     const socket = new SockJS('/chatroom');
@@ -128,7 +145,7 @@ return (
                     key={chatRoom.id} onClick={() => {
                       localStorage.setItem('nowRoom', chatRoom.id);
                       localStorage.setItem('nowRoomName', chatRoom.name);
-                      localStorage.setItem('userName', 'White');
+                      //localStorage.setItem('userName', 'White');
                       // connectWebSocket();
                     }}>
                   <li>
@@ -143,7 +160,6 @@ return (
           ))}
     </ul>
     </div>
-    
   </div>
 );
 

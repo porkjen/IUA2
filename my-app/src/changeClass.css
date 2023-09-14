@@ -58,6 +58,7 @@
     justify-content:space-between;
   }
 
+
 .changeClassBtn{
     font-family: 'Noto Serif TC', serif;
     border-radius: 5px;
@@ -65,3 +66,5 @@
     background-color: transparent;
     box-sizing: 1px;
 }
+
+

@@ -14,15 +14,61 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { onLogin } from "./cookie.js";
 import { setAuthToken } from "./utils";
+import { getMessaging, getToken } from "firebase/messaging";
 
 const SignIn=()=> {
 
     let navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['token']);
+    const [error, setError] = useState(false);
+
+    function resetUI(){
+      // Get registration token. Initially this makes a network call, once retrieved
+      // subsequent calls to getToken will return from cache.
+      const messaging = getMessaging();
+      getToken(messaging, { vapidKey: 'BEKPWgmGQLVbo8wj_8_AmRSB-T2UOpgX-HYIrOYYKDLteQx8syLkeb8vrL8PhHdPE4iQNYhbzf7hqYAnHkx6X2U' }).then((currentToken) => {
+        if (currentToken) {
+          // Send the token to your server and update the UI if necessary
+          // ...
+        } else {
+          // Show permission request UI
+          console.log('No registration token available. Request permission to generate one.');
+          // ...
+        }
+      }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+        // ...
+      });
+    }
+
+    function requestPermission() {
+      console.log('Requesting permission...');
+      Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+          console.log('Notification permission granted.');
+          resetUI();
+      } else {
+          console.log('Unable to get permission to notify.');
+        }
+      });
+    }
+
+
+    function ErrorPassword(){
+      return(
+        <div className='signIn_error'>
+          <div className='error_text'>密碼錯誤!請重試</div><br/>
+          <Link to="/signIn">
+            <button className='signIn_error_yes' onClick={setError(false)}>確定</button>
+          </Link>
+        </div>
+      );
+    }
 
     function SignIn() {
       const [student_id, setStudent_id] = useState("");
       const [password, setPassword] = useState("");
+      const [waiting, setWaiting] = useState(false);
       const [responseStatus, setResponseStatus] = useState("");
       const navigate = useNavigate();
       const handleStudent_idChange = (event) => {
@@ -34,7 +80,8 @@ const SignIn=()=> {
       };
       const handleSubmit = (e) => {
         e.preventDefault();
-        alert(`The name you entered was: ${student_id}`);
+        //alert(`The name you entered was: ${student_id}`);
+        setWaiting(true);
         const formData = {
                         studentID: student_id,
                         password: password,
@@ -53,6 +100,7 @@ const SignIn=()=> {
                             }
                             else if(response.status==400){
                               alert("輸入錯誤");
+                              setError(true);
                             }
                             else if(response.status==201){
                               navigate('/nickName', {
@@ -76,20 +124,23 @@ const SignIn=()=> {
          
       }
       return (
+        
         <div className="SignIn">    
+        <requestPermission/>
             <div className='SignIn_bg'>
                 <div className='SignIn_signIn'>
-                    <div className="SignIn_title">
-                        
+                    <br/>
+                    {!waiting && !error &&
+                    <div>
+                      <div className="SignIn_title">
                         <div className="SignIn_title-img">
                             <img src={Signlogo} alt="IUA" />
                         </div>
                         <div className="SignIn_title-text">
                             <img src={signIn} alt="IUA" />
                         </div>
-                    </div>
-                    <br/>
-                    <form className="SignIn_submitForm" onSubmit={handleSubmit}>
+                     </div>
+                      <form className="SignIn_submitForm" onSubmit={handleSubmit}>
                         <label>學號:</label><br/>
                         <input type="text" name="student_id" 
                         onChange={handleStudent_idChange}
@@ -106,7 +157,26 @@ const SignIn=()=> {
                                 <span className="button_text">登入</span>
                             </button>
                         </div>
-                    </form>
+                      </form>
+                    </div>
+
+                      
+                    }
+                    {waiting && !error &&
+                      <div className='LoadingText'>
+                          <div class="preloader">
+                            Loading
+                            <div class="dot1"></div>
+                            <div class="dot2"></div>
+                            <div class="dot3"></div>
+                          </div>
+                    </div>
+                    }
+                    {error && 
+                      <ErrorPassword/>
+                    }
+
+                    
                 </div>
                     <div className="SignIn_img1">
                         <img src={cat1} alt="IUA" />

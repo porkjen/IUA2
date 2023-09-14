@@ -50,10 +50,17 @@ const Rent=()=> {
                   .catch(error => {
                         console.error(error);});
                        //Form submission happens here
-            navigate("/rentArticle", {
-              state: {
-                postId : postID,
-                fromRent:true},});
+              navigate("/rentArticle", {
+                state: {
+                  postId : postID,
+                  fromRent:true,
+                  fromSearch:fromSearch,
+                  RSArea:RSArea,
+                  RSGender:RSGender,
+                  RSPeople:RSPeople,
+                  RSType:RSType,
+                  RSCar:RSCar},});
+            
       }
 
         return (
@@ -84,6 +91,17 @@ const Rent=()=> {
           setRentSelect(false);
           setRentNotification(true);
         }
+        else if(event.target.value==='AllArticle'){
+          fetch(`/rent_search?area=&gender=&people=&style=&car=`)
+              .then(response => response.json())
+              .then(data => {
+                console.log(data);
+                setData(data);
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+        }
 
       };
 
@@ -98,6 +116,7 @@ const Rent=()=> {
                 </Link>
                 <ChangeClassCategorySelect onChange={handleRentFunctionSelect}>
                   <option >功能選單</option>
+                  <option value='AllArticle'>全部貼文</option>
                   <option value='selectArticle'>篩選貼文</option>
                   <option value='setNotification'>設置提醒</option>
                 </ChangeClassCategorySelect>

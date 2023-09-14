@@ -17,7 +17,7 @@ import { getAuthToken } from "./utils";
 const PostArticle=()=> {
     let navigate = useNavigate();
     const location = useLocation();
-    const { studentID, changeClassClassName, changeClassClassTeacher, changeClassClassTime,IsChangeClass,changeClassCategory } = location.state || {};
+    const { ArticleAS, changeClassClassName, changeClassClassTeacher, changeClassClassTime,IsChangeClass,changeClassCategory } = location.state || {};
 
     const userInfo = loginUser();
     const token = getAuthToken();
@@ -32,12 +32,12 @@ const PostArticle=()=> {
         const [FtimeFriday, setFtimeFriday] = useState("");
         const [FtimeSaturday, setFtimeSaturday] = useState("");
         const [FtimeSunday, setFtimeSunday] = useState("");
-        const [Farea, setFarea] = useState("");
+        const [Farea, setFarea] = useState("中正區");
         const [Froad, setFroad] = useState("");
         const [Faddress, setFaddress] = useState("");
         const [Finfo, setFinfo] = useState("");
         const [FLink, setFLink] = useState("");
-        const [Frate, setFrate] = useState("");
+        const [Frate, setFrate] = useState("1");
 
         const openTime = ["星期一:"+FtimeMonday,"星期二:"+FtimeTuesday,"星期三:"+FtimeWednesday,"星期四:"+FtimeThursday,"星期五:"+FtimeFriday,"星期六:"+FtimeSaturday,"星期日:"+FtimeSunday];
 
@@ -124,7 +124,8 @@ const PostArticle=()=> {
                          //Form submission happens here
                          navigate("/food", {
                           state: {
-                            fromSearch:false,},});
+                            fromSearch:false,
+                            ArticleAS:ArticleAS},});
         }
        
         return (

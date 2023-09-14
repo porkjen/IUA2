@@ -6,9 +6,9 @@ import back from './img/back.png';
 import cat from './img/SignIn4.PNG';
 import {Back}  from './components/Style.js';
 import {ArticleDetailPage, ArticleDetailPosition, ArticleDetailAuthor, ArticleDetailAuthorArea, ArticleDetailAuthorImg, 
-  ArticleDetailTitle, ArticleDetailPostDate, ArticleDetailText, ButtonContainer, ArticleDetailNormalBtn, ArticleDetailSavedBtn, 
+  ArticleDetailTitle, ArticleDetailPostDate, ButtonContainer, ArticleDetailNormalBtn, ArticleDetailSavedBtn, 
   ArticleDetailAlreadySavedBtn, ArticleDetailContactdBtn}  from './components/ArticleDetailStyle.js';
-import{Page, Pagebg, CommentList, CommentText, CommentContainer, CommentAuthor, CommentBody, CommentTimeRating, CommentRating} from './components/CommentStyle.js';
+import{CommentText, CommentContainer, CommentAuthor, CommentBody} from './components/CommentStyle.js';
 import { Routes ,Route,useLocation,useNavigate } from 'react-router-dom';
 import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
@@ -23,7 +23,7 @@ const RentArticle=()=> {
     const [isCreator, setIsCreator] = useState(false);
     const [isRentSaved, setIsRentSaved] = useState(false);
     const [isRentDelete, setIsRentDelete] = useState(false);
-    const {postId,fromRent,fromMyPost } = location.state;
+    const {postId,fromRent,fromMyPost,fromSearch,RSArea, RSGender, RSPeople, RSType, RSCar  } = location.state;
     const userInfo = loginUser();
     const token = getAuthToken();
 
@@ -78,14 +78,7 @@ const RentArticle=()=> {
             postId : postId,
           };
 
-        const [RComment, setRComment] = useState("");
-        const handleRCommentChange = event => {
-            setRComment(event.target.value);
-        };
-
-        const commentData = {
-
-        };
+       
 
         useEffect(() => {
             if (!data) {
@@ -229,7 +222,12 @@ const RentArticle=()=> {
             e.preventDefault();
             navigate("/rent", {
               state: {
-                fromSearch:false,},});
+                fromSearch:fromSearch,
+                RSArea:RSArea,
+                RSGender:RSGender,
+                RSPeople:RSPeople,
+                RSType:RSType,
+                RSCar:RSCar},});
           }
           const handleBackToFavoriteSubmit = (e) => {
             e.preventDefault();
