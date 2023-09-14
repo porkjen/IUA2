@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -74,6 +75,10 @@ public class getData {
             FoodEntity restaurant = new FoodEntity();
             restaurant.setStore(resultsArray.getJSONObject(i).getString("name"));//restaurant
             placeID = resultsArray.getJSONObject(i).getString("place_id");
+            double lat = resultsArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+            restaurant.setLatitude(lat);
+            double lng = resultsArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+            restaurant.setLongitude(lng);
             //rating
             if (!resultsArray.getJSONObject(i).has("rating")) restaurant.setRating(0);
             else restaurant.setRating(resultsArray.getJSONObject(i).getDouble("rating"));
@@ -125,14 +130,6 @@ public class getData {
                     restaurant.setReview(userReview);
                 }
             }
-            /*String add = restaurant.getAddress();
-            System.out.println(add);
-            if((add.contains("路")||add.contains("街"))&&add.contains("區")){
-                String roadName = add.split("路|街")[0].split("區")[1];
-                if(add.contains("路")) roadName+="路";
-                else roadName+="街";
-                restaurant.setRoad(roadName);
-            }*/
             restaurant.setStudentID("IUA");
             restaurant.setNickname("IUA");
             restaurant.setPost_time(DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()));

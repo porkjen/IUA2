@@ -1,9 +1,6 @@
 import './timeTable.css';
 import React from 'react';
-import dialog from './img/chatBubble.png';
-import cookie from './img/cookie.png';
-import toast from './img/toast.png';
-import cat1 from './img/SignIn1.png';
+import Modal from "./components/Modal";
 import cat2 from './img/SignIn2.PNG';
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
@@ -13,6 +10,9 @@ import {useState, useEffect} from "react";
 import { loginUser } from './cookie';
 import { useCookies } from 'react-cookie';
 import { getAuthToken } from "./utils";
+import {ChangeClassCategorySelect}  from './components/ArticleStyle.js';
+import { Page, Pagebg, Title,ArticleContainer} from './components/ArticleStyle.js';
+import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody } from './components/Style.js';
 
 const TimeTable=()=> {
 
@@ -22,7 +22,10 @@ const TimeTable=()=> {
         const userInfo = loginUser();
         const location = useLocation();
         const [data, setData] = useState(null);
-        const [student_id, setStudent] = useState(null);
+        const [openModal, setOpenModal] = useState(false);
+        const [courseName, setCourseName] = useState('');
+        const [tt, setTT] = useState(true);
+        const [Info, setInfo] = useState(false);
         const [cookies, setCookie] = useCookies(['token']);
         const token = getAuthToken();
 
@@ -84,6 +87,10 @@ const TimeTable=()=> {
             const timeSlotsSun = [
                 '701', '702', '703', '704', '705', '706', '707', '708', '709', '710', '711', '712', '713', '714'
             ];
+
+            const handleButtonClick = (event) => {
+              
+           };
           
             for (let i = 0; i < timeSlots.length; i++) {
               const timeSlot = timeSlots[i];
@@ -173,15 +180,57 @@ const TimeTable=()=> {
             return timeLabels[timeSlot] || '';
           }
 
+
+
+          const handleTTFunctionSelect  = event => {
+
+            if(event.target.value==='timeTable'){
+              setTT(true);
+              setInfo(false);
+            }
+            else if(event.target.value==='courseInfo'){
+              setInfo(true);
+              setTT(false);
+            }
+    
+          };
+
+          function handleCourseSelect(CName) {
+            setCourseName(CName);
+            setOpenModal(true);
+          };
+
+          function CourseList({ list }) {
+            return (
+                <RemainList>
+                    <ArticleContainer>
+                        {list.map((item, index) => (
+                            <RemainBody key={index}>
+                                <RemainText>{item.name}&nbsp;<br/><button className='courseInfo' onClick={() => handleCourseSelect(item.name)}>課程資訊</button></RemainText>
+                            </RemainBody>
+                        ))}
+                    </ArticleContainer>
+                </RemainList>
+            );
+        }
+
         
       
       return (
-
-        <div className="TimeTable">    
-        <Link to='/CourseSelection'>
+        <div className="TimeTable">  
+        {openModal && <Modal closeModal={setOpenModal} type={"courseInfo"} CName={courseName}/> } 
+        {!openModal &&  
+          <Link to='/CourseSelection'>
               <Back src={back} alt="回上一頁" />
           </Link>
-            <div className="TimeTablebg">
+        }
+        {!openModal &&
+          <div className="TimeTablebg">
+                <select className='timeTableSelect' onChange={handleTTFunctionSelect}>
+                <option>功能選單</option>
+                  <option value='timeTable'>課表</option>
+                  <option value='courseInfo'>課程資訊</option>
+                </select>
                 <div className="TimeTable_draw"> 
                         <img src={cat2} alt="IUA"  className="TimeTableCat2"/>
                     <div className="TimeTable_title">
@@ -190,9 +239,8 @@ const TimeTable=()=> {
                 </div>
 
                 <br/>
-                
-
-                <div className="timeTable_info_place">
+                {tt &&
+                  <div className="timeTable_info_place">
                     <table className="timeTable_info">
                     <tr>
                             <th>時間</th>
@@ -206,8 +254,16 @@ const TimeTable=()=> {
                     </tr>
                     {generateTableRows()}
                     </table>
-                </div>
+                  </div>
+                }
+                {Info && 
+                  <CourseList list={data} />
+                }
+                
             </div>
+
+        }
+            
         </div>
       );
     }

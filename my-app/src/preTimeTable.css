@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=PT+Serif&family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=EB+Garamond:wght@500&family=PT+Serif&family=Permanent+Marker&display=swap');
+
+
+html,body,#root,.PreTimeTable{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+
+.PreTimeTable{
+    /*background-image: url("img/background.PNG");*/
+    background-position: center;
+    background-repeat: repeat-y;
+    background-size: auto;
+    background-color: 	#EDF4FF;
+}
+
+.preCategorySelect{
+    font-family: 'Noto Serif TC', serif;
+    margin-left: 10%;
+    height: 30px;
+    border-radius: 5px;
+    width: 300px;
+    margin-top: 40%;
+}
+
+.PreTimeTable_input{
+    font-family: 'Noto Serif TC', serif;
+    margin-left: 10%;
+    height: 30px;
+    border-radius: 5px;
+    width: 300px;
+    margin-top: 10px;
+}
+
+.preInfol{
+    font-family: 'Noto Serif TC', serif;
+    font-size: 8px;
+    background-color: rgba(204, 235, 236, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    border-radius: 6px; 
+    margin-left: 60px;
+    margin-top: 1px;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.preInfor{
+    font-family: 'Noto Serif TC', serif;
+    font-size: 8px;
+    background-color: rgba(204, 235, 236, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    border-radius: 6px; 
+    margin-left: 10px;
+    margin-top: 1px;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.preShowInfo{
+    font-family: 'Noto Serif TC', serif;
+    font-size: 8px;
+    background-color: rgba(204, 235, 236, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    border-radius: 6px; 
+    margin-left: 100px;
+    margin-top: 3px;
+    border: 1px solid transparent;
+    outline: none;
+}
+
+.preDel{
+    font-family: 'Noto Serif TC', serif;
+    font-size: 8px;
+    background-color: rgba(204, 235, 236, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    border-radius: 6px; 
+    margin-left: 20px;
+    margin-top: 1px;
+    border: 3px solid transparent;
+    outline: none;
+}
+
+.preInfo:active{
+    background-color: rgba(185, 210, 250, 0.951);
+}
+
+
+.preDel:active{
+    background-color: rgba(185, 210, 250, 0.951);
+}
+
+.preTtimeTableSelect{
+    font-family: 'Noto Serif TC', serif;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: transparent; 
+    padding: 10px;
+    width: 100px;
+    height: 40px;
+    margin-left: 68%;
+    position: absolute;
+    margin-top: 25%;
+    z-index: 2;
+}
+
+.preTable_day{
+    padding-top: 30%;
+}
+
+.preDay{
+    font-family: 'Noto Serif TC', serif;
+    background-color: white;
+    color: black;
+    border-radius: 3px;
+    
+    height: 30px;
+    margin-top: 10px;
+   
+}

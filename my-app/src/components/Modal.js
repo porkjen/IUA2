@@ -43,7 +43,7 @@ function ChooseArticle(){
 
 
 
-function Modal({closeModal, type, postId, comment, alreadyComment, studentID, time, rating, ArticleAS}){
+function Modal({closeModal, type, postId, comment, alreadyComment, studentID, time, rating, ArticleAS, CName}){
 
     let navigate = useNavigate();
     const [isModalFood, setisModalFood] = useState(true);
@@ -58,6 +58,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     const [isMeRating, setisMeRating] = useState(false);
     const [isAlreadyComment, setIsAlreadyComment] = useState(false);
     const [confirm, setConfirm] = useState(false);
+    const [courseInfo, setCourseInfo] = useState(false);
     const [noData, setNoData] = useState(false);
     const token = getAuthToken();
     const userInfo = loginUser();
@@ -186,7 +187,8 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                     fromSearch:true,
                     FArea:FSArea,
                     FName:FSName,
-                    FAddr:FSAddress,},});
+                    FAddr:FSAddress,
+                    ArticleAS:ArticleAS,},});
                     //closeModal(false);
                     window.location.reload();
           }
@@ -303,14 +305,36 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
           e.preventDefault();
           //const student_id = loginUser();
           setConfirm(true);
-          
-        
+        }
+
+        const handleClassPostStatusSubmit = (e) => {
+          e.preventDefault();
+          const formData = {
+            studentID: userInfo,
+            postId:postId,
+          };
+          fetch('/change_post_status', {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+              })
+              .then(response => response.status)
+              .then(data => {
+                console.log(data);
+                closeModal(false);
+              })
+              .catch(error => {
+                console.error(error);
+              });
         }
 
 
       return(
-             <div><br/>
-              <label>發文者:&ensp;{data.studentID}</label><br/>
+             <div>
+             {isCreator && <button className='alreadyChangeBtn' onClick={handleClassPostStatusSubmit}>換課完成</button>}
+             <label>發文者:&ensp;{data.studentID}</label><br/>
               <label>標題:&ensp;{data.course}</label><br/>
               <label>課程分類:&ensp;{data.category}</label><br/>
               <label>課程老師:&ensp;{data.teacher}</label><br/>
@@ -339,6 +363,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClassArticle(false);
         setisModalChangeClassNotification(false);
         setisModalRentNotification(false);
+        setCourseInfo(false);
       } else if (type === "food") {
         setisModalFood(true);
         setIsModalRent(false);
@@ -355,6 +380,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClassArticle(false);
         setisModalChangeClassNotification(false);
         setisModalRentNotification(false);
+        setCourseInfo(false);
       }
       else if (type === "rating") {
         setisModalFood(false);
@@ -364,6 +390,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClassArticle(false);
         setisModalChangeClassNotification(false);
         setisModalRentNotification(false);
+        setCourseInfo(false);
         setisPostId(postId)
         setisComment(comment);
         setIsAlreadyComment(alreadyComment);
@@ -376,6 +403,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClassArticle(true);
         setisModalChangeClassNotification(false);
         setisModalRentNotification(false);
+        setCourseInfo(false);
         setisPostId(postId)
         //setisComment(comment);
         //setIsAlreadyComment(alreadyComment);
@@ -388,6 +416,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClassArticle(false);
         setisModalChangeClassNotification(true);
         setisModalRentNotification(false);
+        setCourseInfo(false);
       }
       else if (type === "setRentNotification") {
         setisModalFood(false);
@@ -397,6 +426,17 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         setisModalChangeClassArticle(false);
         setisModalChangeClassNotification(false);
         setisModalRentNotification(true);
+        setCourseInfo(false);
+      }
+      else if (type === "courseInfo") {
+        setisModalFood(false);
+        setIsModalRent(false);
+        setisModalChangeClass(false);
+        setisRating(false);
+        setisModalChangeClassArticle(false);
+        setisModalChangeClassNotification(false);
+        setisModalRentNotification(false);
+        setCourseInfo(true);
       }
     }, [type]);
 
@@ -504,24 +544,28 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
           //const student_id = loginUser();
           const formData = {
             studentID: userInfo,
-            calssNum : "123456",
-            time : "45",
-            type : selectedType,
+            number : classNum,
+            time : time,
+            category : selectedType,
           };
                         fetch('/exchange_notification_add', {
                               method: 'POST',
                               headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': `${token}`
                               },
                               body: JSON.stringify(formData)
                             })
-                            .then(response => response.json())
-                            .then(data => {
-                              console.log(data);
-                            })
+                            .then(response => {
+                              console.log(formData);
+                                  console.log(response.status);
+                                })
                             .catch(error => {
                               console.error(error);
                             });
+                            console.log(classNum);
+                            console.log(time);
+                            console.log(selectedType);
                             navigate("/changeClass", {
                               state: {
                                 fromSearch:false,},});
@@ -560,40 +604,6 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
         };
 
 
-        function TimeTypeNotification(){
-          return(
-            <div>
-                  <label>分類:</label>
-                    <input type="checkbox" id='required' value='必修' name='selectedType[]' onChange={handleTypeChange} ></input>
-                    <label for="required">必修</label>
-                    <input type="checkbox" id='optional' value='選修' name='selectedType[]' onChange={handleTypeChange}></input>
-                    <label for="optional">選修</label>
-                    <input type="checkbox" id='general' value='通識' name='selectedType[]' onChange={handleTypeChange}></input>
-                    <label for="general">通識</label><br/>
-                    <input type="checkbox" id='language' value='第二外語' name='selectedType[]' onChange={handleTypeChange} ></input>
-                    <label for="language">第二外語</label>
-                    <input type="checkbox" id='eng' value='英文' name='selectedType[]' onChange={handleTypeChange}></input>
-                    <label for="eng">英文</label>
-                    <input type="checkbox" id='pe' value='體育' name='selectedType[]' onChange={handleTypeChange}></input>
-                    <label for="pe">體育</label>
-                  
-                    <div>
-                    <label>時間:&emsp;</label>
-                    <input type='text' className='changeClassNotificationFormTimeInput' value={time} onChange={handleTime}></input>
-                    </div>
-            </div>
-          );
-        }
-
-        function ClassNumNotification(){
-          return(
-              <div>
-                  <label>課號:&emsp;</label>
-                  <input type='text' className='changeClassNotificationFormTimeInput' value={classNum} onChange={handleClassNum}></input>
-              </div>
-          );
-        }
-
          return(
             <form className='classNotificationForm' onSubmit={handleClassNotificationSubmit}>
                 <h2 className='modal_tilte'>設置提醒</h2>
@@ -608,13 +618,38 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                 </div><br/>
 
                 <div className='modalBodyText'>
-                  {typeTime && <TimeTypeNotification/>}
-                  {classNumber && <ClassNumNotification/>}
+                  {typeTime && 
+                    <div>
+                      <label>分類:</label>
+                        <input type="checkbox" id='required' value='必修' name='selectedType[]' onChange={handleTypeChange} checked={selectedType.includes('必修')}></input>
+                        <label for="required">必修</label>
+                        <input type="checkbox" id='optional' value='選修' name='selectedType[]' onChange={handleTypeChange} checked={selectedType.includes('選修')}></input>
+                        <label for="optional">選修</label>
+                        <input type="checkbox" id='general' value='通識' name='selectedType[]' onChange={handleTypeChange} checked={selectedType.includes('通識')}></input>
+                        <label for="general">通識</label><br/>
+                        <input type="checkbox" id='language' value='第二外語' name='selectedType[]' onChange={handleTypeChange}  checked={selectedType.includes('第二外語')}></input>
+                        <label for="language">第二外語</label>
+                        <input type="checkbox" id='eng' value='英文' name='selectedType[]' onChange={handleTypeChange} checked={selectedType.includes('英文')}></input>
+                        <label for="eng">英文</label>
+                        <input type="checkbox" id='pe' value='體育' name='selectedType[]' onChange={handleTypeChange} checked={selectedType.includes('體育')}></input>
+                        <label for="pe">體育</label>
+                      
+                        <div>
+                        <label>時間:&emsp;</label>
+                        <input type='text' className='changeClassNotificationFormTimeInput' value={time} onChange={handleTime}></input>
+                        </div>
+                    </div>}
+                  {classNumber && 
+                  <div>
+                    <label>課號:&emsp;</label>
+                    <input type='text' className='changeClassNotificationFormTimeInput' value={classNum} onChange={handleClassNum}></input>
+                  </div>
+                  }
                 </div>
                 <ModalSubmitBtn type='submit'>確認</ModalSubmitBtn>
             </form>
          );
-      }
+    }
 
 
     function SetRentNotification(){
@@ -709,18 +744,17 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
        
           const formData = {
                           studentID: userInfo,
-                          money : Hmoney,
-                          people : Hpeople,
-                          address : Haddress,
-                          area : selectedArea,
-                          gender : rentGender,
-                          style : selectedType,
-                          water : selectedHwater,
-                          power : selectedHpower,
-                          car : haveCar,
-                          floor : Hfloor,
-                          HwaterMoney: HwaterMoney,
-                          HpowerMoney: HpowerMoney,
+                          h_rent : Hmoney,
+                          h_people : Hpeople,
+                          h_region : selectedArea,
+                          h_gender : rentGender,
+                          h_style : selectedType,
+                          h_water : selectedHwater,
+                          h_power : selectedHpower,
+                          h_parking : haveCar,
+                          h_floor : Hfloor,
+                          h_water_money: HwaterMoney,
+                          h_power_money: HpowerMoney,
                         };
                         fetch('/rent_notification_add', {
                               method: 'POST',
@@ -729,10 +763,10 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                               },
                               body: JSON.stringify(formData)
                             })
-                            .then(response => response.json())
-                            .then(data => {
-                              console.log(data);
-                            })
+                            .then(response => {
+                              console.log(formData);
+                                  console.log(response.status);
+                                })
                             .catch(error => {
                               console.error(error);
                             });
@@ -775,19 +809,19 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
             </div>
             <div className='rentNotificationInputAreaCheckBox'>
             <label>地區:</label><br/>
-            <input type="checkbox" id='Zhong' value='中正區' name='selectedType[]' onChange={handleHareaChange} ></input>
+            <input type="checkbox" id='Zhong' value='中正區' name='selectedArea[]' onChange={handleHareaChange} ></input>
               <label for="Zhong">中正區</label>
-              <input type="checkbox" id='Xing' value='信義區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <input type="checkbox" id='Xing' value='信義區' name='selectedArea[]' onChange={handleHareaChange}></input>
               <label for="Xing">信義區</label>
-              <input type="checkbox" id='Ren' value='仁愛區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <input type="checkbox" id='Ren' value='仁愛區' name='selectedArea[]' onChange={handleHareaChange}></input>
               <label for="Ren">仁愛區</label><br/>
-              <input type="checkbox" id='Zhongshan' value='中山區' name='selectedType[]' onChange={handleHareaChange} ></input>
+              <input type="checkbox" id='Zhongshan' value='中山區' name='selectedArea[]' onChange={handleHareaChange} ></input>
               <label for="Zhongshan">中山區</label>
-              <input type="checkbox" id='Anle' value='安樂區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <input type="checkbox" id='Anle' value='安樂區' name='selectedArea[]' onChange={handleHareaChange}></input>
               <label for="Anle">安樂區</label>
-              <input type="checkbox" id='warm' value='暖暖區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <input type="checkbox" id='warm' value='暖暖區' name='selectedArea[]' onChange={handleHareaChange}></input>
               <label for="warm">暖暖區</label><br/>
-              <input type="checkbox" id='Qidu' value='七堵區' name='selectedType[]' onChange={handleHareaChange}></input>
+              <input type="checkbox" id='Qidu' value='七堵區' name='selectedArea[]' onChange={handleHareaChange}></input>
               <label for="Qidu">七堵區</label>
             </div>
             <div className='rentNotificationInput'>
@@ -825,6 +859,48 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
             <ModalNotificationSubmitBtn type="submit">確認</ModalNotificationSubmitBtn>
             </div>
         </form>
+      );
+    }
+
+    function CourseInfo(){
+      const [data, setData] = useState("");
+      useEffect(() => {
+        if (!data) {
+        fetch(`/curriculum_search_detail?studentID=${userInfo}&Cname=${CName}`, {
+          headers: {
+            'Authorization': `${token}`  // 將 token 添加到請求頭中
+          }
+        })
+        .then(response => {
+          console.log(response.status);
+          if (response.status === 200) {
+            
+            return response.json(); // 解析回應為 JSON
+          } else {
+            throw new Error('Unauthorized'); // 或者在其他狀況處理錯誤
+          }
+        })
+        .then(data => {
+          console.log(data);
+          setData(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });}
+      }, [data]); // 添加依賴項data
+      
+      return(
+             <div>
+              <label className='courseLabel'>課程名稱:&ensp;{data.name}</label><br/>
+              <label className='courseLabel'>課號:&ensp;{data.classNum}</label><br/>
+              <label className='courseLabel'>課程分類:&ensp;{data.category}</label><br/>
+              <label className='courseLabel'>課程老師:&ensp;{data.teacher}</label><br/>
+              <label className='courseLabel'>課程時間:&ensp;{data.time}</label><br/>
+              <label className='courseLabel'>課程地點:&ensp;{data.classroom}</label><br/>
+              <label className='courseLabel'>課程目標:&ensp;<br/>{data.target}</label><br/>
+              <label className='courseLabel'>評分方式:&ensp;<br/>{data.evaluation}</label><br/>
+              <label className='courseLabel'>課程內容:&ensp;<br/>{data.syllabus}</label><br/><br/>
+             </div>
       );
     }
 
@@ -872,16 +948,19 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                 <button className='modal_no' onClick={handleCancelRemovedClassPostSubmit}>取消</button>
               </div>
       );
-  }
+    }
 
     
     
 
     return(
-        <div className="modalBackground">
+      <div>
+        {!courseInfo &&
+          <div className="modalBackground">
             {isRating && <RatingFood/>}
             {!isRating && <ChooseArticle/>}
-            <div className="modalContainer">
+            {!courseInfo && 
+              <div className="modalContainer">
                 <button className='modalClose' onClick={() => closeModal(false)}>X</button>
                 <div className="modalTitle">
                     <div className="modalBody">
@@ -895,7 +974,23 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                     </div>
                 </div>
             </div>
+            }
+        </div>}
+        {courseInfo &&
+        <div className="modalCourseInfoBackground">
+              <ChooseArticle/>
+              <div className="modalCourseInfoContainer">
+              <button className='modalClose' onClick={() => closeModal(false)}>X</button>
+              <div className="modalTitle">
+                  <div className="modalBody">
+                      {courseInfo && <CourseInfo/>}
+                  </div>
+              </div>
+          </div>
         </div>
+            }
+      </div>
+        
 
     );
 }

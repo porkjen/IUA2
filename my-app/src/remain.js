@@ -7,8 +7,7 @@ import back from './img/back.png';
 import {Back}  from './components/Style.js';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
-import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleDCText, ArticleText, ArticlePostTimeRating,
-    ArticleContainer, ArticleFoodContainer, ArticleAuthor, ArticlePostTime, ArticlePostRating, ArticleBody } from './components/ArticleStyle.js';
+import { Page, Pagebg, Title,ArticleContainer} from './components/ArticleStyle.js';
 import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody } from './components/Style.js';
 import { onLogin } from "./cookie.js";
 import { loginUser } from './cookie';

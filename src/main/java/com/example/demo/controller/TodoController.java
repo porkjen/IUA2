@@ -103,6 +103,7 @@ public class TodoController {
         //password encrypt
         String studentID = user.get("studentID");
         account = studentID;
+        todoService.setAccount(account);
         String password = user.get("password");
         pwd = password;
         System.out.println(studentID);
@@ -195,7 +196,7 @@ public class TodoController {
     }
 
     @PostMapping("/add_detect_course")
-    public ResponseEntity<String> addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{   
+    public ResponseEntity<String> addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
         ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
         DetectedCoursesList courseList = new DetectedCoursesList();
         Boolean isExist = false;
@@ -1744,66 +1745,72 @@ public class TodoController {
     }
 
     @GetMapping("/pre_curriculum_search")
-    public List<CourseDTO> preCurriculumSearch(@RequestParam("name") String name, @RequestParam("category") String category){
+    public List<?> preCurriculumSearch(@RequestParam("name") String name, @RequestParam("category") String category){
         List<CourseDTO> courseDTOList = new ArrayList<>();
-        List<GeneralCourseEntity> generalCourseEntityList = generalRepository.findByNameContaining(name);
-        for(GeneralCourseEntity g : generalCourseEntityList){
-            CourseDTO courseDTO = new CourseDTO();
-            courseDTO.setName(g.getName());
-            courseDTO.setCategory(g.getCategory());
-            courseDTO.setClassNum(g.getClassNum());
-            courseDTO.setTeacher(g.getTeacher());
-            courseDTO.setTime(g.getTime().split(","));
-            courseDTO.setClassroom(g.getClassroom());
-            courseDTO.setTarget(g.getTarget());
-            courseDTO.setEvaluation(g.getEvaluation());
-            courseDTO.setSyllabus(g.getSyllabus());
-            courseDTOList.add(courseDTO);
+        if(Objects.equals(category, "general")||Objects.equals(category, "")){
+            List<GeneralCourseEntity> generalCourseEntityList = generalRepository.findByNameContaining(name);
+            for(GeneralCourseEntity g : generalCourseEntityList){
+                CourseDTO courseDTO = new CourseDTO();
+                courseDTO.setName(g.getName());
+                courseDTO.setCategory(g.getCategory());
+                courseDTO.setClassNum(g.getClassNum());
+                courseDTO.setTeacher(g.getTeacher());
+                courseDTO.setTime(g.getTime().split(","));
+                courseDTO.setClassroom(g.getClassroom());
+                courseDTO.setTarget(g.getTarget());
+                courseDTO.setEvaluation(g.getEvaluation());
+                courseDTO.setSyllabus(g.getSyllabus());
+                courseDTOList.add(courseDTO);
+            }
         }
+        if(Objects.equals(category, "PE")||Objects.equals(category, "")){
+            List<PECourseEntity> peCourseEntityList = peCourseRepository.findByNameContaining(name);
+            for(PECourseEntity pe : peCourseEntityList){
+                CourseDTO courseDTO = new CourseDTO();
+                courseDTO.setName(pe.getName());
+                courseDTO.setClassNum(pe.getClassNum());
+                courseDTO.setCategory(pe.getCategory());
+                courseDTO.setTeacher(pe.getTeacher());
+                courseDTO.setTime(pe.getTime());
+                courseDTO.setClassroom(pe.getClassroom());
+                courseDTO.setTarget(pe.getTarget());
+                courseDTO.setEvaluation(pe.getEvaluation());
+                courseDTO.setSyllabus(pe.getSyllabus());
+                courseDTOList.add(courseDTO);
 
-        List<PECourseEntity> peCourseEntityList = peCourseRepository.findByNameContaining(name);
-        for(PECourseEntity pe : peCourseEntityList){
-            CourseDTO courseDTO = new CourseDTO();
-            courseDTO.setName(pe.getName());
-            courseDTO.setClassNum(pe.getClassNum());
-            courseDTO.setCategory(pe.getCategory());
-            courseDTO.setTeacher(pe.getTeacher());
-            courseDTO.setTime(pe.getTime());
-            courseDTO.setClassroom(pe.getClassroom());
-            courseDTO.setTarget(pe.getTarget());
-            courseDTO.setEvaluation(pe.getEvaluation());
-            courseDTO.setSyllabus(pe.getSyllabus());
-            courseDTOList.add(courseDTO);
-
+            }
         }
-        List<EnglishCourseEntity> englishCourseEntityList = englishCourseRepository.findByNameContaining(name);
-        for(EnglishCourseEntity en : englishCourseEntityList){
-            CourseDTO courseDTO = new CourseDTO();
-            courseDTO.setName(en.getName());
-            courseDTO.setClassNum(en.getClassNum());
-            courseDTO.setCategory(en.getCategory());
-            courseDTO.setTeacher(en.getTeacher());
-            courseDTO.setTime(en.getTime());
-            courseDTO.setClassroom(en.getClassroom());
-            courseDTO.setTarget(en.getTarget());
-            courseDTO.setEvaluation(en.getEvaluation());
-            courseDTO.setSyllabus(en.getSyllabus());
-            courseDTOList.add(courseDTO);
-
+        if(Objects.equals(category, "english")||Objects.equals(category, "")){
+            List<EnglishCourseEntity> englishCourseEntityList = englishCourseRepository.findByNameContaining(name);
+            for(EnglishCourseEntity en : englishCourseEntityList){
+                CourseDTO courseDTO = new CourseDTO();
+                courseDTO.setName(en.getName());
+                courseDTO.setClassNum(en.getClassNum());
+                courseDTO.setCategory(en.getCategory());
+                courseDTO.setTeacher(en.getTeacher());
+                courseDTO.setTime(en.getTime());
+                courseDTO.setClassroom(en.getClassroom());
+                courseDTO.setTarget(en.getTarget());
+                courseDTO.setEvaluation(en.getEvaluation());
+                courseDTO.setSyllabus(en.getSyllabus());
+                courseDTOList.add(courseDTO);
+            }
         }
-        List<ForeignLanguageEntity> foreignLanguageEntityList = foreignLanguageCourseRepository.findByNameContaining(name);
-        for(ForeignLanguageEntity f : foreignLanguageEntityList){
-            CourseDTO courseDTO = new CourseDTO();
-            courseDTO.setName(f.getName());
-            courseDTO.setClassNum(f.getClassNum());
-            courseDTO.setCategory(f.getCategory());
-            courseDTO.setTeacher(f.getTeacher());
-            courseDTO.setTime(f.getTime());
-            courseDTO.setClassroom(f.getClassroom());
-            courseDTO.setTarget(f.getTarget());
-            courseDTO.setEvaluation(f.getEvaluation());
-            courseDTO.setSyllabus(f.getSyllabus());
-            courseDTOList.add(courseDTO);
+        if(Objects.equals(category, "foreign_language")||Objects.equals(category, "")){
+            List<ForeignLanguageEntity> foreignLanguageEntityList = foreignLanguageCourseRepository.findByNameContaining(name);
+            for(ForeignLanguageEntity f : foreignLanguageEntityList){
+                CourseDTO courseDTO = new CourseDTO();
+                courseDTO.setName(f.getName());
+                courseDTO.setClassNum(f.getClassNum());
+                courseDTO.setCategory(f.getCategory());
+                courseDTO.setTeacher(f.getTeacher());
+                courseDTO.setTime(f.getTime());
+                courseDTO.setClassroom(f.getClassroom());
+                courseDTO.setTarget(f.getTarget());
+                courseDTO.setEvaluation(f.getEvaluation());
+                courseDTO.setSyllabus(f.getSyllabus());
+                courseDTOList.add(courseDTO);
+            }
         }
         return courseDTOList;
     }
@@ -1864,6 +1871,7 @@ public class TodoController {
         for(ChatroomRecordEntity cRecord: chatRecord){
             ChatroomRecordEntity record = new ChatroomRecordEntity();
             record.setfrom(cRecord.getfrom());
+            System.out.println(record.getfrom());
             record.settext(cRecord.gettext());
             record.setatWhere(cRecord.getatWhere());
             load_chat.add(record);
