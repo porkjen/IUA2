@@ -204,22 +204,26 @@ public class TodoController {
         if(dRepository.existsByStudentID(requestData.getStudentID())){
             courseList = dRepository.findByStudentID(requestData.getStudentID());
             courses = courseList.getDetectedCourses();
+            for(CourseToBeDetected c : courses){
+                if(c.getNumber().equals(requestData.getNumber())){
+                    isExist = true;
+                    break;
+                }
+            }
         }
         else{
             courseList.setStudentID(requestData.getStudentID());
-        }
-        for(CourseToBeDetected c : courses){
-            if(c.getNumber().equals(requestData.getNumber())){
-                isExist = true;
-                break;
-            }
         }
         if(!isExist){
             courses.add(requestData);
             courseList.setDetectedCourse(courses);
             dRepository.save(courseList);
+            return ResponseEntity.ok("Success");
         }
-        return ResponseEntity.ok("Success");
+        else{
+            System.out.println("Already added.");
+            return ResponseEntity.badRequest().body("Invalid request");
+        }
     }
 
     @DeleteMapping("/delete_detect_course")
@@ -254,11 +258,13 @@ public class TodoController {
     }
 
     @PostMapping("/detect_course")
-    public void detectCourse(@RequestBody String studentID)throws TesseractException, IOException, InterruptedException{
+    public void detectCourse(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
         System.out.println("/detect_course");
-        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
+        System.out.println("student id is " + studentID.get("studentID"));
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID.get("studentID"));
         ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
         while(!courses.isEmpty()){
+            Thread.sleep(1500);
             System.out.println("Start detection.");
             crawler.detectCoureses(courses);
             for(int i = 0; i < courses.size(); i++){
