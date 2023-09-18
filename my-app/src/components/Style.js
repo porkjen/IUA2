@@ -202,7 +202,7 @@ const CoreHardwareField = styled.label`
     border-width:1px;
     border-style:solid;
     width:40%;
-    height:15%;
+    height: 15%;
     margin-top:2%;
     color:black;
     background-color:#E6FAEF;
@@ -213,7 +213,7 @@ const CoreSoftwareField = styled.label`
     border-width:1px;
     border-style:solid;
     width:40%;
-    height:15%;
+    height: 15%;
     margin-top:2%;
     color:black;
     background-color:#FAF0E6;

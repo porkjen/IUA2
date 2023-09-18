@@ -17,13 +17,13 @@ public class ChatGPTController {
     @Autowired
     KeyRepository keyRepository;
     private final String API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
-
+    //test2
     @PostMapping("/chat")
     public ResponseEntity<String> chatWithGPT(@RequestBody Map<String, String> requestData) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer "+keyRepository.findByUse("chatGPT").getKey());
         headers.set("Content-Type", "application/json");
-
+        
         JSONObject requestJson = new JSONObject();
         JSONArray messagesArray = new JSONArray();
 

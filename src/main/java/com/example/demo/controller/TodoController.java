@@ -85,7 +85,9 @@ public class TodoController {
     ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
     @Autowired
     EnglishCourseRepository englishCourseRepository;//英文
-    String secretKey = "au4a83";
+    @Autowired
+    KeyRepository keyRepository;
+    String secretKey = keyRepository.findByUse("pswKey").getKey();
 
     static Crawler crawler = new Crawler();
     String account = "";
@@ -102,24 +104,23 @@ public class TodoController {
         System.out.println("/login");
         //password encrypt
         String studentID = user.get("studentID");
+        String password = user.get("password");
         account = studentID;
         todoService.setAccount(account);
-        String password = user.get("password");
         pwd = password;
         System.out.println(studentID);
         System.out.println(password);
-        String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
-        String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
+        String encryptedpwd = aesEncryptionDecryption.encrypt(password, keyRepository.findByUse("pswKey").getKey());
         System.out.println("加密:"+encryptedpwd);
-        //sign in
-        crawler.CrawlerHandle(studentID,password);
-        System.out.println("login message " +Crawler.loginMessage);
-        if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
-            return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
-        }
-        //account is not in database
         BasicEntity personalData = basicRepository.findByStudentID(studentID);
+        //account is not in database
         if(personalData==null){
+            //sign in
+            crawler.CrawlerHandle(studentID,password);
+            System.out.println("login message " +Crawler.loginMessage);
+            if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
+                return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
+            }
             personalData = crawler.getBasicData(studentID,password);
             personalData.setPassword(encryptedpwd);
             personalData.setEmail(studentID + "@mail.ntou.edu.tw");
@@ -132,18 +133,24 @@ public class TodoController {
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
-            //sendTestNotification(token);
             return ResponseEntity.status(HttpStatus.CREATED).body(t);//201
         }
         else {
-            personalData.setPassword(encryptedpwd); //user may change password, update password everytime
-            basicRepository.save(personalData);
+            if(!Objects.equals(aesEncryptionDecryption.decrypt(personalData.getPassword(), secretKey), password)){
+                //sign in
+                crawler.CrawlerHandle(studentID,password);
+                System.out.println("login message " +Crawler.loginMessage);
+                if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
+                    return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
+                }
+                personalData.setPassword(encryptedpwd); //user had changed password, update password
+                basicRepository.save(personalData);
+            }
             System.out.println("Old user!");
             JwtToken jwtToken = new JwtToken();
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
-            //sendTestNotification(token);
             return ResponseEntity.ok(t); // 回傳狀態碼 200
         }
     }
@@ -457,6 +464,7 @@ public class TodoController {
         }
         return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
     }
+
 
     @PostMapping("/course_search_detail")
     public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {
