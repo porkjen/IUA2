@@ -30,7 +30,7 @@ public class ChatGPTController {
         // 系統消息，用於設定語言為繁體中文
         JSONObject systemMessage = new JSONObject();
         systemMessage.put("role", "system");
-        systemMessage.put("content", "使用繁體中文，我在這裡傾聽您的心事");
+        systemMessage.put("content", "使用繁體中文，我在這裡傾聽您的心事，簡短回答");
 
         // 用戶消息
         JSONObject userMessage = new JSONObject();

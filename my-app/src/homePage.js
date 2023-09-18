@@ -61,7 +61,7 @@ const HomePage=()=> {
                             </Link>
                         </div>
                         <div className="othersBtn">
-                            <Link to="/moodChat">
+                            <Link to="/moodChatGPT">
                                 <button className="othersButton">
                                     <img src={treeImg} className='pic'/>
                                 </button>
