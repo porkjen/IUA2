@@ -120,6 +120,7 @@ const PreTimeTable=()=> {
                 .catch(error => {
                     console.error(error);
                 });
+                window.location.reload();
         }
         return(
             <ArticleContainer>
