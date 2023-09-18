@@ -458,8 +458,7 @@ public class TodoController {
         return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
     }
 
-    @PostMapping("/recommend_course")
-    //for 推薦課程
+    //for 推薦課程 test
 
     @PostMapping("/course_search_detail")
     public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {
