@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.JwtToken;
+import com.example.demo.getData;
 import com.example.demo.repository.BasicRepository;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.NextPostId;
@@ -101,13 +102,15 @@ public class FoodController {
     @GetMapping("/food_load") //load all food posts
     public List<FoodDTO> foodLoad(@RequestParam("sort") String sort){
         System.out.println("/food_load, sort : "+sort);
-        List<FoodEntity> foodPostList;
+        List<FoodEntity> foodPostList = new ArrayList<>();
+        getData gD = new getData();
         if(Objects.equals(sort, "PostTimeNtoF"))foodPostList = foodRepository.findAllByOrderByIdDesc();
         else if (Objects.equals(sort, "PostTimeFtoN")) foodPostList = foodRepository.findAll();
-        else if(Objects.equals(sort, "rate_Decrease")) foodPostList = foodRepository.findAllByOrderByRatingDesc();
         else if(Objects.equals(sort, "rate_Increase")) foodPostList = foodRepository.findAllByOrderByRatingAsc();
-        else if(Objects.equals(sort, "distance_Increase"))foodPostList = foodRepository.findAllByOrderByDistanceAsc();
-        else foodPostList = foodRepository.findAllByOrderByDistanceDesc(); //distance_Decrease
+        else if(Objects.equals(sort, "distance_Increase")){
+            foodPostList = foodRepository.findAll();
+            foodPostList = gD.LocationSorter(foodPostList, 1, 1);
+        }
 
         List<FoodDTO> shortenedPostList = new ArrayList<>();
         for (FoodEntity post : foodPostList) {

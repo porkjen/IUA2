@@ -62,7 +62,7 @@ const DetectCourse = () => {
 
     const handleCourseDetectNumSubmit = (e) => {
       e.preventDefault();
-      setStartDetect(true);
+      //setStartDetect(true);
       const savedFormData = {
         studentID: userInfo,
         courseName: '',
@@ -75,7 +75,11 @@ const DetectCourse = () => {
         },
         body: JSON.stringify(savedFormData),
       })
-        .then((response) => response.status)
+      .then((response) => {
+        console.log(response.status);
+        if(response.status===200)
+          setStartDetect(true);
+      })
         .catch((error) => {
           console.error(error);
         });
@@ -83,7 +87,6 @@ const DetectCourse = () => {
 
     const handleCourseDetectNameSubmit = (e) => {
       e.preventDefault();
-      setStartDetect(true);
       const savedFormData = {
         studentID: userInfo,
         courseName: isCourseName,
@@ -96,7 +99,11 @@ const DetectCourse = () => {
         },
         body: JSON.stringify(savedFormData),
       })
-        .then((response) => response.status)
+        .then((response) => {
+          console.log(response.status);
+          if(response.status===200)
+            setStartDetect(true);
+        })
         .catch((error) => {
           console.error(error);
         });
@@ -153,7 +160,7 @@ const DetectCourse = () => {
             <button className='DetectCourse_searchBtn' onClick={handleCourseDetectNameSubmit}>加入課程</button>
           </div>
 
-            {data && <DetectCourse_all list={data} />}
+            {data.length > 0 && <DetectCourse_all list={data} />}
 
         </div>
       </div>
