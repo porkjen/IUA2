@@ -99,8 +99,8 @@ public class FoodController {
         return foodEntity;
     }
 
-    @GetMapping("/food_load") //load all food posts
-    public List<FoodDTO> foodLoad(@RequestParam("sort") String sort){
+    @PostMapping("/food_load") //load all food posts
+    public List<FoodDTO> foodLoad(@RequestParam("sort") String sort, @RequestBody Map<String, String> requestData){
         System.out.println("/food_load, sort : "+sort);
         List<FoodEntity> foodPostList = new ArrayList<>();
         getData gD = new getData();
@@ -109,7 +109,7 @@ public class FoodController {
         else if(Objects.equals(sort, "rate_Increase")) foodPostList = foodRepository.findAllByOrderByRatingAsc();
         else if(Objects.equals(sort, "distance_Increase")){
             foodPostList = foodRepository.findAll();
-            foodPostList = gD.LocationSorter(foodPostList, 1, 1);
+            foodPostList = gD.LocationSorter(foodPostList, Double.parseDouble(requestData.get("latitude")), Double.parseDouble(requestData.get("longitude")));
         }
 
         List<FoodDTO> shortenedPostList = new ArrayList<>();
