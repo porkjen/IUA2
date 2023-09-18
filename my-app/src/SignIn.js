@@ -41,7 +41,7 @@ const SignIn=()=> {
       });
     }
 
-    function requestPermission() {
+    function RequestPermission() {
       console.log('Requesting permission...');
       Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
@@ -126,12 +126,13 @@ const SignIn=()=> {
       return (
         
         <div className="SignIn">    
-        <requestPermission/>
+        
             <div className='SignIn_bg'>
                 <div className='SignIn_signIn'>
                     <br/>
                     {!waiting && !error &&
                     <div>
+                      <RequestPermission/>
                       <div className="SignIn_title">
                         <div className="SignIn_title-img">
                             <img src={Signlogo} alt="IUA" />

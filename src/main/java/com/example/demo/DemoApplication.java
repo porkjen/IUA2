@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dao.FoodEntity;
 import com.example.demo.repository.ChangeCourseHaveRepository;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.service.TodoService;
@@ -11,6 +12,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @SpringBootApplication
 @EnableScheduling //啟用定時任務功能

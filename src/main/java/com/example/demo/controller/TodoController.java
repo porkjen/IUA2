@@ -219,8 +219,12 @@ public class TodoController {
             courses.add(requestData);
             courseList.setDetectedCourse(courses);
             dRepository.save(courseList);
+            return ResponseEntity.ok("Success");
         }
-        return ResponseEntity.ok("Success");
+        else{
+            System.out.println("Already added.");
+            return ResponseEntity.badRequest().body("Invalid request");
+        }
     }
 
     @DeleteMapping("/delete_detect_course")
@@ -255,11 +259,13 @@ public class TodoController {
     }
 
     @PostMapping("/detect_course")
-    public void detectCourse(@RequestBody String studentID)throws TesseractException, IOException, InterruptedException{
+    public void detectCourse(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
         System.out.println("/detect_course");
-        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
+        System.out.println("student id is " + studentID.get("studentID"));
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID.get("studentID"));
         ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
         while(!courses.isEmpty()){
+            Thread.sleep(1500);
             System.out.println("Start detection.");
             crawler.detectCoureses(courses);
             for(int i = 0; i < courses.size(); i++){
@@ -451,6 +457,8 @@ public class TodoController {
         }
         return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
     }
+
+    //for 推薦課程 test
 
     @PostMapping("/course_search_detail")
     public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {
@@ -1739,7 +1747,7 @@ public class TodoController {
     }
 
     @GetMapping("/pre_curriculum_search")
-    public List<CourseDTO> preCurriculumSearch(@RequestParam("name") String name, @RequestParam("category") String category){
+    public List<?> preCurriculumSearch(@RequestParam("name") String name, @RequestParam("category") String category){
         List<CourseDTO> courseDTOList = new ArrayList<>();
         if(Objects.equals(category, "general")||Objects.equals(category, "")){
             List<GeneralCourseEntity> generalCourseEntityList = generalRepository.findByNameContaining(name);
@@ -1798,7 +1806,7 @@ public class TodoController {
                 courseDTO.setClassNum(f.getClassNum());
                 courseDTO.setCategory(f.getCategory());
                 courseDTO.setTeacher(f.getTeacher());
-                courseDTO.setTime(f.getTime());  
+                courseDTO.setTime(f.getTime());
                 courseDTO.setClassroom(f.getClassroom());
                 courseDTO.setTarget(f.getTarget());
                 courseDTO.setEvaluation(f.getEvaluation());
