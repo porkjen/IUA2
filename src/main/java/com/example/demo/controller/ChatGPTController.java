@@ -17,6 +17,7 @@ public class ChatGPTController {
     @Autowired
     KeyRepository keyRepository;
     private final String API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
+    //test2
     @PostMapping("/chat")
     public ResponseEntity<String> chatWithGPT(@RequestBody Map<String, String> requestData) {
         HttpHeaders headers = new HttpHeaders();
