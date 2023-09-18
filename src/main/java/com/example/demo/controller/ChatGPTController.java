@@ -23,7 +23,7 @@ public class ChatGPTController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "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");
         headers.set("Content-Type", "application/json");
-
+        
         JSONObject requestJson = new JSONObject();
         JSONArray messagesArray = new JSONArray();
 
