@@ -281,14 +281,14 @@ const PreTimeTable=()=> {
                         >
                             <div>
                                 <h2>{pcourseName}</h2>
-                                <p>課程代號：{pclassNum}</p>
-                                <p>選課類別：{pcategory}</p>
-                                <p>授課教師：{pteacher}</p>
-                                <p>上課時間：{pclassTime}</p>
-                                <p>上課地點：{pclassRoom}</p>
-                                <p>教學目標：{ptarget}</p>
-                                <p>教學進度：{psyllabus}</p>
-                                <p>評分方式:{pevaluation}</p>
+                                <p>課程代號：<br/>{pclassNum}</p>
+                                <p>選課類別：<br/>{pcategory}</p>
+                                <p>授課教師：<br/>{pteacher}</p>
+                                <p>上課時間：<br/>{pclassTime}</p>
+                                <p>上課地點：<br/>{pclassRoom}</p>
+                                <p>教學目標：<br/>{ptarget}</p>
+                                <p>教學進度：<br/>{psyllabus}</p>
+                                <p>評分方式:<br/>{pevaluation}</p>
                             </div>
                             <button onClick={closeModal}>關閉</button>
                         </Modal>
@@ -316,14 +316,14 @@ const PreTimeTable=()=> {
                         >
                             <div>
                                 <h2>{pcourseName}</h2>
-                                <p>課程代號：{pclassNum}</p>
-                                <p>選課類別：{pcategory}</p>
-                                <p>授課教師：{pteacher}</p>
-                                <p>上課時間：{pclassTime}</p>
-                                <p>上課地點：{pclassRoom}</p>
-                                <p>教學目標：{ptarget}</p>
-                                <p>教學進度：{psyllabus}</p>
-                                <p>評分方式:{pevaluation}</p>
+                                <p>課程代號：<br/>{pclassNum}</p>
+                                <p>選課類別：<br/>{pcategory}</p>
+                                <p>授課教師：<br/>{pteacher}</p>
+                                <p>上課時間：<br/>{pclassTime}</p>
+                                <p>上課地點：<br/>{pclassRoom}</p>
+                                <p>教學目標：<br/>{ptarget}</p>
+                                <p>教學進度：<br/>{psyllabus}</p>
+                                <p>評分方式:<br/>{pevaluation}</p>
                             </div>
                             <button onClick={closeModal}>關閉</button>
                         </Modal>
