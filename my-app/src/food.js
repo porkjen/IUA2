@@ -21,7 +21,7 @@ import { getAuthToken } from "./utils";
 const Food = () => {
 
   const location = useLocation();
-  const { fromSearch, FArea, FName, FAddr, ArticleAS } = location.state;
+  const { fromSearch, FArea, FName, FAddr, ArticleAS,latt,long } = location.state;
   const [data, setData] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [visibleData, setVisibleData] = useState([]);
@@ -37,6 +37,8 @@ const Food = () => {
   const [isXing, setisXing] = useState(false);
   const [isXi, setisXi] = useState(false);
   const [noData, setNoData] = useState(false);
+  const [latitude, setlatitude] = useState("");
+  const [longitude, setlongitude] = useState("");
   let navigate = useNavigate();
   const articleListRef = useRef(null);
   //const location = useLocation();
@@ -50,7 +52,15 @@ const Food = () => {
     setisPostTime(true);
     setisRate(false);
     setisDistance(false);
-    fetch(`/food_load?sort=PostTimeNtoF`)
+    const formData = {
+      latitude: latitude,
+      longitude: longitude,
+    };
+    fetch(`/food_load?sort=PostTimeNtoF`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
       .then(response => response.json())
       .then(data => {
         console.log("NOTsearchIn");
@@ -69,7 +79,15 @@ const Food = () => {
     setisPostTime(false);
     setisRate(true);
     setisDistance(false);
-    fetch(`/food_load?sort=rate_Decrease`)
+    const formData = {
+      latitude: latitude,
+      longitude: longitude,
+    };
+    fetch(`/food_load?sort=rate_Decrease`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
       .then(response => response.json())
       .then(data => {
         console.log("NOTsearchIn");
@@ -88,13 +106,22 @@ const Food = () => {
     setisPostTime(false);
     setisRate(false);
     setisDistance(true);
-    fetch(`/food_load?sort=distance_Increase`)
+    const formData = {
+      latitude: latitude,
+      longitude: longitude,
+    };
+    fetch(`/food_load?sort=distance_Increase`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
       .then(response => response.json())
       .then(data => {
         console.log("NOTsearchIn");
         setData(data);
         setVisibleData(data.slice(0, 50));
         setIsLoading(false);
+        console.log(formData);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -237,7 +264,22 @@ const Food = () => {
     );
   }
 
+  const successCallback = (position) => {
+    console.log(position);
+    let lat=position.coords.latitude;
+    let lon=position.coords.longitude;
+    setlatitude(lat);
+    setlongitude(lon);
+  };
+  
+  const errorCallback = (error) => {
+    console.log(error);
+  };
+  
+  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
   useEffect(() => {
+    
     if(fromSearch===false){
       if (!data) {
         setIsLoading(true);
@@ -247,12 +289,21 @@ const Food = () => {
           setisDistance(true);
         else if(ArticleAS=='rate_Decrease')
           setisRate(true);
-        fetch(`/food_load?sort=${ArticleAS}`)
+          const formData = {
+            latitude: latt,
+            longitude: long,
+          };
+          fetch(`/food_load?sort=${ArticleAS}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          })
           .then(response => response.json())
           .then(data => {
             console.log("NOTsearchIn");
             console.log(data);
             console.log(AS);
+            console.log(formData);
             setData(data);
             setVisibleData(data.slice(0, 50));
             setIsLoading(false);
@@ -319,6 +370,10 @@ const Food = () => {
     articleListRef.current?.removeEventListener("scroll", handleScroll);
   };
   }, [visibleData, isLoading]);
+
+
+
+
 
   return (
     <Page>

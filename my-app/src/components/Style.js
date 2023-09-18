@@ -189,7 +189,7 @@ const Coreinfo = styled.label`
     margin-right: auto;
     z-index: 2;
     width: 90%;
-    height: 25%;
+    height: 30%;
     background-color: white;
     border-radius: 10px;
     display: flex;
@@ -202,7 +202,7 @@ const CoreHardwareField = styled.label`
     border-width:1px;
     border-style:solid;
     width:40%;
-    height:20%;
+    height:15%;
     margin-top:2%;
     color:black;
     background-color:#E6FAEF;
@@ -213,7 +213,7 @@ const CoreSoftwareField = styled.label`
     border-width:1px;
     border-style:solid;
     width:40%;
-    height:20%;
+    height:15%;
     margin-top:2%;
     color:black;
     background-color:#FAF0E6;

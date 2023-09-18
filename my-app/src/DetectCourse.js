@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import { loginUser } from './cookie';
 import { getAuthToken } from './utils';
+import { getMessaging, getToken } from "firebase/messaging";
 
 const DetectCourse = () => {
   const userInfo = loginUser();
@@ -77,6 +78,7 @@ const DetectCourse = () => {
       })
       .then((response) => {
         console.log(response.status);
+        console.log(getToken());
         if(response.status===200)
           setStartDetect(true);
       })
