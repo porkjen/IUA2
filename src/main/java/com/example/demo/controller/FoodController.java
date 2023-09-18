@@ -106,7 +106,7 @@ public class FoodController {
         getData gD = new getData();
         if(Objects.equals(sort, "PostTimeNtoF"))foodPostList = foodRepository.findAllByOrderByIdDesc();
         else if (Objects.equals(sort, "PostTimeFtoN")) foodPostList = foodRepository.findAll();
-        else if(Objects.equals(sort, "rate_Increase")) foodPostList = foodRepository.findAllByOrderByRatingAsc();
+        else if(Objects.equals(sort, "rate_Decrease")) foodPostList = foodRepository.findAllByOrderByRatingDesc();
         else if(Objects.equals(sort, "distance_Increase")){
             foodPostList = foodRepository.findAll();
             foodPostList = gD.LocationSorter(foodPostList, Double.parseDouble(requestData.get("latitude")), Double.parseDouble(requestData.get("longitude")));
