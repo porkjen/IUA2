@@ -21,7 +21,7 @@ public class ChatGPTController {
     @PostMapping("/chat")
     public ResponseEntity<String> chatWithGPT(@RequestBody Map<String, String> requestData) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer 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");
+        headers.set("Authorization", "Bearer "+keyRepository.findByUse("chatGPT").getKey());
         headers.set("Content-Type", "application/json");
 
         JSONObject requestJson = new JSONObject();
