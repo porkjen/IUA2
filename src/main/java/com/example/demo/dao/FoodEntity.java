@@ -2,6 +2,7 @@ package com.example.demo.dao;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class FoodEntity {
     private List<String> saved = new ArrayList<>();
     private double distance;
     private String district = "";
+    private double latitude;
+    private double longitude;
 
     public static class p {
         private String p_studentID = "";
@@ -217,5 +220,21 @@ public class FoodEntity {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

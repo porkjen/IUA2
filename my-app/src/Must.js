@@ -75,7 +75,6 @@ const Must = () => {
               {RCResult.map((item) => (
                   <Mustinfo key={item.id}>
                     {item.cname}<MustDetailBtn  onClick={() => openModal(item.cnumber, item.cmajor, item.cgrade)}>詳細資訊</MustDetailBtn>{item.cnumber}&emsp;{item.cgrade}&emsp;{item.cteacher}&emsp;{item.ccredit}學分
-
                   </Mustinfo>
               ))}
             </div>

@@ -72,11 +72,11 @@ const Core=()=>{
                             ))}
                         </div>  
                     </div>
-                    <div className="core_pic">
+                    {!modalIsOpen && <div className="core_pic">
                         <div className="whitefox">
                             <img src={whitefox} alt="IUA" />
                         </div>  
-                    </div>
+                    </div>}
                 </div>
                 <Modal
                     isOpen={modalIsOpen}

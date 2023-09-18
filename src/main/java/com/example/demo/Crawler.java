@@ -40,7 +40,19 @@ public class Crawler {
     public static void CrawlerHandle(String userAccount, String userPassword) throws IOException, TesseractException, InterruptedException {
 
         System.setProperty("javax.net.ssl.trustStore", "jssecacerts"); //解決SSL問題
+
+
+
+//        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
+
+        //System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");//白
+
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+
+
+
+        //System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+
         //C:\Program Files\Google\Chrome\Application\chromedriver.exe  //白
         //C:\\Program Files (x86)\\Google
         //C:\Program Files (x86)\Google\Chrome\Application
@@ -414,9 +426,14 @@ public class Crawler {
             if(i<9) driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl0"+(i+1)+"$COSID','')\"]")).click();
             else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
             //switch iframe
+
+            //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
             //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
             WebElement iframe = driver.findElement(By.tagName("iframe"));
             driver.switchTo().frame(iframe);
             driver.switchTo().frame("mainFrame");

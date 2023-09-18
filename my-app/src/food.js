@@ -190,15 +190,23 @@ const Food = () => {
       }
 
     };
+
+    const handlePostSubmit = (e) => {
+      e.preventDefault();
+      navigate("/postArticle", {
+        state: {
+          fromSearch:false,
+          ArticleAS:AS,
+          },});
+    }
+
     return (
       <Page>
         <Pagebg>
           <Title>美食板</Title>
           <img className='food_yolk' src={yolk} alt="yolk" />
           <img className='food_redBall' src={redBall} alt="redBall" />
-          <Link to='/postArticle'>
-            <PostArticleBtn>我要發文</PostArticleBtn>
-          </Link>
+            <PostArticleBtn onClick={handlePostSubmit}>我要發文</PostArticleBtn>
           <ChangeClassCategorySelect onChange={handleRentFunctionSelect}>
                   <option >功能選單</option>
                   <option value='AllArticle'>全部貼文</option>
@@ -259,6 +267,12 @@ const Food = () => {
       if (!data) {
         setIsLoading(true);
         console.log(FArea);
+        if(ArticleAS=='PostTimeNtoF')
+        setisPostTime(true);
+        else if(ArticleAS=='distance_Increase')
+          setisDistance(true);
+        else if(ArticleAS=='rate_Decrease')
+          setisRate(true);
         fetch(`/food_search?area=${FArea}&store=${FName}&addr=${FAddr}`)
         .then(response => response.json())
         .then(data => {
@@ -311,7 +325,7 @@ const Food = () => {
       <Link to='/choose'>
               <img src={back} className='food_back' alt="回上一頁" />
       </Link>
-      {openModal && <Modal closeModal={setOpenModal} type={"food"} />}
+      {openModal && <Modal closeModal={setOpenModal} type={"food"} ArticleAS={AS}/>}
       {!openModal && <Food_all />}
     </Page>
   );

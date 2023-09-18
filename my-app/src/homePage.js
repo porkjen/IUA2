@@ -29,9 +29,11 @@ const HomePage=()=> {
                             </Link>
                         </div>
                         <div className="graduateBtn">
-                            <button className="graduateButton">
-                                <img src={graduateImg} className='pic'/>
-                            </button>
+                            <Link to='/NTOULink'>
+                                <button className="graduateButton">
+                                    <img src={graduateImg} className='pic'/>
+                                </button>
+                            </Link>
                         </div>
                     </div>
                     <div class="flex">

@@ -51,6 +51,81 @@ const RemainText = styled.div`
     text-align:center;
 `;
 
+const PreList = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    overflow: auto;
+    height: 75%;
+    width:90%;
+    will-change: transform;
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    transform: translate(-50%, -50%);
+`;
+
+const PreClassBody = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    width: 90%;
+    height: 50px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    margin-top:2%;
+`;
+
+const PreBody = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    width: 230px;
+    height: 60px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    margin-top:2%;
+    margin-left:7px;
+`;
+
+const PreText = styled.div`
+    padding-top: 12px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size:12px;
+    text-align:center;
+    
+`;
+
+const PreSearchList = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    overflow: auto;
+    height: 60%;
+    width:90%;
+    will-change: transform;
+    position: absolute;
+    left: 50%;
+    top: 63%;
+    transform: translate(-50%, -50%);
+`;
+
+const PreSearchBody = styled.div`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    width: 230px;
+    height: 70px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: white;
+    margin-top:2%;
+    margin-left:10%;
+`;
+
 const Mustinfo = styled.label`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
@@ -59,8 +134,8 @@ const Mustinfo = styled.label`
     margin-left: auto;
     margin-right: auto;
     z-index: 2;
-    width: 90%;
-    height: 12%;
+    width: 350px;
+    height: 60px;
     background-color: white;
     border-radius: 10px;
     display: flex;
@@ -114,7 +189,7 @@ const Coreinfo = styled.label`
     margin-right: auto;
     z-index: 2;
     width: 90%;
-    height: 35%;
+    height: 30%;
     background-color: white;
     border-radius: 10px;
     display: flex;
@@ -161,6 +236,19 @@ const GEinfo = styled.label`
     padding-left: 10px;
 `;
 
+const DetailBtn = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    border: none;
+    margin-left:10px;
+    margin-top:5px;
+    width: 80px;
+    height: 20px;
+    background-color: #C4E1FF;
+    color: 	#005AB5;
+`;
+
 const MustDetailBtn = styled.button`
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
     font-family: 'Noto Serif TC', serif;
@@ -184,4 +272,6 @@ const CoreDetailBtn = styled.button`
     color: white;
 `;
 
-export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  GEinfo, CoreHardwareField, CoreSoftwareField, MustDetailBtn, CoreDetailBtn} ;
+export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  
+    GEinfo, CoreHardwareField, CoreSoftwareField, DetailBtn, PreBody, PreText,MustDetailBtn,CoreDetailBtn,PreList,PreClassBody,
+    PreSearchList,PreSearchBody } ;
