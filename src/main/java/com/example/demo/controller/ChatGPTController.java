@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 import com.example.demo.repository.KeyRepository;
+import com.example.demo.service.MailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,6 +17,8 @@ public class ChatGPTController {
 
     @Autowired
     KeyRepository keyRepository;
+    @Autowired
+    private MailService mailService;
     private final String API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
     //test2
     @PostMapping("/chat")
@@ -45,9 +48,15 @@ public class ChatGPTController {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> request = new HttpEntity<>(requestJson.toString(), headers);
-
         ResponseEntity<String> response = restTemplate.exchange(API_ENDPOINT, HttpMethod.POST, request, String.class);
+        if(requestData.get("content").contains("死")||requestData.get("content").contains("自殺")||requestData.get("content").contains("討厭人生")||requestData.get("content").contains("離開世界")||requestData.get("content").contains("不想活")||requestData.get("content").contains("討厭世界")){
+            Thread otherThread = new Thread(() -> {
+                mailService.sendMail(requestData.get("studentID")+"@mail.ntou.edu.tw","我是IUA心情樹洞","你還好嗎，不要害怕求助，世界上還有好多人可以幫你!\n生命線協談專線 : 1995\n學校諮商輔導組 : https://care.ntou.edu.tw/");
 
+            });
+            otherThread.start();
+        }
+        System.out.println("response");
         return response;
 
     }

@@ -87,7 +87,6 @@ public class TodoController {
     EnglishCourseRepository englishCourseRepository;//英文
     @Autowired
     KeyRepository keyRepository;
-    String secretKey = keyRepository.findByUse("pswKey").getKey();
 
     static Crawler crawler = new Crawler();
     String account = "";
@@ -102,6 +101,7 @@ public class TodoController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
+        String secretKey = keyRepository.findByUse("pswKey").getKey();
         //password encrypt
         String studentID = user.get("studentID");
         String password = user.get("password");
@@ -110,7 +110,7 @@ public class TodoController {
         pwd = password;
         System.out.println(studentID);
         System.out.println(password);
-        String encryptedpwd = aesEncryptionDecryption.encrypt(password, keyRepository.findByUse("pswKey").getKey());
+        String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
         System.out.println("加密:"+encryptedpwd);
         BasicEntity personalData = basicRepository.findByStudentID(studentID);
         //account is not in database
@@ -414,11 +414,11 @@ public class TodoController {
     }
     @GetMapping("/curriculum_search")
     public ResponseEntity<?> curriculumSearch(@RequestParam("studentID") String studentID, @RequestHeader("Authorization") String au) throws TesseractException, IOException, InterruptedException {
+        String secretKey = keyRepository.findByUse("pswKey").getKey();
         JwtToken jwtToken = new JwtToken();
         try {
             jwtToken.validateToken(au, studentID);
         } catch (AuthException e) {
-            //return null;
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
         List<TimeTableDTO> shortTT = new ArrayList<>();
