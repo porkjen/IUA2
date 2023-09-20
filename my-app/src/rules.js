@@ -10,7 +10,7 @@ const Rules = () => {
 
     const timerId = setTimeout(() => {
       document.body.appendChild(script);
-    }, 1000000); 
+    }, 100); 
 
     script.onerror = function() {
       console.error("腳本載入錯誤");
