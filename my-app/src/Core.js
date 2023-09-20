@@ -1,6 +1,5 @@
 import './Core.css';
 import React, { useEffect, useState } from 'react';
-import orangefox from './img/orangefox.PNG';
 import whitefox from './img/whitefox.PNG';
 import back from './img/back.png';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
@@ -72,11 +71,11 @@ const Core=()=>{
                             ))}
                         </div>  
                     </div>
-                    <div className="core_pic">
+                    {!modalIsOpen && <div className="core_pic">
                         <div className="whitefox">
                             <img src={whitefox} alt="IUA" />
                         </div>  
-                    </div>
+                    </div>}
                 </div>
                 <Modal
                     isOpen={modalIsOpen}
@@ -84,25 +83,25 @@ const Core=()=>{
                     contentLabel="課程詳細資訊"
                 >
                     {data && (
-                    <div>
-                        <h2>{data.name}</h2>
-                        <p>開課學期：{data.semester}</p>
-                        <p>課程代號：{data.number}</p>
-                        <p>選課類別：{data.category}</p>
-                        <p>課程學分：{data.ccredit}</p>
-                        <p>授課教師：{data.teacher}</p>
-                        <p>開課年班：{data.grade}</p>
-                        <p>上課時間：{data.time}</p>
-                        <p>上課地點：{data.room}</p>
-                        <p>人數上限：{data.people}</p>
-                        <p>教學目標：{data.cobjective}</p>
-                        <p>先修科目：{data.cprecourse}</p>
-                        <p>教材內容：{data.coutline}</p>
-                        <p>教學方式：{data.ctmethod}</p>
-                        <p>參考書目：{data.creference}</p>
-                        <p>教學進度：{data.csyllabus}</p>
-                        <p>評分方式:{data.cevaluation}</p>
-                    </div>
+                        <div>
+                            <h2>{data.name}</h2>
+                            <p>開課學期：{data.semester}</p>
+                            <p>課程代號：{data.number}</p>
+                            <p>選課類別：{data.category}</p>
+                            <p>課程學分：{data.ccredit}</p>
+                            <p>授課教師：{data.teacher}</p>
+                            <p>開課年班：{data.grade}</p>
+                            <p>上課時間：{data.time}</p>
+                            <p>上課地點：{data.room}</p>
+                            <p>人數上限：{data.people}</p>
+                            <p>教學目標：<br/>{data.cobjective}</p>
+                            <p>先修科目：<br/>{data.cprecourse}</p>
+                            <p>教材內容：<br/>{data.coutline}</p>
+                            <p>教學方式：<br/>{data.ctmethod}</p>
+                            <p>參考書目：<br/>{data.creference}</p>
+                            <p>教學進度：<br/>{data.csyllabus}</p>
+                            <p>評分方式：<br/>{data.cevaluation}</p>
+                        </div>
                     )}
                     <button onClick={closeModal}>關閉</button>
                 </Modal>
