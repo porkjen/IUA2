@@ -87,7 +87,7 @@ public class TodoController {
     EnglishCourseRepository englishCourseRepository;//英文
     @Autowired
     KeyRepository keyRepository;
-    String secretKey = keyRepository.findByUse("pswKey").getKey();
+
 
     static Crawler crawler = new Crawler();
     String account = "";
@@ -101,6 +101,7 @@ public class TodoController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
+        String secretKey = keyRepository.findByUse("pswKey").getKey();
         System.out.println("/login");
         //password encrypt
         String studentID = user.get("studentID");
@@ -414,6 +415,7 @@ public class TodoController {
     }
     @GetMapping("/curriculum_search")
     public ResponseEntity<?> curriculumSearch(@RequestParam("studentID") String studentID, @RequestHeader("Authorization") String au) throws TesseractException, IOException, InterruptedException {
+        String secretKey = keyRepository.findByUse("pswKey").getKey();
         JwtToken jwtToken = new JwtToken();
         try {
             jwtToken.validateToken(au, studentID);

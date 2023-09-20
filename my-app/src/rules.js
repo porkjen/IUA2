@@ -10,8 +10,12 @@ const Rules = () => {
 
     const timerId = setTimeout(() => {
       document.body.appendChild(script);
-    }, 100); 
+    }, 1000000); 
 
+    script.onerror = function() {
+      console.error("腳本載入錯誤");
+    };
+    
     return () => {
       clearTimeout(timerId);
       //document.body.removeChild(script);
