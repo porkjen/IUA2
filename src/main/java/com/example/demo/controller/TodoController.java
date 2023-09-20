@@ -80,6 +80,8 @@ public class TodoController {
     @Autowired
     ChatroomRecordRepository chatroomRecordRepository;
     @Autowired
+    ChatRoomApiRepository chatRoomApiRepository;
+    @Autowired
     PECourseRepository peCourseRepository; //體育
     @Autowired
     ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
@@ -1886,6 +1888,29 @@ public class TodoController {
         }
         System.out.println("Loading is finished! ->(ChatRoomRecord)");
         return load_chat;
+    }
+
+    @PostMapping("/pickRoomApi")
+    public ChatroomApiEntity pickRoomApi(@RequestParam(value = "first") String first, @RequestParam(value = "second") String second){
+
+        ChatroomApiEntity Api = new ChatroomApiEntity();
+        Random random = new Random();
+        int min = 1;
+        int max = 100;
+        int randomNumber = random.nextInt(max - min + 1) + min;
+        int intValue1 = Integer.parseInt(first, 16);
+        int intValue2 = Integer.parseInt(second, 16);
+        int intTotal = intValue1 + intValue2 +randomNumber;
+        String randomHex = Integer.toHexString(intTotal);
+
+        Api.setFirstStudentID(first);
+        Api.setSecondStudentID(second);
+        Api.setRoomApi(randomHex);
+        chatRoomApiRepository.save(Api);
+
+        System.out.println("16 进制数: " + randomHex);
+
+        return Api;
     }
 }
 
