@@ -35,6 +35,7 @@ import CoreSearch from './coreSearch';
 import MyArticles from './MyArticles';
 import PreTimeTable from './preTimeTable';
 import Rules from './rules';
+import MoodChatGPT from './moodChatGPT';
 
 const App=()=> {
 
@@ -75,6 +76,7 @@ const App=()=> {
                     <Route path="/MyArticles" element={<MyArticles />} />
                     <Route path="/preTimeTable" element={<PreTimeTable />} />
                     <Route path="/rules" element={<Rules />} />
+                    <Route path="/moodChatGPT" element={<MoodChatGPT />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
                 

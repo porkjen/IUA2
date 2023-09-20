@@ -33,7 +33,7 @@
     padding-left: 15%;
 }
 
-.chatroom-messages {
+.Chatroom .chatroom-messages {
     flex: 1;
     overflow-y: auto; /* 让聊天消息区域可滚动 */
     padding-top: 110px;

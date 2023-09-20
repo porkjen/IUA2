@@ -23,7 +23,7 @@ const NTOULink=()=> {
                 <button className='NTOUBtn'>海大行事曆</button>
             </a>
             <a href="https://www.ntou.edu.tw/calendar">
-                <button className='NTOUBtn'>TronClass</button>
+                <button className='NTOUBtn'>tronClass</button>
             </a>
             </div>
            

@@ -4,32 +4,12 @@ import back from './img/back.png';
 import {Back}  from './components/Style.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useNavigate } from 'react-router-dom';
-import { useEffect, useState, useRef,  } from "react";
 import bee1 from './img/bee1.png';
 import bee2 from './img/bee2.png';
 import bear from './img/bear.PNG';
 import logo from './img/gray_logo.png';
 
 const Choose=()=> {
-
-  const [latitude, setlatitude] = useState("");
-  const [longitude, setlongitude] = useState("");
-
-  const successCallback = (position) => {
-    console.log(position);
-    let lat=position.coords.latitude;
-    let lon=position.coords.longitude;
-    setlatitude(lat);
-    setlongitude(lon);
-    console.log("is"+latitude);
-    console.log(lon);
-  };
-  
-  const errorCallback = (error) => {
-    console.log(error);
-  };
-  
-  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
     let navigate = useNavigate();
     const toRent = (e) => {
@@ -49,9 +29,7 @@ const Choose=()=> {
         navigate("/food", {
           state: {
             fromSearch:false,
-            ArticleAS:"PostTimeNtoF",
-            latt:latitude,
-            long:longitude},});
+            ArticleAS:"PostTimeNtoF"},});
       }
 
       const toMine = (e) => {
