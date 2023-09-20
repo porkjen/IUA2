@@ -3,6 +3,7 @@ import React from "react";
 import back from './img/back.png';
 import {Back} from './components/Style.js';
 import { Link } from 'react-router-dom';
+import { loginUser } from './cookie';
 
 class MoodChatGPT extends React.Component {
   constructor(props) {
@@ -38,10 +39,12 @@ class MoodChatGPT extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const { messages, newMessage } = this.state;
+    const userInfo = loginUser();
 
     if (newMessage.trim() !== '') {
       const userMessage = {
         content: newMessage,
+        studentID: userInfo,
         isSent: true,
       };
 
@@ -49,7 +52,7 @@ class MoodChatGPT extends React.Component {
         content: '正在輸入中...',
         isSent: false,
       };
-
+      
       const updatedMessages = [...messages, userMessage, typingMessage];
       this.setState({ messages: updatedMessages, newMessage: '', isTyping: true }, () => {
         this.scrollToBottom();
