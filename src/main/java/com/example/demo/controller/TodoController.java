@@ -96,7 +96,7 @@ public class TodoController {
 
     @Autowired
     private TodoService todoService;
-    
+
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
@@ -308,7 +308,7 @@ public class TodoController {
                     rc.setField(kernalCourseG2[i][1]);
                     result.add(rc);
                 }
-                
+
             }
         }
         else if(grade.equals("3")){
@@ -465,7 +465,6 @@ public class TodoController {
         return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
     }
 
-    //for 推薦課程 test
 
     @PostMapping("/course_search_detail")
     public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {
@@ -1872,7 +1871,7 @@ public class TodoController {
         }
         System.out.println("done");
     }
-    
+
     @PostMapping("/loadChatRecord")
     public List<ChatroomRecordEntity> loadChatRecord(@RequestParam(value = "where") String where){
         List<ChatroomRecordEntity> load_chat = new ArrayList<>();
@@ -1889,4 +1888,3 @@ public class TodoController {
         return load_chat;
     }
 }
-
