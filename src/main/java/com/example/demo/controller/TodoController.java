@@ -1916,7 +1916,17 @@ public class TodoController {
                 int intValue2 = Integer.parseInt(second, 16);
                 int intTotal = intValue1 + intValue2 +randomNumber;
                 String randomHex = Integer.toHexString(intTotal);
-
+                while (true){
+                    ChatroomApiEntity roomApi = chatRoomApiRepository.findByRoomApi(randomHex);
+                    if (roomApi != null && roomApi.getRoomApi() != null){
+                        int randomTemp = random.nextInt(max - min + 1) + min;
+                        int intTemp = intValue1 + intValue2 +randomTemp;
+                        randomHex = Integer.toHexString(intTemp);
+                    }
+                    else{
+                        break;
+                    } 
+                }
                 Api.setFirstStudentID(first);
                 Api.setSecondStudentID(second);
                 Api.setRoomApi(randomHex);
