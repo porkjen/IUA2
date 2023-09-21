@@ -248,9 +248,9 @@ const RentArticle=()=> {
               first: userInfo,
               second: data.studentID,
             });
-      
+          
             const url = '/pickRoomApi?' + queryParams.toString();
-
+          
             const requestData = {
               first: userInfo,
               second: data.studentID,
@@ -265,12 +265,12 @@ const RentArticle=()=> {
             })
               .then((response) => response.json())
               .then((data) => {
-                navigate(`/chatroom/${data.roomApi}`);
+                navigate(`/chatroom/${data.roomApi}`, { state: { roomApi: data.roomApi } });
+                localStorage.setItem('roomApi', data.roomApi);
               })
               .catch((error) => {
                 console.error('Error:', error);
               });
-              
           };
 
       return (

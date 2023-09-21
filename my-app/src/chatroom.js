@@ -17,7 +17,7 @@ class ChatRoom extends React.Component {
        from:'',
        connected: false,
        userName: localStorage.getItem('userName'),
-       apiRoom: localStorage.getItem('nowRoom'),
+       apiRoom: localStorage.getItem('roomApi'),
        apiRoomName: localStorage.getItem('nowRoomName'),
        inputName: '', // 新增的姓名輸入狀態
        messageData: [],
