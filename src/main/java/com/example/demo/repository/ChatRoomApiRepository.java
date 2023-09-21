@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface ChatRoomApiRepository extends MongoRepository<ChatroomApiEntity, String> {
 
-
+    @Query(value = "{'FirstStudentID': ?0,'SecondStudentID': ?1}")
+    ChatroomApiEntity findByStudentID(String FirstStudentID, String SecondStudentID);
 }
