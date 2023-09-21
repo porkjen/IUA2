@@ -68,7 +68,7 @@ const App=()=> {
                     <Route path="/generalEducation" element={<GeneralEducaton />} />
                     <Route path="/favorite" element={<Favorite />} />
                     <Route path="/DetectCourse" element={<DetectCourse />} />
-                    <Route path="/Chatroom/:id" element={<Chatroom />} />
+                    <Route path="/chatroom/:roomApi" element={<Chatroom />} />
                     <Route path="/modifyPost" element={<ModifyPost />} />
                     <Route path="/ChatRoomList" element={<ChatRoomList />} />
                     <Route path="/moodChat" element={<MoodChat />} />
