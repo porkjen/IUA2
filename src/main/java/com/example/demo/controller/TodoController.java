@@ -1888,22 +1888,37 @@ public class TodoController {
     public ChatroomApiEntity pickRoomApi(@RequestParam(value = "first") String first, @RequestParam(value = "second") String second){
 
         ChatroomApiEntity Api = new ChatroomApiEntity();
-        Random random = new Random();
-        int min = 1;
-        int max = 100;
-        int randomNumber = random.nextInt(max - min + 1) + min;
-        int intValue1 = Integer.parseInt(first, 16);
-        int intValue2 = Integer.parseInt(second, 16);
-        int intTotal = intValue1 + intValue2 +randomNumber;
-        String randomHex = Integer.toHexString(intTotal);
+        ChatroomApiEntity chatRoomApi1 = chatRoomApiRepository.findByStudentID(first,second);
+        if (chatRoomApi1 != null && chatRoomApi1.getRoomApi() != null) {
+            Api.setRoomApi(chatRoomApi1.getRoomApi());
+            Api.setFirstStudentID(chatRoomApi1.getFirstStudentID());
+            Api.setSecondStudentID(chatRoomApi1.getSecondStudentID());
+        }
+        else {
+            ChatroomApiEntity chatRoomApi2 = chatRoomApiRepository.findByStudentID(second,first);
+            if (chatRoomApi2 != null && chatRoomApi2.getRoomApi() != null) {
+                Api.setRoomApi(chatRoomApi2.getRoomApi());
+                Api.setFirstStudentID(chatRoomApi2.getFirstStudentID());
+                Api.setSecondStudentID(chatRoomApi2.getSecondStudentID());
+            }
+            else {
+                Random random = new Random();
+                int min = 1;
+                int max = 100;
+                int randomNumber = random.nextInt(max - min + 1) + min;
+                int intValue1 = Integer.parseInt(first, 16);
+                int intValue2 = Integer.parseInt(second, 16);
+                int intTotal = intValue1 + intValue2 +randomNumber;
+                String randomHex = Integer.toHexString(intTotal);
 
-        Api.setFirstStudentID(first);
-        Api.setSecondStudentID(second);
-        Api.setRoomApi(randomHex);
-        chatRoomApiRepository.save(Api);
+                Api.setFirstStudentID(first);
+                Api.setSecondStudentID(second);
+                Api.setRoomApi(randomHex);
+                chatRoomApiRepository.save(Api);
 
-        System.out.println("16 进制数: " + randomHex);
-
+                System.out.println("16 进制数: " + randomHex);
+            }
+        }
         return Api;
     }
 }
