@@ -10,4 +10,7 @@ public interface ChatRoomApiRepository extends MongoRepository<ChatroomApiEntity
 
     @Query(value = "{'FirstStudentID': ?0,'SecondStudentID': ?1}")
     ChatroomApiEntity findByStudentID(String FirstStudentID, String SecondStudentID);
+
+    @Query(value = "{'roomApi': ?0}")
+    ChatroomApiEntity findByRoomApi(String roomApi);
 }
