@@ -288,6 +288,8 @@ public class TodoController {
                     System.out.println("[" + courses.get(i).getNumber() + "] is full, keep detecting.");
                 }
             }
+            courseList = dRepository.findByStudentID(studentID.get("studentID"));
+            courses = courseList.getDetectedCourses();
         }
     }
 
@@ -1819,6 +1821,22 @@ public class TodoController {
                 courseDTO.setTarget(f.getTarget());
                 courseDTO.setEvaluation(f.getEvaluation());
                 courseDTO.setSyllabus(f.getSyllabus());
+                courseDTOList.add(courseDTO);
+            }
+        }
+        if(Objects.equals(category, "major")||Objects.equals(category, "")){
+            List<CourseEntity> CourseEntityList = courseRepository.findByNameContaining(name);
+            for(CourseEntity f : CourseEntityList){
+                CourseDTO courseDTO = new CourseDTO();
+                courseDTO.setName(f.getName());
+                courseDTO.setClassNum(f.getNumber());
+                courseDTO.setCategory(f.getCategory());
+                courseDTO.setTeacher(f.getTeacher());
+                courseDTO.setTTime(f.getTime());
+                courseDTO.setClassroom(f.getRoom());
+                courseDTO.setTarget(f.getCObjective());
+                courseDTO.setEvaluation(f.getCEvaluation());
+                courseDTO.setSyllabus(f.getCSyllabus());
                 courseDTOList.add(courseDTO);
             }
         }
