@@ -14,4 +14,7 @@ public interface CourseRepository extends MongoRepository<CourseEntity, String>{
 
     @Query("{'$and': [{'c_grade': ?0}, {'c_name': ?0}]}")
     List<CourseEntity> findByc_gradeAndc_name(String grade, String name);
+
+    @Query("{'c_name': {'$regex': ?0, '$options': 'i'}}")
+    List<CourseEntity> findByNameContaining(String name);
 }
