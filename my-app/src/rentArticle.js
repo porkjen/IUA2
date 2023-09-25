@@ -26,7 +26,7 @@ const RentArticle=()=> {
     const {postId,fromRent,fromMyPost,fromSearch,RSArea, RSGender, RSPeople, RSType, RSCar  } = location.state;
     const userInfo = loginUser();
     const token = getAuthToken();
-
+    
     function Commentinfo({ author, text }) {
         return (
           <CommentContainer>
@@ -78,9 +78,7 @@ const RentArticle=()=> {
             postId : postId,
           };
 
-       
-
-        useEffect(() => {
+          useEffect(() => {
             if (!data) {
                 fetch('/rent_full_post', {
                     method: 'POST',
@@ -245,6 +243,36 @@ const RentArticle=()=> {
             navigate("/MyArticles")
           }
 
+          const handleContactBtnClick = () => {
+            const queryParams = new URLSearchParams({
+              first: userInfo,
+              second: data.studentID,
+            });
+          
+            const url = '/pickRoomApi?' + queryParams.toString();
+          
+            const requestData = {
+              first: userInfo,
+              second: data.studentID,
+            };
+          
+            fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(requestData),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                navigate(`/chatroom/${data.roomApi}`, { state: { roomApi: data.roomApi } });
+                localStorage.setItem('roomApi', data.roomApi);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+          };
+
       return (
         <ArticleDetailPage>
           {fromRent && !fromMyPost && <Back src={back} alt="回上一頁" onClick={handleBackSubmit}/>}
@@ -266,12 +294,7 @@ const RentArticle=()=> {
                   </ButtonContainer>)}
                 {!isCreator && (
                   <ButtonContainer>
-                    <Link to={`/chatroom/${postId}`} onClick={() => {
-                                                localStorage.setItem('nowRoom', postId);
-                                                localStorage.setItem('nowRoomName', data.title)
-                                                localStorage.setItem('userName', 'White')}}>
-                      <ArticleDetailContactdBtn>聯絡</ArticleDetailContactdBtn>
-                    </Link>
+                      <ArticleDetailContactdBtn onClick={handleContactBtnClick}>聯絡</ArticleDetailContactdBtn>
                     {isRentSaved ? (
                       <ArticleDetailAlreadySavedBtn onClick={handleRemovedRentSavedSubmit}>
                         已收藏

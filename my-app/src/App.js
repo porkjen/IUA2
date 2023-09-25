@@ -35,6 +35,7 @@ import CoreSearch from './coreSearch';
 import MyArticles from './MyArticles';
 import PreTimeTable from './preTimeTable';
 import Rules from './rules';
+import MoodChatGPT from './moodChatGPT';
 
 const App=()=> {
 
@@ -67,7 +68,7 @@ const App=()=> {
                     <Route path="/generalEducation" element={<GeneralEducaton />} />
                     <Route path="/favorite" element={<Favorite />} />
                     <Route path="/DetectCourse" element={<DetectCourse />} />
-                    <Route path="/Chatroom/:id" element={<Chatroom />} />
+                    <Route path="/chatroom/:roomApi" element={<Chatroom />} />
                     <Route path="/modifyPost" element={<ModifyPost />} />
                     <Route path="/ChatRoomList" element={<ChatRoomList />} />
                     <Route path="/moodChat" element={<MoodChat />} />
@@ -75,6 +76,7 @@ const App=()=> {
                     <Route path="/MyArticles" element={<MyArticles />} />
                     <Route path="/preTimeTable" element={<PreTimeTable />} />
                     <Route path="/rules" element={<Rules />} />
+                    <Route path="/moodChatGPT" element={<MoodChatGPT />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
                 

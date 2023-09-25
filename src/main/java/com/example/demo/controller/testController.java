@@ -1,9 +1,8 @@
-/*package com.example.demo.controller;
+package com.example.demo.controller;
 
 import com.example.demo.IntentManagement;
 import com.example.demo.QA;
 import com.example.demo.gifCrawler;
-import com.example.demo.quote;
 import com.example.demo.service.MailService;
 import com.google.cloud.dialogflow.v2.Intent;
 import com.google.cloud.dialogflow.v2.Intent.TrainingPhrase;
@@ -43,7 +42,9 @@ public class testController {
     private String gifLink;
     private String quote;
 
+    /*
     public String getGIF(String intent){
+
         try{
             gifCrawler crawler = new gifCrawler();
             gifCollection = crawler.gifCrawler(intent);
@@ -56,7 +57,8 @@ public class testController {
 
         return gifLink;
     }
-
+    */
+    /*
     public String getQuote(){
         try{
             quote crawler = new quote();
@@ -71,7 +73,7 @@ public class testController {
 
         return quote;
     }
-
+    */
 
    //send mail
     public void sendMail(){
@@ -80,7 +82,7 @@ public class testController {
     }
 
 
-
+/*
     //MTH(心情樹洞)
     @ResponseBody
     @PostMapping("/test")
@@ -101,7 +103,6 @@ public class testController {
             image.getJSONObject("payload").getJSONArray("richContent").getJSONArray(0).getJSONObject(0).put("rawUrl", Arrays.asList(getGIF("negative")));
 
         }
-/*
         else if(jsonObjectResponse.getJSONObject("queryResult").getJSONObject("intent").get("displayName").equals("Default Fallback Intent")){
             JSONArray fulfillmentMessagesJsonArray = new JSONArray(jsonObjectResponse.getJSONObject("queryResult").getJSONArray("fulfillmentMessages"));
             JSONObject message = fulfillmentMessagesJsonArray.getJSONObject(0);
@@ -110,8 +111,6 @@ public class testController {
             image.getJSONObject("payload").getJSONArray("richContent").getJSONArray(0).getJSONObject(0).put("rawUrl", Arrays.asList(getGIF("negative")));
 
         }
-*/
-/*
         else{
             jsonObjectResponse.getJSONObject("queryResult").put("fulfillmentText","taetae love you");
             //System.out.println(jsonObjectResponse.getJSONObject("queryResult"));
@@ -122,12 +121,10 @@ public class testController {
             image.getJSONObject("payload").getJSONArray("richContent").getJSONArray(0).getJSONObject(0).put("rawUrl", Arrays.asList(getGIF("sad")));
 
         }
-
-
         String jsonStr = jsonObjectResponse.getJSONObject("queryResult").toString();
         return jsonStr;
     }
-
+*/
 
     //連接googleSheet
    public void getQA(){
@@ -278,4 +275,3 @@ public class testController {
     }
 
 }
-*/

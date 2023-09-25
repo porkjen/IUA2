@@ -80,12 +80,15 @@ public class TodoController {
     @Autowired
     ChatroomRecordRepository chatroomRecordRepository;
     @Autowired
+    ChatRoomApiRepository chatRoomApiRepository;
+    @Autowired
     PECourseRepository peCourseRepository; //體育
     @Autowired
     ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
     @Autowired
     EnglishCourseRepository englishCourseRepository;//英文
-    String secretKey = "au4a83";
+    @Autowired
+    KeyRepository keyRepository;
 
     static Crawler crawler = new Crawler();
     String account = "";
@@ -94,32 +97,32 @@ public class TodoController {
 
     @Autowired
     private TodoService todoService;
-    
+
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
+        String secretKey = keyRepository.findByUse("pswKey").getKey();
         //password encrypt
         String studentID = user.get("studentID");
+        String password = user.get("password");
         account = studentID;
         todoService.setAccount(account);
-        String password = user.get("password");
         pwd = password;
         System.out.println(studentID);
         System.out.println(password);
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
-        String decryptedpwd = aesEncryptionDecryption.decrypt(encryptedpwd, secretKey);
         System.out.println("加密:"+encryptedpwd);
-        //sign in
-        crawler.CrawlerHandle(studentID,password);
-        System.out.println("login message " +Crawler.loginMessage);
-        if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
-            return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
-        }
-        //account is not in database
         BasicEntity personalData = basicRepository.findByStudentID(studentID);
+        //account is not in database
         if(personalData==null){
+            //sign in
+            crawler.CrawlerHandle(studentID,password);
+            System.out.println("login message " +Crawler.loginMessage);
+            if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
+                return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
+            }
             personalData = crawler.getBasicData(studentID,password);
             personalData.setPassword(encryptedpwd);
             personalData.setEmail(studentID + "@mail.ntou.edu.tw");
@@ -132,18 +135,24 @@ public class TodoController {
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
-            //sendTestNotification(token);
             return ResponseEntity.status(HttpStatus.CREATED).body(t);//201
         }
         else {
-            personalData.setPassword(encryptedpwd); //user may change password, update password everytime
-            basicRepository.save(personalData);
+            if(!Objects.equals(aesEncryptionDecryption.decrypt(personalData.getPassword(), secretKey), password)){
+                //sign in
+                crawler.CrawlerHandle(studentID,password);
+                System.out.println("login message " +Crawler.loginMessage);
+                if (Objects.equals(crawler.loginMessage, "帳號或密碼錯誤")){
+                    return ResponseEntity.badRequest().body("Invalid request"); // 回傳狀態碼 400
+                }
+                personalData.setPassword(encryptedpwd); //user had changed password, update password
+                basicRepository.save(personalData);
+            }
             System.out.println("Old user!");
             JwtToken jwtToken = new JwtToken();
             String token = jwtToken.generateToken(user); // 取得token
             Map<String, String> t = new HashMap<>();
             t.put("token", token);
-            //sendTestNotification(token);
             return ResponseEntity.ok(t); // 回傳狀態碼 200
         }
     }
@@ -301,7 +310,7 @@ public class TodoController {
                     rc.setField(kernalCourseG2[i][1]);
                     result.add(rc);
                 }
-                
+
             }
         }
         else if(grade.equals("3")){
@@ -407,11 +416,11 @@ public class TodoController {
     }
     @GetMapping("/curriculum_search")
     public ResponseEntity<?> curriculumSearch(@RequestParam("studentID") String studentID, @RequestHeader("Authorization") String au) throws TesseractException, IOException, InterruptedException {
+        String secretKey = keyRepository.findByUse("pswKey").getKey();
         JwtToken jwtToken = new JwtToken();
         try {
             jwtToken.validateToken(au, studentID);
         } catch (AuthException e) {
-            //return null;
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
         List<TimeTableDTO> shortTT = new ArrayList<>();
@@ -457,6 +466,7 @@ public class TodoController {
         }
         return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
     }
+
 
     @PostMapping("/course_search_detail")
     public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {
@@ -1863,7 +1873,7 @@ public class TodoController {
         }
         System.out.println("done");
     }
-    
+
     @PostMapping("/loadChatRecord")
     public List<ChatroomRecordEntity> loadChatRecord(@RequestParam(value = "where") String where){
         List<ChatroomRecordEntity> load_chat = new ArrayList<>();
@@ -1879,5 +1889,52 @@ public class TodoController {
         System.out.println("Loading is finished! ->(ChatRoomRecord)");
         return load_chat;
     }
-}
 
+    @PostMapping("/pickRoomApi")
+    public ChatroomApiEntity pickRoomApi(@RequestParam(value = "first") String first, @RequestParam(value = "second") String second){
+
+        ChatroomApiEntity Api = new ChatroomApiEntity();
+        ChatroomApiEntity chatRoomApi1 = chatRoomApiRepository.findByStudentID(first,second);
+        if (chatRoomApi1 != null && chatRoomApi1.getRoomApi() != null) {
+            Api.setRoomApi(chatRoomApi1.getRoomApi());
+            Api.setFirstStudentID(chatRoomApi1.getFirstStudentID());
+            Api.setSecondStudentID(chatRoomApi1.getSecondStudentID());
+        }
+        else {
+            ChatroomApiEntity chatRoomApi2 = chatRoomApiRepository.findByStudentID(second,first);
+            if (chatRoomApi2 != null && chatRoomApi2.getRoomApi() != null) {
+                Api.setRoomApi(chatRoomApi2.getRoomApi());
+                Api.setFirstStudentID(chatRoomApi2.getFirstStudentID());
+                Api.setSecondStudentID(chatRoomApi2.getSecondStudentID());
+            }
+            else {
+                Random random = new Random();
+                int min = 1;
+                int max = 100;
+                int randomNumber = random.nextInt(max - min + 1) + min;
+                int intValue1 = Integer.parseInt(first, 16);
+                int intValue2 = Integer.parseInt(second, 16);
+                int intTotal = intValue1 + intValue2 +randomNumber;
+                String randomHex = Integer.toHexString(intTotal);
+                while (true){
+                    ChatroomApiEntity roomApi = chatRoomApiRepository.findByRoomApi(randomHex);
+                    if (roomApi != null && roomApi.getRoomApi() != null){
+                        int randomTemp = random.nextInt(max - min + 1) + min;
+                        int intTemp = intValue1 + intValue2 +randomTemp;
+                        randomHex = Integer.toHexString(intTemp);
+                    }
+                    else{
+                        break;
+                    } 
+                }
+                Api.setFirstStudentID(first);
+                Api.setSecondStudentID(second);
+                Api.setRoomApi(randomHex);
+                chatRoomApiRepository.save(Api);
+
+                System.out.println("16 进制数: " + randomHex);
+            }
+        }
+        return Api;
+    }
+}
