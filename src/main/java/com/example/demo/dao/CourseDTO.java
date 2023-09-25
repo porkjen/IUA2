@@ -6,6 +6,7 @@ public class CourseDTO {
     private String category;
     private String teacher;
     private String[] time;
+    private String tTime;
     private String classroom;
     private String target;
     private String evaluation;
@@ -49,6 +50,14 @@ public class CourseDTO {
 
     public void setTime(String[] time) {
         this.time = time;
+    }
+
+    public String getTTime() {
+        return tTime;
+    }
+
+    public void setTTime(String time) {
+        this.tTime = time;
     }
 
     public String getClassroom() {
