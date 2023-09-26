@@ -220,14 +220,18 @@ const FoodArticle=()=> {
                             },
                             body: JSON.stringify(formData)
                           })
-                          .then(response => response.json())
+                          .then(response => {
+                            console.log(response.status);
+                            if(response.status===200){
+                              window.location.reload();
+                            }
+                          })
                           .then(data => {
                             console.log(data);
                           })
                           .catch(error => {
                             console.error(error);
                           });
-                          window.location.reload();
                           
                        //Form submission happens here
       }

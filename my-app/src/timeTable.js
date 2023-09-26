@@ -26,11 +26,13 @@ const TimeTable=()=> {
         const [courseName, setCourseName] = useState('');
         const [tt, setTT] = useState(true);
         const [Info, setInfo] = useState(false);
+        const [waiting, setWaiting] = useState(false);
         const [cookies, setCookie] = useCookies(['token']);
         const token = getAuthToken();
 
         useEffect(() => {
           if (!data) {
+            setWaiting(true);
             fetch(`/curriculum_search?studentID=${userInfo}`, {
               headers: {
                 'Authorization': `${token}`  // 將 token 添加到請求頭中
@@ -39,7 +41,7 @@ const TimeTable=()=> {
             .then(response => {
               console.log(response.status);
               if (response.status === 200) {
-                
+                setWaiting(false);
                 return response.json(); // 解析回應為 JSON
               } else {
                 throw new Error('Unauthorized'); // 或者在其他狀況處理錯誤
@@ -224,7 +226,18 @@ const TimeTable=()=> {
               <Back src={back} alt="回上一頁" />
           </Link>
         }
-        {!openModal &&
+        {waiting && 
+         <div className='timeTableLoadingText'>
+          <div class="timeTablePreloader">
+            正在抓取資料
+            <div class="timeTableDot1"></div>
+            <div class="timeTableDot2"></div>
+            <div class="timeTableDot3"></div>
+          </div>
+        </div>
+
+        }
+        {!openModal && !waiting &&
           <div className="TimeTablebg">
                 <select className='timeTableSelect' onChange={handleTTFunctionSelect}>
                 <option>功能選單</option>

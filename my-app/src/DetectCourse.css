@@ -89,3 +89,54 @@ html,body,#root,.DetectCourse{
     text-transform: uppercase;
     margin-left: 150px;
 }
+
+.delDet{
+    width: 200px;
+    height: 70px;
+    position: absolute;
+    z-index: 3;
+    background-color: white;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    margin-left: 40%;
+    margin-top: 40%;
+}
+
+.delOk{
+    width: 70px;
+    height: 30px;
+    border-radius: 7px;
+    background-color: rgba(204, 235, 236, 0.951);
+    margin-left: 25px;
+    
+}
+
+.delYes{
+    width: 70px;
+    height: 30px;
+    border-radius: 7px;
+    background-color: rgba(204, 235, 236, 0.951);
+    margin-left: 9%;
+}
+
+.delText{
+    font-family: 'Noto Serif TC', serif;
+    text-align: center;
+    padding-left: 25%;
+}
+
+.detDel{
+    font-family: 'Noto Serif TC', serif;
+    font-size: 8px;
+    background-color: rgba(204, 235, 236, 0.951);
+    width:80px;
+    text-align:center;
+    height:30px;
+    border-radius: 6px; 
+    margin-left: 65%;
+    margin-top: 5px;
+    border: 3px solid transparent;
+    outline: none;
+}
