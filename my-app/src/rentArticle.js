@@ -60,7 +60,7 @@ const RentArticle=()=> {
                 <div>樓層: {floor}</div>
                 <div>性別: {gender}</div>
                 <div>租金: {money}</div>
-                <div>人數: {people}</div>
+                <div>人數: {people}&nbsp;&#40;目前已確定人數:&#41;</div>
                 <div>電費: {power}</div>
                 <div>水費: {water}</div>
                 <div>房型: {style}</div>
