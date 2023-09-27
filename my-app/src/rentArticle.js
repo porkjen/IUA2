@@ -266,8 +266,10 @@ const RentArticle=()=> {
               .then((response) => response.json())
               .then((apidata) => {
                 navigate(`/chatroom/${apidata.roomApi}`, { state: { roomApi: apidata.roomApi } });
+                localStorage.setItem('userName', userInfo);
                 localStorage.setItem('nowRoom', apidata.roomApi);
                 localStorage.setItem('nowRoomName', data.title);
+                localStorage.setItem('poster', data.studentID);
               })
               .catch((error) => {
                 console.error('Error:', error);
