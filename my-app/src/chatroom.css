@@ -93,5 +93,15 @@
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
+}
+
+.Chatroom button[type="confirmed"] {
+    background-color: #f1e5cb;
+    color: black;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    position: relative;
+    top: 20px; 
+    left: 30px; 
 }
