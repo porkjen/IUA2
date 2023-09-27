@@ -96,13 +96,13 @@ const Must = () => {
              <p>上課時間：{item.ctime}</p>
              <p>上課地點：{item.clocation}</p>
              <p>人數上限：{item.cpeople}</p>
-             <p>教學目標：<br/>{item.cobjective}</p>
-             <p>先修科目：<br/>{item.cprecourse}</p>
-             <p>教材內容：<br/>{item.coutline}</p>
-             <p>教學方式：<br/>{item.ctmethod}</p>
-             <p>參考書目：<br/>{item.creference}</p>
-             <p>教學進度：<br/>{item.csyllabus}</p>
-             <p>評分方式：<br/>{item.cevaluation}</p>
+             <p>教學目標：{item.cobjective}</p>
+             <p>先修科目：{item.cprecourse}</p>
+             <p>教材內容：{item.coutline}</p>
+             <p>教學方式：{item.ctmethod}</p>
+             <p>參考書目：{item.creference}</p>
+             <p>教學進度：{item.csyllabus}</p>
+             <p>評分方式:{item.cevaluation}</p>
           </div>
         ))}
         <button onClick={closeModal}>關閉</button>

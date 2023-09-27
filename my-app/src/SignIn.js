@@ -10,7 +10,6 @@ import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 import {useState} from "react";
-import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { onLogin } from "./cookie.js";
 import { setAuthToken } from "./utils";

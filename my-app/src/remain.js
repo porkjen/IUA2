@@ -22,6 +22,7 @@ const Remain = () => {
     const [general, setGeneral] = useState(false);
     const [kernal, setKernal] = useState(false);
     const [pe, setPE] = useState(false);
+    const [waiting, setWaiting] = useState(false);
     const [showAlready, setshowAlready] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
     const [deptListData, setDeptListData] = useState([]);
@@ -41,6 +42,7 @@ const Remain = () => {
 
     useEffect(() => {
         if (!data) {
+            setWaiting(true);
             fetch('/remained_credits', {
                 method: 'POST',
                 headers: { 
@@ -49,7 +51,15 @@ const Remain = () => {
                 },
                 body: JSON.stringify(formData)
             })
-                .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                if (response.status === 200) {
+                    setWaiting(false);
+                  return response.json(); // 解析回應為 JSON
+                } else {
+                  throw new Error('Unauthorized'); // 或者在其他狀況處理錯誤
+                }
+              })
                 .then(data => {
                     setData(data);
                     console.log(data);
@@ -205,11 +215,24 @@ const Remain = () => {
                     <Back src={back} alt="回上一頁" />
                 </Link>
                 <div className='Remain_bg'>
-                    <div className="Remain_title">
-                        <Title>剩餘學分</Title>
-                    </div>
+                    {!waiting && 
+                        <div className="Remain_title">
+                            <Title>剩餘學分</Title>
+                        </div>
+                    }
+                    {waiting && 
+                        <div className='remainLoadingText'>
+                        <div class="remainPreloader">
+                            正在抓取資料
+                            <div class="remainDot1"></div>
+                            <div class="remainDot2"></div>
+                            <div class="remainDot3"></div>
+                        </div>
+                        </div>
 
-                    <div className='Remain_Course'>
+                    }
+                    {!waiting && 
+                        <div className='Remain_Course'>
                         <select className='courseSelect' value={selectedValue} onChange={handleSelectChange}>
                             <option value="reamin_all">全部剩餘學分</option>
                             <option value="pre">已修過必修</option>
@@ -227,7 +250,8 @@ const Remain = () => {
                         {general && <FCourseList list={generalListData} />}
                         {kernal && <FCourseList list={kernalListData} />}
                         {pe && <FCourseList list={peListData} />}
-                    </div>
+                        </div>
+                    }
 
                     <div className="bee">
                         <img src={bee} alt="IUA" />

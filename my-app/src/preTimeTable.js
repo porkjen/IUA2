@@ -10,7 +10,7 @@ import { useCookies } from 'react-cookie';
 import { loginUser } from './cookie';
 import { getAuthToken } from "./utils";
 import { Page, Pagebg, Title,ArticleContainer} from './components/ArticleStyle.js';
-import { RemainTitle, RemainContainer, RemainList, RemainText, RemainBody,PreBody,PreText ,PreList, PreClassBody, PreSearchList, PreSearchBody} from './components/Style.js';
+import { PreText ,PreList, PreClassBody, PreSearchList, PreSearchBody} from './components/Style.js';
 import Modal from 'react-modal';
 const PreTimeTable=()=> {
 
@@ -53,8 +53,6 @@ const PreTimeTable=()=> {
       };
 
     function CourseList({ list }) {
-
-
         //加入預選
         const handleAddPreCourse = (courseName,classNum,classTime,classRoom,category,teacher,target,syllabus,evaluation) =>{
             console.log(classTime);
@@ -287,9 +285,9 @@ const PreTimeTable=()=> {
                                 <p>授課教師：{pteacher}</p>
                                 <p>上課時間：{pclassTime}</p>
                                 <p>上課地點：{pclassRoom}</p>
-                                <p>教學目標：{ptarget}</p>
-                                <p>教學進度：{psyllabus}</p>
-                                <p>評分方式:{pevaluation}</p>
+                                <p>教學目標：<br/>{ptarget}</p>
+                                <p>教學進度：<br/>{psyllabus}</p>
+                                <p>評分方式:<br/>{pevaluation}</p>
                             </div>
                             <button onClick={closeModal}>關閉</button>
                         </Modal>
@@ -306,6 +304,7 @@ const PreTimeTable=()=> {
                             <option value='foreign_language'>第二外語</option>
                             <option value='general'>通識</option>
                             <option value='english'>英語</option>
+                            <option value='major'>必選修</option>
                         </select>
                         <input type="text" className='PreTimeTable_input' placeholder="輸入關鍵字" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                         <CourseList list={predata} />
@@ -322,9 +321,9 @@ const PreTimeTable=()=> {
                                 <p>授課教師：{pteacher}</p>
                                 <p>上課時間：{pclassTime}</p>
                                 <p>上課地點：{pclassRoom}</p>
-                                <p>教學目標：{ptarget}</p>
-                                <p>教學進度：{psyllabus}</p>
-                                <p>評分方式:{pevaluation}</p>
+                                <p>教學目標：<br/>{ptarget}</p>
+                                <p>教學進度：<br/>{psyllabus}</p>
+                                <p>評分方式:<br/>{pevaluation}</p>
                             </div>
                             <button onClick={closeModal}>關閉</button>
                         </Modal>

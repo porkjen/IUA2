@@ -1,12 +1,6 @@
 import './Modal.css';
 import React from "react";
-import sandwich from '../img/sandwich.png';
-import pizza from '../img/pizza.png';
-import taco from '../img/taco.png';
-import cookiem from '../img/cookiem.png';
-import cookiemonster from '../img/cookiemonster.png';
-import minion from '../img/minion.png';
-import banana from '../img/banana.png';
+
 import duck from '../img/duck.PNG';
 import cuteDogImg from "../img/cutedoggy.PNG";
 import {ArticleSubmitBtn, ModalSubmitBtn, ModalNotificationSubmitBtn,ChangeClassStatusSelect} from './ArticleStyle.js';
@@ -465,7 +459,11 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                                 },
                                 body: JSON.stringify(formData)
                               })
-                              .then(response => response.json())
+                              .then(response => {
+                                if(response.status===200){
+                                  window.location.reload();
+                                }
+                              })
                               .then(data => {
                                 console.log(data);
                               })
@@ -488,7 +486,11 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                                 },
                                 body: JSON.stringify(formData)
                               })
-                              .then(response => response.json())
+                              .then(response => {
+                                if(response.status===200){
+                                  window.location.reload();
+                                }
+                              })
                               .then(data => {
                                 console.log(data);
                               })
@@ -496,7 +498,6 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                                 console.error(error);
                               });
                         }
-                              window.location.reload();
                               navigate("/foodArticle", {
                                 state: {
                                   postId,postId,

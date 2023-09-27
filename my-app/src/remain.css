@@ -94,3 +94,43 @@ html,body,#root,.Remain{
     right: -115px;
     bottom: 5px;
 }
+
+.remainLoadingText{
+    color: #7ea6e1;
+    font-size: 25px;
+    font-family: 'Noto Serif TC', serif;
+    text-align: center;
+    writing-mode: horizontal-tb;
+    padding-top: 70%;
+}
+
+.remainPreloader > div{
+    background-color: #7ea6e1;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    animation: stretchdelay 0.7s infinite ease-in-out;
+}
+
+@keyframes stretchdelay {
+    0%, 40%, 100% { 
+         transform: translateY(0px);
+    }
+    20% {
+         transform: translateY(-10px);
+    }
+ }
+
+
+.remainPreloader .remainDot1 {
+    animation-delay: 0;
+  }
+  
+  .remainPreloader .remainDot2 {
+    animation-delay: 0.1s;
+  }
+  
+  .remainPreloader .remainDot3 {
+    animation-delay: 0.2s;
+  }
