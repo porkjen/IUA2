@@ -7,6 +7,7 @@ import java.util.List;
 
 @Document("change_CourseCollection")
 public class ChangeCourseEntity {
+    //test
     private String id;
     private String postId; //C12345
     private String studentID;
