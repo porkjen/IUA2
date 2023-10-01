@@ -42,7 +42,7 @@ const CourseSelection=()=> {
                                 </Link>
                             </div>
                             <div class="flex">
-                                <Link to='/preTimeTable'>
+                                <Link to=''>
                                     <div className="recommendedCourseBtn">
                                         <button className="recommendedCourseButton">
                                             <img src={recommendedCourseImg} className='courseSelectionpic'/>

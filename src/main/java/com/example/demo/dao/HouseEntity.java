@@ -15,6 +15,7 @@ public class HouseEntity {
     private String title = "";
     private String money = "";
     private String people = "";
+    private int decided = 0;
     private String address = "";
     private String area = "";
     private String gender = "";//男 女 不限
@@ -191,5 +192,13 @@ public class HouseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getDecided() {
+        return decided;
+    }
+
+    public void setDecided(int decided) {
+        this.decided = decided;
     }
 }

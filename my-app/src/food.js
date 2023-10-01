@@ -254,6 +254,11 @@ const Food = () => {
 
           </div><br/>
           <ArticleList ref={articleListRef}>
+            {isLoading && 
+              <div>
+                Loading....
+              </div>
+            }
             {noData && <div className='food_noData'>沒有資料</div>}
             {visibleData.map(item => (
               <Articleinfo key={item.postId} author={item.nickname} post_time={item.post_time} store={item.store} rating={item.rating} road={item.road} postID={item.postId}></Articleinfo>

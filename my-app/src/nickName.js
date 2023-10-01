@@ -8,23 +8,24 @@ import cat4 from './img/SignIn4.PNG';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route,useLocation, useNavigate } from 'react-router-dom';
 import {useState} from "react";
-import { loginUser } from "./cookie.js";
+import { loginUser } from './cookie';
+import { useCookies } from 'react-cookie';
+import { getAuthToken } from './utils';
 
 const NickName=()=> {
     function NickName() {
       let navigate = useNavigate();
-      const location = useLocation();
       const [nickName_id, setNickName_id] = useState("");
-      const { studentID } = location.state;
+      const userInfo = loginUser();
+      const token = getAuthToken();
       const handleNickName_idChange = event => {
         setNickName_id(event.target.value);
       };
       const handleSubmit = (e) => {
         e.preventDefault();
         const student_id = loginUser();
-        alert(`The nickName you entered was: ${nickName_id}`)
         const formData = {
-                        "studentID": studentID,
+                        "studentID": userInfo,
                         "nickname": nickName_id
                       };
                       fetch('/nickname', {
@@ -56,7 +57,7 @@ const NickName=()=> {
                 <form className="NickName_submitForm" onSubmit={handleSubmit}>
                     <div className="NickName_label_loc">
                         <div  className="hint_label">
-                            <label className="first_label">看來你是第一次登入此系統!<br/>填寫你想要被稱呼的暱稱吧!</label><br/>
+                            <label className="first_label">填寫你想要被稱呼的暱稱吧!</label><br/>
                         </div>
                         <input type="text" name="nickName_id" 
                         onChange={handleNickName_idChange}

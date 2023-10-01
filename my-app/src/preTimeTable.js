@@ -30,6 +30,7 @@ const PreTimeTable=()=> {
     const [error, setError] = useState(false);
     const [preSearch, setPreSearch] = useState(false);
     const [preTable, setPreTable] = useState(true);
+    const [addSuccess, setAddSuccess] = useState(false);
     
     const userInfo = loginUser();
     const token = getAuthToken();
@@ -56,6 +57,7 @@ const PreTimeTable=()=> {
         //加入預選
         const handleAddPreCourse = (courseName,classNum,classTime,classRoom,category,teacher,target,syllabus,evaluation) =>{
             console.log(classTime);
+            setAddSuccess(true);
             const formData = {
                 studentID:userInfo,
                 pre_info:
@@ -86,10 +88,21 @@ const PreTimeTable=()=> {
                 .catch(error => {
                     console.error(error);
                 });
+
+                const timer = setTimeout(() => {
+                    setAddSuccess(false);
+                  }, 500);
+
+                return () => clearTimeout(timer);
         }
         return (
             <PreSearchList>
                 <ArticleContainer>
+                {addSuccess &&
+                    <div className='addSucText'>
+                        加入成功!
+                    </div>
+                }
                     {list.map((item, index) => (
                         <PreSearchBody key={index}>
                             <PreText>{item.name}&nbsp;<br/>{item.time}<br/>
@@ -210,12 +223,10 @@ const PreTimeTable=()=> {
         const [searchResults, setSearchResults] = useState([]);
         const [predata, setPreData] = useState([]);
         const [searchTerm, setSearchTerm] = useState('');
-        const [searchCategory, setSearchCategory] = useState('');
-        const [waiting, setWaiting] = useState(false);
+        const [searchCategory, setSearchCategory] = useState('general');
 
         const closeModal = () => {
             setModalIsOpen(false);
-            
           };
 
         const handlePTTFunctionSelect  = event => {
@@ -237,7 +248,7 @@ const PreTimeTable=()=> {
 
 
         
-        useEffect(() => {
+          useEffect(() => {
             console.log(searchCategory);
             if (searchTerm||searchCategory||searchCategory=='') {          
               fetch(`/pre_curriculum_search?category=${searchCategory}&name=${searchTerm}`)
@@ -300,14 +311,15 @@ const PreTimeTable=()=> {
                     <div>
                         <select className='preCategorySelect' onChange={handlePTTCategorySelect} value={searchCategory}>
                             <option>分類</option>
-                            <option value=''>全部</option>
+                            <option value='general'>通識</option>
                             <option value='PE'>體育</option>
                             <option value='foreign_language'>第二外語</option>
-                            <option value='general'>通識</option>
                             <option value='english'>英語</option>
                             <option value='major'>必選修</option>
+                            <option value=''>全部</option>
                         </select>
                         <input type="text" className='PreTimeTable_input' placeholder="輸入關鍵字" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
+                        
                         <CourseList list={predata} />
                         <Modal
                             isOpen={modalIsOpen}

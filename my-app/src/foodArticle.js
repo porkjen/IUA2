@@ -552,13 +552,22 @@ const FoodArticle=()=> {
           }
 
       return (
-        <ArticleDetailPage>
+        <div>
+          {!openModal &&
+            <ArticleDetailPage>
             {!openModal && fromFood && !fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackSubmit}/>}
             {!openModal && !fromFood && !fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackToFavoriteSubmit}/>}
             {!openModal && !fromFood && fromMyPost && <img src={back} className='food_back' alt="回上一頁" onClick={handleBackToMyPostSubmit}/>}
-            {openModal && <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment} ArticleAS={ArticleAS}/>}
             {!openModal && < FoodDetailInfo/>}
-        </ArticleDetailPage>
+            </ArticleDetailPage>
+          }
+          {openModal &&
+            <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment} ArticleAS={ArticleAS}/>
+          }
+         
+
+        </div>
+        
       );
     }
 

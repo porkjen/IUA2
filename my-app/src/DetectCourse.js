@@ -34,6 +34,7 @@ const DetectCourse = () => {
   const [preSearch, setPreSearch] = useState(false);
   const [preTable, setPreTable] = useState(true);
   const [del, setDel] = useState(false);
+  const [addSuccess, setAddSuccess] = useState(false);
 
   const handlePreCourseInfo = (courseName,classNum,classTime,classRoom,category,teacher,target,syllabus,evaluation) =>{
 
@@ -92,7 +93,7 @@ const DetectCourse = () => {
          <ArticleContainer>
             {ShowData.map((item, index) => (
                 <PreClassBody key={index}>
-                    <PreText>{item.number}&nbsp;{item.name}<br/>
+                    <PreText>{item.name}<br/>
                     <button className='detDel' onClick={() => handleCourseDetectDelSubmit(item.number)} >刪除</button></PreText>
                 </PreClassBody>
             ))}
@@ -178,6 +179,7 @@ const DetectCourse = () => {
     //加入預選
     const handleAddPreCourse = (courseName,classNum) =>{
       console.log(courseName);
+      setAddSuccess(true);
         const formData = {
             studentID:userInfo,
             courseNumber:classNum,
@@ -196,15 +198,26 @@ const DetectCourse = () => {
             .catch(error => {
                 console.error(error);
             });
+            const timer = setTimeout(() => {
+              setAddSuccess(false);
+            }, 500);
+
+          return () => clearTimeout(timer);
     }
     return (
         <PreSearchList>
             <ArticleContainer>
+              {addSuccess &&
+                    <div className='Det_addSucText'>
+                        加入成功!
+                    </div>
+                }
                 {list.map((item, index) => (
                     <PreSearchBody key={index}>
                         <PreText>{item.name}&nbsp;<br/>{item.time}<br/>
                         <button className='preInfol' onClick={() => handlePreCourseInfo(item.name,item.classNum,item.time,item.classroom,item.category,item.teacher,item.target,item.syllabus,item.evaluation)}>詳細資訊</button>
-                        <button className='preInfor' onClick={() => handleAddPreCourse(item.name,item.classNum)}>加入偵測</button></PreText>
+                         <button className='preInfor' onClick={() => handleAddPreCourse(item.name,item.classNum)}>加入偵測</button>
+                        </PreText>
                     </PreSearchBody>
                 ))}
             </ArticleContainer>
@@ -216,7 +229,7 @@ const DetectCourse = () => {
     const [searchResults, setSearchResults] = useState([]);
         const [predata, setPreData] = useState([]);
         const [searchTerm, setSearchTerm] = useState('');
-        const [searchCategory, setSearchCategory] = useState('');
+        const [searchCategory, setSearchCategory] = useState('general');
 
         const closeModal = () => {
             setModalIsOpen(false);
@@ -305,12 +318,12 @@ const DetectCourse = () => {
                     <div>
                         <select className='preCategorySelect' onChange={handlePTTCategorySelect} value={searchCategory}>
                             <option>分類</option>
-                            <option value=''>全部</option>
+                            <option value='general'>通識</option>
                             <option value='PE'>體育</option>
                             <option value='foreign_language'>第二外語</option>
-                            <option value='general'>通識</option>
                             <option value='english'>英語</option>
                             <option value='major'>必選修</option>
+                            <option value=''>全部</option>
                         </select>
                         <input type="text" className='PreTimeTable_input' placeholder="輸入關鍵字" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                         <CourseList list={predata} />
