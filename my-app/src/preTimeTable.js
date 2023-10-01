@@ -211,6 +211,7 @@ const PreTimeTable=()=> {
         const [predata, setPreData] = useState([]);
         const [searchTerm, setSearchTerm] = useState('');
         const [searchCategory, setSearchCategory] = useState('');
+        const [waiting, setWaiting] = useState(false);
 
         const closeModal = () => {
             setModalIsOpen(false);
@@ -259,7 +260,7 @@ const PreTimeTable=()=> {
       return (
         
         <div className="PreTimeTable">   
-            <Link to='/CourseSelection'>
+            <Link to='/timeTableChoose'>
               <Back src={back} alt="回上一頁" />
             </Link> 
             {!modalIsOpen && <Title>預選課表</Title>}
