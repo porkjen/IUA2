@@ -9,43 +9,47 @@ import cat4 from './img/SignIn4.PNG';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { onLogin } from "./cookie.js";
 import { setAuthToken } from "./utils";
-import { getMessaging, getToken } from "firebase/messaging";
+import { MessagePayload, onMessage } from "firebase/messaging";
+import {requestToken, onMessageListener} from './firebase.js';
 
 const SignIn=()=> {
 
     let navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['token']);
     const [error, setError] = useState(false);
+    const [setToken, setTokenFound] = useState('');
+    const [notification, setNotification] = useState({title: '', body: ''});
 
-    function resetUI(){
-      // Get registration token. Initially this makes a network call, once retrieved
-      // subsequent calls to getToken will return from cache.
-      const messaging = getMessaging();
-      getToken(messaging, { vapidKey: 'BEKPWgmGQLVbo8wj_8_AmRSB-T2UOpgX-HYIrOYYKDLteQx8syLkeb8vrL8PhHdPE4iQNYhbzf7hqYAnHkx6X2U' }).then((currentToken) => {
-        if (currentToken) {
-          // Send the token to your server and update the UI if necessary
-          // ...
-        } else {
-          // Show permission request UI
-          console.log('No registration token available. Request permission to generate one.');
-          // ...
-        }
-      }).catch((err) => {
-        console.log('An error occurred while retrieving token. ', err);
-        // ...
-      });
+    //註冊sw
+    if ('serviceWorker' in navigator) {
+      console.log('sw in navigator!');
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      .then(reg => {
+        console.log('完成 SW 設定!', reg);
+      })
+      .catch(err => console.log('Error!', err));
     }
+    //取得token
+    requestToken(setTokenFound);
+    //console.log('the token from fcm: ', setToken);
 
+    //收到通知
+    onMessageListener().then(payload => {
+      setNotification({title: payload.notification.title, body: payload.notification.body})
+      console.log(payload);
+    }).catch(err => console.log('failed: ', err));
+
+    //通知權限
     function requestPermission() {
       console.log('Requesting permission...');
       Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
           console.log('Notification permission granted.');
-          resetUI();
       } else {
           console.log('Unable to get permission to notify.');
         }
@@ -124,8 +128,8 @@ const SignIn=()=> {
       }
       return (
         
-        <div className="SignIn">    
-        <requestPermission/>
+        <div className="SignIn">
+          <requestPermission/>
             <div className='SignIn_bg'>
                 <div className='SignIn_signIn'>
                     <br/>
