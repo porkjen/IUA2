@@ -103,7 +103,7 @@ public class TodoController {
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
+    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user, @RequestHeader("fcmToken")String ft)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
         String secretKey = keyRepository.findByUse("pswKey").getKey();
         //password encrypt
@@ -118,6 +118,7 @@ public class TodoController {
         System.out.println("加密:"+encryptedpwd);
         BasicEntity personalData = basicRepository.findByStudentID(studentID);
         //account is not in database
+        sendTestNotification(ft);
         if(personalData==null){
             //sign in
             crawler.CrawlerHandle(studentID,password);
