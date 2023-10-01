@@ -13,7 +13,7 @@ import {useState, useEffect} from "react";
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { onLogin } from "./cookie.js";
-import { setAuthToken } from "./utils";
+import { setAuthToken,setFcmToken } from "./utils";
 import { MessagePayload, onMessage } from "firebase/messaging";
 import {requestToken, onMessageListener} from './firebase.js';
 
@@ -92,7 +92,8 @@ const SignIn=()=> {
                       fetch('/login', {
                             method: 'POST',
                             headers: {
-                              'Content-Type': 'application/json'
+                              'Content-Type': 'application/json',
+                              'fcmToken': `${setToken}`,
                             },
                             body: JSON.stringify(formData)
                           })
@@ -118,6 +119,7 @@ const SignIn=()=> {
                           .then(data => {
                             onLogin(student_id);
                             console.log(data.token);//token
+                            setFcmToken(setToken);
                             setAuthToken(data.token);
                           })
                           .catch(error => {
