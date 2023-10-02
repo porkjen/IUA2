@@ -9,12 +9,14 @@ public class RemainCredit{
     int general;        //通識
     int kernal;         //核心
     int pe;             //體育
+    int chinese;        //國文
     ArrayList<CourseCredit> requiredList;
     ArrayList<CourseCredit> deptList;
     ArrayList<CourseCredit> optionalList;
     ArrayList<CourseCredit> generalList;
     ArrayList<CourseCredit> kernalList;
     ArrayList<CourseCredit> peList;
+    ArrayList<CourseCredit> chList;
     String eng = "未通過";
     String swimming = "未通過";
 
@@ -42,6 +44,10 @@ public class RemainCredit{
 
     public void setPE(int pe){
         this.pe = pe;
+    }
+
+    public void setChinese(int ch){
+        this.chinese = ch;
     }
 
     public void setEng(String eng){
@@ -76,6 +82,10 @@ public class RemainCredit{
         this.peList = peList;
     }
 
+    public void setChList(ArrayList<CourseCredit> chList){
+        this.chList = chList;
+    }
+
     public int getRequired(){
         return required;
     }
@@ -98,6 +108,10 @@ public class RemainCredit{
 
     public int getPE(){
         return pe;
+    }
+
+    public int getChinese(){
+        return chinese;
     }
 
     public String getEng(){
@@ -130,5 +144,9 @@ public class RemainCredit{
 
     public ArrayList<CourseCredit> getPeList(){
         return peList;
+    }
+
+    public ArrayList<CourseCredit> getChList(){
+        return chList;
     }
 }

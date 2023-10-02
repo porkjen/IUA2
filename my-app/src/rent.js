@@ -167,7 +167,16 @@ const Rent=()=> {
       }, [data]); // 添加依賴項data
 
       if (!data) {
-        return <div>Loading...</div>;
+        return (
+          <div className='rentLoadingText'>
+            <div class="rentPreloader">
+                正在抓取資料
+                <div class="rentDot1"></div>
+                <div class="rentDot2"></div>
+                <div class="rentDot3"></div>
+            </div>
+          </div>
+        );
       }
 
       

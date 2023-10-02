@@ -26,7 +26,7 @@ const CourseSelection=()=> {
                     <div className="finger"><img src={finger} alt="IUA"></img></div>
                     <div className="courseSelection_allBtn">
                             <div class="flex">
-                                <Link to='/timeTable'>
+                                <Link to='/timeTableChoose'>
                                 <div className="searchScheduleBtn">
                                     <button className="searchScheduleButton">
                                         <img src={searchScheduleImg} className='courseSelectionpic'/>
@@ -42,7 +42,7 @@ const CourseSelection=()=> {
                                 </Link>
                             </div>
                             <div class="flex">
-                                <Link to='/preTimeTable'>
+                                <Link to=''>
                                     <div className="recommendedCourseBtn">
                                         <button className="recommendedCourseButton">
                                             <img src={recommendedCourseImg} className='courseSelectionpic'/>

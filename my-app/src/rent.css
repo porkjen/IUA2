@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=PT+Serif&family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=EB+Garamond:wght@500&family=PT+Serif&family=Permanent+Marker&display=swap');
+
+
 .rent_house{
     max-width: 20%;
     padding-left: 10%;
@@ -36,3 +44,43 @@
     padding-top: 0px;
     padding-left: 260px;
 }
+
+.rentLoadingText{
+    color: #000000;
+    font-size: 25px;
+    font-family: 'Noto Serif TC', serif;
+    text-align: center;
+    writing-mode: horizontal-tb;
+    padding-top: 70%;
+}
+
+.rentPreloader > div{
+    background-color: #000000;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    animation: stretchdelay 0.7s infinite ease-in-out;
+}
+
+@keyframes stretchdelay {
+    0%, 40%, 100% { 
+         transform: translateY(0px);
+    }
+    20% {
+         transform: translateY(-10px);
+    }
+ }
+
+
+.rentPreloader .rentDot1 {
+    animation-delay: 0;
+  }
+  
+  .rentPreloader .rentDot2 {
+    animation-delay: 0.1s;
+  }
+  
+  .rentPreloader .rentDot3 {
+    animation-delay: 0.2s;
+  }

@@ -1,0 +1,64 @@
+html,body,#root,.timeTableChoose_bg{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+
+.timeTableChoose_bg{
+  /*background-image: url("img/background.PNG");*/
+  background-position: center;
+  background-repeat: repeat-y;
+  background-size: auto;
+  background-color: 	#EDF4FF;
+}
+
+.ttc_backicon{
+  height: 40px;
+  width: 40px;
+  padding-top: 10px;
+}
+
+.ttcBtnPos{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ttcBtn{
+    font-family: 'Noto Serif TC', serif;
+    margin-top: 30px;
+    width:200px;
+    padding: 17px 40px;
+    border-radius: 10px;
+    border: 0;
+    background-color: rgb(120, 182, 235);
+    letter-spacing: 1.5px;
+    font-size: 15px;
+    transition: all .3s ease;
+    box-shadow: rgb(120, 182, 235) 0px 10px 0px 0px;
+    color: hsl(0, 0%, 100%);
+}
+
+.ttcBtn:hover {
+  box-shadow: rgb(120, 182, 235) 0px 7px 0px 0px;
+}
+ 
+.ttcBtn:active {
+  background-color: rgb(120, 182, 235);
+  /*50, 168, 80*/
+  box-shadow: rgb(120, 182, 235) 0px 0px 0px 0px;
+  transform: translateY(5px);
+  transition: 200ms;
+}
+
+.ttc_duckpic{
+    position: fixed;
+    height: 380px;
+    width: 400px;
+    margin-top: 90%;
+}

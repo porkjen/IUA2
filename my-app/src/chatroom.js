@@ -17,8 +17,9 @@ class ChatRoom extends React.Component {
        from:'',
        connected: false,
        userName: localStorage.getItem('userName'),
-       apiRoom: localStorage.getItem('roomApi'),
+       apiRoom: localStorage.getItem('nowRoom'),
        apiRoomName: localStorage.getItem('nowRoomName'),
+       poster: localStorage.getItem('poster'),
        inputName: '', // 新增的姓名輸入狀態
        messageData: [],
      };
@@ -177,8 +178,9 @@ class ChatRoom extends React.Component {
    
 
    render() {
-    const { messages, newMessage, connected, userName, apiRoomName, inputName, messageData } = this.state;
+    const { messages, newMessage, connected, userName, apiRoomName, inputName, messageData, poster } = this.state;
     console.log("this.state.userName in render:", this.state.userName);
+    const isPosterSameAsUserName = poster === userName;
     const Message = ({ content, isSent }) => (
       <div className={`message ${isSent ? 'sent' : 'received'}`}>
         {content}
@@ -192,7 +194,7 @@ class ChatRoom extends React.Component {
               <Back src={back} alt="回上一頁" />
           </Link>
          <h1>{this.state.apiRoomName}
-         <span className="user-online">{userName} is online</span>
+         {isPosterSameAsUserName && <button type="confirmed">已確認</button>}
          </h1>
        </div>
        <div className="chatroom-messages" >

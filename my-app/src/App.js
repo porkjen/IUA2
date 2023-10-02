@@ -36,6 +36,7 @@ import MyArticles from './MyArticles';
 import PreTimeTable from './preTimeTable';
 import Rules from './rules';
 import MoodChatGPT from './moodChatGPT';
+import TimeTableChoose from './timeTableChoose';
 
 const App=()=> {
 
@@ -48,6 +49,7 @@ const App=()=> {
                     <Route path="/remain" element={<Remain/>} />
                     <Route path="/nickName" element={<NickName/>} />
                     <Route path="/timeTable" element={<TimeTable/>} />
+                    <Route path="/timeTableChoose" element={<TimeTableChoose/>} />
                     <Route path="/choose" element={<Choose />} />
                     <Route path="/myNotification" element={<MyNotification />} />
                     <Route path="/changeClass" element={<ChangeClass/>} />

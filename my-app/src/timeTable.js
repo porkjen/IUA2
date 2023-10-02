@@ -222,7 +222,7 @@ const TimeTable=()=> {
         <div className="TimeTable">  
         {openModal && <Modal closeModal={setOpenModal} type={"courseInfo"} CName={courseName}/> } 
         {!openModal &&  
-          <Link to='/CourseSelection'>
+          <Link to='/timeTableChoose'>
               <Back src={back} alt="回上一頁" />
           </Link>
         }

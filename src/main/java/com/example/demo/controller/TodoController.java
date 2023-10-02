@@ -82,6 +82,8 @@ public class TodoController {
     @Autowired
     ChatRoomApiRepository chatRoomApiRepository;
     @Autowired
+    RecomdCourseRepository recomdCourseRepository;
+    @Autowired
     PECourseRepository peCourseRepository; //體育
     @Autowired
     ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
@@ -101,7 +103,7 @@ public class TodoController {
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user)throws TesseractException, IOException, InterruptedException  {
+    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user, @RequestHeader("fcmToken")String ft)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
         String secretKey = keyRepository.findByUse("pswKey").getKey();
         //password encrypt
@@ -116,6 +118,7 @@ public class TodoController {
         System.out.println("加密:"+encryptedpwd);
         BasicEntity personalData = basicRepository.findByStudentID(studentID);
         //account is not in database
+        sendTestNotification(ft);
         if(personalData==null){
             //sign in
             crawler.CrawlerHandle(studentID,password);
@@ -469,6 +472,149 @@ public class TodoController {
         return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
     }
 
+        @PostMapping("/recommend_course_QA")
+    public RecommandCourseEntity course_recommand_QA(@RequestParam(value = "ans1")String ans1, @RequestParam(value = "ans2")String ans2, @RequestParam(value = "ans3")String ans3, @RequestParam(value = "ans4")String ans4, @RequestParam(value = "ans5")String ans5)throws TesseractException, IOException, InterruptedException {
+        Integer core = 0,general = 0;//initial
+        Integer[] temp = {0,0,0,0,0};//0:co 1:sw 2:ai 3:is 4:cs
+        String[] core_software = {"程式語言","資料庫系統","軟體工程","編譯器","系統工程","人工智慧"};//軟體工程有上下兩學期  //#6
+        String[] core_computer = {"數位系統設計","微處理器原理與組合語言","計算機系統設計","計算機結構","嵌入式系統設計","系統程式"};//#6
+        String[] computer = {"Verilog硬體描述語言","ios應用程式語言開發入門","Android行動裝置軟體設計"};//co  //#3
+        String[] software = {"Python程式語言","網頁程式設計","ASP.NET程式設計","MATLAB程式設計","JAVA程式設計","進階資料庫","物件導向軟體工程","IOS App遊戲開發"};//sw  //#8
+        String[] artificial_intelligence = {"數位影像處理","電腦圖學","巨量資料運算導論","機器視覺理論應用","機器學習技術","物聯網技術與應用","3D列印技術與系統"};//ai  //#7
+        String[] information_security = {"資訊安全實務管理"};//資訊安全實務管理有上下兩學期  //is   //#1
+        String[] computational_science = {"組合論","數值分析","圖論演算法","進階程式競賽技巧"};//cs  //#4
+        String[] tempCore = {};
+        String[] tempGeneral = {};
+        //cs&sw->Python程式語言 MATLAB程式設計 組合論 進階程式競賽技巧
+        //cs&is->資訊安全實務管理
+        //ai&sw->巨量資料運算導論 物聯網技術與應用 機器學習技術
+        //co&sw->ios應用程式語言開發入門 Android行動裝置軟體設計
+        if(Integer.parseInt(ans1) > 3){
+            temp[3]++;//is
+        }
+        else if(Integer.parseInt(ans2) > 3){
+            temp[2]++;//ai
+        }
+        else if(Integer.parseInt(ans3) > 3){
+            temp[0]++;//co
+        }
+        else if(Integer.parseInt(ans4) > 3){
+            temp[1]++;//sw
+        }
+        else if(Integer.parseInt(ans5) > 3){
+            temp[4]++;//cs
+        }
+        RecommandCourseEntity recommandCourse = recomdCourseRepository.findByStudentID(account);
+        if(recommandCourse == null){
+            recommandCourse.setStudentID(account);
+        }
+        int flag = 0;
+        for(int i = 0;i < 5;i++){
+            if(temp[i]==0){
+                flag++;
+            }
+        }
+        if(flag == 5 || flag == 0){
+            int randCore = (int)(Math.random()*12);
+            int randCSAIC = (int)(Math.random()*23);
+            RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+            if(randCore < 6){
+                coreShow.setName(core_computer[randCore]);
+                coreShow.setField("計算機領域");
+            }
+            else{
+                randCore -= 6;
+                coreShow.setName(core_software[randCore]);
+                coreShow.setField("軟體領域");
+            }
+            coreShow.setCategory("核心選修");
+            recommandCourse.setDisplay(coreShow);
+
+            RecommandCourseEntity.Display caiscShow = new RecommandCourseEntity.Display();
+            if(randCSAIC < 3){
+                caiscShow.setName(computer[randCSAIC]);
+                caiscShow.setField("計算機領域");
+            }
+            else if(randCSAIC < 11){
+                randCSAIC -= 3;
+                caiscShow.setName(software[randCSAIC]);
+                caiscShow.setField("軟體領域");
+            }
+            else if(randCSAIC < 18){
+                randCSAIC -= 11;
+                caiscShow.setName(artificial_intelligence[randCSAIC]);
+                caiscShow.setField("人工智慧領域");
+            }
+            else if(randCSAIC < 19){
+                randCSAIC -= 18;
+                caiscShow.setName(information_security[randCSAIC]);
+                caiscShow.setField("資訊安全領域");
+            }
+            else if(randCSAIC < 23){
+                randCSAIC -= 19;
+                caiscShow.setName(computational_science[randCSAIC]);
+                caiscShow.setField("計算科學領域");
+            }
+            caiscShow.setCategory("一般選修");
+            recommandCourse.setDisplay(caiscShow);
+
+        }
+        else{
+            if(temp[0] > 0){
+                int randCore = (int)(Math.random()*6);
+                int randCSAIC = (int)(Math.random()*3);
+                core+=2;
+                general+=2;
+                tempCore[core-2] = core_computer[randCore];
+                tempCore[core-1] = "計算機領域";
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "計算機領域";
+            }
+            else if(temp[1] > 0){
+                int randCore = (int)(Math.random()*6);
+                int randCSAIC = (int)(Math.random()*8);
+                core+=2;
+                general+=2;
+                tempCore[core-2] = core_computer[randCore];
+                tempCore[core-1] = "軟體領域";
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "軟體領域";
+            }
+            else if(temp[2] > 0){
+                int randCSAIC = (int)(Math.random()*7);
+                general+=2;
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "人工智慧領域";
+            }
+            else if(temp[3] > 0){
+                int randCSAIC = (int)(Math.random()*1);
+                general+=2;
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "資訊安全領域";
+            }
+            else if(temp[4] > 0){
+                int randCSAIC = (int)(Math.random()*4);
+                general+=2;
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "計算科學領域";
+            }
+            int sizeCore = tempCore.length/2;
+            int sizeGeneral = tempGeneral.length/2;
+            int randCore = (int)(Math.random()*sizeCore);
+            int randCSAIC = (int)(Math.random()*sizeGeneral);
+            RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+            RecommandCourseEntity.Display caiscShow = new RecommandCourseEntity.Display();
+            coreShow.setName(tempCore[(randCore*2)]);
+            coreShow.setField(tempCore[(randCore*2)+1]);
+            coreShow.setCategory("核心選修");
+            recommandCourse.setDisplay(coreShow);
+            caiscShow.setName(tempCore[(randCSAIC*2)]);
+            caiscShow.setField(tempCore[(randCSAIC*2)+1]);
+            caiscShow.setCategory("一般選修");
+            recommandCourse.setDisplay(caiscShow);
+        }
+        return recommandCourse;
+    }
 
     @PostMapping("/course_search_detail")
     public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {

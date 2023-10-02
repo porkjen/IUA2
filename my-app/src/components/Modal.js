@@ -324,6 +324,37 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
               });
         }
 
+        const handleContactBtnClick = () => {
+          const queryParams = new URLSearchParams({
+            first: userInfo,
+            second: data.studentID,
+          });
+        
+          const url = '/pickRoomApi?' + queryParams.toString();
+        
+          const requestData = {
+            first: userInfo,
+            second: data.studentID,
+          };
+        
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+          })
+            .then((response) => response.json())
+            .then((apidata) => {
+              navigate(`/chatroom/${apidata.roomApi}`, { state: { roomApi: apidata.roomApi } });
+              localStorage.setItem('nowRoom', apidata.roomApi);
+              localStorage.setItem('nowRoomName', data.title);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+        };
+
 
       return(
              <div>
@@ -334,7 +365,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
               <label>課程老師:&ensp;{data.teacher}</label><br/>
               <label>課程時間:&ensp;{data.time.join('、')}</label><br/>
               <label>內容:&ensp;{data.content}</label><br/><br/>
-              {isCreator===false && <ModalSubmitBtn type="submit">聯絡發文者</ModalSubmitBtn>}
+              {isCreator===false && <ModalSubmitBtn type="submit" onClick={handleContactBtnClick}>聯絡發文者</ModalSubmitBtn>}
               {isCreator && confirm && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit} disabled>修改貼文</ArticleDetailNormalBtn>
                     <ArticleDetailNormalBtn onClick={handleRemovedClassPostConfirmSubmit} disabled>刪除貼文</ArticleDetailNormalBtn>
                 </ButtonContainer>)}

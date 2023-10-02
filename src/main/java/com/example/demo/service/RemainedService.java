@@ -27,6 +27,7 @@ public class RemainedService {
         int general = 16;        //通識
         int kernal = 12;         //核心選修
         int pe = 4;             //體育
+        int chinese = 4;        //國文
 
         ArrayList<CourseCredit> requiredList = new ArrayList<CourseCredit>();   //必修細項
         ArrayList<CourseCredit> deptList = new ArrayList<CourseCredit>();       //內選細項
@@ -34,6 +35,7 @@ public class RemainedService {
         ArrayList<CourseCredit> generalList = new ArrayList<CourseCredit>();    //通識細項
         ArrayList<CourseCredit> kernalList = new ArrayList<CourseCredit>();     //核心細項
         ArrayList<CourseCredit> peList = new ArrayList<CourseCredit>();         //體育細項
+        ArrayList<CourseCredit> chList = new ArrayList<CourseCredit>();         //國文細項
 
         int eecse = 0;          //電資學院
         int optOffset = 0;      //共同教育抵銷
@@ -55,6 +57,12 @@ public class RemainedService {
                     if(dept.equals("體育室")){
                         peList.add(item);
                         pe -= 1;
+                    }
+                    if(f.getName().contains("國文")){
+                        chinese -= credit;
+                        chList.add(item);
+                        if(chinese < 0)
+                            chinese = 0;
                     }
                     if(required < 0)
                         required = 0;
@@ -127,6 +135,7 @@ public class RemainedService {
         remainCredit.setOptional(optional);
         remainCredit.setGeneral(general);
         remainCredit.setPE(pe);
+        remainCredit.setChinese(chinese);
 
         remainCredit.setReqList(requiredList);
         remainCredit.setDeptList(deptList);
@@ -134,6 +143,7 @@ public class RemainedService {
         remainCredit.setgeneralList(generalList);
         remainCredit.setKernalList(kernalList);
         remainCredit.setPeList(peList);
+        remainCredit.setChList(chList);
 
         return remainCredit;
     }

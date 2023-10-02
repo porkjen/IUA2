@@ -132,3 +132,7 @@ html,body,#root,.PreTimeTable{
     margin-top: 10px;
    
 }
+
+.addSucText{
+    font-family: 'Noto Serif TC', serif;
+}
