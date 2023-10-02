@@ -1810,22 +1810,38 @@ public class TodoController {
     }
 
     @PutMapping("/change_post_status") //both house and change course posts
-    public ResponseEntity<String> changePostStatus(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<?> changePostStatus(@RequestBody Map<String, String> requestData){
         if(requestData.get("postId").startsWith("H")){
             HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
             if(!Objects.equals(house.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
+            house.setDecided(Integer.parseInt(house.getPeople()));
             house.setStatus("已租");
             houseRepository.save(house);
+            return ResponseEntity.ok("Success");
         }
         //requestData.get("postId").startsWith("C")
         else {
             ChangeCourseEntity changeCourse = changeCourseRepository.findByPostId(requestData.get("postId"));
             if(!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
-            changeCourse.setStatus("已換");
-            changeCourseRepository.save(changeCourse);
+            List<String> nickName = new ArrayList<>();
+            for(String id : changeCourse.getContact()){
+                nickName.add(basicRepository.findByStudentID(id).getNickname());
+            }
+            return ResponseEntity.ok(nickName);
         }
+    }
+
+    @PostMapping("/change_post_decided")
+    public ResponseEntity<String> changePostDecided(@RequestBody Map<String, String> requestData)
+    {
+        System.out.println("/change_post_decided : "+requestData.get("nickname"));
+        ChangeCourseEntity changeCourse = changeCourseRepository.findByPostId(requestData.get("postId"));
+        changeCourse.setDecided(basicRepository.findByNickname(requestData.get("nickname")).getStudentID());
+        changeCourse.setStatus("已換");
+        changeCourseRepository.save(changeCourse);
         return ResponseEntity.ok("Success");
     }
+
 
     public static Map<Integer, List<TimeTableEntity.Pre_Info>> groupPreInfoByWeekday(List<TimeTableEntity.Pre_Info> preInfoList) {
         Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = new HashMap<>();

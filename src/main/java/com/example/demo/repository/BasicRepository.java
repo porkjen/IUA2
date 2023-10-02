@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BasicRepository extends MongoRepository<BasicEntity, String> {
     BasicEntity findByStudentID(String studentID);
-
+    BasicEntity findByNickname(String nickname);
 }

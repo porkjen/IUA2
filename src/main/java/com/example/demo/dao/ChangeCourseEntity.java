@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
-
 @Document("change_CourseCollection")
 public class ChangeCourseEntity {
     //test
@@ -18,6 +17,8 @@ public class ChangeCourseEntity {
     private String teacher;
     private String content;
     private String post_time;
+    private List<String> contact = new ArrayList<>();
+    private String decided = "";
     private String status = "未換";
 
     public String getId() {
@@ -106,5 +107,21 @@ public class ChangeCourseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<String> getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact.add(contact);
+    }
+
+    public String getDecided() {
+        return decided;
+    }
+
+    public void setDecided(String decided) {
+        this.decided = decided;
     }
 }
