@@ -51,7 +51,7 @@ const RentArticle=()=> {
         );
       }
 
-      function ArticleDetailInfo({ address, area, car, floor, gender, money, people, power, water, style, rent_date, note  }) {
+      function ArticleDetailInfo({ address, area, car, floor, gender, money, people, power, water, style, rent_date, note, decided  }) {
         return (
             <div>
                 <div>地址: {address}</div>
@@ -60,7 +60,7 @@ const RentArticle=()=> {
                 <div>樓層: {floor}</div>
                 <div>性別: {gender}</div>
                 <div>租金: {money}</div>
-                <div>人數: {people}&nbsp;&#40;目前已確定人數:&#41;</div>
+                <div>人數: {people}&nbsp;&#40;目前已確定人數: {decided}&#41;</div>
                 <div>電費: {power}</div>
                 <div>水費: {water}</div>
                 <div>房型: {style}</div>
@@ -284,7 +284,7 @@ const RentArticle=()=> {
             <ArticleDetailPosition>
                 <ArticleTitleinfo author={data.name} title={data.title} post_time={data.post_time}></ArticleTitleinfo>
                 <hr></hr>
-                <ArticleDetailInfo  address={data.address} area={data.area} car={data.car} floor={data.floor} gender={data.gender} money={data.money} people={data.people} power={data.power} water={data.water} style={data.style} rent_date={data.rent_date} note={data.note} >拜託跟我換課，我請你吃雞排</ArticleDetailInfo>
+                <ArticleDetailInfo  address={data.address} area={data.area} car={data.car} floor={data.floor} gender={data.gender} money={data.money} people={data.people} power={data.power} water={data.water} style={data.style} rent_date={data.rent_date} note={data.note} decided={data.decided}>拜託跟我換課，我請你吃雞排</ArticleDetailInfo>
                 <hr></hr>
                 {isRentDelete && <ConfirmRentDelete/>}
                 {isCreator && isRentDelete && (<ButtonContainer>

@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&family=Playfair+Display:ital,wght@1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=PT+Serif&family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=EB+Garamond:wght@500&family=PT+Serif&family=Permanent+Marker&display=swap');
+
+
+html,body,#root,.Recommend{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+
+.Recommend{
+    /*background-image: url("img/background.PNG");*/
+    background-position: center;
+    background-repeat: repeat-y;
+    background-size: auto;
+    background-color: 	#EDF4FF;
+    
+   }
+
+.Position{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.Btn{
+    font-family: 'Noto Serif TC', serif;
+    margin-top: 30px;
+    width:200px;
+    padding: 17px 40px;
+    border-radius: 10px;
+    border: 0;
+    background-color: rgb(120, 182, 235);
+    letter-spacing: 1.5px;
+    font-size: 15px;
+    transition: all .3s ease;
+    box-shadow: rgb(120, 182, 235) 0px 10px 0px 0px;
+    color: hsl(0, 0%, 100%);
+}
+
+.Btn:hover {
+    box-shadow: rgb(120, 182, 235) 0px 7px 0px 0px;
+}
+   
+.Btn:active {
+    background-color: rgb(120, 182, 235);
+    /*50, 168, 80*/
+    box-shadow: rgb(120, 182, 235) 0px 0px 0px 0px;
+    transform: translateY(5px);
+    transition: 200ms;
+}
