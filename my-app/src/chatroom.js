@@ -175,6 +175,35 @@ class ChatRoom extends React.Component {
       this.scrollToBottom(); // Scroll to the bottom when new messages arrive
     }
   }
+
+  handleConfirmation = () => {
+    const { apiRoom, poster } = this.state;
+  
+    const data = {
+      studentID: poster,
+      postId: apiRoom,
+    };
+  
+    fetch('/change_post_status', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(result => {
+        // Handle the result as needed
+        console.log('Confirmation result:', result);
+        // Update the UI or take further actions based on the result
+        if (result.success) {
+          this.setState({ postConfirmed: true });
+        }
+      })
+      .catch(error => {
+        console.error('Error confirming post:', error);
+      });
+  };
    
 
    render() {
@@ -194,7 +223,10 @@ class ChatRoom extends React.Component {
               <Back src={back} alt="回上一頁" />
           </Link>
          <h1>{this.state.apiRoomName}
-         {isPosterSameAsUserName && <button type="confirmed">已確認</button>}
+         {isPosterSameAsUserName && 
+         <button type="button" onClick={this.handleConfirmation} disabled={!connected}>
+            已確認
+          </button>}
          </h1>
        </div>
        <div className="chatroom-messages" >
