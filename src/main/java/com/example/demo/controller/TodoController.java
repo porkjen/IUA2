@@ -2071,8 +2071,13 @@ public class TodoController {
     }
 
     @PostMapping("/pickRoomApi")
-    public ChatroomApiEntity pickRoomApi(@RequestParam(value = "first") String first, @RequestParam(value = "second") String second){
+    public ChatroomApiEntity pickRoomApi(@RequestParam(value = "first") String first, @RequestParam(value = "second") String second, @RequestParam(value = "postId") String postId){
 
+        if(postId.startsWith("C")){
+            ChangeCourseEntity changeCourse = changeCourseRepository.findByPostId(postId);
+            changeCourse.setContact(first);
+            changeCourseRepository.save(changeCourse);
+        }
         ChatroomApiEntity Api = new ChatroomApiEntity();
         ChatroomApiEntity chatRoomApi1 = chatRoomApiRepository.findByStudentID(first,second);
         if (chatRoomApi1 != null && chatRoomApi1.getRoomApi() != null) {

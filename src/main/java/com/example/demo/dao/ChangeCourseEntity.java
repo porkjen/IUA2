@@ -18,7 +18,7 @@ public class ChangeCourseEntity {
     private String content;
     private String post_time;
     private List<String> contact = new ArrayList<>();
-    private String decided = "";
+    private String decided = "";//最終結果
     private String status = "未換";
 
     public String getId() {
