@@ -22,6 +22,7 @@ public class ChangeCourseEntity {
     private String status = "未換";
     private String desiredClass;
 
+
     public String getId() {
         return id;
     }
@@ -125,6 +126,7 @@ public class ChangeCourseEntity {
     public void setDecided(String decided) {
         this.decided = decided;
     }
+
 
     public String getDesiredClass() {
         return desiredClass;
