@@ -9,6 +9,7 @@ public class NotificationCondition {
     private String studentID;
     private RentPushCondition rentCondition;
     private ArrayList<ExchangePushCondition> exchangeCondition;
+    private ArrayList<String> desireClasses = new ArrayList<>();
 
     public NotificationCondition(){}
 
@@ -30,5 +31,13 @@ public class NotificationCondition {
     }
     public ArrayList<ExchangePushCondition> getExchangeCondition(){
         return exchangeCondition;
+    }
+
+    public ArrayList<String> getDesireClasses() {
+        return desireClasses;
+    }
+
+    public void setDesireClasses(String desireClass) {
+        this.desireClasses.add(desireClass);
     }
 }
