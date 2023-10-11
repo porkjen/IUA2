@@ -10,9 +10,10 @@ import {Back}  from './components/Style.js';
 import {ArticleSubmitBtn, ArticleSubmitBtnPosition}  from './components/ArticleStyle.js';
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import { loginUser } from "./cookie.js";
 import { getAuthToken } from "./utils";
+import Select from 'react-select'
 
 const PostArticle=()=> {
     let navigate = useNavigate();
@@ -407,6 +408,8 @@ const PostArticle=()=> {
         const [Ctime, setCtime] = useState(changeClassClassTime);
         const [Cteacher, setCteacher] = useState(changeClassClassTeacher);
         const [numberArray, setNumberArray] = useState([]);
+        const [options, setOptions] = useState([]);
+        const [selectedOption, setSelectedOption] = useState("");
         
         const handleCtextChange = event => {
           setCtext(event.target.value);
@@ -423,6 +426,7 @@ const PostArticle=()=> {
                           time:Ctime.time,
                           teacher:Cteacher.teacher,
                           content : Ctext,
+                          desiredClass : selectedOption,
                         };
                         fetch('/exchange_course_post', {
                               method: 'POST',
@@ -435,6 +439,7 @@ const PostArticle=()=> {
                             .then(response => response.json())
                             .then(data => {
                               console.log(data);
+                              setOptions(data);
                             })
                             .catch(error => {
                               console.error(error);
@@ -443,6 +448,22 @@ const PostArticle=()=> {
                             
                          //Form submission happens here
         }
+
+        useEffect(() => {
+            fetch(`/pre_curriculum_search?category=${''}&name=${''}`)
+              .then((response) => response.json())
+              .then((data) => {
+                  console.log(data);
+                  const optionsFromAPI = data.map((item) => ({
+                    value: item.name+item,
+                    label: item.name,
+                  }));
+                  setOptions(optionsFromAPI);
+              })
+              .catch((error) => {
+                console.error('error:', error);
+              });
+        }, []);
 
         return (
           <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
@@ -461,6 +482,14 @@ const PostArticle=()=> {
             <div className='articleChangeClassFormTeacher'>
               <label>老師:</label>
               <input type='text' className='articleChangeClassFormTeacherInput' value={Cteacher.teacher} required="required" disabled></input>
+            </div><br/>
+            <div className='articleChangeClassFormTeacher'>
+              <label>想要的課:(選填)</label>
+              <Select 
+              className='articleCCS'
+              options={options}
+              value={selectedOption}
+              onChange={(selected) => setSelectedOption(selected)}/>
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>
