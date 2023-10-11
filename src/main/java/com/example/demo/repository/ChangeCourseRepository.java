@@ -8,5 +8,6 @@ import java.util.List;
 public interface ChangeCourseRepository extends MongoRepository<ChangeCourseEntity, String> {
     ChangeCourseEntity findByPostId(String postId);
     List<ChangeCourseEntity> findByCategory(String category);
+    List<ChangeCourseEntity> findByCourse(String course);
     ChangeCourseEntity findFirstByOrderByIdDesc();
 }

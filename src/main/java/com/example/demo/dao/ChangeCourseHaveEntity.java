@@ -10,6 +10,7 @@ public class ChangeCourseHaveEntity {
     private String id;
     private String time;
     private int have;
+    private boolean pair;
 
     public String getId() {
         return id;
@@ -35,6 +36,14 @@ public class ChangeCourseHaveEntity {
         this.have = have;
     }
 
+    public boolean isPair() {
+        return pair;
+    }
+
+    public void setPair(boolean pair) {
+        this.pair = pair;
+    }
+
     public List<ChangeCourseHaveEntity> initialization(){
         List<ChangeCourseHaveEntity> init = new ArrayList<>();
         for(int i=1;i<=7;i++){
@@ -48,4 +57,5 @@ public class ChangeCourseHaveEntity {
         }
         return init;
     }
+
 }

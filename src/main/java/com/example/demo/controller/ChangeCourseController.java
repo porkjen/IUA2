@@ -4,10 +4,7 @@ package com.example.demo.controller;
 //import com.example.demo.dao.*;
 import com.example.demo.*;
 import com.example.demo.dao.*;
-import com.example.demo.repository.BasicRepository;
-import com.example.demo.repository.ChangeCourseHaveRepository;
-import com.example.demo.repository.ChangeCourseRepository;
-import com.example.demo.repository.SavedRepository;
+import com.example.demo.repository.*;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,14 +24,28 @@ public class ChangeCourseController {
     @Autowired
     ChangeCourseRepository changeCourseRepository;
     @Autowired
+    NotificationRepository notificationRepository;
+    @Autowired
     BasicRepository basicRepository;
 
     @Autowired
     SavedRepository savedRepository;
 
     @GetMapping("/course_change_have") //whether there is class at this time
-    public List<ChangeCourseHaveEntity> courseChangeHave(){
+    public List<ChangeCourseHaveEntity> courseChangeHave(@RequestParam("studentID") String studentID){
+        System.out.println("/course_change_have");
         List<ChangeCourseHaveEntity> courseTimeList = changeCourseHaveRepository.findAll();
+        for(String c : notificationRepository.findByStudentID(studentID).getDesireClasses()){
+            System.out.println(c);
+            for(ChangeCourseEntity coursePost : changeCourseRepository.findByCourse(c)){
+                System.out.println(Arrays.toString(coursePost.getTime()));
+                for(int i=0;i<coursePost.getTime().length;i++){
+                    int idx = 14*(Integer.parseInt(coursePost.getTime()[i])/100-1)+(Integer.parseInt(coursePost.getTime()[i])-Integer.parseInt(coursePost.getTime()[i])/100*100)-1;
+                    System.out.println(idx);
+                    courseTimeList.get(idx).setPair(true);
+                }
+            }
+        }
         return courseTimeList;
     }
 
@@ -82,6 +93,12 @@ public class ChangeCourseController {
         course.setPost_time(dateTime);
         course.setNickname(basicRepository.findByStudentID(course.getStudentID()).getNickname());
         changeCourseRepository.save(course);
+        if(course.getDesiredClass()!=null){
+            NotificationCondition n = notificationRepository.findByStudentID(course.getStudentID());
+            if(n==null) n=new NotificationCondition(course.getStudentID());
+            n.setDesireClasses(course.getDesiredClass());
+            notificationRepository.save(n);
+        }
         //加入到我的文章
         SavedEntity saved = savedRepository.findByStudentID(course.getStudentID());
         saved.setPosted(course.getPostId());//add

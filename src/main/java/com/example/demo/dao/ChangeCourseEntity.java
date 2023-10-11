@@ -18,8 +18,9 @@ public class ChangeCourseEntity {
     private String content;
     private String post_time;
     private List<String> contact = new ArrayList<>();
-    private String decided = "";//最終結果
+    private String decided = "";//最終結果(交換對象的學號)
     private String status = "未換";
+    private String desiredClass;
 
     public String getId() {
         return id;
@@ -123,5 +124,13 @@ public class ChangeCourseEntity {
 
     public void setDecided(String decided) {
         this.decided = decided;
+    }
+
+    public String getDesiredClass() {
+        return desiredClass;
+    }
+
+    public void setDesiredClass(String desiredClass) {
+        this.desiredClass = desiredClass;
     }
 }
