@@ -418,7 +418,7 @@ const PostArticle=()=> {
           console.log("innnnn");
           e.preventDefault();
           const student_id = loginUser();
-          console.log("innnnn");
+          console.log(selectedOption.label);
           const formData = {
                           studentID: userInfo,
                           course : Ctitle.name,
@@ -426,7 +426,7 @@ const PostArticle=()=> {
                           time:Ctime.time,
                           teacher:Cteacher.teacher,
                           content : Ctext,
-                          desiredClass : selectedOption,
+                          desiredClass : selectedOption.label,
                         };
                         fetch('/exchange_course_post', {
                               method: 'POST',
