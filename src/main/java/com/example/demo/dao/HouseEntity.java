@@ -28,6 +28,8 @@ public class HouseEntity {
     private String post_time = "";
     private List<String> saved = new ArrayList<>();
     private String status = "未租";
+    private int decided;
+
 
     public String getId() {
         return id;
@@ -191,5 +193,13 @@ public class HouseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getDecided() {
+        return decided;
+    }
+
+    public void setDecided(int decided) {
+        this.decided = decided;
     }
 }

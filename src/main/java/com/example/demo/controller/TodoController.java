@@ -453,7 +453,149 @@ public class TodoController {
         }
         return ResponseEntity.ok(shortTT);
     }
+    @PostMapping("/recommend_course_QA")
+    public RecommandCourseEntity course_recommand_QA(@RequestParam(value = "ans1")String ans1, @RequestParam(value = "ans2")String ans2, @RequestParam(value = "ans3")String ans3, @RequestParam(value = "ans4")String ans4, @RequestParam(value = "ans5")String ans5)throws TesseractException, IOException, InterruptedException {
+        Integer core = 0,general = 0;//initial
+        Integer[] temp = {0,0,0,0,0};//0:co 1:sw 2:ai 3:is 4:cs
+        String[] core_software = {"程式語言","資料庫系統","軟體工程","編譯器","系統工程","人工智慧"};//軟體工程有上下兩學期  //#6
+        String[] core_computer = {"數位系統設計","微處理器原理與組合語言","計算機系統設計","計算機結構","嵌入式系統設計","系統程式"};//#6
+        String[] computer = {"Verilog硬體描述語言","ios應用程式語言開發入門","Android行動裝置軟體設計"};//co  //#3
+        String[] software = {"Python程式語言","網頁程式設計","ASP.NET程式設計","MATLAB程式設計","JAVA程式設計","進階資料庫","物件導向軟體工程","IOS App遊戲開發"};//sw  //#8
+        String[] artificial_intelligence = {"數位影像處理","電腦圖學","巨量資料運算導論","機器視覺理論應用","機器學習技術","物聯網技術與應用","3D列印技術與系統"};//ai  //#7
+        String[] information_security = {"資訊安全實務管理"};//資訊安全實務管理有上下兩學期  //is   //#1
+        String[] computational_science = {"組合論","數值分析","圖論演算法","進階程式競賽技巧"};//cs  //#4
+        String[] tempCore = {};
+        String[] tempGeneral = {};
+        //cs&sw->Python程式語言 MATLAB程式設計 組合論 進階程式競賽技巧
+        //cs&is->資訊安全實務管理
+        //ai&sw->巨量資料運算導論 物聯網技術與應用 機器學習技術
+        //co&sw->ios應用程式語言開發入門 Android行動裝置軟體設計
+        if(Integer.parseInt(ans1) > 3){
+            temp[3]++;//is
+        }
+        else if(Integer.parseInt(ans2) > 3){
+            temp[2]++;//ai
+        }
+        else if(Integer.parseInt(ans3) > 3){
+            temp[0]++;//co
+        }
+        else if(Integer.parseInt(ans4) > 3){
+            temp[1]++;//sw
+        }
+        else if(Integer.parseInt(ans5) > 3){
+            temp[4]++;//cs
+        }
+        RecommandCourseEntity recommandCourse = recomdCourseRepository.findByStudentID(account);
+        if(recommandCourse == null){
+            recommandCourse.setStudentID(account);
+        }
+        int flag = 0;
+        for(int i = 0;i < 5;i++){
+            if(temp[i]==0){
+                flag++;
+            }
+        }
+        if(flag == 5 || flag == 0){
+            int randCore = (int)(Math.random()*12);
+            int randCSAIC = (int)(Math.random()*23);
+            RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+            if(randCore < 6){
+                coreShow.setName(core_computer[randCore]);
+                coreShow.setField("計算機領域");
+            }
+            else{
+                randCore -= 6;
+                coreShow.setName(core_software[randCore]);
+                coreShow.setField("軟體領域");
+            }
+            coreShow.setCategory("核心選修");
+            recommandCourse.setDisplay(coreShow);
 
+            RecommandCourseEntity.Display caiscShow = new RecommandCourseEntity.Display();
+            if(randCSAIC < 3){
+                caiscShow.setName(computer[randCSAIC]);
+                caiscShow.setField("計算機領域");
+            }
+            else if(randCSAIC < 11){
+                randCSAIC -= 3;
+                caiscShow.setName(software[randCSAIC]);
+                caiscShow.setField("軟體領域");
+            }
+            else if(randCSAIC < 18){
+                randCSAIC -= 11;
+                caiscShow.setName(artificial_intelligence[randCSAIC]);
+                caiscShow.setField("人工智慧領域");
+            }
+            else if(randCSAIC < 19){
+                randCSAIC -= 18;
+                caiscShow.setName(information_security[randCSAIC]);
+                caiscShow.setField("資訊安全領域");
+            }
+            else if(randCSAIC < 23){
+                randCSAIC -= 19;
+                caiscShow.setName(computational_science[randCSAIC]);
+                caiscShow.setField("計算科學領域");
+            }
+            caiscShow.setCategory("一般選修");
+            recommandCourse.setDisplay(caiscShow);
+
+        }
+        else{
+            if(temp[0] > 0){
+                int randCore = (int)(Math.random()*6);
+                int randCSAIC = (int)(Math.random()*3);
+                core+=2;
+                general+=2;
+                tempCore[core-2] = core_computer[randCore];
+                tempCore[core-1] = "計算機領域";
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "計算機領域";
+            }
+            else if(temp[1] > 0){
+                int randCore = (int)(Math.random()*6);
+                int randCSAIC = (int)(Math.random()*8);
+                core+=2;
+                general+=2;
+                tempCore[core-2] = core_computer[randCore];
+                tempCore[core-1] = "軟體領域";
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "軟體領域";
+            }
+            else if(temp[2] > 0){
+                int randCSAIC = (int)(Math.random()*7);
+                general+=2;
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "人工智慧領域";
+            }
+            else if(temp[3] > 0){
+                int randCSAIC = (int)(Math.random()*1);
+                general+=2;
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "資訊安全領域";
+            }
+            else if(temp[4] > 0){
+                int randCSAIC = (int)(Math.random()*4);
+                general+=2;
+                tempGeneral[general-2] = computer[randCSAIC];
+                tempGeneral[general-1] = "計算科學領域";
+            }
+            int sizeCore = tempCore.length/2;
+            int sizeGeneral = tempGeneral.length/2;
+            int randCore = (int)(Math.random()*sizeCore);
+            int randCSAIC = (int)(Math.random()*sizeGeneral);
+            RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+            RecommandCourseEntity.Display caiscShow = new RecommandCourseEntity.Display();
+            coreShow.setName(tempCore[(randCore*2)]);
+            coreShow.setField(tempCore[(randCore*2)+1]);
+            coreShow.setCategory("核心選修");
+            recommandCourse.setDisplay(coreShow);
+            caiscShow.setName(tempCore[(randCSAIC*2)]);
+            caiscShow.setField(tempCore[(randCSAIC*2)+1]);
+            caiscShow.setCategory("一般選修");
+            recommandCourse.setDisplay(caiscShow);
+        }
+        return recommandCourse;
+    }
     @GetMapping("/curriculum_search_detail")
     public ResponseEntity<?> curriculumSearchDetail(@RequestParam("studentID") String studentID, @RequestParam("Cname")String name, @RequestHeader("Authorization") String au){
         JwtToken jwtToken = new JwtToken();
@@ -1664,28 +1806,37 @@ public class TodoController {
     }
 
     @PutMapping("/change_post_status") //both house and change course posts
-    public ResponseEntity<String> changePostStatus(@RequestBody Map<String, String> requestData){
+    public ResponseEntity<?> changePostStatus(@RequestBody Map<String, String> requestData){
         if(requestData.get("postId").startsWith("H")){
             HouseEntity house = houseRepository.findByPostId(requestData.get("postId"));
             if(!Objects.equals(house.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
+            house.setDecided(Integer.parseInt(house.getPeople()));
             house.setStatus("已租");
             houseRepository.save(house);
+            return ResponseEntity.ok("Success");
         }
         //requestData.get("postId").startsWith("C")
         else {
             ChangeCourseEntity changeCourse = changeCourseRepository.findByPostId(requestData.get("postId"));
-            if(!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
-            changeCourse.setStatus("已換");
-            changeCourseRepository.save(changeCourse);
-            for(String t : changeCourse.getTime()){
-                ChangeCourseHaveEntity c = changeCourseHaveRepository.findByTime(t);
-                c.setHave(c.getHave()-1);
-                changeCourseHaveRepository.save(c);
+            if (!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))
+                return ResponseEntity.badRequest().body("Invalid request : not the author");//400
+            List<String> nickName = new ArrayList<>();
+            for (String id : changeCourse.getContact()) {
+                nickName.add(basicRepository.findByStudentID(id).getNickname());
             }
+            return ResponseEntity.ok(nickName);
         }
+    }
+    @PostMapping("/change_post_decided")
+    public ResponseEntity<String> changePostDecided(@RequestBody Map<String, String> requestData)
+    {
+        System.out.println("/change_post_decided : "+requestData.get("nickname"));
+        ChangeCourseEntity changeCourse = changeCourseRepository.findByPostId(requestData.get("postId"));
+        changeCourse.setDecided(basicRepository.findByNickname(requestData.get("nickname")).getStudentID());
+        changeCourse.setStatus("已換");
+        changeCourseRepository.save(changeCourse);
         return ResponseEntity.ok("Success");
     }
-
     public static Map<Integer, List<TimeTableEntity.Pre_Info>> groupPreInfoByWeekday(List<TimeTableEntity.Pre_Info> preInfoList) {
         Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = new HashMap<>();
         int lastweekday;
@@ -1898,8 +2049,13 @@ public class TodoController {
     }
 
     @PostMapping("/pickRoomApi")
-    public ChatroomApiEntity pickRoomApi(@RequestParam(value = "first") String first, @RequestParam(value = "second") String second){
+    public ChatroomApiEntity pickRoomApi(@RequestParam(value = "first") String first, @RequestParam(value = "second") String second, @RequestParam(value = "postId") String postId){
 
+        if(postId.startsWith("C")){
+            ChangeCourseEntity changeCourse = changeCourseRepository.findByPostId(postId);
+            changeCourse.setContact(first);
+            changeCourseRepository.save(changeCourse);
+        }
         ChatroomApiEntity Api = new ChatroomApiEntity();
         ChatroomApiEntity chatRoomApi1 = chatRoomApiRepository.findByStudentID(first,second);
         if (chatRoomApi1 != null && chatRoomApi1.getRoomApi() != null) {

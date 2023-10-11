@@ -18,7 +18,8 @@ public class ChangeCourseEntity {
     private String content;
     private String post_time;
     private String status = "未換";
-
+    private List<String> contact = new ArrayList<>();
+    private String decided = "";
     public String getId() {
         return id;
     }
@@ -105,5 +106,21 @@ public class ChangeCourseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<String> getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact.add(contact);
+    }
+
+    public String getDecided() {
+        return decided;
+    }
+
+    public void setDecided(String decided) {
+        this.decided = decided;
     }
 }
