@@ -82,6 +82,8 @@ public class TodoController {
     @Autowired
     ChatRoomApiRepository chatRoomApiRepository;
     @Autowired
+    RecomdCourseRepository recomdCourseRepository;
+    @Autowired
     PECourseRepository peCourseRepository; //體育
     @Autowired
     ForeignLanguageCourseRepository foreignLanguageCourseRepository; //外語
