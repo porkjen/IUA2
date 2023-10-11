@@ -89,6 +89,8 @@ public class TodoController {
     EnglishCourseRepository englishCourseRepository;//英文
     @Autowired
     KeyRepository keyRepository;
+    @Autowired
+    ChangeCourseHaveRepository changeCourseHaveRepository;
 
     static Crawler crawler = new Crawler();
     String account = "";
@@ -1675,6 +1677,11 @@ public class TodoController {
             if(!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
             changeCourse.setStatus("已換");
             changeCourseRepository.save(changeCourse);
+            for(String t : changeCourse.getTime()){
+                ChangeCourseHaveEntity c = changeCourseHaveRepository.findByTime(t);
+                c.setHave(c.getHave()-1);
+                changeCourseHaveRepository.save(c);
+            }
         }
         return ResponseEntity.ok("Success");
     }
