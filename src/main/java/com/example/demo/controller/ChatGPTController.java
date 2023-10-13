@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import com.example.demo.repository.BasicRepository;
 import com.example.demo.repository.KeyRepository;
 import com.example.demo.service.MailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,8 @@ public class ChatGPTController {
     @Autowired
     KeyRepository keyRepository;
     @Autowired
+    BasicRepository basicRepository;
+    @Autowired
     private MailService mailService;
     private final String API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
     //test2
@@ -33,7 +36,8 @@ public class ChatGPTController {
         // 系統消息，用於設定語言為繁體中文
         JSONObject systemMessage = new JSONObject();
         systemMessage.put("role", "system");
-        systemMessage.put("content", "使用繁體中文，我在這裡傾聽您的心事，簡短回答");
+        String department = basicRepository.findByStudentID(requestData.get("studentID")).getDepartment();
+        systemMessage.put("content", "使用繁體中文，我是心理輔導師，簡短回答，使用者是"+department+"學生");
 
         // 用戶消息
         JSONObject userMessage = new JSONObject();
@@ -45,6 +49,7 @@ public class ChatGPTController {
 
         requestJson.put("messages", messagesArray);
         requestJson.put("model", "gpt-3.5-turbo");
+        requestJson.put("temperature", 0.5);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> request = new HttpEntity<>(requestJson.toString(), headers);
