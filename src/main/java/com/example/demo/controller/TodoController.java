@@ -1838,6 +1838,11 @@ public class TodoController {
         changeCourse.setDecided(basicRepository.findByNickname(requestData.get("nickname")).getStudentID());
         changeCourse.setStatus("已換");
         changeCourseRepository.save(changeCourse);
+        for (String t : changeCourse.getTime()){
+            ChangeCourseHaveEntity have = changeCourseHaveRepository.findByTime(t);
+            have.setHave(have.getHave()-1);
+            changeCourseHaveRepository.save(have);
+        }
         return ResponseEntity.ok("Success");
     }
     public static Map<Integer, List<TimeTableEntity.Pre_Info>> groupPreInfoByWeekday(List<TimeTableEntity.Pre_Info> preInfoList) {
