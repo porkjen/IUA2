@@ -1075,6 +1075,56 @@ public class Crawler {
         System.out.println(eCourseEntityList.size());
         return eCourseEntityList;
     }
+    public static List<RecommandCourseEntity.Info> getHistoryCourse() throws  InterruptedException{
+        driver.switchTo().defaultContent();
+        Thread.sleep(1000);
+        driver.switchTo().frame("menuFrame");
+        Thread.sleep(1000);
+        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        Thread.sleep(1000);
+        driver.findElement(By.linkText("成績系統")).click(); //
+        Thread.sleep(3000);
+        driver.findElement(By.linkText("查詢各式成績")).click();
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("mainFrame");
+        driver.findElement(By.xpath("//*[@id=\"RB_TYPE_3\"]")).click(); //歷年成績
+        driver.findElement(By.xpath("//*[@id=\"QUERY_BTN1\"]")).click(); //查詢
+
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("viewFrame");
+        Thread.sleep(3000);
+
+        // 添加等待
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        //獲取scoretable
+        List<WebElement> hcResult = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
+        List<RecommandCourseEntity.Info> HCresult = new ArrayList<>();
+        //HCresult.setStudentID(account);
+        for(int i = 1;i < hcResult.size();i++){
+            System.out.println(i);
+            WebElement itemCourse = driver.findElements(By.cssSelector("#DataGrid > tbody > tr")).get(i);
+            List<WebElement> item = itemCourse.findElements(By.tagName("td"));
+            Thread.sleep(3000);
+            System.out.println("學分 : "+item.get(3).getText());
+            System.out.println("種類 : "+item.get(4).getText());
+            if(item.get(3).getText().equals("3") && item.get(4).getText().equals("選修")){
+                RecommandCourseEntity.Info HCinfo = new RecommandCourseEntity.Info();
+                System.out.println("課號 : "+item.get(1).getText());
+                System.out.println("名稱 : "+item.get(5).getText());
+                System.out.println("分數 : "+item.get(7).getText());
+                if(item.get(7).getText().equals("+")){
+                    break;
+                }
+                HCinfo.setNumber(item.get(1).getText());
+                HCinfo.setName(item.get(5).getText());
+                HCinfo.setScore(item.get(7).getText());
+                HCinfo.setLoved("0");
+                HCresult.add(HCinfo);
+            }
+        }
+        return HCresult;
+    }
     public static void main(String[] args) throws Exception {
 
 

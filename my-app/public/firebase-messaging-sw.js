@@ -26,9 +26,9 @@ messaging.onBackgroundMessage(function(payload) {
 
 self.addEventListener('push', e => {
   console.log('[Service Worker] Push Received.');
-  let title = 'test';
+  let title = 'Hello!';
   let options = {
-    body: 'test'
+    body: 'This is IUA.'
   };
   if(e.data){
     options = e.data.json();

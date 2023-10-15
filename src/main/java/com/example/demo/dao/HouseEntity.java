@@ -29,6 +29,8 @@ public class HouseEntity {
     private String post_time = "";
     private List<String> saved = new ArrayList<>();
     private String status = "未租";
+    private int decided;
+
 
     public String getId() {
         return id;

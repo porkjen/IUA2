@@ -91,6 +91,8 @@ public class TodoController {
     EnglishCourseRepository englishCourseRepository;//英文
     @Autowired
     KeyRepository keyRepository;
+    @Autowired
+    ChangeCourseHaveRepository changeCourseHaveRepository;
 
     static Crawler crawler = new Crawler();
     String account = "";
@@ -103,7 +105,7 @@ public class TodoController {
     AESEncryptionDecryption aesEncryptionDecryption = new AESEncryptionDecryption();
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user, @RequestHeader("fcmToken")String ft)throws TesseractException, IOException, InterruptedException  {
+    public ResponseEntity<?> login(@RequestBody HashMap <String, String> user, @RequestHeader("fcmToken")String fcmToken)throws TesseractException, IOException, InterruptedException  {
         System.out.println("/login");
         String secretKey = keyRepository.findByUse("pswKey").getKey();
         //password encrypt
@@ -117,8 +119,8 @@ public class TodoController {
         String encryptedpwd = aesEncryptionDecryption.encrypt(password, secretKey);
         System.out.println("加密:"+encryptedpwd);
         BasicEntity personalData = basicRepository.findByStudentID(studentID);
+        sendTestNotification(fcmToken);
         //account is not in database
-        sendTestNotification(ft);
         if(personalData==null){
             //sign in
             crawler.CrawlerHandle(studentID,password);
@@ -291,8 +293,6 @@ public class TodoController {
                     System.out.println("[" + courses.get(i).getNumber() + "] is full, keep detecting.");
                 }
             }
-            courseList = dRepository.findByStudentID(studentID.get("studentID"));
-            courses = courseList.getDetectedCourses();
         }
     }
 
@@ -456,65 +456,55 @@ public class TodoController {
         }
         return ResponseEntity.ok(shortTT);
     }
-
-    @GetMapping("/curriculum_search_detail")
-    public ResponseEntity<?> curriculumSearchDetail(@RequestParam("studentID") String studentID, @RequestParam("Cname")String name, @RequestHeader("Authorization") String au){
-        JwtToken jwtToken = new JwtToken();
-        try {
-            jwtToken.validateToken(au, studentID);
-        } catch (AuthException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    @PostMapping("/recommend_course_rating")
+    public RecommandCourseEntity course_recommand_rating()throws TesseractException, IOException, InterruptedException {
+        RecommandCourseEntity recommandCourse = new RecommandCourseEntity();
+        recommandCourse.setStudentID(account);
+        //String grade = basicRepository.findByStudentID(account).getGrade();
+        crawler.CrawlerHandle(account, pwd);
+        List<RecommandCourseEntity.Info> hcList = crawler.getHistoryCourse();
+        for (RecommandCourseEntity.Info i:hcList){
+            System.out.println(i.getName());
+            recommandCourse.setInfo(i);
         }
-        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
-        for(TimeTableEntity.Info i : timeTable.getInfo()){
-            if(Objects.equals(i.getName(), name))return ResponseEntity.ok(i);
-        }
-        return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
+        return recommandCourse;
     }
 
-        @PostMapping("/recommend_course_QA")
-    public RecommandCourseEntity course_recommand_QA(@RequestParam(value = "ans1")String ans1, @RequestParam(value = "ans2")String ans2, @RequestParam(value = "ans3")String ans3, @RequestParam(value = "ans4")String ans4, @RequestParam(value = "ans5")String ans5)throws TesseractException, IOException, InterruptedException {
-        Integer core = 0,general = 0;//initial
-        Integer[] temp = {0,0,0,0,0};//0:co 1:sw 2:ai 3:is 4:cs
+    @PostMapping("/recommend_course_rating_result")
+    public RecommandCourseEntity course_recommand_rating_result(@RequestParam(value = "coreC")String coreC,@RequestParam(value = "coreS")String coreS,@RequestParam(value = "co")String co,
+                                                                @RequestParam(value = "sw")String sw,@RequestParam(value = "ai")String ai,@RequestParam(value = "is")String is,
+                                                                @RequestParam(value = "cs")String cs)throws TesseractException, IOException, InterruptedException {
         String[] core_software = {"程式語言","資料庫系統","軟體工程","編譯器","系統工程","人工智慧"};//軟體工程有上下兩學期  //#6
         String[] core_computer = {"數位系統設計","微處理器原理與組合語言","計算機系統設計","計算機結構","嵌入式系統設計","系統程式"};//#6
         String[] computer = {"Verilog硬體描述語言","ios應用程式語言開發入門","Android行動裝置軟體設計"};//co  //#3
-        String[] software = {"Python程式語言","網頁程式設計","ASP.NET程式設計","MATLAB程式設計","JAVA程式設計","進階資料庫","物件導向軟體工程","IOS App遊戲開發"};//sw  //#8
+        String[] software = {"Python程式語言","網頁程式設計","ASP.NET程式設計","MATLAB程式設計","組合論","JAVA程式設計","ios應用程式語言開發入門",
+                "巨量資料運算導論","進階程式競賽技巧","機器學習技術","進階資料庫","物聯網技術與應用","Android行動裝置軟體設計","物件導向軟體工程","IOS App遊戲開發"};//sw  //#15
         String[] artificial_intelligence = {"數位影像處理","電腦圖學","巨量資料運算導論","機器視覺理論應用","機器學習技術","物聯網技術與應用","3D列印技術與系統"};//ai  //#7
         String[] information_security = {"資訊安全實務管理"};//資訊安全實務管理有上下兩學期  //is   //#1
-        String[] computational_science = {"組合論","數值分析","圖論演算法","進階程式競賽技巧"};//cs  //#4
-        String[] tempCore = {};
-        String[] tempGeneral = {};
+        String[] computational_science = {"Python程式語言","MATLAB程式設計","組合論","數值分析","圖論演算法","資訊安全實務管理","進階程式競賽技巧"};//cs  //#7
         //cs&sw->Python程式語言 MATLAB程式設計 組合論 進階程式競賽技巧
-        //cs&is->資訊安全實務管理
+        //cs&is&sw->資訊安全實務管理
         //ai&sw->巨量資料運算導論 物聯網技術與應用 機器學習技術
         //co&sw->ios應用程式語言開發入門 Android行動裝置軟體設計
-        if(Integer.parseInt(ans1) > 3){
-            temp[3]++;//is
-        }
-        else if(Integer.parseInt(ans2) > 3){
-            temp[2]++;//ai
-        }
-        else if(Integer.parseInt(ans3) > 3){
-            temp[0]++;//co
-        }
-        else if(Integer.parseInt(ans4) > 3){
-            temp[1]++;//sw
-        }
-        else if(Integer.parseInt(ans5) > 3){
-            temp[4]++;//cs
-        }
+        Integer[] temp = {0,0,0,0,0,0,0};
         RecommandCourseEntity recommandCourse = recomdCourseRepository.findByStudentID(account);
         if(recommandCourse == null){
             recommandCourse.setStudentID(account);
         }
+        temp[0] = Integer.parseInt(coreC);
+        temp[1] = Integer.parseInt(coreS);
+        temp[2] = Integer.parseInt(co);
+        temp[3] = Integer.parseInt(sw);
+        temp[4] = Integer.parseInt(ai);
+        temp[5] = Integer.parseInt(is);
+        temp[6] = Integer.parseInt(cs);
         int flag = 0;
-        for(int i = 0;i < 5;i++){
-            if(temp[i]==0){
+        for(int i = 1;i < 7;i++){
+            if(temp[i]==temp[i-1]){
                 flag++;
             }
         }
-        if(flag == 5 || flag == 0){
+        if(flag == 6){
             int randCore = (int)(Math.random()*12);
             int randCSAIC = (int)(Math.random()*23);
             RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
@@ -557,64 +547,96 @@ public class TodoController {
             }
             caiscShow.setCategory("一般選修");
             recommandCourse.setDisplay(caiscShow);
-
         }
-        else{
-            if(temp[0] > 0){
+        int max = temp[0];
+        for(int i = 1;i < 7;i++){
+            if(temp[i]>max){
+                max = temp[i];
+            }
+        }
+        Integer[] tempMax={};
+        int index = 0;
+        for(int i = 0;i < 7;i++){
+            if(temp[i]==max){
+                tempMax[index] = i;
+                index++;
+            }
+        }
+        for(int i = 0;i < index;i++){
+            if(tempMax[i] == 0){
                 int randCore = (int)(Math.random()*6);
-                int randCSAIC = (int)(Math.random()*3);
-                core+=2;
-                general+=2;
-                tempCore[core-2] = core_computer[randCore];
-                tempCore[core-1] = "計算機領域";
-                tempGeneral[general-2] = computer[randCSAIC];
-                tempGeneral[general-1] = "計算機領域";
+                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                coreShow.setName(core_computer[randCore]);
+                coreShow.setField("計算機領域");
+                coreShow.setCategory("核心選修");
+                recommandCourse.setDisplay(coreShow);
             }
-            else if(temp[1] > 0){
+            if(tempMax[i] == 1){
                 int randCore = (int)(Math.random()*6);
-                int randCSAIC = (int)(Math.random()*8);
-                core+=2;
-                general+=2;
-                tempCore[core-2] = core_computer[randCore];
-                tempCore[core-1] = "軟體領域";
-                tempGeneral[general-2] = computer[randCSAIC];
-                tempGeneral[general-1] = "軟體領域";
+                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                coreShow.setName(core_software[randCore]);
+                coreShow.setField("軟體領域");
+                coreShow.setCategory("核心選修");
+                recommandCourse.setDisplay(coreShow);
             }
-            else if(temp[2] > 0){
-                int randCSAIC = (int)(Math.random()*7);
-                general+=2;
-                tempGeneral[general-2] = computer[randCSAIC];
-                tempGeneral[general-1] = "人工智慧領域";
+            if(tempMax[i] == 2){
+                int randCore = (int)(Math.random()*3);
+                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                coreShow.setName(core_software[randCore]);
+                coreShow.setField("計算機領域");
+                coreShow.setCategory("一般選修");
+                recommandCourse.setDisplay(coreShow);
             }
-            else if(temp[3] > 0){
-                int randCSAIC = (int)(Math.random()*1);
-                general+=2;
-                tempGeneral[general-2] = computer[randCSAIC];
-                tempGeneral[general-1] = "資訊安全領域";
+            if(tempMax[i] == 3){
+                int randCore = (int)(Math.random()*8);
+                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                coreShow.setName(core_software[randCore]);
+                coreShow.setField("軟體領域");
+                coreShow.setCategory("一般選修");
+                recommandCourse.setDisplay(coreShow);
             }
-            else if(temp[4] > 0){
-                int randCSAIC = (int)(Math.random()*4);
-                general+=2;
-                tempGeneral[general-2] = computer[randCSAIC];
-                tempGeneral[general-1] = "計算科學領域";
+            if(tempMax[i] == 4){
+                int randCore = (int)(Math.random()*7);
+                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                coreShow.setName(core_software[randCore]);
+                coreShow.setField("人工智慧領域");
+                coreShow.setCategory("一般選修");
+                recommandCourse.setDisplay(coreShow);
             }
-            int sizeCore = tempCore.length/2;
-            int sizeGeneral = tempGeneral.length/2;
-            int randCore = (int)(Math.random()*sizeCore);
-            int randCSAIC = (int)(Math.random()*sizeGeneral);
-            RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-            RecommandCourseEntity.Display caiscShow = new RecommandCourseEntity.Display();
-            coreShow.setName(tempCore[(randCore*2)]);
-            coreShow.setField(tempCore[(randCore*2)+1]);
-            coreShow.setCategory("核心選修");
-            recommandCourse.setDisplay(coreShow);
-            caiscShow.setName(tempCore[(randCSAIC*2)]);
-            caiscShow.setField(tempCore[(randCSAIC*2)+1]);
-            caiscShow.setCategory("一般選修");
-            recommandCourse.setDisplay(caiscShow);
+            if(tempMax[i] == 5){
+                int randCore = (int)(Math.random()*1);
+                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                coreShow.setName(core_software[randCore]);
+                coreShow.setField("資訊安全領域");
+                coreShow.setCategory("一般選修");
+                recommandCourse.setDisplay(coreShow);
+            }
+            if(tempMax[i] == 6){
+                int randCore = (int)(Math.random()*4);
+                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                coreShow.setName(core_software[randCore]);
+                coreShow.setField("計算科學領域");
+                coreShow.setCategory("一般選修");
+                recommandCourse.setDisplay(coreShow);
+            }
         }
         return recommandCourse;
     }
+    @GetMapping("/curriculum_search_detail")
+    public ResponseEntity<?> curriculumSearchDetail(@RequestParam("studentID") String studentID, @RequestParam("Cname")String name, @RequestHeader("Authorization") String au){
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        for(TimeTableEntity.Info i : timeTable.getInfo()){
+            if(Objects.equals(i.getName(), name))return ResponseEntity.ok(i);
+        }
+        return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
+    }
+
 
     @PostMapping("/course_search_detail")
     public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {
@@ -1822,15 +1844,15 @@ public class TodoController {
         //requestData.get("postId").startsWith("C")
         else {
             ChangeCourseEntity changeCourse = changeCourseRepository.findByPostId(requestData.get("postId"));
-            if(!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))return ResponseEntity.badRequest().body("Invalid request : not the author");//400
+            if (!Objects.equals(changeCourse.getStudentID(), requestData.get("studentID")))
+                return ResponseEntity.badRequest().body("Invalid request : not the author");//400
             List<String> nickName = new ArrayList<>();
-            for(String id : changeCourse.getContact()){
+            for (String id : changeCourse.getContact()) {
                 nickName.add(basicRepository.findByStudentID(id).getNickname());
             }
             return ResponseEntity.ok(nickName);
         }
     }
-
     @PostMapping("/change_post_decided")
     public ResponseEntity<String> changePostDecided(@RequestBody Map<String, String> requestData)
     {
@@ -1841,8 +1863,6 @@ public class TodoController {
         changeCourseRepository.save(changeCourse);
         return ResponseEntity.ok("Success");
     }
-
-
     public static Map<Integer, List<TimeTableEntity.Pre_Info>> groupPreInfoByWeekday(List<TimeTableEntity.Pre_Info> preInfoList) {
         Map<Integer, List<TimeTableEntity.Pre_Info>> groupedByWeekday = new HashMap<>();
         int lastweekday;
@@ -1983,22 +2003,6 @@ public class TodoController {
                 courseDTO.setTarget(f.getTarget());
                 courseDTO.setEvaluation(f.getEvaluation());
                 courseDTO.setSyllabus(f.getSyllabus());
-                courseDTOList.add(courseDTO);
-            }
-        }
-        if(Objects.equals(category, "major")||Objects.equals(category, "")){
-            List<CourseEntity> CourseEntityList = courseRepository.findByNameContaining(name);
-            for(CourseEntity f : CourseEntityList){
-                CourseDTO courseDTO = new CourseDTO();
-                courseDTO.setName(f.getName());
-                courseDTO.setClassNum(f.getNumber());
-                courseDTO.setCategory(f.getCategory());
-                courseDTO.setTeacher(f.getTeacher());
-                courseDTO.setTTime(f.getTime());
-                courseDTO.setClassroom(f.getRoom());
-                courseDTO.setTarget(f.getCObjective());
-                courseDTO.setEvaluation(f.getCEvaluation());
-                courseDTO.setSyllabus(f.getCSyllabus());
                 courseDTOList.add(courseDTO);
             }
         }
