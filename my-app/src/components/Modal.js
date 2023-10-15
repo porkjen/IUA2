@@ -10,7 +10,7 @@ import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
 import { loginUser } from '../cookie';
 import { useCookies } from 'react-cookie';
 import { getAuthToken } from "../utils";
-
+import Modal from 'react-modal';
 
 
 
@@ -37,7 +37,7 @@ function ChooseArticle(){
 
 
 
-function Modal({closeModal, type, postId, comment, alreadyComment, studentID, time, rating, ArticleAS, CName}){
+function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, time, rating, ArticleAS, CName}){
 
     let navigate = useNavigate();
     const [isModalFood, setisModalFood] = useState(true);
@@ -54,6 +54,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     const [confirm, setConfirm] = useState(false);
     const [courseInfo, setCourseInfo] = useState(false);
     const [noData, setNoData] = useState(false);
+    const [modalIsOpen, setModalIsOpen] = useState(false); // 控制彈出視窗的狀態
     const token = getAuthToken();
     const userInfo = loginUser();
 
@@ -222,9 +223,13 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
       let navigate = useNavigate();
       //const { studentID, postId, time } = location.state;
       const [data, setData] = useState("");
+      const [people, setPeople] = useState([]);
+      const [thispeople, setThisPeople] = useState("");
       const [timeValue, setTimeValue] = useState("");
+      const [checkedPeople, setcheckedPeople] = useState("女");
       const [isCreator, setIsCreator] = useState(false);
-      const location = useLocation();
+      const [choose, setChoose] = useState(false);
+      
       const formData = {
         studentID:  userInfo,
         postId : postId,
@@ -255,8 +260,37 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
               console.error('Error:', error);
             });
         }
-      }, [data]); // 添加依賴項data
-
+        if (people==[] || people[0]==undefined) {
+          if(isCreator){
+            fetch('/change_post_status', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData),
+            })
+              .then(response => {
+                if (response.status === 200) {
+                  return response.json();
+                } else {
+                  throw new Error('请求失败');
+                }
+              })
+              .then(peopledata => {
+                const formattedData = peopledata.map(item => ({ name: item }));
+                //console.log(formattedData);
+                setPeople(peopledata);
+                console.log(people);
+                //setModalIsOpen(true);
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+        
+        }
+        console.log(people);
+      }, [data,people]); // 添加依賴項data
       if (!data) {
         return <div>Loading...</div>;
       }
@@ -300,29 +334,13 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
           //const student_id = loginUser();
           setConfirm(true);
         }
+        
 
         const handleClassPostStatusSubmit = (e) => {
           e.preventDefault();
-          const formData = {
-            studentID: userInfo,
-            postId:postId,
-          };
-          fetch('/change_post_status', {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-              })
-              .then(response => response.status)
-              .then(data => {
-                console.log(data);
-                closeModal(false);
-              })
-              .catch(error => {
-                console.error(error);
-              });
-        }
+      
+          setModalIsOpen(true);
+        };
 
         const handleContactBtnClick = () => {
           const queryParams = new URLSearchParams({
@@ -355,24 +373,93 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
             });
         };
 
+        const closeThisModal = () => {
+          setModalIsOpen(false);
+          setChoose(false);
+        };
+
+        const handleppChange = event => {
+          setcheckedPeople(event.target.value);
+        };
+
+
+        const choosePeople = () => {
+          const formData = {
+            postId:data.postId,
+            nickname: checkedPeople,
+          };
+        fetch('/change_post_decided', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+          })
+          .then(response => {
+            if(response.status===200){
+              window.location.reload();
+            }
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+        };
+
 
       return(
              <div>
-             {isCreator && <button className='alreadyChangeBtn' onClick={handleClassPostStatusSubmit}>換課完成</button>}
+             {!modalIsOpen && isCreator && 
+             <div>
+              <button className='alreadyChangeBtn' onClick={handleClassPostStatusSubmit}>換課完成</button>
              <label>發文者:&ensp;{data.studentID}</label><br/>
               <label>標題:&ensp;{data.course}</label><br/>
               <label>課程分類:&ensp;{data.category}</label><br/>
               <label>課程老師:&ensp;{data.teacher}</label><br/>
               <label>課程時間:&ensp;{data.time.join('、')}</label><br/>
+              <label>想要的課:&ensp;{data.desiredClass}</label><br/>
               <label>內容:&ensp;{data.content}</label><br/><br/>
-              {isCreator===false && <ModalSubmitBtn type="submit" onClick={handleContactBtnClick}>聯絡發文者</ModalSubmitBtn>}
-              {isCreator && confirm && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit} disabled>修改貼文</ArticleDetailNormalBtn>
+              </div>}
+              {!modalIsOpen && !isCreator && 
+             <div>
+             <label>發文者:&ensp;{data.studentID}</label><br/>
+              <label>標題:&ensp;{data.course}</label><br/>
+              <label>課程分類:&ensp;{data.category}</label><br/>
+              <label>課程老師:&ensp;{data.teacher}</label><br/>
+              <label>課程時間:&ensp;{data.time.join('、')}</label><br/>
+              <label>想要的課:&ensp;{data.desiredClass}</label><br/>
+              <label>內容:&ensp;{data.content}</label><br/><br/>
+              </div>}
+              {!modalIsOpen && !isCreator && <ModalSubmitBtn type="submit" onClick={handleContactBtnClick}>聯絡發文者</ModalSubmitBtn>}
+              {!modalIsOpen && isCreator && confirm && (<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit} disabled>修改貼文</ArticleDetailNormalBtn>
                     <ArticleDetailNormalBtn onClick={handleRemovedClassPostConfirmSubmit} disabled>刪除貼文</ArticleDetailNormalBtn>
                 </ButtonContainer>)}
-                {isCreator && confirm===false &&(<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit}>修改貼文</ArticleDetailNormalBtn>
+                {!modalIsOpen && isCreator && confirm===false &&(<ButtonContainer><ArticleDetailNormalBtn onClick={handleModifyClassPostSubmit}>修改貼文</ArticleDetailNormalBtn>
                     <ArticleDetailNormalBtn onClick={handleRemovedClassPostConfirmSubmit}>刪除貼文</ArticleDetailNormalBtn>
                 </ButtonContainer>)}<br/>
 
+                {modalIsOpen && 
+                <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeThisModal}
+                contentLabel="課程詳細資訊"
+              >
+                <div>
+                <button className='modalClose' onClick={closeThisModal}>X</button>
+                    <h2>{data.course}</h2>
+                    <h3>選擇與你交換的人</h3>
+                        {people.map((item, index) => (
+                      <label key={index}>
+                        <input type="radio" name="people" value={item} checked={checkedPeople === item} onChange={handleppChange}/> {item}<br/>
+                      </label>
+                    ))}
+                </div><br/>
+                <ModalSubmitBtn onClick={choosePeople}>確認</ModalSubmitBtn><br/>
+              </Modal>
+
+              }
               
              </div>
       );
@@ -991,7 +1078,7 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
           <div className="modalBackground">
             {isRating && <RatingFood/>}
             {!isRating && <ChooseArticle/>}
-            {!courseInfo && 
+            {!modalIsOpen && !courseInfo && 
               <div className="modalContainer">
                 <button className='modalClose' onClick={() => closeModal(false)}>X</button>
                 <div className="modalTitle">
@@ -1006,6 +1093,9 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
                     </div>
                 </div>
             </div>
+            }
+            {modalIsOpen && 
+               <ModalChangeClassArticle/>
             }
         </div>}
         {courseInfo &&
@@ -1027,4 +1117,4 @@ function Modal({closeModal, type, postId, comment, alreadyComment, studentID, ti
     );
 }
 
-export default Modal;
+export default IsModal;

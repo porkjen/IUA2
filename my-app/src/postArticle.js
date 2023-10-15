@@ -1,7 +1,5 @@
 import './PostArticle.css';
 import React from 'react';
-import elmo from './img/elmo.png';
-import conversation from './img/conversation.png';
 import cat1 from './img/SignIn1.png';
 import cat2 from './img/SignIn2.PNG';
 import {Title}  from './components/ArticleStyle.js';
@@ -455,7 +453,7 @@ const PostArticle=()=> {
               .then((data) => {
                   console.log(data);
                   const optionsFromAPI = data.map((item) => ({
-                    value: item.name+item,
+                    value: item.name,
                     label: item.name,
                   }));
                   setOptions(optionsFromAPI);

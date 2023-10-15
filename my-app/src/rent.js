@@ -1,9 +1,6 @@
 import './rent.css';
 import React from 'react';
-import Modal from "./components/Modal";
-import house from './img/house.png';
-import connection from './img/connection.png';
-import dog from './img/dog.png';
+import IsModal from "./components/Modal";
 import bee1 from './img/bee1.png';
 import bee2 from './img/bee2.png';
 import yolk from './img/yolk.PNG';
@@ -102,6 +99,8 @@ const Rent=()=> {
                 console.error('Error:', error);
               });
         }
+        else if(event.target.value==="myPost")
+          navigate('/MyArticles');
 
       };
 
@@ -119,6 +118,7 @@ const Rent=()=> {
                   <option value='AllArticle'>全部貼文</option>
                   <option value='selectArticle'>篩選貼文</option>
                   <option value='setNotification'>設置提醒</option>
+                  <option value='myPost'>我的貼文</option>
                 </ChangeClassCategorySelect>
                   
                 <ArticleList>
@@ -187,8 +187,8 @@ const Rent=()=> {
               <Back src={back} alt="回上一頁" />
           </Link>
           }
-          {openModal && rentSelect && <Modal closeModal={setOpenModal} type={"rent"}/>}
-          {openModal && rentNotification && <Modal closeModal={setOpenModal} type={"setRentNotification"}/>}
+          {openModal && rentSelect && <IsModal closeModal={setOpenModal} type={"rent"}/>}
+          {openModal && rentNotification && <IsModal closeModal={setOpenModal} type={"setRentNotification"}/>}
           {!openModal && < Rent_all/>}
         </Page>
       );

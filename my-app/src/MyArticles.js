@@ -8,7 +8,7 @@ import yolk from './img/yolk.PNG';
 import redBall from './img/redBall.PNG';
 import student from './img/student.png';
 import cat from './img/SignIn4.PNG';
-import Modal from "./components/Modal";
+import IsModal from "./components/Modal";
 import { Page, Pagebg, Title, PostArticleBtn, ChooseArticleBtn, ArticleList, ArticleText, ArticlePostTimeRating, ArticleContainer, 
   ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticlePostTime, ArticlePostRating, ArticleBody, ArticleSelect 
   ,ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance,ChangeClassCategorySelect, ArticleDistance,AlreadyArticleText} from './components/ArticleStyle.js';
@@ -337,7 +337,7 @@ function MyArticles() {
               />
             ))}
           </ArticleList>}
-          {openModal && <Modal closeModal={setOpenModal} type={"classArticle"} postId={Postid} studentID={userInfo} />}
+          {openModal && <IsModal closeModal={setOpenModal} type={"classArticle"} postId={Postid} studentID={userInfo} />}
         </div>
     );
   }
