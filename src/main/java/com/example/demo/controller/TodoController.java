@@ -456,6 +456,86 @@ public class TodoController {
         }
         return ResponseEntity.ok(shortTT);
     }
+
+    @PostMapping("/recommend_course_emptyhall")
+    public List<RecommandCourseEntity.Display> recommend_course_emptyhall()throws TesseractException, IOException, InterruptedException {
+        String[][] last_semester = {{"數值分析","102","103","104","資訊安全領域","一般選修"},{"計算機系統設計", "102","103","104","計算機領域","核心選修"},
+                {"Python程式語言","106","107","108","軟體領域&計算科學領域","一般選修"},{"資料庫系統","106","107","108","軟體領域","核心選修"},
+                {"進階程式競賽技巧","111","112","113","軟體領域&計算科學領域","一般選修"},{"網頁程式設計","206","207","208","軟體領域","一般選修"},
+                {"計算機結構", "206","207","208","計算機領域","核心選修"},{"數位影像處理","206","207","208","人工智慧領域","一般選修"},
+                {"軟體工程", "302","303","304","軟體領域","核心選修"},{"電腦圖學","302","303","304","人工智慧領域","一般選修"},
+                {"圖論演算法","402","403","404","計算科學領域","一般選修"},{"程式語言","408","409","410","軟體領域","核心選修"},
+                {"數位系統設計","506","507","508","計算機領域","核心選修"}};
+        /*
+        String[][] core_software_next = {{"編譯器", "","",""},{"軟體工程", "","",""},{"系統工程", "","",""},{"人工智慧", "","",""}}; //#6
+        String[][] core_computer_next ={{"微處理器原理與組合語言","","",""},{"嵌入式系統設計", "","",""},{"系統程式", "","",""}}; //#3
+        String[][] computer_next = {{"Verilog硬體描述語言","","",""},{"ios應用程式語言開發入門","","",""},{"Android行動裝置軟體設計","","",""}};//co  //#3
+        String[][] software_next ={{"ASP.NET程式設計","","",""},{"MATLAB程式設計","","",""},{"組合論","","",""}, {"JAVA程式設計","","",""},
+                {"巨量資料運算導論","","",""},{"機器學習技術","","",""},{"進階資料庫","","",""},{"物聯網技術與應用","","",""},{"IOS App遊戲開發","","",""}};//sw  //#15
+        String[][] artificial_intelligence_next ={{"機器視覺理論應用","","",""},{"3D列印技術與系統","","",""}};//ai  //#2
+        String[][] computational_science_next ={{"資訊安全實務管理","","",""}};//cs  //#7
+         */
+        //cs&sw->Python程式語言 MATLAB程式設計 組合論 進階程式競賽技巧
+        //cs&is&sw->資訊安全實務管理
+        //ai&sw->巨量資料運算導論 物聯網技術與應用 機器學習技術
+        //co&sw->ios應用程式語言開發入門 Android行動裝置軟體設計
+        String[] alreadyClass={};
+        int num = 0;
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
+        List<RecommandCourseEntity.Display> rcEH = new ArrayList<>();
+        RecommandCourseEntity recommandCourse = recomdCourseRepository.findByStudentID(account);
+        if(recommandCourse == null){
+            recommandCourse.setStudentID(account);
+        }
+        if(timeTable ==null){
+            crawler.CrawlerHandle(account,pwd);
+            List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
+            TimeTableEntity table = new TimeTableEntity();
+            if (timeTable != null) { //copy to new
+                table.setId(timeTable.getId());
+                table.setStudentID(timeTable.getStudentID());
+                table.setWholePre_info(timeTable.getPre_info());
+            }
+            else table.setStudentID(account); //create a new one
+            for(TimeTableEntity.Info i : myClassList){
+                System.out.println(i.getName());
+                table.setInfo(i);
+            }
+            timeTableRepository.save(table);
+        }
+        List<TimeTableEntity.Info> timeList = new ArrayList<>();
+        timeList = timeTable.getInfo();
+        for(TimeTableEntity.Info index : timeList){
+            String[] temp = index.getTime();
+            for(int i = 0;i < 3 ;i++){
+                alreadyClass[num] = temp[i];
+                num++;
+            }
+        }
+        for(int i = 0;i < 13;i++){
+            RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+            for(int j = 0; j < num;j++){
+                if (!last_semester[i][1].equals(alreadyClass[j])) {
+                    for(int k = 0; k < num;k++){
+                        if (!last_semester[i][2].equals(alreadyClass[k])) {
+                            for(int l = 0; l < num;l++){
+                                if (!last_semester[i][3].equals(alreadyClass[l])) {
+                                    coreShow.setName(last_semester[i][0]);
+                                    coreShow.setCategory(last_semester[i][5]);
+                                    coreShow.setField(last_semester[i][4]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            rcEH.add(coreShow);
+            recommandCourse.setDisplay(coreShow);
+        }
+
+        return rcEH;
+    }
+    
     @PostMapping("/recommend_course_rating")
     public RecommandCourseEntity course_recommand_rating()throws TesseractException, IOException, InterruptedException {
         RecommandCourseEntity recommandCourse = new RecommandCourseEntity();
