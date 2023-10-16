@@ -164,6 +164,19 @@ public class TodoController {
 
     private ResponseEntity<?> sendTestNotification(String token){
         PushNotificationRequest request = new PushNotificationRequest("Welcome!", "This is IUA", "welcome", token);
+        WebPushEntity webPushEntity = new WebPushEntity();
+        webPushEntity.setToken(token);
+        if(webPushRepository.existsByStudentID(account)){
+            webPushEntity = webPushRepository.findByStudentID(account);
+            webPushEntity.getNotifications().add(request);
+        }
+        else{
+            ArrayList<PushNotificationRequest> noticications = new ArrayList<PushNotificationRequest>();
+            noticications.add(request);
+            webPushEntity.setStudentID(account);
+            webPushEntity.setNotifications(noticications);
+        }
+        webPushRepository.save(webPushEntity);
         pushNotificationService.sendPushNotificationToToken(request);
         return new ResponseEntity<>(new PushNotificationResponse(HttpStatus.OK.value(), "Notification has been sent."), HttpStatus.OK);
     }
