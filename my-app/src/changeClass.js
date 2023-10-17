@@ -3,7 +3,8 @@ import React from 'react';
 import IsModal from "./components/Modal";
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
-import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleContainer, PerChangeClassBtn, PerHaveChangeClassBtn, ChangeClassCategorySelect,PerHavePairChangeClassBtn} from './components/ArticleStyle.js';
+import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleContainer, PerChangeClassBtn, PerHaveChangeClassBtn, 
+  ChangeClassCategorySelect,PerHavePairChangeClassBtn} from './components/ArticleStyle.js';
 import { MyclassBody } from './components/Style.js';
 import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
 import {useState,useEffect} from "react";

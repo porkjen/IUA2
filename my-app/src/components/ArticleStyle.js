@@ -300,6 +300,10 @@ const PerChangeClassBtn = styled.button`
     background-color: white; 
     padding: 10px;
     
+    @media screen and (min-width: 600px) {
+        width:90px;
+    }
+    
 `;
 
 const PerHaveChangeClassBtn = styled.button`
@@ -310,7 +314,12 @@ const PerHaveChangeClassBtn = styled.button`
     background-color: white; 
     padding: 10px;
     background-color:#DEAD73;
+
+    @media screen and (min-width: 600px) {
+        width:90px;
+    }
 `;
+
 
 const PerHavePairChangeClassBtn = styled.button`
     width:53px;
@@ -320,6 +329,10 @@ const PerHavePairChangeClassBtn = styled.button`
     background-color: white; 
     padding: 10px;
     background-color:#FFCE55;
+
+    @media screen and (min-width: 600px) {
+        width:90px;
+    }
 `;
 
 const ChangeClassCategorySelect = styled.select`
