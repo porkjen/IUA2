@@ -24,6 +24,8 @@ public class PushNotificationController {
     private PushNotificationService pushNotificationService;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private WebPushRepository webPushRepository;
 
     public PushNotificationController(PushNotificationService pushNotificationService) {
         this.pushNotificationService = pushNotificationService;
