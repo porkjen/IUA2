@@ -7,11 +7,64 @@ import courseSelectImg from "./img/selectcourse.png";
 import socialImg from "./img/social.png";
 import chatroomImg from "./img/chatroom.png";
 import treeImg from "./img/tree.png";
+import noti from "./img/notifications.png"
+import { loginUser } from './cookie';
+import {useState, useEffect} from "react";
 import { BrowserRouter as Router,Link } from 'react-router-dom';//BrowserRouter
 import { Routes ,Route } from 'react-router-dom';
 
 const HomePage=()=> {
+    const userInfo = loginUser();
+    const [data, setData] = useState("");
+    const [newMessage, setNewMessage] = useState(true);
+    function NotificationText({title, message}){
+        return(
+            <div>
+                <li className='noti_title'><strong>{title}</strong></li>
+                <li className='noti_message'>{message}</li>
+                <div className='line'></div>
+            </div>
+        );
+    }
+    
     function HomePage(){
+        const [showNotification, setShowNotification] = useState(false);
+        
+
+        useEffect(() => {
+            if (!data) {
+                fetch(`/get_all_notifications?studentID=${userInfo}`, {
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'},
+                    })
+                .then(response => response.json())
+                .then(data => {
+                  setData(data);
+                  console.log(data);
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+            }
+          }, [data]); // 添加依賴項data
+
+        const handleBtn = (e) =>{
+            if(showNotification){
+                setShowNotification(false);
+                setNewMessage(false);
+            }
+            else
+                setShowNotification(true);
+        }
+
+        /*
+        
+        {data.map(item => (
+                         <NotificationText title={item.title} message={item.message}/>
+                        ))}
+        */
+
+        
         return(
             <div className="home_bg">
                 <div>
@@ -19,6 +72,27 @@ const HomePage=()=> {
                         <img src={back} alt="回上一頁" className="home_backicon"/>
                     </Link>
                 </div>
+                <div className='notificationImg'>
+                    <button className='notiBtn' onClick={handleBtn}>
+                        {newMessage && <div className='red_dot'></div>}
+                        <img src={noti} className='pic'/>
+                    </button>
+                </div>
+                {showNotification &&
+                    <div className='notification_menu'>
+                        <ul className=''>
+                        {data.map((item,index) => (
+                         <NotificationText key={index} title={item.title} message={item.message}/>
+                        ))}
+                        <NotificationText title={"租屋版"} message={"有符合你要的租屋!"}/>
+                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
+                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
+                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
+                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
+                        </ul>
+                    </div>
+
+                }
                 <div className="allBtn">
                     <div class="flex">
                         <div className="creditBtn">

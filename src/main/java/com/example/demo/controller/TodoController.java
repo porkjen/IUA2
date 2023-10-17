@@ -23,6 +23,9 @@ import java.util.*;
 public class TodoController {
     @Autowired
     PushNotificationService pushNotificationService;
+
+    @Autowired
+    WebPushRepository webPushRepository;
     @Autowired
     RemainedService remainedService;
     @Autowired
