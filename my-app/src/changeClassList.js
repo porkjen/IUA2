@@ -98,7 +98,7 @@ const ChangeClassList=()=> {
           console.log(event.target.value);
 
           if(event.target.value==='All'){
-            fetch(`/course_change?time=${time}`)
+            fetch(`/course_change?time=${time}&studentID=${userInfo}`)
             .then(response => response.json())
             .then(data => {
               console.log(time);

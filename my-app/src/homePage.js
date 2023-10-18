@@ -85,10 +85,6 @@ const HomePage=()=> {
                          <NotificationText key={index} title={item.title} message={item.message}/>
                         ))}
                         <NotificationText title={"租屋版"} message={"有符合你要的租屋!"}/>
-                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
-                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
-                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
-                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
                         </ul>
                     </div>
 

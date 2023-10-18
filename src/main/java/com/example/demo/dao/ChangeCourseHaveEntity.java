@@ -10,7 +10,7 @@ public class ChangeCourseHaveEntity {
     private String id;
     private String time;
     private int have;
-    private boolean pair;
+    private int pair;
 
     public String getId() {
         return id;
@@ -36,12 +36,15 @@ public class ChangeCourseHaveEntity {
         this.have = have;
     }
 
-    public boolean isPair() {
+    public int getPair() {
         return pair;
     }
 
-    public void setPair(boolean pair) {
+    public void setPair(int pair) {
         this.pair = pair;
+    }
+    public void setPair() {
+        this.pair++;
     }
 
     public List<ChangeCourseHaveEntity> initialization(){

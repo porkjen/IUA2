@@ -68,4 +68,15 @@
     box-sizing: 1px;
 }
 
+.redDot{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgb(238, 29, 29);
+  position: absolute;
+  margin-left: 11%;
+  margin-top: 5px;
+
+}
+
 

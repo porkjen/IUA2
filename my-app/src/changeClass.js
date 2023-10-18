@@ -123,17 +123,24 @@ const ChangeClass=()=> {
       function ChangeClassBtn({time, haveClass, pair}) {
 
 
-        if(haveClass>=1 && pair===false)
+        if(haveClass>=1 && pair===0)
         {
           setHaveClass(true);
           console.log(time);
-          return (<PerHaveChangeClassBtn onClick={() => handleShowClassInfoSubmit(time)}>{time}</PerHaveChangeClassBtn>)
+          return (
+              <PerHaveChangeClassBtn onClick={() => handleShowClassInfoSubmit(time)}>{time}</PerHaveChangeClassBtn>
+          
+          )
         }
-        if(haveClass>=1 && pair===true)
+        if(haveClass>=1 && pair>=1)
         {
           setHaveClass(true);
           console.log(time);
-          return (<PerHavePairChangeClassBtn onClick={() => handleShowClassInfoSubmit(time)}>{time}</PerHavePairChangeClassBtn>)
+          return (
+            
+              <PerHavePairChangeClassBtn onClick={() => handleShowClassInfoSubmit(time)}>{time}</PerHavePairChangeClassBtn>
+            
+          )
         }
         else if(haveClass===0){
           setHaveClass(false);

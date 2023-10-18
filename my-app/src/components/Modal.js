@@ -228,6 +228,7 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
       const [timeValue, setTimeValue] = useState("");
       const [checkedPeople, setcheckedPeople] = useState("女");
       const [isCreator, setIsCreator] = useState(false);
+      const [noPeople, setNoPeople] = useState(false);
       const [choose, setChoose] = useState(false);
       
       const formData = {
@@ -279,7 +280,12 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
               .then(peopledata => {
                 const formattedData = peopledata.map(item => ({ name: item }));
                 //console.log(formattedData);
-                setPeople(peopledata);
+                if(peopledata.length===0){
+                  setPeople(userInfo);
+                  setNoPeople(true);
+                }
+                else
+                  setPeople(peopledata);
                 console.log(people);
                 //setModalIsOpen(true);
               })
@@ -448,15 +454,26 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
               >
                 <div>
                 <button className='modalClose' onClick={closeThisModal}>X</button>
-                    <h2>{data.course}</h2>
+                    <h2>{data.course}</h2> 
                     <h3>選擇與你交換的人</h3>
-                        {people.map((item, index) => (
-                      <label key={index}>
-                        <input type="radio" name="people" value={item} checked={checkedPeople === item} onChange={handleppChange}/> {item}<br/>
-                      </label>
-                    ))}
+                    {noPeople && 
+                        <h4>no data</h4>
+                    }
+                    {!noPeople && 
+                        <div>
+                          {people.map((item, index) => (
+                            <label key={index}>
+                              <input type="radio" name="people" value={item} checked={checkedPeople === item} onChange={handleppChange}/> {item}<br/>
+                            </label>
+                          ))}
+                        </div>
+
+                    }
+                   
                 </div><br/>
-                <ModalSubmitBtn onClick={choosePeople}>確認</ModalSubmitBtn><br/>
+                {!noPeople && 
+                <ModalSubmitBtn onClick={choosePeople}>確認</ModalSubmitBtn>
+                }
               </Modal>
 
               }
