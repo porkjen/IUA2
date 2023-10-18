@@ -11,6 +11,7 @@ import { Routes ,Route, useNavigate, useLocation } from 'react-router-dom';
 import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
 import { getAuthToken } from "./utils";
+import Select from 'react-select'
 
 const ModifyPost=()=> {
     let navigate = useNavigate();
@@ -464,6 +465,8 @@ const ModifyPost=()=> {
         const [Cteacher, setCteacher] = useState("");
         const [timeArray, setTimeArray] = useState([]);
         const [numberArray, setNumberArray] = useState([]);
+        const [options, setOptions] = useState([]);
+        const [selectedOption, setSelectedOption] = useState("");
 
         useEffect(() => {
           if (newData) {
@@ -473,6 +476,7 @@ const ModifyPost=()=> {
             setCtime(newData.time.join('、 '));
             setCteacher(newData.teacher);
             setNumberArray(newData.time);
+            setSelectedOption(newData.desiredClass);
           }
         }, [newData]);
 
@@ -530,6 +534,21 @@ const ModifyPost=()=> {
                      
                          //Form submission happens here
         }
+        useEffect(() => {
+          fetch(`/pre_curriculum_search?category=${''}&name=${''}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                const optionsFromAPI = data.map((item) => ({
+                  value: item.name,
+                  label: item.name,
+                }));
+                setOptions(optionsFromAPI);
+            })
+            .catch((error) => {
+              console.error('error:', error);
+            });
+      }, []);
 
         return (
           <form className='articleChangeClassForm' onSubmit={handleChangeClassSubmit}>
@@ -548,6 +567,14 @@ const ModifyPost=()=> {
             <div className='articleChangeClassFormTeacher'>
               <label>老師:</label>
               <input type='text' className='articleChangeClassFormTeacherInput'  value={Cteacher} disabled></input>
+            </div><br/>
+            <div className='articleChangeClassFormTeacher'>
+              <label>想要的課:(選填)</label>
+              <Select 
+              className='articleCCS'
+              options={options}
+              value={selectedOption}
+              onChange={(selected) => setSelectedOption(selected)}/>
             </div><br/>
             <div className='articleChangeClassFormText'>
               <label>內文:</label><br/>

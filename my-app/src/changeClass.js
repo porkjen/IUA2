@@ -1,9 +1,10 @@
 import './changeClass.css';
 import React from 'react';
-import Modal from "./components/Modal";
+import IsModal from "./components/Modal";
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
-import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleContainer, PerChangeClassBtn, PerHaveChangeClassBtn, ChangeClassCategorySelect} from './components/ArticleStyle.js';
+import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleContainer, PerChangeClassBtn, PerHaveChangeClassBtn, 
+  ChangeClassCategorySelect,PerHavePairChangeClassBtn} from './components/ArticleStyle.js';
 import { MyclassBody } from './components/Style.js';
 import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
 import {useState,useEffect} from "react";
@@ -30,7 +31,7 @@ const ChangeClass=()=> {
 
       useEffect(() => {
         if (data.length === 0) {
-          fetch("/course_change_have")
+          fetch(`/course_change_have?studentID=${userInfo}`)
           .then(response => response.json())
           .then(data => {
             console.log(data);
@@ -64,7 +65,7 @@ const ChangeClass=()=> {
             <div className='column' key={rowIndex}>
               {data.slice(rowIndex * itemsPerRow, (rowIndex + 1) * itemsPerRow).map(item => (
                 <div className='ChangeClassBtnContainer' key={item.time}>
-                  <ChangeClassBtn time={item.time} haveClass={item.have} onClick={() => handleShowClassInfoSubmit(item.time)}>
+                  <ChangeClassBtn time={item.time} haveClass={item.have} pair={item.pair} onClick={() => handleShowClassInfoSubmit(item.time)}>
                     {item.time}
                   </ChangeClassBtn>
                 </div>
@@ -119,14 +120,20 @@ const ChangeClass=()=> {
       }
 
 
-      function ChangeClassBtn({time, haveClass}) {
+      function ChangeClassBtn({time, haveClass, pair}) {
 
 
-        if(haveClass>=1)
+        if(haveClass>=1 && pair===false)
         {
           setHaveClass(true);
           console.log(time);
           return (<PerHaveChangeClassBtn onClick={() => handleShowClassInfoSubmit(time)}>{time}</PerHaveChangeClassBtn>)
+        }
+        if(haveClass>=1 && pair===true)
+        {
+          setHaveClass(true);
+          console.log(time);
+          return (<PerHavePairChangeClassBtn onClick={() => handleShowClassInfoSubmit(time)}>{time}</PerHavePairChangeClassBtn>)
         }
         else if(haveClass===0){
           setHaveClass(false);
@@ -163,7 +170,7 @@ const ChangeClass=()=> {
         setchangeTable(true);
         console.log("handleChangeTableChange called");
         console.log(myClass);
-        fetch("/course_change_have")
+        fetch(`/course_change_have?studentID=${userInfo}`)
         .then(response => response.json())
         .then(data => {
           console.log(data);
@@ -182,7 +189,9 @@ const ChangeClass=()=> {
         if(event.target.value==="setNotification")
           setOpenModal(true);
         else if(event.target.value==="myNotification")
-          navigate('/myNotification')
+          navigate('/myNotification');
+        else if(event.target.value==="myPost")
+          navigate('/MyArticles');
       };
 
 
@@ -206,13 +215,14 @@ const ChangeClass=()=> {
         </div><br/>
           {changeTable && !openModal && <IsChangeTable/>}
           {myClass && !openModal && <AllMyClass myClassData={data}/>}
-          {openModal && <Modal closeModal={setOpenModal} type={"setChangeClassNotification"}  />}
+          {openModal && <IsModal closeModal={setOpenModal} type={"setChangeClassNotification"}  />}
           
           { !openModal && 
             <ChangeClassCategorySelect onChange={handleChangeClassFunctionSelect}>
               <option >功能選單</option>
               <option value='myNotification'>我的提醒</option>
               <option value='setNotification'>設置提醒</option>
+              <option value='myPost'>我的貼文</option>
           </ChangeClassCategorySelect>}
        
 

@@ -1,6 +1,6 @@
 import './changeClass';
 import React from 'react';
-import Modal from "./components/Modal";
+import IsModal from "./components/Modal";
 import student from './img/student.png';
 import back from './img/back.png';
 import yolk from './img/yolk.PNG';
@@ -44,7 +44,7 @@ const ChangeClassList=()=> {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(formData)})
-                  .then(response => response.json())
+                  .then(response => response.status)
                   .then(data => {
                         console.log(data);})
                   .catch(error => {
@@ -194,7 +194,7 @@ const ChangeClassList=()=> {
           <Link to='/changeClass'>
               <Back src={back} alt="回上一頁" />
           </Link>}
-          {openModal && !setNotification && <Modal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={userInfo} time={time} />}
+          {openModal && !setNotification && <IsModal closeModal={setOpenModal} type={"classArticle"} postId={isPostID} studentID={userInfo} time={time} />}
           {!openModal && !setNotification && < ChangeClassList_all/>}
           
         </Page>

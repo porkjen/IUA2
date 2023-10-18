@@ -2,7 +2,7 @@ import './food.css';
 import React from 'react';
 import dog from './img/dog.png';
 import banana from './img/banana.png';
-import Modal from "./components/Modal";
+import IsModal from "./components/Modal";
 import logo from './img/IUAlogo.png';
 import star from './img/star.png';
 import student from './img/student.png';
@@ -562,7 +562,7 @@ const FoodArticle=()=> {
             </ArticleDetailPage>
           }
           {openModal &&
-            <Modal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment} ArticleAS={ArticleAS}/>
+            <IsModal closeModal={setOpenModal} type={"rating"} postId={postId} comment={isMeComment} alreadyComment={isAlreadyComment} ArticleAS={ArticleAS}/>
           }
          
 

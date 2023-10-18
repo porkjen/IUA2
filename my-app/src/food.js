@@ -1,6 +1,6 @@
 import './food.css';
 import React from 'react';
-import Modal from "./components/Modal";
+import IsModal from "./components/Modal";
 import yolk from './img/yolk.PNG';
 import star from './img/star.png';
 import redBall from './img/redBall.PNG';
@@ -215,6 +215,8 @@ const Food = () => {
       else if(event.target.value==='FindArticle'){
         setOpenModal(true);
       }
+      else if(event.target.value==="myPost")
+          navigate('/MyArticles');
 
     };
 
@@ -238,6 +240,7 @@ const Food = () => {
                   <option >功能選單</option>
                   <option value='AllArticle'>全部貼文</option>
                   <option value='FindArticle'>篩選貼文</option>
+                  <option value='myPost'>我的貼文</option>
           </ChangeClassCategorySelect>
           <div className='ArticleSelect'>
           {isPostTime && <input type="radio" id='postTime' name='AS' value='PostTimeNtoF' onChange={handlePostASChange} checked></input>}
@@ -385,7 +388,7 @@ const Food = () => {
       <Link to='/choose'>
               <img src={back} className='food_back' alt="回上一頁" />
       </Link>
-      {openModal && <Modal closeModal={setOpenModal} type={"food"} ArticleAS={AS}/>}
+      {openModal && <IsModal closeModal={setOpenModal} type={"food"} ArticleAS={AS}/>}
       {!openModal && <Food_all />}
     </Page>
   );

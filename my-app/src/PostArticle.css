@@ -180,6 +180,10 @@ body {
     text-align: center;
 }
 
+.articleCCS{
+    font-family: 'Noto Serif TC', serif;
+}
+
 .post_elmo{
     max-width: 23%;
     padding-left: 10%;

@@ -4,15 +4,14 @@ import org.springframework.http.HttpStatus;
 
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dao.ExchangePushCondition;
 import com.example.demo.dao.NotificationCondition;
 import com.example.demo.dao.PushNotificationRequest;
 import com.example.demo.dao.PushNotificationResponse;
 import com.example.demo.dao.RentPushCondition;
+import com.example.demo.repository.WebPushRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.service.PushNotificationService;
 
@@ -24,6 +23,8 @@ public class PushNotificationController {
     private PushNotificationService pushNotificationService;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private WebPushRepository webPushRepository;
 
     public PushNotificationController(PushNotificationService pushNotificationService) {
         this.pushNotificationService = pushNotificationService;
@@ -60,6 +61,22 @@ public class PushNotificationController {
         condition.setRentCondition(received);
         notificationRepository.save(condition);
         return ResponseEntity.ok("success");
+    }
+
+    @GetMapping("/get_all_notifications")
+    public ArrayList<PushNotificationRequest> getAllNotification(@RequestParam("studentID") String studentID){
+        ArrayList<PushNotificationRequest> result = new ArrayList<PushNotificationRequest>();
+        if(webPushRepository.existsByStudentID(studentID)){
+            ArrayList<PushNotificationRequest> n = webPushRepository.findByStudentID(studentID).getNotifications();
+            int count = webPushRepository.findByStudentID(studentID).getNotifications().size();
+            System.out.println(count);
+            if(count > 10)  count = 10;
+            for(int i = count-1; i >= 0; i--){
+                System.out.println(i);
+                result.add(n.get(i));
+            }
+        }
+        return result;
     }
 
     @PostMapping("/notification/topic")
