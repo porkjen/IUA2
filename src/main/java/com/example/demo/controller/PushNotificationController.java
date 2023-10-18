@@ -85,6 +85,7 @@ public class PushNotificationController {
                     request.setMessage("發布者 " + cPost.getNickname() + "已發布貼文\n[" + cPost.getCourse() + "] " + cPost.getContent());
                     request.setToken(webPushRepository.findByStudentID(studentID.get("studentID")).getToken());
                     pushNotificationService.sendPushNotificationToToken(request);
+                    webPushRepository.findByStudentID(studentID.get("studentID")).getNotifications().add(request);
                     sentPosts.add(cPost.getPostId());
                     break;
                 }
@@ -104,6 +105,7 @@ public class PushNotificationController {
                                 request.setMessage("發布者 " + cPost.getNickname() + "已發布貼文\n[" + cPost.getCourse() + "] " + cPost.getContent());
                                 request.setToken(webPushRepository.findByStudentID(studentID.get("studentID")).getToken());
                                 pushNotificationService.sendPushNotificationToToken(request);
+                                webPushRepository.findByStudentID(studentID.get("studentID")).getNotifications().add(request);
                                 sentPosts.add(cPost.getPostId());
                                 break outter;
                             }
