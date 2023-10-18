@@ -42,7 +42,7 @@ public class ChangeCourseController {
                 for(int i=0;i<coursePost.getTime().length;i++){
                     int idx = 14*(Integer.parseInt(coursePost.getTime()[i])/100-1)+(Integer.parseInt(coursePost.getTime()[i])-Integer.parseInt(coursePost.getTime()[i])/100*100)-1;
                     System.out.println(idx);
-                    courseTimeList.get(idx).setPair(true);
+                    courseTimeList.get(idx).setPair();
                 }
             }
         }
