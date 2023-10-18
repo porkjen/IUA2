@@ -474,7 +474,7 @@ public class TodoController {
     }
 
     @PostMapping("/recommend_course_emptyhall")
-    public List<RecommandCourseEntity.Display> recommend_course_emptyhall()throws TesseractException, IOException, InterruptedException {
+    public List<RecommandCourseEntity.Show> recommend_course_emptyhall()throws TesseractException, IOException, InterruptedException {
         String[][] last_semester = {{"數值分析","102","103","104","資訊安全領域","一般選修"},{"計算機系統設計", "102","103","104","計算機領域","核心選修"},
                 {"Python程式語言","106","107","108","軟體領域&計算科學領域","一般選修"},{"資料庫系統","106","107","108","軟體領域","核心選修"},
                 {"進階程式競賽技巧","111","112","113","軟體領域&計算科學領域","一般選修"},{"網頁程式設計","206","207","208","軟體領域","一般選修"},
@@ -484,15 +484,10 @@ public class TodoController {
                 {"數位系統設計","506","507","508","計算機領域","核心選修"}};
         String[] alreadyClass=new String[1000];
         int num = 0;
+        List<RecommandCourseEntity.Show> rcEH = new ArrayList<>();
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
-        List<RecommandCourseEntity.Display> rcEH = new ArrayList<>();
-        RecommandCourseEntity recommandCourse = recomdCourseRepository.findByStudentID(account);
-        List<RecommandCourseEntity.Info> rCourse = recommandCourse.getInfo();
-        if(recommandCourse == null){
-            recommandCourse.setStudentID(account);
-        }
         if(timeTable ==null){
-            crawler.CrawlerHandle(account,pwd);
+            //crawler.CrawlerHandle(account,pwd);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
             TimeTableEntity table = new TimeTableEntity();
             if (timeTable != null) { //copy to new
@@ -521,26 +516,43 @@ public class TodoController {
         }
         System.out.println("num = "+num);
         System.out.println("ac = "+alreadyClass.length);
-        for(int i = 0;i < 13;i++){
-            RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+        System.out.println("33333333save");
+
+        RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(account);
+        System.out.println("1."+rcHistory.getStudentID());
+        if (rcHistory == null) {
+            System.out.println("no value in DB");
+            rcHistory = new RecommandCourseEntity(); 
+            rcHistory.setStudentID(account);
+            crawler.CrawlerHandle(account, pwd);
+            List<RecommandCourseEntity.Info> hcList = crawler.getHistoryCourse();
+            for (RecommandCourseEntity.Info i : hcList) {
+                System.out.println(i.getName());
+                rcHistory.setInfo(i);
+            }
+            recomdCourseRepository.save(rcHistory); 
+        }
+
+        List<RecommandCourseEntity.Info> rCourse = rcHistory.getInfo();
+
+        for (int i = 0; i < 13; i++) {
+            RecommandCourseEntity.Show coreShow = new RecommandCourseEntity.Show();
             int check = 1;
-            System.out.println(last_semester[i][1] + " && "+last_semester[i][2]+ " && "+last_semester[i][3]);
-            for(int j = 0; j < num;j++){
-                //System.out.println("j = "+last_semester[i][1] + " && "+alreadyClass[j]);
-                if(alreadyClass[j].equals(last_semester[i][1])){
-                    check =2;
+            System.out.println(last_semester[i][1] + " && " + last_semester[i][2] + " && " + last_semester[i][3]);
+
+            for (int j = 0; j < num; j++) {
+                if (alreadyClass[j].equals(last_semester[i][1])) {
+                    check = 2;
                     break;
-                }
-                else{
-                    for(int k = 0; k < num;k++){
-                        if(alreadyClass[k].equals(last_semester[i][2])){
-                            check =2;
+                } else {
+                    for (int k = 0; k < num; k++) {
+                        if (alreadyClass[k].equals(last_semester[i][2])) {
+                            check = 2;
                             break;
-                        }
-                        else{
-                            for(int l = 0; l < num;l++){
-                                if(alreadyClass[l].equals(last_semester[i][3])){
-                                    check =2;
+                        } else {
+                            for (int l = 0; l < num; l++) {
+                                if (alreadyClass[l].equals(last_semester[i][3])) {
+                                    check = 2;
                                     break;
                                 }
                             }
@@ -548,25 +560,32 @@ public class TodoController {
                     }
                 }
             }
-            if(check == 1){
+            if (check == 1) {
                 int found = 0;
-                for(RecommandCourseEntity.Info rc : rCourse){
-                    //System.out.println("**"+last_semester[i][0]+"+"+rc.getName());
-                    if(last_semester[i][0].equals(rc.getName())){
+                for (RecommandCourseEntity.Info rc : rCourse) {
+                    if (last_semester[i][0].equals(rc.getName())) {
                         found = 1;
                     }
                 }
-                if(found == 0){
-                    System.out.println(last_semester[i][0]+"&"+last_semester[i][5]+"&"+last_semester[i][4]);
+                if (found == 0) {
+                    System.out.println(last_semester[i][0] + "&" + last_semester[i][5] + "&" + last_semester[i][4]);
                     coreShow.setName(last_semester[i][0]);
                     coreShow.setCategory(last_semester[i][5]);
                     coreShow.setField(last_semester[i][4]);
+                    String[] time3 = {last_semester[i][1], last_semester[i][2], last_semester[i][3]};
+                    coreShow.setTimeList(time3);
+                    coreShow.setWay("空堂推薦");
                     rcEH.add(coreShow);
-                    recommandCourse.setDisplay(coreShow);
+                    rcHistory.setShow(coreShow);
+                    System.out.println("save2222");
                 }
             }
         }
-        //recomdCourseRepository.save(recommandCourse);
+        RecommandCourseEntity rcHistoryD = recomdCourseRepository.findByStudentID(account);
+        System.out.println(rcHistoryD.getStudentID());
+        recomdCourseRepository.delete(rcHistoryD);
+        System.out.println("save1");
+        recomdCourseRepository.save(rcHistory);
         return rcEH;
     }
     
@@ -612,6 +631,11 @@ public class TodoController {
         String[] artificial_intelligence = {"數位影像處理","電腦圖學","巨量資料運算導論","機器視覺理論應用","機器學習技術","物聯網技術與應用","3D列印技術與系統"};//ai  //#7
         String[] information_security = {"資訊安全實務與管理"};//資訊安全實務管理有上下兩學期  //is   //#1
         String[] computational_science = {"Python程式語言","MATLAB程式設計","組合論","數值分析","圖論演算法","資訊安全實務與管理","進階程式競賽技巧"};//cs  //#7
+
+        //cs&sw->Python程式語言 MATLAB程式設計 組合論 進階程式競賽技巧
+        //cs&is&sw->資訊安全實務管理
+        //ai&sw->巨量資料運算導論 物聯網技術與應用 機器學習技術
+        //co&sw->ios應用程式語言開發入門 Android行動裝置軟體設計
         Integer[] temp = {0,0,0,0,0,0,0}; //coreC = 0,coreS = 1,co = 2,sw = 3,ai = 4,is = 5,cs = 6
         RecommandCourseEntity recommandCourse = recomdCourseRepository.findByStudentID(account);
         List<RecommandCourseEntity.Display> display = new ArrayList<>();
@@ -729,6 +753,7 @@ public class TodoController {
                 coreShow.setField("軟體領域");
             }
             coreShow.setCategory("核心選修");
+            coreShow.setWay("喜好推薦");
             display.add(coreShow);
             recommandCourse.setDisplay(coreShow);
 
@@ -833,6 +858,7 @@ public class TodoController {
                 caiscShow.setField("計算科學領域");
             }
             caiscShow.setCategory("一般選修");
+            caiscShow.setWay("喜好推薦");
             display.add(caiscShow);
             recommandCourse.setDisplay(caiscShow);
         }
@@ -869,6 +895,7 @@ public class TodoController {
                         coreShow.setName(core_computer[randCore]);
                         coreShow.setField("計算機領域");
                         coreShow.setCategory("核心選修");
+                        coreShow.setWay("喜好推薦");
                         display.add(coreShow);
                         recommandCourse.setDisplay(coreShow);
 
@@ -895,6 +922,7 @@ public class TodoController {
                         csaicShow.setName(computer[randCSAIC]);
                         csaicShow.setField("計算機領域");
                         csaicShow.setCategory("一般選修");
+                        csaicShow.setWay("喜好推薦");
                         display.add(csaicShow);
                         recommandCourse.setDisplay(csaicShow);
                     }
@@ -922,6 +950,7 @@ public class TodoController {
                         coreShow.setName(core_software[randCore]);
                         coreShow.setField("軟體領域");
                         coreShow.setCategory("核心選修");
+                        coreShow.setWay("喜好推薦");
                         display.add(coreShow);
                         recommandCourse.setDisplay(coreShow);
 
@@ -954,6 +983,7 @@ public class TodoController {
                         csaicShow.setName(software[randCSAIC]);
                         csaicShow.setField("軟體領域");
                         csaicShow.setCategory("一般選修");
+                        csaicShow.setWay("喜好推薦");
                         display.add(csaicShow);
                         recommandCourse.setDisplay(csaicShow);
                     }
@@ -984,6 +1014,7 @@ public class TodoController {
                         coreShow.setName(artificial_intelligence[randCSAIC]);
                         coreShow.setField("人工智慧領域");
                         coreShow.setCategory("一般選修");
+                        coreShow.setWay("喜好推薦");
                         display.add(coreShow);
                         recommandCourse.setDisplay(coreShow);
                     }
@@ -1013,13 +1044,13 @@ public class TodoController {
                             coreShow.setName(information_security[randCSAIC]);
                             coreShow.setField("資訊安全領域");
                             coreShow.setCategory("一般選修");
+                            coreShow.setWay("喜好推薦");
                             display.add(coreShow);
                             recommandCourse.setDisplay(coreShow);
                         }
                         else {
                             break;
                         }
-
                     }
                     else if(i == 6){
                         int randCSAIC = (int)(Math.random()*7);
@@ -1048,12 +1079,14 @@ public class TodoController {
                         coreShow.setName(computational_science[randCSAIC]);
                         coreShow.setField("計算科學領域");
                         coreShow.setCategory("一般選修");
+                        coreShow.setWay("喜好推薦");
                         display.add(coreShow);
                         recommandCourse.setDisplay(coreShow);
                     }
                 }
             }
         }
+        recomdCourseRepository.save(recommandCourse);
         return display;
     }
     
