@@ -37,7 +37,7 @@ public class ChatGPTController {
         JSONObject systemMessage = new JSONObject();
         systemMessage.put("role", "system");
         String department = basicRepository.findByStudentID(requestData.get("studentID")).getDepartment();
-        systemMessage.put("content", "使用繁體中文，我是心理輔導師，簡短回答，使用者是"+department+"學生");
+        systemMessage.put("content", "使用繁體中文，我是心理輔導師，使用者是"+department+"學生，回應100字以內");
 
         // 用戶消息
         JSONObject userMessage = new JSONObject();
@@ -57,7 +57,6 @@ public class ChatGPTController {
         if(requestData.get("content").contains("死")||requestData.get("content").contains("自殺")||requestData.get("content").contains("討厭人生")||requestData.get("content").contains("離開世界")||requestData.get("content").contains("不想活")||requestData.get("content").contains("討厭世界")){
             Thread otherThread = new Thread(() -> {
                 mailService.sendMail(requestData.get("studentID")+"@mail.ntou.edu.tw","我是IUA心情樹洞","你還好嗎，不要害怕求助，世界上還有好多人可以幫你!\n生命線協談專線 : 1995\n學校諮商輔導組 : https://care.ntou.edu.tw/");
-
             });
             otherThread.start();
         }
