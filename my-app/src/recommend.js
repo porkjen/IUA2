@@ -14,10 +14,14 @@ const Recommend=()=> {
           </Link>
             <div className='Position'>
             <a >
-                <button className='Btn'>領域喜好推薦</button>
+                <Link to="/emptyResult">
+                    <button className='Btn'>當學期課表空堂推薦</button>
+                </Link>
             </a>
             <a >
-                <button className='Btn' >已修過課程喜好推薦</button>
+                <Link to="/courseRate">
+                    <button className='Btn' >已修過課程喜好推薦</button>
+                </Link>
             </a>
             <a >
                 <button className='Btn'>歷史推薦結果</button>

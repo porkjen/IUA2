@@ -38,6 +38,9 @@ import Rules from './rules';
 import MoodChatGPT from './moodChatGPT';
 import TimeTableChoose from './timeTableChoose';
 import Recommend from './recommend';
+import CourseRate from './courseRate';
+import EmptyResult from './emptyResult';
+import CourseResult from './courseResult';
 
 const App=()=> {
 
@@ -81,6 +84,9 @@ const App=()=> {
                     <Route path="/rules" element={<Rules />} />
                     <Route path="/moodChatGPT" element={<MoodChatGPT />} />
                     <Route path="/recommend" element={<Recommend />} />
+                    <Route path="/courseRate" element={<CourseRate />} />
+                    <Route path="/emptyResult" element={<EmptyResult />} />
+                    <Route path="/courseResult" element={<CourseResult />} />
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
                 

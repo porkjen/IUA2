@@ -156,3 +156,27 @@ li{
     color: gray;
     border: solid 1px;
 }
+
+.logoutBtn{
+    padding-left: 5%;
+    padding-top: 5%;
+}
+
+.logoutBtn button{
+    color: white;
+    background-color: #889cd4;
+    border: none;
+    border-radius: 5px;
+}
+
+.changeNameBtn{
+    padding-left: 5%;
+    padding-top: 5%;
+}
+
+.changeNameBtn button{
+    color: white;
+    background-color: #889cd4;
+    border: none;
+    border-radius: 5px;
+}

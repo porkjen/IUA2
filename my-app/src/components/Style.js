@@ -272,6 +272,23 @@ const CoreDetailBtn = styled.button`
     color: white;
 `;
 
+const Courseinfo = styled.label`
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300&display=swap');
+    font-family: 'Noto Serif TC', serif;
+    color:#008CBA;
+    margin-top:5%;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+    width: 90%;
+    height: 10%;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 2%;
+`;
+
 export {RemainTitle, RemainContainer, RemainList, Mustinfo, RemainText, RemainBody, BackBtn, MyclassBody, MyclassText, Back, Coreinfo,  
     GEinfo, CoreHardwareField, CoreSoftwareField, DetailBtn, PreBody, PreText,MustDetailBtn,CoreDetailBtn,PreList,PreClassBody,
-    PreSearchList,PreSearchBody } ;
+    PreSearchList,PreSearchBody,Courseinfo } ;

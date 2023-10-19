@@ -67,10 +67,17 @@ const HomePage=()=> {
         
         return(
             <div className="home_bg">
-                <div>
-                    <Link to='/SignIn'>
-                        <img src={back} alt="回上一頁" className="home_backicon"/>
-                    </Link>
+                <div class="flex">
+                    <div className="logoutBtn">
+                        <Link to="/SignIn">
+                            <button >登出</button>
+                        </Link>
+                    </div>
+                    <div className="changeNameBtn">
+                        <Link to="/nickName">
+                            <button >修改暱稱</button>
+                        </Link>
+                    </div>
                 </div>
                 <div className='notificationImg'>
                     <button className='notiBtn' onClick={handleBtn}>
