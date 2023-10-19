@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import org.apache.catalina.util.ErrorPageSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -15,6 +16,8 @@ import com.example.demo.repository.WebPushRepository;
 import com.example.demo.service.PushNotificationService;
 
 import net.sourceforge.tess4j.TesseractException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.io.IOException;
@@ -28,6 +31,8 @@ public class PushNotificationController {
     private NotificationRepository notificationRepository;
     @Autowired
     private WebPushRepository webPushRepository;
+    @Autowired
+    ChangeCourseRepository changeCourseRepository;
 
     public PushNotificationController(PushNotificationService pushNotificationService) {
         this.pushNotificationService = pushNotificationService;
