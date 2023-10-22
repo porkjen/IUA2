@@ -473,6 +473,31 @@ public class TodoController {
         return ResponseEntity.ok(shortTT);
     }
 
+    @GetMapping("/update_curriculum")
+    public ResponseEntity<?> updateCurriculum(@RequestParam("studentID") String studentID, @RequestHeader("Authorization") String au) throws TesseractException, IOException, InterruptedException {
+        System.out.println("/update_curriculum");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        String secretKey = keyRepository.findByUse("pswKey").getKey();
+        List<TimeTableDTO> shortTT = new ArrayList<>();
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        String password = basicRepository.findByStudentID(studentID).getPassword();
+        password = aesEncryptionDecryption.decrypt(password, secretKey);
+        crawler.CrawlerHandle(studentID,password);
+        List<TimeTableEntity.Info> myClassList = crawler.getMyClass(studentID,password);
+        timeTable.setWholeInfo(myClassList);
+        timeTableRepository.save(timeTable);
+        System.out.println("update database");
+        for(TimeTableEntity.Info i : myClassList){
+            System.out.println(i.getName());
+            shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
+        }
+        return ResponseEntity.ok(shortTT);
+    }
     @PostMapping("/recommend_course_emptyhall")
     public List<RecommandCourseEntity.Show> recommend_course_emptyhall()throws TesseractException, IOException, InterruptedException {
         String[][] last_semester = {{"數值分析","102","103","104","資訊安全領域","一般選修"},{"計算機系統設計", "102","103","104","計算機領域","核心選修"},
@@ -2208,6 +2233,7 @@ public class TodoController {
         return RC_result;
     }
 
+    /*************************** favorite *********************************/
     @PostMapping("/favorites")
     public ResponseEntity<String> favorites(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites");

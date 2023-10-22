@@ -254,7 +254,8 @@ public class ChangeCourseController {
         for(String postId : savedEntity.getPosted()){
             if(postId.startsWith("C")){
                 ChangeCourseEntity c = changeCourseRepository.findByPostId(postId);
-                C_post.add(c);
+                if(Objects.equals(c.getStatus(),"已換"))C_post.add(c);
+                else C_post.add(0,c);
             }
         }
         return C_post;
