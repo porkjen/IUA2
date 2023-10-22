@@ -56,14 +56,23 @@ public class ChangeCourseController {
         List<String>desiredClassList = new ArrayList<>();
         if(nt!=null)desiredClassList = nt.getDesireClasses();
         boolean pair = false;
+        int pos=0;
         for(ChangeCourseEntity c : changeCourseRepository.findAll()){//all posts
             String[] timeArray = c.getTime();
             for (String value : timeArray) {
                 if (Objects.equals(value, time)) {
-                    for (String s : desiredClassList) {
-                        if (Objects.equals(c.getCourse(), s)) {
-                            thisTimeCourses.add(0, c);
-                            pair = true;
+                    if(Objects.equals(c.getStatus(), "未換")){
+                        for (String s : desiredClassList) {
+                            if (Objects.equals(c.getCourse(), s)) {
+                                thisTimeCourses.add(0, c);
+                                pos++;
+                                pair = true;
+                                break;
+                            }
+                        }
+                        if (!pair) {
+                            thisTimeCourses.add(pos,c);
+                            break;
                         }
                     }
                     if (!pair) thisTimeCourses.add(c);
