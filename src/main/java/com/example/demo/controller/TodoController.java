@@ -498,6 +498,80 @@ public class TodoController {
         }
         return ResponseEntity.ok(shortTT);
     }
+
+    @PostMapping("/recommend_course_emptyhall_general")
+    public List<RecommandCourseEntity.General> recommend_course_emptyhall_general()throws TesseractException, IOException, InterruptedException {
+        RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(account);
+        List<RecommandCourseEntity.General> rcGL = new ArrayList<>();
+        List<GeneralCourseEntity> generalAll = generalRepository.findAll();
+        String[] alreadyClass=new String[1000];
+        int num = 0;
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
+        if(timeTable ==null){
+            //crawler.CrawlerHandle(account,pwd);
+            List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
+            TimeTableEntity table = new TimeTableEntity();
+            if (timeTable != null) { //copy to new
+                table.setId(timeTable.getId());
+                table.setStudentID(timeTable.getStudentID());
+                table.setWholePre_info(timeTable.getPre_info());
+            }
+            else table.setStudentID(account); //create a new one
+            for(TimeTableEntity.Info i : myClassList){
+                System.out.println(i.getName());
+                table.setInfo(i);
+            }
+            timeTableRepository.save(table);
+        }
+        List<TimeTableEntity.Info> timeList = new ArrayList<>();
+        timeList = timeTable.getInfo();
+        //System.out.println(timeList);
+        for(TimeTableEntity.Info t : timeList){
+            String[] temp = t.getTime();
+            for(int i = 0;i < temp.length ;i++){
+                alreadyClass[num] = temp[i];
+                //System.out.println("t = "+temp[i]);
+                System.out.println("a = "+alreadyClass[num]);
+                num++;
+            }
+        }
+        System.out.println("num = "+num);
+        System.out.println("ac = "+alreadyClass.length);
+        for(GeneralCourseEntity index : generalAll){
+            String temp[] = index.getTime().split(",");
+            int flag = 0;
+            for(int i = 0;i < num;i++){
+                if(temp[0].equals(alreadyClass[i])){
+                    break;
+                }
+                else{
+                    for(int j = 0;j < num;j++){
+                        if(temp[1].equals(alreadyClass[i])){
+                            break;
+                        }
+                        else{
+                            flag = 1;
+                        }
+                    }
+                }
+            }
+            if(flag == 1){
+                RecommandCourseEntity.General exhibit = new RecommandCourseEntity.General();
+                exhibit.setField(index.getSubfield());
+                exhibit.setCategory(index.getCategory());
+                String[] time2 = {temp[0],temp[1]};
+                exhibit.setTimeList(time2);
+                exhibit.setName(index.getName());
+                exhibit.setWay("空堂推薦");
+                rcGL.add(exhibit);
+                rcHistory.setGeneral(exhibit);
+                System.out.println(index.getName());
+                System.out.println(time2[0]+"&"+time2[1]);
+            }
+        }
+        return rcGL;
+    }
+    
     @PostMapping("/recommend_course_emptyhall")
     public List<RecommandCourseEntity.Show> recommend_course_emptyhall()throws TesseractException, IOException, InterruptedException {
         String[][] last_semester = {{"數值分析","102","103","104","資訊安全領域","一般選修"},{"計算機系統設計", "102","103","104","計算機領域","核心選修"},
