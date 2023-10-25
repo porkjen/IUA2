@@ -108,12 +108,12 @@ class MoodChatGPT extends React.Component {
                 {message.isSent ? (
                   message.content
                 ) : (
-                  <div className="received">
-                    {(index === messages.length - 1 && isTyping) ? '正在輸入中...' :
-                      (message.choices && message.choices.length > 0
-                        ? message.choices[0].message.content
-                        : '')}
-                  </div>
+                  <div className={`received ${isTyping && index === messages.length - 1 ? 'received-blink' : ''}`}>
+    {(index === messages.length - 1 && isTyping) ? '正在輸入中...' :
+      (message.choices && message.choices.length > 0
+        ? message.choices[0].message.content
+        : '')}
+  </div>
                 )}
               </div>
             ))}
