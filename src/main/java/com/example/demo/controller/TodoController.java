@@ -546,7 +546,7 @@ public class TodoController {
                 }
                 else{
                     for(int j = 0;j < num;j++){
-                        if(temp[1].equals(alreadyClass[i])){
+                        if(temp[1].equals(alreadyClass[j])){
                             break;
                         }
                         else{
@@ -624,7 +624,7 @@ public class TodoController {
                 }
                 else{
                     for(int j = 0;j < num;j++){
-                        if(temp[1].equals(alreadyClass[i])){
+                        if(temp[1].equals(alreadyClass[j])){
                             break;
                         }
                         else{
