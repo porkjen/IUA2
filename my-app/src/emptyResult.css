@@ -48,3 +48,9 @@ html,body,#root,.EmptyResult{
     border: none;
     border-radius: 10px;
 }
+
+.EmptyResult .selectType{
+    margin-left: 75%;
+    padding: 1%;
+    width: 20%;
+}
