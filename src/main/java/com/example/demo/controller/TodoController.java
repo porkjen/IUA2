@@ -502,12 +502,13 @@ public class TodoController {
     @PostMapping("/recommend_course_emptyhall_PE")
     public List<RecommandCourseEntity.PE> recommend_course_emptyhall_PE()throws TesseractException, IOException, InterruptedException {
         RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(account);
+        System.out.println("PE->"+rcHistory.getStudentID());
         List<RecommandCourseEntity.PE> rcPE = new ArrayList<>();
         List<PECourseEntity> PEall = peCourseRepository.findAll();
         String[] alreadyClass=new String[1000];
         int num = 0;
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
-        if(timeTable ==null){
+        if(timeTable ==null || timeTable.getId().isEmpty()){
             //crawler.CrawlerHandle(account,pwd);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
             TimeTableEntity table = new TimeTableEntity();
@@ -564,15 +565,15 @@ public class TodoController {
                 exhibit.setName(index.getName());
                 exhibit.setWay("空堂推薦");
                 rcPE.add(exhibit);
-                rcHistory.setPE(exhibit);
+                //rcHistory.setPE(exhibit);
                 System.out.println(index.getName());
                 System.out.println(time2[0]+"&"+time2[1]);
             }
         }
-        RecommandCourseEntity rcHistoryD = recomdCourseRepository.findByStudentID(account);
-        System.out.println(rcHistoryD.getStudentID());
-        recomdCourseRepository.delete(rcHistoryD);
-        System.out.println("save1");
+        //RecommandCourseEntity rcHistoryDPE = recomdCourseRepository.findByStudentID(account);
+        //recomdCourseRepository.delete(rcHistoryDPE);
+        System.out.println("savePE");
+        rcHistory.setWholePE(rcPE);
         recomdCourseRepository.save(rcHistory);
         return rcPE;
     }
@@ -585,7 +586,7 @@ public class TodoController {
         String[] alreadyClass=new String[1000];
         int num = 0;
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
-        if(timeTable ==null){
+        if(timeTable == null || timeTable.getId().isEmpty()){
             //crawler.CrawlerHandle(account,pwd);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
             TimeTableEntity table = new TimeTableEntity();
@@ -617,6 +618,10 @@ public class TodoController {
         System.out.println("ac = "+alreadyClass.length);
         for(GeneralCourseEntity index : generalAll){
             String temp[] = index.getTime().split(",");
+            System.out.println(index.getName());
+            for(int n = 0; n < temp.length;n++){
+                System.out.println(n+"->"+temp[n]);
+            }
             int flag = 0;
             for(int i = 0;i < num;i++){
                 if(temp[0].equals(alreadyClass[i])){
@@ -640,6 +645,7 @@ public class TodoController {
                 String[] time2 = {temp[0],temp[1]};
                 exhibit.setTimeList(time2);
                 exhibit.setName(index.getName());
+                exhibit.setTeacher(index.getTeacher());
                 exhibit.setWay("空堂推薦");
                 rcGL.add(exhibit);
                 rcHistory.setGeneral(exhibit);
@@ -647,14 +653,14 @@ public class TodoController {
                 System.out.println(time2[0]+"&"+time2[1]);
             }
         }
-        RecommandCourseEntity rcHistoryD = recomdCourseRepository.findByStudentID(account);
-        System.out.println(rcHistoryD.getStudentID());
-        recomdCourseRepository.delete(rcHistoryD);
-        System.out.println("save1");
+        //RecommandCourseEntity rcHistoryD = recomdCourseRepository.findByStudentID(account);
+        //System.out.println(rcHistoryD.getStudentID());
+        //recomdCourseRepository.delete(rcHistoryD);
+        System.out.println("saveGeneral");
         recomdCourseRepository.save(rcHistory);
         return rcGL;
     }
-    
+
     @PostMapping("/recommend_course_emptyhall")
     public List<RecommandCourseEntity.Show> recommend_course_emptyhall()throws TesseractException, IOException, InterruptedException {
         String[][] last_semester = {{"數值分析","102","103","104","資訊安全領域","一般選修"},{"計算機系統設計", "102","103","104","計算機領域","核心選修"},
@@ -664,11 +670,24 @@ public class TodoController {
                 {"軟體工程", "302","303","304","軟體領域","核心選修"},{"電腦圖學","302","303","304","人工智慧領域","一般選修"},
                 {"圖論演算法","402","403","404","計算科學領域","一般選修"},{"程式語言","408","409","410","軟體領域","核心選修"},
                 {"數位系統設計","506","507","508","計算機領域","核心選修"}};
+        /*
+        String[][] core_software_next = {{"編譯器", "","",""},{"軟體工程", "","",""},{"系統工程", "","",""},{"人工智慧", "","",""}}; //#6
+        String[][] core_computer_next ={{"微處理器原理與組合語言","","",""},{"嵌入式系統設計", "","",""},{"系統程式", "","",""}}; //#3
+        String[][] computer_next = {{"Verilog硬體描述語言","","",""},{"ios應用程式語言開發入門","","",""},{"Android行動裝置軟體設計","","",""}};//co  //#3
+        String[][] software_next ={{"ASP.NET程式設計","","",""},{"MATLAB程式設計","","",""},{"組合論","","",""}, {"JAVA程式設計","","",""},
+                {"巨量資料運算導論","","",""},{"機器學習技術","","",""},{"進階資料庫","","",""},{"物聯網技術與應用","","",""},{"IOS App遊戲開發","","",""}};//sw  //#15
+        String[][] artificial_intelligence_next ={{"機器視覺理論應用","","",""},{"3D列印技術與系統","","",""}};//ai  //#2
+        String[][] computational_science_next ={{"資訊安全實務管理","","",""}};//cs  //#7
+         */
+        //cs&sw->Python程式語言 MATLAB程式設計 組合論 進階程式競賽技巧
+        //cs&is&sw->資訊安全實務管理
+        //ai&sw->巨量資料運算導論 物聯網技術與應用 機器學習技術
+        //co&sw->ios應用程式語言開發入門 Android行動裝置軟體設計
         String[] alreadyClass=new String[1000];
         int num = 0;
         List<RecommandCourseEntity.Show> rcEH = new ArrayList<>();
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
-        if(timeTable ==null){
+        if(timeTable ==null  || timeTable.getId().isEmpty()){
             //crawler.CrawlerHandle(account,pwd);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
             TimeTableEntity table = new TimeTableEntity();
@@ -701,10 +720,10 @@ public class TodoController {
         System.out.println("33333333save");
 
         RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(account);
-        System.out.println("1."+rcHistory.getStudentID());
+        //System.out.println("1."+rcHistory.getStudentID());
         if (rcHistory == null) {
             System.out.println("no value in DB");
-            rcHistory = new RecommandCourseEntity(); 
+            rcHistory = new RecommandCourseEntity(); // 创建一个新的对象
             rcHistory.setStudentID(account);
             crawler.CrawlerHandle(account, pwd);
             List<RecommandCourseEntity.Info> hcList = crawler.getHistoryCourse();
@@ -712,7 +731,7 @@ public class TodoController {
                 System.out.println(i.getName());
                 rcHistory.setInfo(i);
             }
-            recomdCourseRepository.save(rcHistory); 
+            recomdCourseRepository.save(rcHistory); // 保存新对象到数据库
         }
 
         List<RecommandCourseEntity.Info> rCourse = rcHistory.getInfo();
@@ -770,6 +789,7 @@ public class TodoController {
         recomdCourseRepository.save(rcHistory);
         return rcEH;
     }
+
     
     @PostMapping("/recommend_course_rating")
     public RecommandCourseEntity course_recommand_rating() throws TesseractException, IOException, InterruptedException {
