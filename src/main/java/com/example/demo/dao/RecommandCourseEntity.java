@@ -26,6 +26,7 @@ public class RecommandCourseEntity {
         String name = "";
         String field = "";
         String category = "";
+        String teacher = "";
         String[] timeList;
         String way = "";
 
@@ -43,6 +44,13 @@ public class RecommandCourseEntity {
 
         public void setField(String field) {
             this.field = field;
+        }
+        public String getTeacher() {
+            return teacher;
+        }
+
+        public void setTeacher(String teacher) {
+            this.teacher = teacher;
         }
 
         public String getCategory() {
@@ -281,6 +289,7 @@ public class RecommandCourseEntity {
     public void setPE(PE pe) {
         this.pe.add(pe);
     }
+    public void  setWholePE(List<PE> pe){this.pe = pe;}
 
     public List<Display> getDisplay() {
         return display;
