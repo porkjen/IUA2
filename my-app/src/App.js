@@ -41,6 +41,7 @@ import Recommend from './recommend';
 import CourseRate from './courseRate';
 import EmptyResult from './emptyResult';
 import CourseResult from './courseResult';
+import History from './history';
 
 const App=()=> {
 
@@ -87,6 +88,7 @@ const App=()=> {
                     <Route path="/courseRate" element={<CourseRate />} />
                     <Route path="/emptyResult" element={<EmptyResult />} />
                     <Route path="/courseResult" element={<CourseResult />} />
+                    <Route path="/history" element={<History/>}/>
                     <Route path="/navbar" element={<navbar/> } />
                 </Routes>
                 
