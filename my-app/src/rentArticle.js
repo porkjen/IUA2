@@ -17,11 +17,13 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const PeopleText = styled.span`
-  color: orange;
+  color: #f7891b;
+  font-weight:bold;
 `;
 
 const DecidedText = styled.span`
   color: red;
+  font-weight:bold;
 `;
 
 const RentArticle=()=> {
