@@ -68,32 +68,32 @@ function EmptyResult() {
       });
   }, []);
 
-  // useEffect(() => {
-  //   setWaiting(true);
-  //   fetch('/recommend_course_emptyhall_general', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({})
-  //   })
-  //     .then(response => {
-  //       if (response.ok) {
-  //         return response.json();
-  //       } else {
-  //         throw new Error('獲取資料失敗');
-  //       }
-  //     })
-  //     .then(data => {
-  //       console.log("Got it!");
-  //       console.log(data);
-  //       setGCourseData(data);
-  //     })
-  //     .catch(error => {
-  //       console.error("獲取資料失敗", error);
-  //     })
-  //     .finally(() => {
-  //       setWaiting(false);
-  //     });
-  // }, []);
+  useEffect(() => {
+    setWaiting(true);
+    fetch('/recommend_course_emptyhall_general', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('獲取資料失敗');
+        }
+      })
+      .then(data => {
+        console.log("Got it!");
+        console.log(data);
+        setGCourseData(data);
+      })
+      .catch(error => {
+        console.error("獲取資料失敗", error);
+      })
+      .finally(() => {
+        setWaiting(false);
+      });
+  }, []);
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;
