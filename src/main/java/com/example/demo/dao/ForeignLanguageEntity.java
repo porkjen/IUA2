@@ -289,7 +289,7 @@ public class ForeignLanguageEntity {
 
     @Override
     public String toString() {
-        return "PECourseEntity{" +
+        return "ForeignCourseEntity{" +
                 "id=" + id + '\'' +
                 ", classNum=" + classNum + '\n' +
                 ", department=" + department + '\n' +

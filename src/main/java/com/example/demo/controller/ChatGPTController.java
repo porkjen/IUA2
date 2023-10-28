@@ -37,7 +37,7 @@ public class ChatGPTController {
         JSONObject systemMessage = new JSONObject();
         systemMessage.put("role", "system");
         String department = basicRepository.findByStudentID(requestData.get("studentID")).getDepartment();
-        systemMessage.put("content", "使用繁體中文，我是心理輔導師，使用者是"+department+"學生，回應100字以內");
+        systemMessage.put("content", "使用繁體中文，我是心理輔導師，使用者是"+department+"學生，不超過100字");
 
         // 用戶消息
         JSONObject userMessage = new JSONObject();

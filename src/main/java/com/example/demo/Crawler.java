@@ -43,11 +43,11 @@ public class Crawler {
 
 
 
-//        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\chromedriver.exe");
 
         //System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");//白
 
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
 
 
 
@@ -61,7 +61,7 @@ public class Crawler {
         ChromeOptions options = new ChromeOptions();
 
         options.addArguments("–incognito"); //無痕
-        options.addArguments("remote-allow-origins=*");
+        options.addArguments("--remote-allow-origins=*");
         options.addArguments("-headless");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
@@ -85,8 +85,8 @@ public class Crawler {
                 Point point = element.getLocation();
                 int width = element.getSize().getWidth();
                 int height = element.getSize().getHeight();
-                BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 100, height + 4);//headless
-                //BufferedImage subImage = image.getSubimage(point.getX()+350, point.getY()+132, width + 6, height + 4);//朱
+                BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 110, height + 4);//headless
+                //BufferedImage subImage = image.getSubimage(point.getX()+240, point.getY()+248, width + 6, height + 5);//朱
                 //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
 
@@ -186,12 +186,19 @@ public class Crawler {
     //基本資料
     public static BasicEntity getBasicData(String studentID, String password) throws InterruptedException {//基本資料
         BasicEntity personalInformation = new BasicEntity();
-        driver.switchTo().frame("menuFrame");
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
-        Thread.sleep(3000);
-        driver.findElement(By.linkText("學生基本資料維護作業")).click(); //學生基本資料維護作業
-        Thread.sleep(3000);
-        driver.findElement(By.linkText("維護舊生資料")).click(); //維護舊生資料
+        driver.switchTo().frame(1);
+        driver.findElement(By.id("Menu_TreeViewn0Nodes"));
+        WebElement element = driver.findElement(By.id("Menu_TreeViewt1"));
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        Thread.sleep(1500);
+        element = driver.findElement(By.id("Menu_TreeViewt31"));//學生基本資料維護作業
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        Thread.sleep(1500);
+        element = driver.findElement(By.id("Menu_TreeViewt42"));//維護舊生資料
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
         String name = driver.findElement(By.id("M_CH_NAME")).getText();
@@ -211,7 +218,7 @@ public class Crawler {
         personalInformation.setGrade(grade);
         personalInformation.setTeam(team);
         personalInformation.setBirth(birth);
-        driver.quit();
+        driver.close();
         return personalInformation;
     }
 
@@ -382,14 +389,21 @@ public class Crawler {
     public static List<TimeTableEntity.Info> getMyClass(String studentID, String password) throws InterruptedException{
         System.out.println("getMyClass");
         List<TimeTableEntity.Info> myClassList = new ArrayList<>();
-        driver.switchTo().frame("menuFrame");
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        driver.switchTo().frame(1);
+        driver.findElement(By.id("Menu_TreeViewn0Nodes"));
+        WebElement element = driver.findElement(By.id("Menu_TreeViewt1"));//教務系統
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("教務系統");
-        Thread.sleep(3000);
-        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        Thread.sleep(1500);
+        element = driver.findElement(By.id("Menu_TreeViewt32"));//選課系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("選課系統");
-        Thread.sleep(3000);
-        driver.findElement(By.linkText("學生個人選課清單課表列印")).click(); //學生個人選課清單課表列印
+        Thread.sleep(1500);
+        element = driver.findElement(By.id("Menu_TreeViewt43"));//學生個人選課清單課表列印
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("學生個人選課清單課表列印");
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
@@ -427,12 +441,7 @@ public class Crawler {
             else driver.findElement(By.cssSelector("a[href=\"javascript:__doPostBack('DataGrid$ctl"+(i+1)+"$COSID','')\"]")).click();//click class number
             //switch iframe
 
-            //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-            //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-            //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
             WebElement iframe = driver.findElement(By.tagName("iframe"));
             driver.switchTo().frame(iframe);
@@ -480,7 +489,7 @@ public class Crawler {
             System.out.println(myClass.toString());
             myClassList.add(myClass);
         }
-
+        driver.close();
         return myClassList;
     }
 
@@ -810,14 +819,21 @@ public class Crawler {
 
     public static List<PECourseEntity> getPE() throws InterruptedException{
         System.out.println("getPE class");
-        driver.switchTo().frame("menuFrame");
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        driver.switchTo().frame(1);
+        driver.findElement(By.id("Menu_TreeViewn0Nodes"));
+        WebElement element = driver.findElement(By.id("Menu_TreeViewt1"));//教務系統
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("教務系統");
         Thread.sleep(2000);
-        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        element = driver.findElement(By.id("Menu_TreeViewt32"));//選課系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("選課系統");
         Thread.sleep(2000);
-        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        element = driver.findElement(By.id("Menu_TreeViewt41"));//課程課表查詢
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("課程課表查詢");
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
@@ -832,7 +848,7 @@ public class Crawler {
         js.executeScript("arguments[0].value = '150';", driver.findElement(By.id("PC_PageSize")));
         Thread.sleep(2000);
         driver.findElement(By.xpath("//*[@id=\"PC_ShowRows\"]")).click();
-        Thread.sleep(3000);
+        Thread.sleep(2000);
         System.out.println("顯示150筆");
         List<PECourseEntity> peCourseEntityList = new ArrayList<>();
         List<WebElement> PE = driver.findElements(By.cssSelector("#DataGrid > tbody > tr"));
@@ -899,14 +915,21 @@ public class Crawler {
     }
     public static List<ForeignLanguageEntity> getForeignLanguageClass() throws InterruptedException{
         System.out.println("getForeignLanguage class");
-        driver.switchTo().frame("menuFrame");
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        driver.switchTo().frame(1);
+        driver.findElement(By.id("Menu_TreeViewn0Nodes"));
+        WebElement element = driver.findElement(By.id("Menu_TreeViewt1"));//教務系統
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("教務系統");
         Thread.sleep(2000);
-        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        element = driver.findElement(By.id("Menu_TreeViewt32"));//選課系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("選課系統");
         Thread.sleep(2000);
-        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        element = driver.findElement(By.id("Menu_TreeViewt41"));//課程課表查詢
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("課程課表查詢");
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
@@ -988,14 +1011,21 @@ public class Crawler {
     }
     public static List<EnglishCourseEntity> getEnglishClass() throws InterruptedException{
         System.out.println("getEnglish class");
-        driver.switchTo().frame("menuFrame");
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        driver.switchTo().frame(1);
+        driver.findElement(By.id("Menu_TreeViewn0Nodes"));
+        WebElement element = driver.findElement(By.id("Menu_TreeViewt1"));//教務系統
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("教務系統");
         Thread.sleep(2000);
-        driver.findElement(By.linkText("選課系統")).click(); //選課系統
+        element = driver.findElement(By.id("Menu_TreeViewt32"));//選課系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("選課系統");
         Thread.sleep(2000);
-        driver.findElement(By.linkText("課程課表查詢")).click(); //課程課表查詢
+        element = driver.findElement(By.id("Menu_TreeViewt41"));//課程課表查詢
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         System.out.println("課程課表查詢");
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
@@ -1128,22 +1158,20 @@ public class Crawler {
     public static void main(String[] args) throws Exception {
 
 
-        String account = "";
-        String password = "";
+        String account = "00957025";
+        String password = "20230607";
 
 /*
         String account = "00957030";
         String password = "0baf254b";
         CrawlerHandle(account,password);
 */
-
-
-        //getBasicData(account,password);
         CrawlerHandle(account,password);
-        getForeignLanguageClass();
+        //getBasicData(account,password);
+        //getForeignLanguageClass();
         //getPE();
         //getMyClass(account,password);
-
+        getEnglishClass();
         //getAllGeneralClass();
         //getFinishedCredict();
         //findRCourse("必修","3");
