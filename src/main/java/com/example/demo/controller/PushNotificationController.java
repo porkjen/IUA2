@@ -10,7 +10,10 @@ import com.example.demo.dao.NotificationCondition;
 import com.example.demo.dao.PushNotificationRequest;
 import com.example.demo.dao.PushNotificationResponse;
 import com.example.demo.dao.RentPushCondition;
+import com.example.demo.dao.WebPushEntity;
+import com.example.demo.dao.HouseEntity;
 import com.example.demo.repository.ChangeCourseRepository;
+import com.example.demo.repository.HouseRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.WebPushRepository;
 import com.example.demo.service.PushNotificationService;
@@ -33,6 +36,8 @@ public class PushNotificationController {
     private WebPushRepository webPushRepository;
     @Autowired
     ChangeCourseRepository changeCourseRepository;
+    @Autowired
+    HouseRepository houseRepository;
 
     public PushNotificationController(PushNotificationService pushNotificationService) {
         this.pushNotificationService = pushNotificationService;
@@ -72,8 +77,9 @@ public class PushNotificationController {
     }
 
     @PostMapping("/exchange_web_push")
-    public void rentWebPush(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
+    public void exchangeWebPush(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
         System.out.println("/exchange_web_push");
+        WebPushEntity webPush = webPushRepository.findByStudentID(studentID.get("studentID"));
         ArrayList<ExchangePushCondition> exchangeCondition = notificationRepository.findByStudentID(studentID.get("studentID")).getExchangeCondition();
         ArrayList<String> desired = notificationRepository.findByStudentID(studentID.get("studentID")).getDesireClasses();
         List<ChangeCourseEntity> cList = changeCourseRepository.findAll();
@@ -88,9 +94,12 @@ public class PushNotificationController {
                     System.out.println("[course name] " + cPost.getCourse() + "\n[post id] " + cPost.getPostId());
                     request.setTitle("您想換的課程[" + cPost.getCourse() + "] 已有新貼文！");
                     request.setMessage("發布者 " + cPost.getNickname() + "已發布貼文\n[" + cPost.getCourse() + "] " + cPost.getContent());
-                    request.setToken(webPushRepository.findByStudentID(studentID.get("studentID")).getToken());
+                    request.setToken(webPush.getToken());
                     pushNotificationService.sendPushNotificationToToken(request);
-                    webPushRepository.findByStudentID(studentID.get("studentID")).getNotifications().add(request);
+                    ArrayList<PushNotificationRequest> noticications = webPush.getNotifications();
+                    noticications.add(request);
+                    webPush.setNotifications(noticications);
+                    webPushRepository.save(webPush);
                     sentPosts.add(cPost.getPostId());
                     break;
                 }
@@ -108,12 +117,65 @@ public class PushNotificationController {
                                 System.out.println("[course time] " + c + "\n[post id] " + cPost.getPostId());
                                 request.setTitle("您想換的課程[" + cPost.getCourse() + "] 已有新貼文！");
                                 request.setMessage("發布者 " + cPost.getNickname() + "已發布貼文\n[" + cPost.getCourse() + "] " + cPost.getContent());
-                                request.setToken(webPushRepository.findByStudentID(studentID.get("studentID")).getToken());
+                                request.setToken(webPush.getToken());
                                 pushNotificationService.sendPushNotificationToToken(request);
-                                webPushRepository.findByStudentID(studentID.get("studentID")).getNotifications().add(request);
+                                ArrayList<PushNotificationRequest> noticications = webPush.getNotifications();
+                                noticications.add(request);
+                                webPush.setNotifications(noticications);
+                                webPushRepository.save(webPush);
                                 sentPosts.add(cPost.getPostId());
                                 break outter;
                             }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    @PostMapping("/rent_web_push")
+    public void rentWebPush(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
+        System.out.println("/exchange_web_push");
+        WebPushEntity webPush = webPushRepository.findByStudentID(studentID.get("studentID"));
+        RentPushCondition rentCondition = notificationRepository.findByStudentID(studentID.get("studentID")).getRentCondition();
+        ArrayList<String> sentPosts = new ArrayList<String>();
+        PushNotificationRequest request = new PushNotificationRequest();
+        while(rentCondition != null){
+            String money = rentCondition.getRent();
+            String gender = rentCondition.getGender();
+            String people = rentCondition.getPeople();
+            String floor = rentCondition.getFloor();
+            String parking = rentCondition.getParking();
+            boolean moneyMatch = false;
+            boolean genderMatch = false;
+            boolean peopleMatch = false;
+            boolean floorMatch = false;
+            boolean parkingMatch = false;
+            Thread.sleep(1500);
+            for(String style : rentCondition.getStyle()){
+                for(String area : rentCondition.getRegion()){
+                    List<HouseEntity> hList = houseRepository.findByStyleAndArea(style, area);
+                    for(HouseEntity hPost : hList){
+                        if(sentPosts.contains(hPost.getPostId()))
+                            break;
+                        if(hPost.getStatus().equals("未租")){
+                            if(money != null && Integer.parseInt(hPost.getMoney()) < Integer.parseInt(money))   moneyMatch = true;
+                            if(gender != null && hPost.getGender().equals(gender))  genderMatch = true;
+                            if(people != null && hPost.getPeople().equals(people))  peopleMatch = true;
+                            if(floor != null && hPost.getFloor().equals(floor)) floorMatch = true;
+                            if(parking != null && hPost.getCar().equals(parking))   parkingMatch = true;
+                            if(moneyMatch && genderMatch && peopleMatch && floorMatch && parkingMatch){    
+                                System.out.println("[style] " + hPost.getStyle() + "\n[post id] " + hPost.getPostId());
+                                request.setTitle("[租屋版]已發現新貼文！");
+                                request.setMessage("標題：" + hPost.getTitle());
+                                request.setToken(webPush.getToken());
+                                pushNotificationService.sendPushNotificationToToken(request);
+                                ArrayList<PushNotificationRequest> noticications = webPush.getNotifications();
+                                noticications.add(request);
+                                webPush.setNotifications(noticications);
+                                webPushRepository.save(webPush);
+                                sentPosts.add(hPost.getPostId());}
                         }
                     }
                 }
