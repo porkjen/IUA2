@@ -13,11 +13,114 @@ public class RecommandCourseEntity {
     private String id;
     String studentID;
 
+    List<General> general = new ArrayList<>();
+
+    List<PE> pe = new ArrayList<>();
     List<Info> info = new ArrayList<>();
 
     List<Show> show = new ArrayList<>();
 
     List<Display> display = new ArrayList<>();
+
+    public static class General{
+        String name = "";
+        String field = "";
+        String category = "";
+        String teacher = "";
+        String[] timeList;
+        String way = "";
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public void setField(String field) {
+            this.field = field;
+        }
+        public String getTeacher() {
+            return teacher;
+        }
+
+        public void setTeacher(String teacher) {
+            this.teacher = teacher;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
+        public String[] getTimeList() {
+            return timeList;
+        }
+
+        public void setTimeList(String[] timeList) {
+            this.timeList = timeList;
+        }
+        public String getWay() {
+            return way;
+        }
+
+        public void setWay(String way) {
+            this.way = way;
+        }
+    }
+
+    public static class PE{
+        String name = "";
+        String teacher = "";
+        String category = "";
+        String[] timeList;
+        String way = "";
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getTeacher() {
+            return teacher;
+        }
+
+        public void setTeacher(String teacher) {
+            this.teacher = teacher;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
+        public String[] getTimeList() {
+            return timeList;
+        }
+
+        public void setTimeList(String[] timeList) {
+            this.timeList = timeList;
+        }
+        public String getWay() {
+            return way;
+        }
+
+        public void setWay(String way) {
+            this.way = way;
+        }
+    }
 
     public static class Display{
        String name = "";
@@ -172,6 +275,21 @@ public class RecommandCourseEntity {
     public void setShow(Show show) {
         this.show.add(show);
     }
+
+    public List<General> getGeneral() {
+        return general;
+    }
+    public void setGeneral(General general) {
+        this.general.add(general);
+    }
+
+    public List<PE> getPE() {
+        return pe;
+    }
+    public void setPE(PE pe) {
+        this.pe.add(pe);
+    }
+    public void  setWholePE(List<PE> pe){this.pe = pe;}
 
     public List<Display> getDisplay() {
         return display;

@@ -14,6 +14,17 @@ import {useEffect,useState} from "react";
 import { loginUser } from './cookie';
 import { getAuthToken } from "./utils";
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const PeopleText = styled.span`
+  color: #f7891b;
+  font-weight:bold;
+`;
+
+const DecidedText = styled.span`
+  color: red;
+  font-weight:bold;
+`;
 
 const RentArticle=()=> {
 
@@ -60,7 +71,7 @@ const RentArticle=()=> {
                 <div>樓層: {floor}</div>
                 <div>性別: {gender}</div>
                 <div>租金: {money}</div>
-                <div>人數: {people}&nbsp;&#40;目前已確定合租人數: {decided}&#41;</div>
+                <div>人數: <PeopleText>{people}</PeopleText>&nbsp;&#40;目前已確定合租人數: <DecidedText>{decided}</DecidedText>&#41;</div>
                 <div>電費: {power}</div>
                 <div>水費: {water}</div>
                 <div>房型: {style}</div>

@@ -1,10 +1,10 @@
-html,body,#root,.EmptyResult{
+html,body,#root,.HistoryResult{
     height: 100%;
     padding: 0;
     margin: 0;
 }
 
-.EmptyResult_bg {
+.HistoryResult_bg {
     /* The image used */
     background-image: url("img/background.PNG");
   
@@ -17,13 +17,13 @@ html,body,#root,.EmptyResult{
     background-size: cover;
 }
 
-.EmptyResult_backicon{
+.HistoryResult_backicon{
     height: 40px;
     width: 40px;
     padding-top: 10px;
 }
 
-.EmptyResult_title{
+.HistoryResult_title{
     text-align: center;
     padding-top: 0px;
 }
@@ -33,23 +33,7 @@ html,body,#root,.EmptyResult{
     overflow: auto;
   }
 
-.finishDiv{
-    padding-left: 38%;
-    padding-top: 5%;
-}
-
-.finish_btn{
-    font-size: 18px;
-    color: #889cd4;
-    font-weight:bold;
-    height: 10%;
-    width: 30%;
-    background-color: white;
-    border: none;
-    border-radius: 10px;
-}
-
-.EmptyResult .selectType{
+.HistoryResult .selectType{
     margin-left: 75%;
     padding: 1%;
     width: 20%;

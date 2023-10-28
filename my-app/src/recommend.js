@@ -24,7 +24,9 @@ const Recommend=()=> {
                 </Link>
             </a>
             <a >
-                <button className='Btn'>歷史推薦結果</button>
+                <Link to="/history">
+                    <button className='Btn'>歷史推薦結果</button>
+                </Link>
             </a>
             </div>
            
