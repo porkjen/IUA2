@@ -41,10 +41,21 @@ public class ChangeCourseController {
                 System.out.println(Arrays.toString(coursePost.getTime()));
                 for(int i=0;i<coursePost.getTime().length;i++){
                     int idx = 14*(Integer.parseInt(coursePost.getTime()[i])/100-1)+(Integer.parseInt(coursePost.getTime()[i])-Integer.parseInt(coursePost.getTime()[i])/100*100)-1;
-                    System.out.println(idx);
+                    System.out.println("desire : "+idx);
                     courseTimeList.get(idx).setPair();
                 }
             }
+        }
+        for(String c : savedRepository.findByStudentID(studentID).getPosted()){
+            if(c.startsWith("C")){
+                ChangeCourseEntity coursePost = changeCourseRepository.findByPostId(c);
+                for(int i=0;i<coursePost.getTime().length;i++){
+                    int idx = 14*(Integer.parseInt(coursePost.getTime()[i])/100-1)+(Integer.parseInt(coursePost.getTime()[i])-Integer.parseInt(coursePost.getTime()[i])/100*100)-1;
+                    System.out.println("mypost : "+idx);
+                    courseTimeList.get(idx).setMine();
+                }
+            }
+
         }
         return courseTimeList;
     }
