@@ -136,7 +136,7 @@ public class PushNotificationController {
 
     @PostMapping("/rent_web_push")
     public void rentWebPush(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
-        System.out.println("/exchange_web_push");
+        System.out.println("/rent_web_push");
         WebPushEntity webPush = webPushRepository.findByStudentID(studentID.get("studentID"));
         RentPushCondition rentCondition = notificationRepository.findByStudentID(studentID.get("studentID")).getRentCondition();
         ArrayList<String> sentPosts = new ArrayList<String>();
@@ -152,6 +152,8 @@ public class PushNotificationController {
             boolean peopleMatch = false;
             boolean floorMatch = false;
             boolean parkingMatch = false;
+            boolean powerMatch = false;
+            boolean waterMatch = false;
             Thread.sleep(1500);
             for(String style : rentCondition.getStyle()){
                 for(String area : rentCondition.getRegion()){
@@ -160,13 +162,34 @@ public class PushNotificationController {
                         if(sentPosts.contains(hPost.getPostId()))
                             break;
                         if(hPost.getStatus().equals("未租")){
-                            if(money != null && Integer.parseInt(hPost.getMoney()) < Integer.parseInt(money))   moneyMatch = true;
-                            if(gender != null && hPost.getGender().equals(gender))  genderMatch = true;
-                            if(people != null && hPost.getPeople().equals(people))  peopleMatch = true;
-                            if(floor != null && hPost.getFloor().equals(floor)) floorMatch = true;
-                            if(parking != null && hPost.getCar().equals(parking))   parkingMatch = true;
+                            for(String power : rentCondition.getPower()){
+                                if(power.equals("一度") && hPost.getPower().startsWith("一")){
+                                    String powerMoney = hPost.getPower().replaceAll("[^0-9]", "");
+                                    if(Integer.parseInt(powerMoney) <= rentCondition.getPowerMoney())
+                                        powerMatch = true;
+                                }
+                                else if(hPost.getPower().equals(power))
+                                    powerMatch = true;
+                            }
+                            for(String water : rentCondition.getWater()){
+                                if(water.equals("月繳") && hPost.getWater().startsWith("月")){
+                                    String waterMoney = hPost.getWater().replaceAll("[^0-9]", "");
+                                    if(Integer.parseInt(waterMoney) <= rentCondition.getWaterMoney())
+                                        waterMatch = true;
+                                }
+                                else if(hPost.getWater().equals(water))
+                                    waterMatch = true;
+                            }
+                            if(money == null || Integer.parseInt(hPost.getMoney()) <= Integer.parseInt(money))   moneyMatch = true;
+                            if(gender != null){
+                               if(gender.equals("無限制") || hPost.getGender().equals(gender))
+                                    genderMatch = true;
+                            }
+                            if(people == null || Integer.parseInt(hPost.getPeople()) <= Integer.parseInt(people))  peopleMatch = true;
+                            if(floor == null || Integer.parseInt(hPost.getFloor()) <= Integer.parseInt(floor)) floorMatch = true;
+                            if(parking == null || hPost.getCar().equals(parking))   parkingMatch = true;
                             if(moneyMatch && genderMatch && peopleMatch && floorMatch && parkingMatch){    
-                                System.out.println("[style] " + hPost.getStyle() + "\n[post id] " + hPost.getPostId());
+                                System.out.println("[title] " + hPost.getTitle() + "\n[style] " + hPost.getStyle() + "\n[post id] " + hPost.getPostId());
                                 request.setTitle("[租屋版]已發現新貼文！");
                                 request.setMessage("標題：" + hPost.getTitle());
                                 request.setToken(webPush.getToken());
