@@ -230,12 +230,18 @@ public class Crawler {
         driver.switchTo().frame("menuFrame");
 
         Thread.sleep(2000);
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
-        Thread.sleep(1000);
-
-        driver.findElement(By.linkText("成績系統")).click(); //成績系統
-        Thread.sleep(2000);
-        driver.findElement(By.linkText("查詢各式成績")).click(); //查詢各式成績
+        driver.findElement(By.id("Menu_TreeViewn0Nodes")).click();
+        WebElement element = driver.findElement(By.id("Menu_TreeViewt1")); //教務系統
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        Thread.sleep(1500);
+        element = driver.findElement(By.id("Menu_TreeViewt33")); //成績系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        Thread.sleep(1500);
+        element = driver.findElement(By.id("Menu_TreeViewt41")); //查詢各式成績
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
         driver.findElement(By.xpath("//*[@id=\"RB_TYPE_3\"]")).click(); //歷年成績
@@ -284,9 +290,13 @@ public class Crawler {
         driver.switchTo().frame("menuFrame");
         //driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
         //Thread.sleep(3000);
-        driver.findElement(By.linkText("選課系統")).click(); //選課系統
-        Thread.sleep(3000);
-        driver.findElement(By.linkText("歷年課程課表查詢")).click();
+        element = driver.findElement(By.id("Menu_TreeViewt32")); //選課系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        element = driver.findElement(By.id("Menu_TreeViewt72")); //歷年課程課表查詢
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
         for(int i = 0; i < cID.size(); i++){
@@ -328,19 +338,23 @@ public class Crawler {
         }
         return fCourses;
     }
-
     
     public static void detectCoureses(ArrayList<CourseToBeDetected> courses) throws InterruptedException{
         String tDate = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now()); //today
 
         driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
-        Thread.sleep(1000);
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
-        Thread.sleep(3000);
-        driver.findElement(By.linkText("選課系統")).click(); //選課系統
-        Thread.sleep(3000);
-        driver.findElement(By.linkText("線上即時加退選")).click();
+        driver.findElement(By.id("Menu_TreeViewn0Nodes")).click();
+        WebElement element = driver.findElement(By.id("Menu_TreeViewt1")); //教務系統
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        Thread.sleep(1500);
+        element = driver.findElement(By.id("Menu_TreeViewt32")); //選課系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        element = driver.findElement(By.id("Menu_TreeViewt42")); //線上即時加退選
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
 
@@ -379,11 +393,17 @@ public class Crawler {
         }
         driver.switchTo().defaultContent();
         driver.switchTo().frame("menuFrame");
-        driver.findElement(By.linkText("線上即時加退選")).click();
+        element = driver.findElement(By.id("Menu_TreeViewt42")); //線上即時加退選
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        element = driver.findElement(By.id("Menu_TreeViewt32")); //選課系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
+        
         Thread.sleep(1000);
-        driver.findElement(By.linkText("選課系統")).click(); //選課系統
-        Thread.sleep(1000);
-        driver.findElement(By.id("Menu_TreeViewt1")).click(); //教務系統
+        element = driver.findElement(By.id("Menu_TreeViewt1")); //教務系統
+        executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", element);
     }
 
     public static List<TimeTableEntity.Info> getMyClass(String studentID, String password) throws InterruptedException{
