@@ -446,10 +446,11 @@ public class TodoController {
         }
         List<TimeTableDTO> shortTT = new ArrayList<>();
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
-        if(timeTable!=null && timeTable.getInfo().size()!=0){
+        if(timeTable!=null && timeTable.getInfo().size()!=0){ //directly create short
             for(TimeTableEntity.Info i : timeTable.getInfo()){
-                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
+                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory(), i.isChange_avail()));
             }
+            return ResponseEntity.ok(shortTT);
         }
         else{
             String password = basicRepository.findByStudentID(studentID).getPassword();
@@ -457,18 +458,19 @@ public class TodoController {
             crawler.CrawlerHandle(studentID,password);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(studentID,password);
             TimeTableEntity table = new TimeTableEntity();
-            if (timeTable != null) { //copy to new
-                table.setId(timeTable.getId());
-                table.setStudentID(timeTable.getStudentID());
-                table.setWholePre_info(timeTable.getPre_info());
+            if (timeTable != null) { //there is entity but no info
+                timeTable.setWholeInfo(myClassList);
+                timeTableRepository.save(timeTable);
             }
-            else table.setStudentID(studentID); //create a new one
+            else { //create a new one
+                table.setStudentID(studentID);
+                timeTableRepository.save(table);
+            }
             for(TimeTableEntity.Info i : myClassList){
                 System.out.println(i.getName());
-                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
+                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory(), i.isChange_avail()));
                 table.setInfo(i);
             }
-            timeTableRepository.save(table);
         }
         return ResponseEntity.ok(shortTT);
     }
@@ -494,7 +496,7 @@ public class TodoController {
         System.out.println("update database");
         for(TimeTableEntity.Info i : myClassList){
             System.out.println(i.getName());
-            shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
+            shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory(), i.isChange_avail()));
         }
         return ResponseEntity.ok(shortTT);
     }
@@ -2801,5 +2803,10 @@ public class TodoController {
             }
         }
         return Api;
+    }
+    @GetMapping("/database")
+    public void database(){
+
+        System.out.println("fin");
     }
 }

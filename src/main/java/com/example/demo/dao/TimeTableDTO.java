@@ -7,6 +7,7 @@ public class TimeTableDTO {
     private String classroom = ""; //上課地點*
     private String teacher = ""; //授課老師*
     private String category; //選課類別*
+    private boolean available;
 
     public String getName() {
         return name;
@@ -56,12 +57,21 @@ public class TimeTableDTO {
         this.category = category;
     }
 
-    public TimeTableDTO(String name, String classNum, String[] time, String classroom, String teacher, String category) {
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public TimeTableDTO(String name, String classNum, String[] time, String classroom, String teacher, String category, boolean available) {
         this.name = name;
         this.classNum = classNum;
         this.time = time;
         this.classroom = classroom;
         this.teacher = teacher;
         this.category = category;
+        this.available = available;
     }
 }

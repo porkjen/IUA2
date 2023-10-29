@@ -27,7 +27,8 @@ public class ChangeCourseController {
     NotificationRepository notificationRepository;
     @Autowired
     BasicRepository basicRepository;
-
+    @Autowired
+    TimeTableRepository timeTableRepository;
     @Autowired
     SavedRepository savedRepository;
 
@@ -59,6 +60,7 @@ public class ChangeCourseController {
         }
         return courseTimeList;
     }
+
 
     @GetMapping("/course_change")
     public List<ChangeCourseEntity> courseChange(@RequestParam("time") String time, @RequestParam("studentID") String studentID){
@@ -138,6 +140,15 @@ public class ChangeCourseController {
         saved.setPosted(course.getPostId());//add
         savedRepository.save(saved);
         System.out.println("發文成功");
+        //adjust timetable "change_avail" status
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(course.getStudentID());
+        for(TimeTableEntity.Info info : timeTable.getInfo()){
+            if(Objects.equals(info.getName(), course.getCourse())) {
+                info.setChange_avail(false);
+                break;
+            }
+        }
+        timeTableRepository.save(timeTable);
         return ResponseEntity.ok(course);
     }
 
