@@ -31,7 +31,6 @@ public class HouseEntity {
     private String status = "未租";
 
 
-
     public String getId() {
         return id;
     }

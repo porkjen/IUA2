@@ -84,7 +84,7 @@ const HomePage=()=> {
                         {data.map((item,index) => (
                          <NotificationText key={index} title={item.title} message={item.message}/>
                         ))}
-                        <NotificationText title={"租屋版"} message={"有符合你要的租屋!"}/>
+                        
                         </ul>
                     </div>
 

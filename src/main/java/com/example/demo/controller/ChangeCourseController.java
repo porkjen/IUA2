@@ -50,13 +50,27 @@ public class ChangeCourseController {
     }
 
     @GetMapping("/course_change")
-    public List<ChangeCourseEntity> courseChange(@RequestParam("time") String time){
+    public List<ChangeCourseEntity> courseChange(@RequestParam("time") String time, @RequestParam("studentID") String studentID){
         List<ChangeCourseEntity> thisTimeCourses = new ArrayList<>();
-        for(ChangeCourseEntity c : changeCourseRepository.findAll()){
+        NotificationCondition  nt = notificationRepository.findByStudentID(studentID);
+        List<String>desiredClassList = new ArrayList<>();
+        if(nt!=null)desiredClassList = nt.getDesireClasses();
+        boolean pair = false;
+        for(ChangeCourseEntity c : changeCourseRepository.findAll()){//all posts
             String[] timeArray = c.getTime();
-            for(int i=0;i< timeArray.length;i++){
-                if(Objects.equals(timeArray[i], time))thisTimeCourses.add(c);
+            for (String value : timeArray) {
+                if (Objects.equals(value, time)) {
+                    for (String s : desiredClassList) {
+                        if (Objects.equals(c.getCourse(), s)) {
+                            thisTimeCourses.add(0, c);
+                            pair = true;
+                        }
+                    }
+                    if (!pair) thisTimeCourses.add(c);
+                    break;
+                }
             }
+            pair = false;
         }
         return thisTimeCourses;
     }

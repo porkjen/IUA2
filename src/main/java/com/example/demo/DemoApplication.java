@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.dao.ChangeCourseHaveEntity;
 import com.example.demo.dao.FoodEntity;
 import com.example.demo.repository.ChangeCourseHaveRepository;
 import com.example.demo.repository.FoodRepository;
@@ -96,10 +97,9 @@ public class DemoApplication {
 		    System.out.println("finish!");*/
 		    /*ChangeCourseHaveEntity changeCourseHaveEntity = new ChangeCourseHaveEntity();
 		    for(ChangeCourseHaveEntity c : changeCourseHaveEntity.initialization()){
-			System.out.println(c.getTime()+" : "+c.getHave());
-			changeCourseHaveRepository.save(c);
+				System.out.println(c.getTime());
+				changeCourseHaveRepository.save(c);
 		    }*/
-
 		}
 	}
 }

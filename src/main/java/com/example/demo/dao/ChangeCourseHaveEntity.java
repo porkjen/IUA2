@@ -55,6 +55,7 @@ public class ChangeCourseHaveEntity {
                 ChangeCourseHaveEntity c = new ChangeCourseHaveEntity();
                 c.setTime(String.valueOf(classtime));
                 c.setHave(0);
+                c.setPair(0);
                 init.add(c);
             }
         }
