@@ -61,6 +61,24 @@ public class PushNotificationController {
         return ResponseEntity.ok("success");
     }
 
+    @GetMapping("/load_exchange_condition")
+    public ArrayList<ExchangePushCondition> loadExchangeCondition(@RequestParam("studentID") String studentID){
+        System.out.println("/load_exchange_condition");
+        ArrayList<ExchangePushCondition> exchangeCondition = notificationRepository.findByStudentID(studentID).getExchangeCondition();
+        return exchangeCondition;
+    }
+
+    @DeleteMapping("/delete_exchange_condition")
+    public ResponseEntity<String> deleteExchangeCondition(@RequestParam("studentID") String studentID, @RequestParam("listNumber") int listNumber){
+        System.out.println("/delete_exchange_condition");
+        NotificationCondition notificationCondition = notificationRepository.findByStudentID(studentID);
+        ArrayList<ExchangePushCondition> exchangePushCondition = notificationCondition.getExchangeCondition();
+        exchangePushCondition.remove(listNumber);
+        notificationRepository.findByStudentID(studentID).setExchangeCondition(exchangePushCondition);
+        notificationRepository.save(notificationCondition);
+        return ResponseEntity.ok("Success");
+    }
+    
     @PostMapping("/rent_notification_add")
     public ResponseEntity<String> addRentPushCondition(@RequestBody RentPushCondition received){
         System.out.println("/rent_notification_add");
@@ -74,6 +92,24 @@ public class PushNotificationController {
         condition.setRentCondition(received);
         notificationRepository.save(condition);
         return ResponseEntity.ok("success");
+    }
+
+    @GetMapping("/load_rent_condition")
+    public RentPushCondition loadRentCondition(@RequestParam("studentID") String studentID){
+        System.out.println("/load_rent_condition");
+        RentPushCondition rentCondition = notificationRepository.findByStudentID(studentID).getRentCondition();
+        return rentCondition;
+    }
+
+    @DeleteMapping("/delete_rent_condition")
+    public ResponseEntity<String> deleteRentCondition(@RequestParam("studentID") String studentID){
+        System.out.println("/delete_rent_condition");
+        NotificationCondition notificationCondition = notificationRepository.findByStudentID(studentID);
+        RentPushCondition rentPushCondition = notificationCondition.getRentCondition();
+        rentPushCondition = null;
+        notificationRepository.findByStudentID(studentID).setRentCondition(rentPushCondition);
+        notificationRepository.save(notificationCondition);
+        return ResponseEntity.ok("Success");
     }
 
     @PostMapping("/exchange_web_push")
