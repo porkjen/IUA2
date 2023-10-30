@@ -28,7 +28,7 @@ public class ChatSystemController {
         return outputMessage;
     }
 
-    @GetMapping("/namecast")
+    @GetMapping("/namecast")//登錄的使用者是誰
     @ResponseBody
     public String namecast() {
         // 訪問TodoController的studentID

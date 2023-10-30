@@ -27,7 +27,8 @@ public class ChangeCourseController {
     NotificationRepository notificationRepository;
     @Autowired
     BasicRepository basicRepository;
-
+    @Autowired
+    TimeTableRepository timeTableRepository;
     @Autowired
     SavedRepository savedRepository;
 
@@ -41,13 +42,25 @@ public class ChangeCourseController {
                 System.out.println(Arrays.toString(coursePost.getTime()));
                 for(int i=0;i<coursePost.getTime().length;i++){
                     int idx = 14*(Integer.parseInt(coursePost.getTime()[i])/100-1)+(Integer.parseInt(coursePost.getTime()[i])-Integer.parseInt(coursePost.getTime()[i])/100*100)-1;
-                    System.out.println(idx);
+                    System.out.println("desire : "+idx);
                     courseTimeList.get(idx).setPair();
                 }
             }
         }
+        for(String c : savedRepository.findByStudentID(studentID).getPosted()){
+            if(c.startsWith("C")){
+                ChangeCourseEntity coursePost = changeCourseRepository.findByPostId(c);
+                for(int i=0;i<coursePost.getTime().length;i++){
+                    int idx = 14*(Integer.parseInt(coursePost.getTime()[i])/100-1)+(Integer.parseInt(coursePost.getTime()[i])-Integer.parseInt(coursePost.getTime()[i])/100*100)-1;
+                    System.out.println("mypost : "+idx);
+                    courseTimeList.get(idx).setMine();
+                }
+            }
+
+        }
         return courseTimeList;
     }
+
 
     @GetMapping("/course_change")
     public List<ChangeCourseEntity> courseChange(@RequestParam("time") String time, @RequestParam("studentID") String studentID){
@@ -56,14 +69,23 @@ public class ChangeCourseController {
         List<String>desiredClassList = new ArrayList<>();
         if(nt!=null)desiredClassList = nt.getDesireClasses();
         boolean pair = false;
+        int pos=0;
         for(ChangeCourseEntity c : changeCourseRepository.findAll()){//all posts
             String[] timeArray = c.getTime();
             for (String value : timeArray) {
                 if (Objects.equals(value, time)) {
-                    for (String s : desiredClassList) {
-                        if (Objects.equals(c.getCourse(), s)) {
-                            thisTimeCourses.add(0, c);
-                            pair = true;
+                    if(Objects.equals(c.getStatus(), "未換")){
+                        for (String s : desiredClassList) {
+                            if (Objects.equals(c.getCourse(), s)) {
+                                thisTimeCourses.add(0, c);
+                                pos++;
+                                pair = true;
+                                break;
+                            }
+                        }
+                        if (!pair) {
+                            thisTimeCourses.add(pos,c);
+                            break;
                         }
                     }
                     if (!pair) thisTimeCourses.add(c);
@@ -118,6 +140,15 @@ public class ChangeCourseController {
         saved.setPosted(course.getPostId());//add
         savedRepository.save(saved);
         System.out.println("發文成功");
+        //adjust timetable "change_avail" status
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(course.getStudentID());
+        for(TimeTableEntity.Info info : timeTable.getInfo()){
+            if(Objects.equals(info.getName(), course.getCourse())) {
+                info.setChange_avail(false);
+                break;
+            }
+        }
+        timeTableRepository.save(timeTable);
         return ResponseEntity.ok(course);
     }
 
@@ -245,7 +276,8 @@ public class ChangeCourseController {
         for(String postId : savedEntity.getPosted()){
             if(postId.startsWith("C")){
                 ChangeCourseEntity c = changeCourseRepository.findByPostId(postId);
-                C_post.add(c);
+                if(Objects.equals(c.getStatus(),"已換"))C_post.add(c);
+                else C_post.add(0,c);
             }
         }
         return C_post;

@@ -11,6 +11,7 @@ public class ChangeCourseHaveEntity {
     private String time;
     private int have;
     private int pair;
+    private int mine = 0; //0, 1
 
     public String getId() {
         return id;
@@ -46,6 +47,16 @@ public class ChangeCourseHaveEntity {
     public void setPair() {
         this.pair++;
     }
+
+
+    public int getMine() {
+        return mine;
+    }
+
+    public void setMine() {
+        this.mine++;
+    }
+
 
     public List<ChangeCourseHaveEntity> initialization(){
         List<ChangeCourseHaveEntity> init = new ArrayList<>();

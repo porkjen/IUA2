@@ -223,10 +223,10 @@ class ChatRoom extends React.Component {
               <Back src={back} alt="回上一頁" />
           </Link>
          <h1>{this.state.apiRoomName}
-         {isPosterSameAsUserName && 
+         {/* {isPosterSameAsUserName && 
          <button type="button" onClick={this.handleConfirmation} disabled={!connected}>
             已確認
-          </button>}
+          </button>} */}
          </h1>
        </div>
        <div className="chatroom-messages" >

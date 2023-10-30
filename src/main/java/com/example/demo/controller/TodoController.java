@@ -446,10 +446,11 @@ public class TodoController {
         }
         List<TimeTableDTO> shortTT = new ArrayList<>();
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
-        if(timeTable!=null && timeTable.getInfo().size()!=0){
+        if(timeTable!=null && timeTable.getInfo().size()!=0){ //directly create short
             for(TimeTableEntity.Info i : timeTable.getInfo()){
-                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
+                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory(), i.isChange_avail()));
             }
+            return ResponseEntity.ok(shortTT);
         }
         else{
             String password = basicRepository.findByStudentID(studentID).getPassword();
@@ -457,24 +458,213 @@ public class TodoController {
             crawler.CrawlerHandle(studentID,password);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(studentID,password);
             TimeTableEntity table = new TimeTableEntity();
+            if (timeTable != null) { //there is entity but no info
+                timeTable.setWholeInfo(myClassList);
+                timeTableRepository.save(timeTable);
+            }
+            else { //create a new one
+                table.setStudentID(studentID);
+                timeTableRepository.save(table);
+            }
+            for(TimeTableEntity.Info i : myClassList){
+                System.out.println(i.getName());
+                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory(), i.isChange_avail()));
+                table.setInfo(i);
+            }
+        }
+        return ResponseEntity.ok(shortTT);
+    }
+
+    @GetMapping("/update_curriculum")
+    public ResponseEntity<?> updateCurriculum(@RequestParam("studentID") String studentID, @RequestHeader("Authorization") String au) throws TesseractException, IOException, InterruptedException {
+        System.out.println("/update_curriculum");
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        String secretKey = keyRepository.findByUse("pswKey").getKey();
+        List<TimeTableDTO> shortTT = new ArrayList<>();
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        String password = basicRepository.findByStudentID(studentID).getPassword();
+        password = aesEncryptionDecryption.decrypt(password, secretKey);
+        crawler.CrawlerHandle(studentID,password);
+        List<TimeTableEntity.Info> myClassList = crawler.getMyClass(studentID,password);
+        timeTable.setWholeInfo(myClassList);
+        timeTableRepository.save(timeTable);
+        System.out.println("update database");
+        for(TimeTableEntity.Info i : myClassList){
+            System.out.println(i.getName());
+            shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory(), i.isChange_avail()));
+        }
+        return ResponseEntity.ok(shortTT);
+    }
+
+    @PostMapping("/recommend_course_emptyhall_PE")
+    public List<RecommandCourseEntity.PE> recommend_course_emptyhall_PE()throws TesseractException, IOException, InterruptedException {
+        RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(account);
+        System.out.println("PE->"+rcHistory.getStudentID());
+        List<RecommandCourseEntity.PE> rcPE = new ArrayList<>();
+        List<PECourseEntity> PEall = peCourseRepository.findAll();
+        String[] alreadyClass=new String[1000];
+        int num = 0;
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
+        if(timeTable ==null || timeTable.getId().isEmpty()){
+            //crawler.CrawlerHandle(account,pwd);
+            List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
+            TimeTableEntity table = new TimeTableEntity();
             if (timeTable != null) { //copy to new
                 table.setId(timeTable.getId());
                 table.setStudentID(timeTable.getStudentID());
                 table.setWholePre_info(timeTable.getPre_info());
             }
-            else table.setStudentID(studentID); //create a new one
+            else table.setStudentID(account); //create a new one
             for(TimeTableEntity.Info i : myClassList){
                 System.out.println(i.getName());
-                shortTT.add(new TimeTableDTO(i.getName(), i.getClassNum(), i.getTime(), i.getClassroom(), i.getTeacher(), i.getCategory()));
                 table.setInfo(i);
             }
             timeTableRepository.save(table);
         }
-        return ResponseEntity.ok(shortTT);
+        List<TimeTableEntity.Info> timeList = new ArrayList<>();
+        timeList = timeTable.getInfo();
+        //System.out.println(timeList);
+        for(TimeTableEntity.Info t : timeList){
+            String[] temp = t.getTime();
+            for(int i = 0;i < temp.length ;i++){
+                alreadyClass[num] = temp[i];
+                //System.out.println("t = "+temp[i]);
+                System.out.println("a = "+alreadyClass[num]);
+                num++;
+            }
+        }
+        System.out.println("num = "+num);
+        System.out.println("ac = "+alreadyClass.length);
+        for(PECourseEntity index : PEall){
+            String[] temp = index.getTime();
+            int flag = 0;
+            for(int i = 0;i < num;i++){
+                if(temp[0].equals(alreadyClass[i])){
+                    break;
+                }
+                else{
+                    for(int j = 0;j < num;j++){
+                        if(temp[1].equals(alreadyClass[j])){
+                            break;
+                        }
+                        else{
+                            flag = 1;
+                        }
+                    }
+                }
+            }
+            if(flag == 1){
+                RecommandCourseEntity.PE exhibit = new RecommandCourseEntity.PE();
+                exhibit.setTeacher(index.getTeacher());
+                exhibit.setCategory(index.getMainField());
+                String[] time2 = {temp[0],temp[1]};
+                exhibit.setTimeList(time2);
+                exhibit.setName(index.getName());
+                exhibit.setWay("空堂推薦");
+                rcPE.add(exhibit);
+                //rcHistory.setPE(exhibit);
+                System.out.println(index.getName());
+                System.out.println(time2[0]+"&"+time2[1]);
+            }
+        }
+        //RecommandCourseEntity rcHistoryDPE = recomdCourseRepository.findByStudentID(account);
+        //recomdCourseRepository.delete(rcHistoryDPE);
+        System.out.println("savePE");
+        rcHistory.setWholePE(rcPE);
+        recomdCourseRepository.save(rcHistory);
+        return rcPE;
+    }
+
+    @PostMapping("/recommend_course_emptyhall_general")
+    public List<RecommandCourseEntity.General> recommend_course_emptyhall_general()throws TesseractException, IOException, InterruptedException {
+        RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(account);
+        List<RecommandCourseEntity.General> rcGL = new ArrayList<>();
+        List<GeneralCourseEntity> generalAll = generalRepository.findAll();
+        String[] alreadyClass=new String[1000];
+        int num = 0;
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
+        if(timeTable == null || timeTable.getId().isEmpty()){
+            //crawler.CrawlerHandle(account,pwd);
+            List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
+            TimeTableEntity table = new TimeTableEntity();
+            if (timeTable != null) { //copy to new
+                table.setId(timeTable.getId());
+                table.setStudentID(timeTable.getStudentID());
+                table.setWholePre_info(timeTable.getPre_info());
+            }
+            else table.setStudentID(account); //create a new one
+            for(TimeTableEntity.Info i : myClassList){
+                System.out.println(i.getName());
+                table.setInfo(i);
+            }
+            timeTableRepository.save(table);
+        }
+        List<TimeTableEntity.Info> timeList = new ArrayList<>();
+        timeList = timeTable.getInfo();
+        //System.out.println(timeList);
+        for(TimeTableEntity.Info t : timeList){
+            String[] temp = t.getTime();
+            for(int i = 0;i < temp.length ;i++){
+                alreadyClass[num] = temp[i];
+                //System.out.println("t = "+temp[i]);
+                System.out.println("a = "+alreadyClass[num]);
+                num++;
+            }
+        }
+        System.out.println("num = "+num);
+        System.out.println("ac = "+alreadyClass.length);
+        for(GeneralCourseEntity index : generalAll){
+            String temp[] = index.getTime().split(",");
+            System.out.println(index.getName());
+            for(int n = 0; n < temp.length;n++){
+                System.out.println(n+"->"+temp[n]);
+            }
+            int flag = 0;
+            for(int i = 0;i < num;i++){
+                if(temp[0].equals(alreadyClass[i])){
+                    break;
+                }
+                else{
+                    for(int j = 0;j < num;j++){
+                        if(temp[1].equals(alreadyClass[j])){
+                            break;
+                        }
+                        else{
+                            flag = 1;
+                        }
+                    }
+                }
+            }
+            if(flag == 1){
+                RecommandCourseEntity.General exhibit = new RecommandCourseEntity.General();
+                exhibit.setField(index.getSubfield());
+                exhibit.setCategory(index.getCategory());
+                String[] time2 = {temp[0],temp[1]};
+                exhibit.setTimeList(time2);
+                exhibit.setName(index.getName());
+                exhibit.setTeacher(index.getTeacher());
+                exhibit.setWay("空堂推薦");
+                rcGL.add(exhibit);
+                rcHistory.setGeneral(exhibit);
+                System.out.println(index.getName());
+                System.out.println(time2[0]+"&"+time2[1]);
+            }
+        }
+        //RecommandCourseEntity rcHistoryD = recomdCourseRepository.findByStudentID(account);
+        //System.out.println(rcHistoryD.getStudentID());
+        //recomdCourseRepository.delete(rcHistoryD);
+        System.out.println("saveGeneral");
+        recomdCourseRepository.save(rcHistory);
+        return rcGL;
     }
 
     @PostMapping("/recommend_course_emptyhall")
-    public List<RecommandCourseEntity.Display> recommend_course_emptyhall()throws TesseractException, IOException, InterruptedException {
+    public List<RecommandCourseEntity.Show> recommend_course_emptyhall()throws TesseractException, IOException, InterruptedException {
         String[][] last_semester = {{"數值分析","102","103","104","資訊安全領域","一般選修"},{"計算機系統設計", "102","103","104","計算機領域","核心選修"},
                 {"Python程式語言","106","107","108","軟體領域&計算科學領域","一般選修"},{"資料庫系統","106","107","108","軟體領域","核心選修"},
                 {"進階程式競賽技巧","111","112","113","軟體領域&計算科學領域","一般選修"},{"網頁程式設計","206","207","208","軟體領域","一般選修"},
@@ -495,16 +685,12 @@ public class TodoController {
         //cs&is&sw->資訊安全實務管理
         //ai&sw->巨量資料運算導論 物聯網技術與應用 機器學習技術
         //co&sw->ios應用程式語言開發入門 Android行動裝置軟體設計
-        String[] alreadyClass={};
+        String[] alreadyClass=new String[1000];
         int num = 0;
+        List<RecommandCourseEntity.Show> rcEH = new ArrayList<>();
         TimeTableEntity timeTable = timeTableRepository.findByStudentID(account);
-        List<RecommandCourseEntity.Display> rcEH = new ArrayList<>();
-        RecommandCourseEntity recommandCourse = recomdCourseRepository.findByStudentID(account);
-        if(recommandCourse == null){
-            recommandCourse.setStudentID(account);
-        }
-        if(timeTable ==null){
-            crawler.CrawlerHandle(account,pwd);
+        if(timeTable ==null  || timeTable.getId().isEmpty()){
+            //crawler.CrawlerHandle(account,pwd);
             List<TimeTableEntity.Info> myClassList = crawler.getMyClass(account,pwd);
             TimeTableEntity table = new TimeTableEntity();
             if (timeTable != null) { //copy to new
@@ -521,79 +707,206 @@ public class TodoController {
         }
         List<TimeTableEntity.Info> timeList = new ArrayList<>();
         timeList = timeTable.getInfo();
-        for(TimeTableEntity.Info index : timeList){
-            String[] temp = index.getTime();
-            for(int i = 0;i < 3 ;i++){
+        //System.out.println(timeList);
+        for(TimeTableEntity.Info t : timeList){
+            String[] temp = t.getTime();
+            for(int i = 0;i < temp.length ;i++){
                 alreadyClass[num] = temp[i];
+                //System.out.println("t = "+temp[i]);
+                System.out.println("a = "+alreadyClass[num]);
                 num++;
             }
         }
-        for(int i = 0;i < 13;i++){
-            RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-            for(int j = 0; j < num;j++){
-                if (!last_semester[i][1].equals(alreadyClass[j])) {
-                    for(int k = 0; k < num;k++){
-                        if (!last_semester[i][2].equals(alreadyClass[k])) {
-                            for(int l = 0; l < num;l++){
-                                if (!last_semester[i][3].equals(alreadyClass[l])) {
-                                    coreShow.setName(last_semester[i][0]);
-                                    coreShow.setCategory(last_semester[i][5]);
-                                    coreShow.setField(last_semester[i][4]);
+        System.out.println("num = "+num);
+        System.out.println("ac = "+alreadyClass.length);
+        System.out.println("33333333save");
+
+        RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(account);
+        //System.out.println("1."+rcHistory.getStudentID());
+        if (rcHistory == null) {
+            System.out.println("no value in DB");
+            rcHistory = new RecommandCourseEntity(); // 创建一个新的对象
+            rcHistory.setStudentID(account);
+            crawler.CrawlerHandle(account, pwd);
+            List<RecommandCourseEntity.Info> hcList = crawler.getHistoryCourse();
+            for (RecommandCourseEntity.Info i : hcList) {
+                System.out.println(i.getName());
+                rcHistory.setInfo(i);
+            }
+            recomdCourseRepository.save(rcHistory); // 保存新对象到数据库
+        }
+
+        List<RecommandCourseEntity.Info> rCourse = rcHistory.getInfo();
+
+        for (int i = 0; i < 13; i++) {
+            RecommandCourseEntity.Show coreShow = new RecommandCourseEntity.Show();
+            int check = 1;
+            System.out.println(last_semester[i][1] + " && " + last_semester[i][2] + " && " + last_semester[i][3]);
+
+            for (int j = 0; j < num; j++) {
+                if (alreadyClass[j].equals(last_semester[i][1])) {
+                    check = 2;
+                    break;
+                } else {
+                    for (int k = 0; k < num; k++) {
+                        if (alreadyClass[k].equals(last_semester[i][2])) {
+                            check = 2;
+                            break;
+                        } else {
+                            for (int l = 0; l < num; l++) {
+                                if (alreadyClass[l].equals(last_semester[i][3])) {
+                                    check = 2;
+                                    break;
                                 }
                             }
                         }
                     }
                 }
             }
-            rcEH.add(coreShow);
-            recommandCourse.setDisplay(coreShow);
+            if (check == 1) {
+                int found = 0;
+                for (RecommandCourseEntity.Info rc : rCourse) {
+                    if (last_semester[i][0].equals(rc.getName())) {
+                        found = 1;
+                    }
+                }
+                if (found == 0) {
+                    System.out.println(last_semester[i][0] + "&" + last_semester[i][5] + "&" + last_semester[i][4]);
+                    coreShow.setName(last_semester[i][0]);
+                    coreShow.setCategory(last_semester[i][5]);
+                    coreShow.setField(last_semester[i][4]);
+                    String[] time3 = {last_semester[i][1], last_semester[i][2], last_semester[i][3]};
+                    coreShow.setTimeList(time3);
+                    coreShow.setWay("空堂推薦");
+                    rcEH.add(coreShow);
+                    rcHistory.setShow(coreShow);
+                    System.out.println("save2222");
+                }
+            }
         }
-
+        RecommandCourseEntity rcHistoryD = recomdCourseRepository.findByStudentID(account);
+        System.out.println(rcHistoryD.getStudentID());
+        recomdCourseRepository.delete(rcHistoryD);
+        System.out.println("save1");
+        recomdCourseRepository.save(rcHistory);
         return rcEH;
     }
+
     
     @PostMapping("/recommend_course_rating")
-    public RecommandCourseEntity course_recommand_rating()throws TesseractException, IOException, InterruptedException {
+    public RecommandCourseEntity course_recommand_rating() throws TesseractException, IOException, InterruptedException {
+        String studentID = account;
+        String password = pwd;
         RecommandCourseEntity recommandCourse = new RecommandCourseEntity();
-        recommandCourse.setStudentID(account);
-        //String grade = basicRepository.findByStudentID(account).getGrade();
-        crawler.CrawlerHandle(account, pwd);
-        List<RecommandCourseEntity.Info> hcList = crawler.getHistoryCourse();
-        for (RecommandCourseEntity.Info i:hcList){
-            System.out.println(i.getName());
-            recommandCourse.setInfo(i);
+        RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(studentID);
+        if(rcHistory != null){
+            List<RecommandCourseEntity.Info> hcList = rcHistory.getInfo();
+            for (RecommandCourseEntity.Info i : hcList) {
+                System.out.println(i.getName());
+                recommandCourse.setInfo(i);
+            }
+        }
+        else{
+            recommandCourse.setStudentID(studentID);
+            crawler.CrawlerHandle(studentID, password);
+            List<RecommandCourseEntity.Info> hcList = crawler.getHistoryCourse();
+            for (RecommandCourseEntity.Info i : hcList) {
+                System.out.println(i.getName());
+                recommandCourse.setInfo(i);
+            }
+            recomdCourseRepository.save(recommandCourse);
         }
         return recommandCourse;
     }
 
     @PostMapping("/recommend_course_rating_result")
-    public RecommandCourseEntity course_recommand_rating_result(@RequestParam(value = "coreC")String coreC,@RequestParam(value = "coreS")String coreS,@RequestParam(value = "co")String co,
-                                                                @RequestParam(value = "sw")String sw,@RequestParam(value = "ai")String ai,@RequestParam(value = "is")String is,
-                                                                @RequestParam(value = "cs")String cs)throws TesseractException, IOException, InterruptedException {
+    public List<RecommandCourseEntity.Display> course_recommand_rating_result(@RequestBody Map<String,Integer> recommendC)throws TesseractException, IOException, InterruptedException {
+        String[] cc = {"數位系統設計","微處理器原理與組合語言","計算機系統設計","計算機結構","嵌入式系統設計","系統程式"};//#6
+        String[] csw = {"程式語言","資料庫系統","軟體工程","編譯器","系統工程","人工智慧"};//軟體工程有上下兩學期  //#6
+        String[] c = {"Verilog硬體描述語言"};//co  //#1
+        String[] s = {"網頁程式設計","ASP.NET程式設計","JAVA程式設計","巨量資料運算導論","機器學習技術","進階資料庫","物聯網技術與應用","IOS App遊戲開發"};//sw  //#8
+        String[] a = {"數位影像處理","電腦圖學","巨量資料運算導論","機器視覺理論應用","機器學習技術","物聯網技術與應用","3D列印技術與系統"};//ai  //#7
+        String[] cse = {"數值分析","圖論演算法"};//cs  //#2
         String[] core_software = {"程式語言","資料庫系統","軟體工程","編譯器","系統工程","人工智慧"};//軟體工程有上下兩學期  //#6
         String[] core_computer = {"數位系統設計","微處理器原理與組合語言","計算機系統設計","計算機結構","嵌入式系統設計","系統程式"};//#6
         String[] computer = {"Verilog硬體描述語言","ios應用程式語言開發入門","Android行動裝置軟體設計"};//co  //#3
-        String[] software = {"Python程式語言","網頁程式設計","ASP.NET程式設計","MATLAB程式設計","組合論","JAVA程式設計","ios應用程式語言開發入門",
-                "巨量資料運算導論","進階程式競賽技巧","機器學習技術","進階資料庫","物聯網技術與應用","Android行動裝置軟體設計","物件導向軟體工程","IOS App遊戲開發"};//sw  //#15
+        String[] software = {"Python程式語言","網頁程式設計","ASP.NET程式設計","MATLAB程式設計","組合論","JAVA程式設計","ios應用程式語言開發入門","巨量資料運算導論",
+                        "進階程式競賽技巧","機器學習技術","進階資料庫","物聯網技術與應用","Android行動裝置軟體設計","IOS App遊戲開發"};//sw  //#14
         String[] artificial_intelligence = {"數位影像處理","電腦圖學","巨量資料運算導論","機器視覺理論應用","機器學習技術","物聯網技術與應用","3D列印技術與系統"};//ai  //#7
-        String[] information_security = {"資訊安全實務管理"};//資訊安全實務管理有上下兩學期  //is   //#1
-        String[] computational_science = {"Python程式語言","MATLAB程式設計","組合論","數值分析","圖論演算法","資訊安全實務管理","進階程式競賽技巧"};//cs  //#7
+        String[] information_security = {"資訊安全實務與管理"};//資訊安全實務管理有上下兩學期  //is   //#1
+        String[] computational_science = {"Python程式語言","MATLAB程式設計","組合論","數值分析","圖論演算法","資訊安全實務與管理","進階程式競賽技巧"};//cs  //#7
+
         //cs&sw->Python程式語言 MATLAB程式設計 組合論 進階程式競賽技巧
         //cs&is&sw->資訊安全實務管理
         //ai&sw->巨量資料運算導論 物聯網技術與應用 機器學習技術
         //co&sw->ios應用程式語言開發入門 Android行動裝置軟體設計
-        Integer[] temp = {0,0,0,0,0,0,0};
+        Integer[] temp = {0,0,0,0,0,0,0}; //coreC = 0,coreS = 1,co = 2,sw = 3,ai = 4,is = 5,cs = 6
         RecommandCourseEntity recommandCourse = recomdCourseRepository.findByStudentID(account);
-        if(recommandCourse == null){
-            recommandCourse.setStudentID(account);
+        List<RecommandCourseEntity.Display> display = new ArrayList<>();
+        List<RecommandCourseEntity.Info> rCourse = recommandCourse.getInfo();
+        for(RecommandCourseEntity.Info i : rCourse){
+            int tmpNum = recommendC.get(i.getName());
+            i.setLoved(Integer.toString(tmpNum));
+            if(i.getName().equals("Python程式語言") || i.getName().equals("MATLAB程式設計") || i.getName().equals("組合論") || i.getName().equals("進階程式競賽技巧")){
+                temp[6]+=tmpNum-3;
+                temp[3]+=tmpNum-3;
+            }
+            else if(i.getName().equals("資訊安全實務與管理")){
+                temp[6]+=tmpNum-3;
+                temp[3]+=tmpNum-3;
+                temp[5]+=tmpNum-3;
+            }
+            else if(i.getName().equals("巨量資料運算導論") || i.getName().equals("物聯網技術與應用") || i.getName().equals("機器學習技術")){
+                temp[4]+=tmpNum-3;
+                temp[3]+=tmpNum-3;
+            }
+            else if(i.getName().equals("ios應用程式語言開發入門") || i.getName().equals("Android行動裝置軟體設計") ){
+                temp[2]+=tmpNum-3;
+                temp[3]+=tmpNum-3;
+            }
+            else{
+                for(int j = 0;j < 6;j++){
+                    if(i.getName().equals(cc[j])){
+                        temp[0]+=tmpNum-3;
+                        break;
+                    }
+                }
+                for(int j = 0;j < 6;j++){
+                    if(i.getName().equals(csw[j])){
+                        temp[1]+=tmpNum-3;
+                        break;
+                    }
+                }
+                for(int j = 0;j < 1;j++){
+                    if(i.getName().equals(c[j])){
+                        temp[2]+=tmpNum-3;
+                        break;
+                    }
+                }
+                for(int j = 0;j < 8;j++){
+                    if(i.getName().equals(s[j])){
+                        temp[3]+=tmpNum-3;
+                        break;
+                    }
+                }
+                for(int j = 0;j < 7;j++){
+                    if(i.getName().equals(a[j])){
+                        temp[4]+=tmpNum-3;
+                        break;
+                    }
+                }
+                for(int j = 0;j < 2;j++){
+                    if(i.getName().equals(cse[j])){
+                        temp[6]+=tmpNum-3;
+                        break;
+                    }
+                }
+            }
         }
-        temp[0] = Integer.parseInt(coreC);
-        temp[1] = Integer.parseInt(coreS);
-        temp[2] = Integer.parseInt(co);
-        temp[3] = Integer.parseInt(sw);
-        temp[4] = Integer.parseInt(ai);
-        temp[5] = Integer.parseInt(is);
-        temp[6] = Integer.parseInt(cs);
+        for(int i = 0;i < 7;i++){
+            System.out.println(i+":"+temp[i]);
+        }
+        ////////////////////開始判斷///////////////
         int flag = 0;
         for(int i = 1;i < 7;i++){
             if(temp[i]==temp[i-1]){
@@ -602,122 +915,385 @@ public class TodoController {
         }
         if(flag == 6){
             int randCore = (int)(Math.random()*12);
-            int randCSAIC = (int)(Math.random()*23);
+            int randCSAIC = (int)(Math.random()*32);
             RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
             if(randCore < 6){
+                int check = 0, loc = 0;
+                while (check!=1){
+                    boolean found = false;
+                    for(RecommandCourseEntity.Info rc : rCourse){
+                        if(rc.getName().equals(core_computer[randCore])){
+                            randCore = loc;
+                            loc++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        check = 1;
+                    }
+                }
                 coreShow.setName(core_computer[randCore]);
                 coreShow.setField("計算機領域");
             }
             else{
                 randCore -= 6;
+                int check = 0, loc = 0;
+                while (check!=1){
+                    boolean found = false;
+                    for(RecommandCourseEntity.Info rc : rCourse){
+                        if(rc.getName().equals(core_software[randCore])){
+                            randCore = loc;
+                            loc++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        check = 1;
+                    }
+                }
                 coreShow.setName(core_software[randCore]);
                 coreShow.setField("軟體領域");
             }
             coreShow.setCategory("核心選修");
+            coreShow.setWay("喜好推薦");
+            display.add(coreShow);
             recommandCourse.setDisplay(coreShow);
 
             RecommandCourseEntity.Display caiscShow = new RecommandCourseEntity.Display();
             if(randCSAIC < 3){
+                int check = 0, loc = 0;
+                while (check!=1){
+                    boolean found = false;
+                    for(RecommandCourseEntity.Info rc : rCourse){
+                        if(rc.getName().equals(computer[randCSAIC])){
+                            randCSAIC = loc;
+                            loc++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        check = 1;
+                    }
+                }
                 caiscShow.setName(computer[randCSAIC]);
                 caiscShow.setField("計算機領域");
             }
-            else if(randCSAIC < 11){
+            else if(randCSAIC < 17){
                 randCSAIC -= 3;
+                int check = 0, loc = 0;
+                while (check!=1){
+                    boolean found = false;
+                    for(RecommandCourseEntity.Info rc : rCourse){
+                        if(rc.getName().equals(software[randCSAIC])){
+                            randCSAIC = loc;
+                            loc++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        check = 1;
+                    }
+                }
                 caiscShow.setName(software[randCSAIC]);
                 caiscShow.setField("軟體領域");
             }
-            else if(randCSAIC < 18){
-                randCSAIC -= 11;
+            else if(randCSAIC < 24){
+                randCSAIC -= 17;
+                int check = 0, loc = 0;
+                while (check!=1){
+                    boolean found = false;
+                    for(RecommandCourseEntity.Info rc : rCourse){
+                        if(rc.getName().equals(artificial_intelligence[randCSAIC])){
+                            randCSAIC = loc;
+                            loc++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        check = 1;
+                    }
+                }
                 caiscShow.setName(artificial_intelligence[randCSAIC]);
                 caiscShow.setField("人工智慧領域");
             }
-            else if(randCSAIC < 19){
-                randCSAIC -= 18;
+            else if(randCSAIC < 25){
+                randCSAIC -= 24;
+                int check = 0, loc = 0;
+                while (check!=1){
+                    boolean found = false;
+                    for(RecommandCourseEntity.Info rc : rCourse){
+                        if(rc.getName().equals(information_security[randCSAIC])){
+                            randCSAIC = loc;
+                            loc++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        check = 1;
+                    }
+                }
                 caiscShow.setName(information_security[randCSAIC]);
                 caiscShow.setField("資訊安全領域");
             }
-            else if(randCSAIC < 23){
-                randCSAIC -= 19;
+            else if(randCSAIC < 32){
+                randCSAIC -= 25;
+                int check = 0, loc = 0;
+                while (check!=1){
+                    boolean found = false;
+                    for(RecommandCourseEntity.Info rc : rCourse){
+                        if(rc.getName().equals(computational_science[randCSAIC])){
+                            randCSAIC = loc;
+                            loc++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        check = 1;
+                    }
+                }
                 caiscShow.setName(computational_science[randCSAIC]);
                 caiscShow.setField("計算科學領域");
             }
             caiscShow.setCategory("一般選修");
+            caiscShow.setWay("喜好推薦");
+            display.add(caiscShow);
             recommandCourse.setDisplay(caiscShow);
         }
-        int max = temp[0];
-        for(int i = 1;i < 7;i++){
-            if(temp[i]>max){
-                max = temp[i];
+        else{
+            int max = temp[0];
+            for(int i = 1;i < 7;i++){
+                if(temp[i]>max){
+                    max = temp[i];
+                }
+            }
+            for(int i = 0;i < 7;i++){
+                if(temp[i] == max){
+                    if(i == 0 || i == 2){
+                        int randCore = (int)(Math.random()*6);
+                        RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                        int check = 0, loc = 0;
+                        while (check!=1){
+                            boolean found = false;
+                            for(RecommandCourseEntity.Info rc : rCourse){
+                                if(rc.getName().equals(core_computer[randCore])){
+                                    randCore = loc;
+                                    loc++;
+                                    if(loc == 6){
+                                        loc = 0;
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                check = 1;
+                            }
+                        }
+                        coreShow.setName(core_computer[randCore]);
+                        coreShow.setField("計算機領域");
+                        coreShow.setCategory("核心選修");
+                        coreShow.setWay("喜好推薦");
+                        display.add(coreShow);
+                        recommandCourse.setDisplay(coreShow);
+
+                        int randCSAIC = (int)(Math.random()*3);
+                        RecommandCourseEntity.Display csaicShow = new RecommandCourseEntity.Display();
+                        int checkk = 0, locc = 0;
+                        while (checkk!=1){
+                            boolean found = false;
+                            for(RecommandCourseEntity.Info rc : rCourse){
+                                if(rc.getName().equals(computer[randCSAIC])){
+                                    randCSAIC = locc;
+                                    locc++;
+                                    if(locc == 3){
+                                        locc = 0;
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                checkk = 1;
+                            }
+                        }
+                        csaicShow.setName(computer[randCSAIC]);
+                        csaicShow.setField("計算機領域");
+                        csaicShow.setCategory("一般選修");
+                        csaicShow.setWay("喜好推薦");
+                        display.add(csaicShow);
+                        recommandCourse.setDisplay(csaicShow);
+                    }
+                    else if(i == 1 || i == 3){
+                        int randCore = (int)(Math.random()*6);
+                        RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                        int check = 0, loc = 0;
+                        while (check!=1){
+                            boolean found = false;
+                            for(RecommandCourseEntity.Info rc : rCourse){
+                                if(rc.getName().equals(core_software[randCore])){
+                                    randCore = loc;
+                                    loc++;
+                                    if(loc == 6){
+                                        loc = 0;
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                check = 1;
+                            }
+                        }
+                        coreShow.setName(core_software[randCore]);
+                        coreShow.setField("軟體領域");
+                        coreShow.setCategory("核心選修");
+                        coreShow.setWay("喜好推薦");
+                        display.add(coreShow);
+                        recommandCourse.setDisplay(coreShow);
+
+                        int randCSAIC = (int)(Math.random()*3);
+                        RecommandCourseEntity.Display csaicShow = new RecommandCourseEntity.Display();
+                        int checkk = 0, locc = 0;
+                        while (checkk!=1){
+                            boolean found = false;
+                            for(RecommandCourseEntity.Info rc : rCourse){
+                                if(rc.getName().equals(software[randCSAIC])){
+                                    randCSAIC = locc;
+                                    locc++;
+                                    if(locc == 14){
+                                        locc = 0;
+                                    }
+                                    else if(locc == 3 || locc == 4){
+                                        locc += 2;
+                                    }
+                                    else if(locc == 7|| locc == 9){
+                                        locc += 1;
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                checkk = 1;
+                            }
+                        }
+                        csaicShow.setName(software[randCSAIC]);
+                        csaicShow.setField("軟體領域");
+                        csaicShow.setCategory("一般選修");
+                        csaicShow.setWay("喜好推薦");
+                        display.add(csaicShow);
+                        recommandCourse.setDisplay(csaicShow);
+                    }
+                    else if(i == 4){
+                        int randCSAIC = (int)(Math.random()*7);
+                        RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                        int check = 0, loc = 0;
+                        while (check!=1){
+                            boolean found = false;
+                            for(RecommandCourseEntity.Info rc : rCourse){
+                                if(rc.getName().equals(artificial_intelligence[randCSAIC])){
+                                    randCSAIC = loc;
+                                    loc++;
+                                    if(loc == 7){
+                                        loc = 0;
+                                    }
+                                    else if(loc == 5){
+                                        loc += 1;
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                check = 1;
+                            }
+                        }
+                        coreShow.setName(artificial_intelligence[randCSAIC]);
+                        coreShow.setField("人工智慧領域");
+                        coreShow.setCategory("一般選修");
+                        coreShow.setWay("喜好推薦");
+                        display.add(coreShow);
+                        recommandCourse.setDisplay(coreShow);
+                    }
+                    else if(i == 5){
+                        int randCSAIC = (int)(Math.random()*1);
+                        RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                        int check = 0, loc = 0, judge = 0;
+                        while (check!=1){
+                            boolean found = false;
+                            for(RecommandCourseEntity.Info rc : rCourse){
+                                if(rc.getName().equals(information_security[randCSAIC])){
+                                    randCSAIC = loc;
+                                    loc++;
+                                    if (loc == 1){
+                                        judge = 1;
+                                        break;
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                check = 1;
+                            }
+                        }
+                        if(judge == 0){
+                            coreShow.setName(information_security[randCSAIC]);
+                            coreShow.setField("資訊安全領域");
+                            coreShow.setCategory("一般選修");
+                            coreShow.setWay("喜好推薦");
+                            display.add(coreShow);
+                            recommandCourse.setDisplay(coreShow);
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else if(i == 6){
+                        int randCSAIC = (int)(Math.random()*7);
+                        RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
+                        int check = 0, loc = 0;
+                        while (check!=1){
+                            boolean found = false;
+                            for(RecommandCourseEntity.Info rc : rCourse){
+                                if(rc.getName().equals(computational_science[randCSAIC])){
+                                    randCSAIC = loc;
+                                    loc++;
+                                    if(loc == 7){
+                                        loc = 1;
+                                    }
+                                    else if(loc == 5 || loc == 5){
+                                        loc -= 2;
+                                    }
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                check = 1;
+                            }
+                        }
+                        coreShow.setName(computational_science[randCSAIC]);
+                        coreShow.setField("計算科學領域");
+                        coreShow.setCategory("一般選修");
+                        coreShow.setWay("喜好推薦");
+                        display.add(coreShow);
+                        recommandCourse.setDisplay(coreShow);
+                    }
+                }
             }
         }
-        Integer[] tempMax={};
-        int index = 0;
-        for(int i = 0;i < 7;i++){
-            if(temp[i]==max){
-                tempMax[index] = i;
-                index++;
-            }
-        }
-        for(int i = 0;i < index;i++){
-            if(tempMax[i] == 0){
-                int randCore = (int)(Math.random()*6);
-                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-                coreShow.setName(core_computer[randCore]);
-                coreShow.setField("計算機領域");
-                coreShow.setCategory("核心選修");
-                recommandCourse.setDisplay(coreShow);
-            }
-            if(tempMax[i] == 1){
-                int randCore = (int)(Math.random()*6);
-                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-                coreShow.setName(core_software[randCore]);
-                coreShow.setField("軟體領域");
-                coreShow.setCategory("核心選修");
-                recommandCourse.setDisplay(coreShow);
-            }
-            if(tempMax[i] == 2){
-                int randCore = (int)(Math.random()*3);
-                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-                coreShow.setName(core_software[randCore]);
-                coreShow.setField("計算機領域");
-                coreShow.setCategory("一般選修");
-                recommandCourse.setDisplay(coreShow);
-            }
-            if(tempMax[i] == 3){
-                int randCore = (int)(Math.random()*8);
-                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-                coreShow.setName(core_software[randCore]);
-                coreShow.setField("軟體領域");
-                coreShow.setCategory("一般選修");
-                recommandCourse.setDisplay(coreShow);
-            }
-            if(tempMax[i] == 4){
-                int randCore = (int)(Math.random()*7);
-                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-                coreShow.setName(core_software[randCore]);
-                coreShow.setField("人工智慧領域");
-                coreShow.setCategory("一般選修");
-                recommandCourse.setDisplay(coreShow);
-            }
-            if(tempMax[i] == 5){
-                int randCore = (int)(Math.random()*1);
-                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-                coreShow.setName(core_software[randCore]);
-                coreShow.setField("資訊安全領域");
-                coreShow.setCategory("一般選修");
-                recommandCourse.setDisplay(coreShow);
-            }
-            if(tempMax[i] == 6){
-                int randCore = (int)(Math.random()*4);
-                RecommandCourseEntity.Display coreShow = new RecommandCourseEntity.Display();
-                coreShow.setName(core_software[randCore]);
-                coreShow.setField("計算科學領域");
-                coreShow.setCategory("一般選修");
-                recommandCourse.setDisplay(coreShow);
-            }
-        }
-        return recommandCourse;
+        recomdCourseRepository.save(recommandCourse);
+        return display;
     }
+    
     @GetMapping("/curriculum_search_detail")
     public ResponseEntity<?> curriculumSearchDetail(@RequestParam("studentID") String studentID, @RequestParam("Cname")String name, @RequestHeader("Authorization") String au){
         JwtToken jwtToken = new JwtToken();
@@ -1836,6 +2412,7 @@ public class TodoController {
         return RC_result;
     }
 
+    /*************************** favorite *********************************/
     @PostMapping("/favorites")
     public ResponseEntity<String> favorites(@RequestBody Map<String, String> requestData){
         System.out.println("/favorites");
@@ -2226,5 +2803,10 @@ public class TodoController {
             }
         }
         return Api;
+    }
+    @GetMapping("/database")
+    public void database(){
+
+        System.out.println("fin");
     }
 }

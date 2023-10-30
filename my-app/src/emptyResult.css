@@ -1,0 +1,56 @@
+html,body,#root,.EmptyResult{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.EmptyResult_bg {
+    /* The image used */
+    background-image: url("img/background.PNG");
+  
+    /* Full height */
+    height: 100%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.EmptyResult_backicon{
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+}
+
+.EmptyResult_title{
+    text-align: center;
+    padding-top: 0px;
+}
+
+.er_scrollableContainer {
+    height: 530px; /* 設置固定高度，根據需要調整 */
+    overflow: auto;
+  }
+
+.finishDiv{
+    padding-left: 38%;
+    padding-top: 5%;
+}
+
+.finish_btn{
+    font-size: 18px;
+    color: #889cd4;
+    font-weight:bold;
+    height: 10%;
+    width: 30%;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+.EmptyResult .selectType{
+    margin-left: 75%;
+    padding: 1%;
+    width: 20%;
+}

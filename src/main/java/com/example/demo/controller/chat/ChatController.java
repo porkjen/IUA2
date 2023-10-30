@@ -32,7 +32,7 @@ public class ChatController {
         ChatroomRecordEntity record = new ChatroomRecordEntity();
         record.setfrom(message.getFrom());
         record.settext(message.getText());
-        record.setatWhere(mxgWhere);
+        record.setatWhere(mxgWhere);//聊天室
         chatroomRecordRepository.save(record);
 
         return new Output(time, message);

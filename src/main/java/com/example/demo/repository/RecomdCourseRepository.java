@@ -7,5 +7,6 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 
 public interface RecomdCourseRepository extends MongoRepository<RecommandCourseEntity, String> {
+    @Query(value = "{'studentID': ?0}")
     RecommandCourseEntity findByStudentID(String studentID);
 }

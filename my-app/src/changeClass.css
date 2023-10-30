@@ -79,4 +79,58 @@
 
 }
 
+.cc_note{
+  position: absolute;
+  margin-left: 73%;
+  margin-top: 6%;
+  font-size: 14px;
+}
 
+
+.cc_loading{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 45%;
+  font-size: 15px;
+}
+
+.cc_LoadingText{
+  font-family: 'Noto Serif TC', serif;
+  z-index: 3;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 45%;
+  font-size: 15px;
+}
+
+.cc_preloader > div{
+  background-color: black;
+  height: 2px;
+  width: 2px;
+  border-radius: 50%;
+  display: inline-block;
+  animation: stretchdelay 0.7s infinite ease-in-out;
+}
+
+@keyframes stretchdelay {
+  0%, 40%, 100% { 
+       transform: translateY(0px);
+  }
+  20% {
+       transform: translateY(-3px);
+  }
+}
+
+.cc_preloader .cc_dot1 {
+  animation-delay: 0;
+}
+
+.cc_preloader .cc_dot2 {
+  animation-delay: 0.1s;
+}
+
+.cc_preloader .cc_dot3 {
+  animation-delay: 0.2s;
+}

@@ -24,6 +24,7 @@ public class TimeTableEntity {
         private String classroom = ""; //上課地點*
         private String teacher = ""; //授課老師*
         private String category; //選課類別*
+        private boolean change_avail = true;
         private String yearClass = ""; //開課年班(2A)
         private String upper = ""; //人數上限
         private String lower = ""; //人數下限
@@ -93,6 +94,14 @@ public class TimeTableEntity {
 
         public void setCategory(String category) {
             this.category = category;
+        }
+
+        public boolean isChange_avail() {
+            return change_avail;
+        }
+
+        public void setChange_avail(boolean change_avail) {
+            this.change_avail = change_avail;
         }
 
         public String getENname() {

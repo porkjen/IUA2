@@ -454,7 +454,7 @@ const PostArticle=()=> {
                   console.log(data);
                   const optionsFromAPI = data.map((item) => ({
                     value: item.name,
-                    label: item.name,
+                    label: item.name+item.time,
                   }));
                   setOptions(optionsFromAPI);
               })

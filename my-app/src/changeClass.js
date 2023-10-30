@@ -4,7 +4,7 @@ import IsModal from "./components/Modal";
 import back from './img/back.png';
 import {Back}  from './components/Style.js';
 import {Page, Pagebg, Title, PostArticleBtn, ArticleList, ArticleContainer, PerChangeClassBtn, PerHaveChangeClassBtn, 
-  ChangeClassCategorySelect,PerHavePairChangeClassBtn} from './components/ArticleStyle.js';
+  ChangeClassCategorySelect,PerHavePairChangeClassBtn,PerMineChangeClassBtn} from './components/ArticleStyle.js';
 import { MyclassBody } from './components/Style.js';
 import { Routes ,Route,Link,useNavigate } from 'react-router-dom';
 import {useState,useEffect} from "react";
@@ -20,6 +20,7 @@ const ChangeClass=()=> {
     const [notification, setNotification] = useState(false);
     const [changeTable, setchangeTable] = useState(true);
     const [openModal, setOpenModal] = useState(false);
+    const [waiting, setWaiting] = useState(true);
     const userInfo = loginUser();
     const token = getAuthToken();
 
@@ -36,6 +37,7 @@ const ChangeClass=()=> {
           .then(data => {
             console.log(data);
             setData(data);
+            setWaiting(false);
           })
           .catch(error => {
             console.error('Error:', error);
@@ -60,23 +62,38 @@ const ChangeClass=()=> {
 
 
         return (
-          <div className='PerChangeClassTable'>
-          {Array.from({ length: Math.ceil(data.length / itemsPerRow) }).map((_, rowIndex) => (
-            <div className='column' key={rowIndex}>
-              {data.slice(rowIndex * itemsPerRow, (rowIndex + 1) * itemsPerRow).map(item => (
-                <div className='ChangeClassBtnContainer' key={item.time}>
-                  <ChangeClassBtn time={item.time} haveClass={item.have} pair={item.pair} onClick={() => handleShowClassInfoSubmit(item.time)}>
-                    {item.time}
-                  </ChangeClassBtn>
+          <div>
+            {!waiting && 
+            <div className='PerChangeClassTable'>
+              {Array.from({ length: Math.ceil(data.length / itemsPerRow) }).map((_, rowIndex) => (
+                <div className='column' key={rowIndex}>
+                  {data.slice(rowIndex * itemsPerRow, (rowIndex + 1) * itemsPerRow).map(item => (
+                    <div className='ChangeClassBtnContainer' key={item.time}>
+                      <ChangeClassBtn time={item.time} haveClass={item.have} pair={item.pair} mine={item.mine} onClick={() => handleShowClassInfoSubmit(item.time)}>
+                        {item.time}
+                      </ChangeClassBtn>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-          ))}
-        </div>
+            }
+            {waiting && 
+                <div className='cc_LoadingText'>
+                  <div class="cc_preloader">
+                      Loading
+                    <div class="cc_dot1"></div>
+                    <div class="cc_dot2"></div>
+                    <div class="cc_dot3"></div>
+                  </div>
+                </div>
+              }
+          </div>
+          
         );
       }
 
-      function ClassItem({name,time,classNum,teacher,category}){
+      function ClassItem({name,time,classNum,teacher,category,available}){
 
         const handleChangeClassBtn = event =>{
           console.log(name);
@@ -96,7 +113,8 @@ const ChangeClass=()=> {
             <MyclassBody>
               <div className='changeClass_classNum_className'>
                 <label className='changeClass_classNum'>{classNum}</label>
-                <button className='changeClassBtn' onClick={handleChangeClassBtn} >我要換課</button>
+                {available && <button className='changeClassBtn' onClick={handleChangeClassBtn} >我要換課</button>}
+                {!available && <button className='changeClassBtn' onClick={handleChangeClassBtn} disabled>已發文</button>}
               </div>
                 <label className='changeClass_className'>{name}</label>
                 <div>課程時間:&nbsp;{time}</div>
@@ -112,7 +130,7 @@ const ChangeClass=()=> {
 
           <ArticleList >
           {myClassData.map((item, index) => (
-            <ClassItem key={item.name} name={item.name} time={item.time} classNum={item.classNum} teacher={item.teacher} category={item.category}></ClassItem>
+            <ClassItem key={item.name} name={item.name} time={item.time} classNum={item.classNum} teacher={item.teacher} category={item.category} available={item.available}></ClassItem>
           ))}
         </ArticleList>
           
@@ -120,8 +138,17 @@ const ChangeClass=()=> {
       }
 
 
-      function ChangeClassBtn({time, haveClass, pair}) {
+      function ChangeClassBtn({time, haveClass, pair, mine}) {
 
+        if(mine>=1)
+        {
+          setHaveClass(true);
+          console.log(time);
+          return (
+              <PerMineChangeClassBtn onClick={() => handleShowClassInfoSubmit(time)}>{time}</PerMineChangeClassBtn>
+          
+          )
+        }
 
         if(haveClass>=1 && pair===0)
         {
@@ -154,6 +181,7 @@ const ChangeClass=()=> {
         setMyClass(true);
         setchangeTable(false);
         setMyClass(true);
+        setWaiting(true);
         fetch(`/curriculum_search?studentID=${userInfo}`, {
           headers: {
             'Authorization': `${token}`  // 將 token 添加到請求頭中
@@ -164,6 +192,7 @@ const ChangeClass=()=> {
             console.log(data);
             console.log(myClass);
             setData(data);
+            setWaiting(false);
           })
           .catch(error => {
             console.error('Error:', error);
@@ -175,6 +204,7 @@ const ChangeClass=()=> {
         setMyClass(false);
         setchangeTable(true);
         setchangeTable(true);
+        setWaiting(true);
         console.log("handleChangeTableChange called");
         console.log(myClass);
         fetch(`/course_change_have?studentID=${userInfo}`)
@@ -182,6 +212,7 @@ const ChangeClass=()=> {
         .then(data => {
           console.log(data);
           setData(data);
+          setWaiting(false);
         })
         .catch(error => {
           console.error('Error:', error);
@@ -220,11 +251,17 @@ const ChangeClass=()=> {
           {!openModal && <label for="changeClassTable">選課課表</label>}
 
         </div><br/>
-          {changeTable && !openModal && <IsChangeTable/>}
+          {changeTable && !openModal && 
+          <div>
+            <label className='cc_note'>綠:有貼文<br/>藍:發過的文<br/>紅:配對成功</label>
+            <IsChangeTable/>
+          </div>
+          
+          }
           {myClass && !openModal && <AllMyClass myClassData={data}/>}
           {openModal && <IsModal closeModal={setOpenModal} type={"setChangeClassNotification"}  />}
           
-          { !openModal && 
+          {!openModal && 
             <ChangeClassCategorySelect onChange={handleChangeClassFunctionSelect}>
               <option >功能選單</option>
               <option value='myNotification'>我的提醒</option>

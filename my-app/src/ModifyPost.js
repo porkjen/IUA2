@@ -211,6 +211,7 @@ const ModifyPost=()=> {
         const [Hmoney, setHmoney] = useState("");
         const [rentGender, setrentGender] = useState("");
         const [Hpeople, setHpeople] = useState("");
+        const [DHpeople, setDHpeople] = useState("");
         const [Htype, setHtype] = useState("");
         const [Harea, setHarea] = useState("");
         const [haveCar, sethaveCar] = useState("");
@@ -232,6 +233,7 @@ const ModifyPost=()=> {
               setHmoney(newData.money);
               setrentGender(newData.gender);
               setHpeople(newData.people);
+              setDHpeople(newData.decided);
               setHtype(newData.style);
               sethaveCar(newData.car);
               setHwater(newData.water);
@@ -274,6 +276,9 @@ const ModifyPost=()=> {
         };
         const handleHpeopleChange = event => {
           setHpeople(event.target.value);
+        };
+        const handleDHpeopleChange = event => {
+          setDHpeople(event.target.value);
         };
         const handleHtypeChange = event => {
           setHtype(event.target.value);
@@ -326,6 +331,7 @@ const ModifyPost=()=> {
                     title : Htitle,
                     money : Hmoney,
                     people : Hpeople,
+                    decided : DHpeople,
                     address : Haddress,
                     area : Harea,
                     gender : rentGender,
@@ -394,6 +400,10 @@ const ModifyPost=()=> {
             <div className='articleRentFormPeople'>
               <label>人數:</label>
               <input type='text' name = 'Hpeople' onChange={handleHpeopleChange} value={Hpeople}></input>
+            </div><br/>
+            <div className='articleRentFormDPeople'>
+              <label>已確定合租人數:</label>
+              <input type='text' name = 'Hpeople' onChange={handleDHpeopleChange} value={DHpeople}></input>
             </div><br/>
             <div className='articleRentFormType'>
               <label>房型:</label>

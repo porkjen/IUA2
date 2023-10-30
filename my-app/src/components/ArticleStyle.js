@@ -313,7 +313,7 @@ const PerHaveChangeClassBtn = styled.button`
     border-radius: 5px;
     background-color: white; 
     padding: 10px;
-    background-color:#DEAD73;
+    background-color:#BAE8CA;
 
     @media screen and (min-width: 600px) {
         width:90px;
@@ -328,12 +328,27 @@ const PerHavePairChangeClassBtn = styled.button`
     border-radius: 5px;
     background-color: white; 
     padding: 10px;
-    background-color:#FFCE55;
+    background-color:#F0C2B2;
 
     @media screen and (min-width: 600px) {
         width:90px;
     }
 `;
+
+const PerMineChangeClassBtn = styled.button`
+    width:53px;
+    height:50px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 5px;
+    background-color: white; 
+    padding: 10px;
+    background-color:#C2DAFF;
+
+    @media screen and (min-width: 600px) {
+        width:90px;
+    }
+`;
+
 
 const ChangeClassCategorySelect = styled.select`
     font-family: 'Noto Serif TC', serif;
@@ -364,4 +379,4 @@ const ChangeClassStatusSelect = styled.select`
 
 export {Page, Pagebg, Title, PostArticleBtn, ArticleDCText, ChooseArticleBtn, ArticleList, ArticleText, AlreadyArticleText, ArticlePostTime, ArticleContainer, ArticleRentContainer, ArticleFoodContainer, ArticleDistance,
      ArticleAuthorArea, ArticleAuthor, ArticleAuthorImg, ArticleBody, ArticlePostRating, ArticleSubmitBtn, ModalSubmitBtn, ArticleSubmitBtnPosition, PerChangeClassBtn, ArticleSelect,PerHaveChangeClassBtn,
-     ChangeClassCategorySelect, ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance, ChangeClassStatusSelect,ModalNotificationSubmitBtn,PerHavePairChangeClassBtn};
+     ChangeClassCategorySelect, ArticleBaiDistance, ArticleXiangDistance, ArticleXiDistance, ArticleZhongDistance,ArticleXingDistance, ChangeClassStatusSelect,ModalNotificationSubmitBtn,PerHavePairChangeClassBtn, PerMineChangeClassBtn};
