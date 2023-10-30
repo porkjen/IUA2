@@ -87,7 +87,7 @@ public class Crawler {
                 int height = element.getSize().getHeight();
                 BufferedImage subImage = image.getSubimage(point.getX(), point.getY(), 110, height + 4);//headless
                 //BufferedImage subImage = image.getSubimage(point.getX()+240, point.getY()+248, width + 6, height + 5);//朱
-                //BufferedImage subImage = image.getSubimage(point.getX()+205, point.getY()+69, width + 6, height + 4);//31
+                //BufferedImage subImage = image.getSubimage(point.getX()+125, point.getY()+120, width + 8, height + 6);//31
                 //BufferedImage subImage = image.getSubimage(point.getX()+120, point.getY()+55, width + 6, height + 4);//白
 
                 ImageIO.write(subImage, "png", screenshot);
@@ -192,13 +192,14 @@ public class Crawler {
         JavascriptExecutor executor = (JavascriptExecutor)driver;
         executor.executeScript("arguments[0].click();", element);
         Thread.sleep(1500);
-        element = driver.findElement(By.id("Menu_TreeViewt31"));//學生基本資料維護作業
+        element = driver.findElement(By.id("Menu_TreeViewt32"));//學生基本資料維護作業
         executor = (JavascriptExecutor)driver;
         executor.executeScript("arguments[0].click();", element);
         Thread.sleep(1500);
-        element = driver.findElement(By.id("Menu_TreeViewt42"));//維護舊生資料
+        element = driver.findElement(By.id("Menu_TreeViewt43"));//維護舊生資料
         executor = (JavascriptExecutor)driver;
         executor.executeScript("arguments[0].click();", element);
+        Thread.sleep(3000);
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
         String name = driver.findElement(By.id("M_CH_NAME")).getText();
@@ -239,9 +240,12 @@ public class Crawler {
         executor = (JavascriptExecutor)driver;
         executor.executeScript("arguments[0].click();", element);
         Thread.sleep(1500);
+        System.out.println("get in grade system.");
+        Thread.sleep(1500);
         element = driver.findElement(By.id("Menu_TreeViewt41")); //查詢各式成績
         executor = (JavascriptExecutor)driver;
         executor.executeScript("arguments[0].click();", element);
+        System.out.println("get in search grade.");
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
         driver.findElement(By.xpath("//*[@id=\"RB_TYPE_3\"]")).click(); //歷年成績
@@ -296,6 +300,7 @@ public class Crawler {
         element = driver.findElement(By.id("Menu_TreeViewt72")); //歷年課程課表查詢
         executor = (JavascriptExecutor)driver;
         executor.executeScript("arguments[0].click();", element);
+        System.out.println("get in search history grade.");
 
         driver.switchTo().defaultContent();
         driver.switchTo().frame("mainFrame");
