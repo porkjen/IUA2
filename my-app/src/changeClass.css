@@ -134,3 +134,38 @@
 .cc_preloader .cc_dot3 {
   animation-delay: 0.2s;
 }
+
+.delChangeClassNotiBtn{
+  font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    border-color: bisque;
+    background-color: transparent;
+    width: 85px;
+    height: 25px;
+}
+
+.NotiSelect{
+  margin-top: 36%;
+  position: absolute;
+  margin-left: 8%;
+}
+
+.mN_rentNotification{
+  background-color: white;
+  font-family: 'Noto Serif TC', serif;
+  position: absolute;
+  margin-top: 45%;
+  width: 90%;
+  border-radius: 2px;
+  margin-left: 5%;
+}
+
+.rentDelBtn{
+    font-family: 'Noto Serif TC', serif;
+    border-radius: 5px;
+    border-color: bisque;
+    background-color: transparent;
+    width: 100px;
+    height: 25px;
+    margin-left: 68%;
+}

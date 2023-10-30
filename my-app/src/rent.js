@@ -102,6 +102,8 @@ const Rent=()=> {
         else if(event.target.value==="myPost")
           navigate('/MyArticles');
 
+        else if(event.target.value==="myNotification")
+          navigate('/myNotification');
       };
 
       return(
@@ -119,6 +121,7 @@ const Rent=()=> {
                   <option value='selectArticle'>篩選貼文</option>
                   <option value='setNotification'>設置提醒</option>
                   <option value='myPost'>我的貼文</option>
+                  <option value='myNotification'>我的提醒</option>
                 </ChangeClassCategorySelect>
                   
                 <ArticleList>
