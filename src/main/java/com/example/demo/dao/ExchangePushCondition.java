@@ -5,6 +5,7 @@ public class ExchangePushCondition {
     private String number;
     private String[] time;
     private String[] category;
+    private String name;
 
     public ExchangePushCondition(){}
 
@@ -14,6 +15,10 @@ public class ExchangePushCondition {
 
     public void setNumber(String number){
         this.number = number;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
     public void setStudentID(String studentID){
@@ -34,6 +39,9 @@ public class ExchangePushCondition {
 
     public String getNumber(){
         return number;
+    }
+    public String getName(){
+        return name;
     }
     public String[] getTime(){
         return time;
