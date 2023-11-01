@@ -48,6 +48,7 @@ public class ChangeCourseHaveEntity {
         this.pair++;
     }
 
+
     public int getMine() {
         return mine;
     }
@@ -55,6 +56,7 @@ public class ChangeCourseHaveEntity {
     public void setMine() {
         this.mine++;
     }
+
 
     public List<ChangeCourseHaveEntity> initialization(){
         List<ChangeCourseHaveEntity> init = new ArrayList<>();

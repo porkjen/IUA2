@@ -11,7 +11,7 @@ import { loginUser } from '../cookie';
 import { useCookies } from 'react-cookie';
 import { getAuthToken } from "../utils";
 import Modal from 'react-modal';
-
+import Select from 'react-select'
 
 
 
@@ -228,6 +228,7 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
       const [timeValue, setTimeValue] = useState("");
       const [checkedPeople, setcheckedPeople] = useState("女");
       const [isCreator, setIsCreator] = useState(false);
+      const [noPeople, setNoPeople] = useState(false);
       const [choose, setChoose] = useState(false);
       
       const formData = {
@@ -279,7 +280,12 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
               .then(peopledata => {
                 const formattedData = peopledata.map(item => ({ name: item }));
                 //console.log(formattedData);
-                setPeople(peopledata);
+                if(peopledata.length===0){
+                  setPeople(userInfo);
+                  setNoPeople(true);
+                }
+                else
+                  setPeople(peopledata);
                 console.log(people);
                 //setModalIsOpen(true);
               })
@@ -448,15 +454,26 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
               >
                 <div>
                 <button className='modalClose' onClick={closeThisModal}>X</button>
-                    <h2>{data.course}</h2>
+                    <h2>{data.course}</h2> 
                     <h3>選擇與你交換的人</h3>
-                        {people.map((item, index) => (
-                      <label key={index}>
-                        <input type="radio" name="people" value={item} checked={checkedPeople === item} onChange={handleppChange}/> {item}<br/>
-                      </label>
-                    ))}
+                    {noPeople && 
+                        <h4>no data</h4>
+                    }
+                    {!noPeople && 
+                        <div>
+                          {people.map((item, index) => (
+                            <label key={index}>
+                              <input type="radio" name="people" value={item} checked={checkedPeople === item} onChange={handleppChange}/> {item}<br/>
+                            </label>
+                          ))}
+                        </div>
+
+                    }
+                   
                 </div><br/>
-                <ModalSubmitBtn onClick={choosePeople}>確認</ModalSubmitBtn><br/>
+                {!noPeople && 
+                <ModalSubmitBtn onClick={choosePeople}>確認</ModalSubmitBtn>
+                }
               </Modal>
 
               }
@@ -657,15 +674,36 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
         const [typeTime, setTypeTime] = useState(false);
         const [classNumber, setClassNumber] = useState(true);
         const [selectedType, setSelectedType] = useState([]);
+        const [options, setOptions] = useState([]);
+        const [selectedOption, setSelectedOption] = useState("");
+
+        useEffect(() => {
+          fetch(`/pre_curriculum_search?category=${''}&name=${''}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                const optionsFromAPI = data.map((item) => ({
+                  value: item.classNum,
+                  label: item.name+item.time,
+                }));
+                setOptions(optionsFromAPI);
+            })
+            .catch((error) => {
+              console.error('error:', error);
+            });
+      }, []);
 
         const handleClassNotificationSubmit = (e) => {
           e.preventDefault();
           //const student_id = loginUser();
           const formData = {
             studentID: userInfo,
-            number : classNum,
+            number : selectedOption.value,
             time : time,
             category : selectedType,
+          };
+          const notiData = {
+            studentID: userInfo,
           };
                         fetch('/exchange_notification_add', {
                               method: 'POST',
@@ -682,9 +720,26 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
                             .catch(error => {
                               console.error(error);
                             });
-                            console.log(classNum);
+
+                            fetch('/exchange_web_push', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify(notiData)
+                            })
+                            .then(response => {
+                              console.log(notiData);
+                                  console.log(response.status);
+                                })
+                            .catch(error => {
+                              console.error(error);
+                            });
+
+                            console.log(selectedOption.value);
                             console.log(time);
                             console.log(selectedType);
+                            
                             navigate("/changeClass", {
                               state: {
                                 fromSearch:false,},});
@@ -759,10 +814,11 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
                         </div>
                     </div>}
                   {classNumber && 
-                  <div>
-                    <label>課號:&emsp;</label>
-                    <input type='text' className='changeClassNotificationFormTimeInput' value={classNum} onChange={handleClassNum}></input>
-                  </div>
+                  <Select 
+                  className='NotificationCCS'
+                  options={options}
+                  value={selectedOption}
+                  onChange={(selected) => setSelectedOption(selected)}/>
                   }
                 </div>
                 <ModalSubmitBtn type='submit'>確認</ModalSubmitBtn>
@@ -875,6 +931,27 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
                           h_water_money: HwaterMoney,
                           h_power_money: HpowerMoney,
                         };
+
+                        const notiData = {
+                          studentID: userInfo,
+                        };
+
+                        fetch('/rent_web_push', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(notiData)
+                        })
+                        .then(response => {
+                          console.log(notiData);
+                              console.log(response.status);
+                            })
+                        .catch(error => {
+                          console.error(error);
+                        });
+
+
                         fetch('/rent_notification_add', {
                               method: 'POST',
                               headers: {

@@ -215,6 +215,7 @@ public class TodoController {
             //fRepository.save(oriList);
         }
         else{
+            crawler.CrawlerHandle(account, pwd);
             finishedCourse = crawler.getFinishedCredict(finishedCourse, "");
             finished.setFinishedCourses(finishedCourse);
             fRepository.save(finished);

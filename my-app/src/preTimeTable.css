@@ -41,7 +41,7 @@ html,body,#root,.PreTimeTable{
 
 .preInfol{
     font-family: 'Noto Serif TC', serif;
-    font-size: 8px;
+    font-size: 12px;
     background-color: rgba(204, 235, 236, 0.951);
     width:80px;
     text-align:center;
@@ -55,7 +55,7 @@ html,body,#root,.PreTimeTable{
 
 .preInfor{
     font-family: 'Noto Serif TC', serif;
-    font-size: 8px;
+    font-size: 12px;
     background-color: rgba(204, 235, 236, 0.951);
     width:80px;
     text-align:center;
@@ -69,7 +69,7 @@ html,body,#root,.PreTimeTable{
 
 .preShowInfo{
     font-family: 'Noto Serif TC', serif;
-    font-size: 8px;
+    font-size: 12px;
     background-color: rgba(204, 235, 236, 0.951);
     width:80px;
     text-align:center;
@@ -83,7 +83,7 @@ html,body,#root,.PreTimeTable{
 
 .preDel{
     font-family: 'Noto Serif TC', serif;
-    font-size: 8px;
+    font-size: 12px;
     background-color: rgba(204, 235, 236, 0.951);
     width:80px;
     text-align:center;

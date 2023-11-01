@@ -78,6 +78,11 @@ const HomePage=()=> {
                             <button >修改暱稱</button>
                         </Link>
                     </div>
+                    <div className="changeNameBtn">
+                        <a href="https://docs.google.com/forms/d/1SuPgpDuv3iiA45A9pwbg_flQl50XSUomdccPHP-P7dc/edit">
+                            <button >回報問題</button>
+                        </a>
+                    </div>
                 </div>
                 <div className='notificationImg'>
                     <button className='notiBtn' onClick={handleBtn}>
@@ -91,11 +96,7 @@ const HomePage=()=> {
                         {data.map((item,index) => (
                          <NotificationText key={index} title={item.title} message={item.message}/>
                         ))}
-                        <NotificationText title={"租屋版"} message={"有符合你要的租屋!"}/>
-                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
-                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
-                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
-                        <NotificationText title={"Title"} message={"dinzidnvzdnzndndznnkndknknzknvjknnjnj"}/>
+                        
                         </ul>
                     </div>
 

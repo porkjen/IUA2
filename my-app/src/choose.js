@@ -42,6 +42,11 @@ const Choose=()=> {
         navigate("/favorite")
       }
 
+      const toNotification = (e) => {
+        e.preventDefault();
+        navigate("/myNotification")
+      }
+
     function Choose() {
       return (
         <div className="Choose"> 
@@ -56,6 +61,7 @@ const Choose=()=> {
                 <button className='chooseToFood' onClick={toFood}>美食版</button>
                 <button className='myPosts' onClick={toMine}>我的貼文</button>
                 <button className='myLoves' onClick={toLove}>我的收藏</button>
+                <button className='myLoves' onClick={toNotification}>我的提醒</button>
             </div>
             <div><img src={bear} className='bearImg'></img></div>
         </div>

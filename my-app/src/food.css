@@ -97,3 +97,44 @@
     border-radius: 50%;
     overflow: hidden;
 }
+
+.f_LoadingText{
+    font-family: 'Noto Serif TC', serif;
+    z-index: 3;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 45%;
+    font-size: 15px;
+  }
+  
+  .f_preloader > div{
+    background-color: black;
+    height: 2px;
+    width: 2px;
+    border-radius: 50%;
+    display: inline-block;
+    animation: stretchdelay 0.7s infinite ease-in-out;
+  }
+  
+  @keyframes stretchdelay {
+    0%, 40%, 100% { 
+         transform: translateY(0px);
+    }
+    20% {
+         transform: translateY(-3px);
+    }
+  }
+  
+  .f_preloader .f_dot1 {
+    animation-delay: 0;
+  }
+  
+  .f_preloader .f_dot2 {
+    animation-delay: 0.1s;
+  }
+  
+  .f_preloader .f_dot3 {
+    animation-delay: 0.2s;
+  }
+  
