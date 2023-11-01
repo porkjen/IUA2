@@ -501,6 +501,20 @@ public class TodoController {
         return ResponseEntity.ok(shortTT);
     }
 
+    @GetMapping("/curriculum_search_detail")
+    public ResponseEntity<?> curriculumSearchDetail(@RequestParam("studentID") String studentID, @RequestParam("Cname")String name, @RequestHeader("Authorization") String au){
+        JwtToken jwtToken = new JwtToken();
+        try {
+            jwtToken.validateToken(au, studentID);
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
+        for(TimeTableEntity.Info i : timeTable.getInfo()){
+            if(Objects.equals(i.getName(), name))return ResponseEntity.ok(i);
+        }
+        return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
+    }
     @PostMapping("/recommend_course_emptyhall_PE")
     public List<RecommandCourseEntity.PE> recommend_course_emptyhall_PE()throws TesseractException, IOException, InterruptedException {
         RecommandCourseEntity rcHistory = recomdCourseRepository.findByStudentID(account);
@@ -1293,22 +1307,6 @@ public class TodoController {
         recomdCourseRepository.save(recommandCourse);
         return display;
     }
-    
-    @GetMapping("/curriculum_search_detail")
-    public ResponseEntity<?> curriculumSearchDetail(@RequestParam("studentID") String studentID, @RequestParam("Cname")String name, @RequestHeader("Authorization") String au){
-        JwtToken jwtToken = new JwtToken();
-        try {
-            jwtToken.validateToken(au, studentID);
-        } catch (AuthException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
-        TimeTableEntity timeTable = timeTableRepository.findByStudentID(studentID);
-        for(TimeTableEntity.Info i : timeTable.getInfo()){
-            if(Objects.equals(i.getName(), name))return ResponseEntity.ok(i);
-        }
-        return ResponseEntity.badRequest().body("Invalid request : postID error"); // 400
-    }
-
 
     @PostMapping("/course_search_detail")
     public List<RequiredCourseEntity> course_searchDetail( @RequestParam(value = "major") String major, @RequestParam(value = "number") String number,@RequestParam(value = "grade") String grade)throws TesseractException, IOException, InterruptedException {
@@ -2804,7 +2802,8 @@ public class TodoController {
         }
         return Api;
     }
-    @GetMapping("/database")
+
+    @GetMapping("/database")//for testing
     public void database(){
 
         System.out.println("fin");

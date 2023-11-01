@@ -39,6 +39,7 @@ public class ChangeCourseController {
         for(String c : notificationRepository.findByStudentID(studentID).getDesireClasses()){
             System.out.println(c);
             for(ChangeCourseEntity coursePost : changeCourseRepository.findByCourse(c)){
+                if(Objects.equals(coursePost.getStatus(), "已換"))continue;
                 System.out.println(Arrays.toString(coursePost.getTime()));
                 for(int i=0;i<coursePost.getTime().length;i++){
                     int idx = 14*(Integer.parseInt(coursePost.getTime()[i])/100-1)+(Integer.parseInt(coursePost.getTime()[i])-Integer.parseInt(coursePost.getTime()[i])/100*100)-1;
