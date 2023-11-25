@@ -7,6 +7,7 @@ public class WebPushEntity {
     private String id;
     private String studentID;
     private String token;
+    private String update = "updated";
     private ArrayList<PushNotificationRequest> noticications;
 
     public WebPushEntity(){}
@@ -22,6 +23,12 @@ public class WebPushEntity {
     }
     public String getToken(){
         return token;
+    }
+    public void setUpdate(String update){
+        this.update = update;
+    }
+    public String getUpdate(){
+        return update;
     }
     public void setNotifications(ArrayList<PushNotificationRequest> noticications){
         this.noticications = noticications;
