@@ -230,11 +230,15 @@ public class PushNotificationController {
     }
 
     @GetMapping("/get_all_notifications")
-    public ArrayList<PushNotificationRequest> getAllNotification(@RequestParam("studentID") String studentID){
+    public WebPushEntity getAllNotification(@RequestParam("studentID") String studentID){
         System.out.println("/get_all_notifications");
+        WebPushEntity webPushes = new WebPushEntity();
         ArrayList<PushNotificationRequest> result = new ArrayList<PushNotificationRequest>();
         if(webPushRepository.existsByStudentID(studentID)){
             ArrayList<PushNotificationRequest> n = webPushRepository.findByStudentID(studentID).getNotifications();
+            webPushes.setStudentID(studentID);
+            webPushes.setUpdate(webPushRepository.findByStudentID(studentID).getUpdate());
+            webPushes.setToken(webPushRepository.findByStudentID(studentID).getToken());
             int count = webPushRepository.findByStudentID(studentID).getNotifications().size();
             System.out.println(count);
             if(count > 10){
@@ -249,9 +253,9 @@ public class PushNotificationController {
                     result.add(n.get(i));
                 }
             }
-
+            webPushes.setNotifications(result);
         }
-        return result;
+        return webPushes;
     }
     @PostMapping("/notification/topic")
     public ResponseEntity<?> sendNotification(@RequestBody PushNotificationRequest request) {
