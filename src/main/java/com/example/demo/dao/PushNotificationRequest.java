@@ -5,7 +5,7 @@ public class PushNotificationRequest {
     private String message;
     private String topic;
     private String token;
-    
+    private String link;
     
   	public PushNotificationRequest() {
 		super();
@@ -42,5 +42,11 @@ public class PushNotificationRequest {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
 	}
 }

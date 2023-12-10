@@ -12,6 +12,7 @@ import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.WebpushConfig;
+import com.google.firebase.messaging.WebpushFcmOptions;
 import com.google.firebase.messaging.WebpushNotification;
 import com.google.firebase.messaging.Aps;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -47,7 +48,12 @@ public class FCMService {
     } 
     private WebpushConfig getWebpushConfig(PushNotificationRequest request){
         return WebpushConfig.builder()
-                    .setNotification(WebpushNotification.builder().setTitle(request.getTitle()).setBody(request.getMessage()).build()).build();
+                    .setNotification(WebpushNotification.builder()
+                    .setTitle(request.getTitle())
+                    .setBody(request.getMessage())
+                    .build())
+                    .setFcmOptions(WebpushFcmOptions.builder().setLink(request.getLink()).build())
+                    .build();
     }
     private AndroidConfig getAndroidConfig(String topic) {
         return AndroidConfig.builder()

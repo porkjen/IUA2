@@ -50,6 +50,7 @@ public class ChatGPTController {
         requestJson.put("messages", messagesArray);
         requestJson.put("model", "gpt-3.5-turbo");
         requestJson.put("temperature", 0.5);
+        requestJson.put("max_tokens", 250);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> request = new HttpEntity<>(requestJson.toString(), headers);

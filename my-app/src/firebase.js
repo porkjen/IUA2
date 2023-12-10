@@ -44,4 +44,8 @@ export const onMessageListener = () =>
     });
 });
 
+export const onOpenNotification = async(e) => {
+  console.log(e);
+}
+
 export default firebase;
