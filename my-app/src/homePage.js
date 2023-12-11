@@ -18,6 +18,7 @@ const HomePage=()=> {
     const [data, setData] = useState("");
     const [newMessage, setNewMessage] = useState(true);
     function NotificationText({title, message}){
+
         return(
             <div>
                 <li className='noti_title'><strong>{title}</strong></li>
@@ -47,14 +48,32 @@ const HomePage=()=> {
                 });
             }
           }, [data]); // 添加依賴項data
-
         const handleBtn = (e) =>{
             if(showNotification){
                 setShowNotification(false);
                 setNewMessage(false);
             }
-            else
+            else{
+                const formData = {
+                    studentID: userInfo,
+                  };
+        
+                fetch(`/notification_update?studentID=${userInfo}`, {
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                  })
+                  .then(response => response.status)
+                  .then(data => {
+                    console.log(data);
+                  })
+                  .catch(error => {
+                    console.error(error);
+                  });
                 setShowNotification(true);
+            }
         }
 
         /*
@@ -93,7 +112,7 @@ const HomePage=()=> {
                 {showNotification &&
                     <div className='notification_menu'>
                         <ul className=''>
-                        {data.map((item,index) => (
+                        {data.notifications.map((item,index) => (
                          <NotificationText key={index} title={item.title} message={item.message}/>
                         ))}
                         
