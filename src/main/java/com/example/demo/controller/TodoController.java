@@ -31,8 +31,6 @@ public class TodoController {
     @Autowired
     FinishedRepository fRepository;
     @Autowired
-    DetectedRepository dRepository;
-    @Autowired
     BasicRepository basicRepository;
     @Autowired
     HouseRepository houseRepository;
@@ -224,93 +222,6 @@ public class TodoController {
         RemainCredit remainCredit = remainedService.computeCredit(finished.getStudentID());
         return ResponseEntity.ok(remainCredit);
         //return remainCredit;
-    }
-
-    @PostMapping("/add_detect_course")
-    public ResponseEntity<String> addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
-        ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
-        DetectedCoursesList courseList = new DetectedCoursesList();
-        Boolean isExist = false;
-        System.out.println("course number: " + requestData.getNumber());
-
-        if(dRepository.existsByStudentID(requestData.getStudentID())){
-            courseList = dRepository.findByStudentID(requestData.getStudentID());
-            courses = courseList.getDetectedCourses();
-            for(CourseToBeDetected c : courses){
-                if(c.getNumber().equals(requestData.getNumber())){
-                    isExist = true;
-                    break;
-                }
-            }
-        }
-        else{
-            courseList.setStudentID(requestData.getStudentID());
-        }
-        if(!isExist){
-            courses.add(requestData);
-            courseList.setDetectedCourse(courses);
-            dRepository.save(courseList);
-            return ResponseEntity.ok("Success");
-        }
-        else{
-            System.out.println("Already added.");
-            return ResponseEntity.badRequest().body("Invalid request");
-        }
-    }
-
-    @DeleteMapping("/delete_detect_course")
-    public ResponseEntity<String> deleteDetectCourse(@RequestParam("studentID") String studentID, @RequestParam("number") String number){
-        System.out.println("/delete_detect_course");
-        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
-        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
-        boolean isFound = false;
-        for(int i = 0; i < courses.size(); i++){
-            if(courses.get(i).getNumber().equals(number)){
-                courses.remove(i);
-                courseList.setDetectedCourse(courses);
-                dRepository.save(courseList);
-                isFound = true;
-            }
-        }
-        if(isFound){
-            System.out.println("Successfully delete!");
-            return ResponseEntity.ok("Success");
-        }
-        else{
-            System.out.println("Not found.");
-            return ResponseEntity.badRequest().body("Invalid request");
-        }
-    }
-
-    @GetMapping("/load_detect_course")
-    public ArrayList<CourseToBeDetected> loadDetectCourse(@RequestParam("studentID") String studentID){
-        System.out.println("/load_detect_course");
-        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
-        return courseList.getDetectedCourses();
-    }
-
-    @PostMapping("/detect_course")
-    public void detectCourse(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
-        System.out.println("/detect_course");
-        System.out.println("student id is " + studentID.get("studentID"));
-        DetectedCoursesList courseList = dRepository.findByStudentID(studentID.get("studentID"));
-        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
-        while(!courses.isEmpty()){
-            Thread.sleep(1500);
-            System.out.println("Start detection.");
-            crawler.detectCoureses(courses);
-            for(int i = 0; i < courses.size(); i++){
-                if(!courses.get(i).getIsFull()){
-                    System.out.println("Remove [" + courses.get(i).getNumber() + "]");
-                    courses.remove(i);
-                    courseList.setDetectedCourse(courses);
-                    dRepository.save(courseList);
-                }
-                else{
-                    System.out.println("[" + courses.get(i).getNumber() + "] is full, keep detecting.");
-                }
-            }
-        }
     }
 
     @GetMapping("/core_elective")
