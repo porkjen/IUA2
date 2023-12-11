@@ -3,9 +3,11 @@ import org.apache.catalina.util.ErrorPageSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import com.example.demo.CourseToBeDetected;
 import com.example.demo.DetectedCoursesList;
 import com.example.demo.dao.ChangeCourseEntity;
 import com.example.demo.dao.ExchangePushCondition;
+import com.example.demo.dao.FakeCourseData;
 import com.example.demo.dao.NotificationCondition;
 import com.example.demo.dao.PushNotificationRequest;
 import com.example.demo.dao.PushNotificationResponse;
@@ -13,6 +15,8 @@ import com.example.demo.dao.RentPushCondition;
 import com.example.demo.dao.WebPushEntity;
 import com.example.demo.dao.HouseEntity;
 import com.example.demo.repository.ChangeCourseRepository;
+import com.example.demo.repository.DetectedRepository;
+import com.example.demo.repository.FakeCourseRepository;
 import com.example.demo.repository.HouseRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.WebPushRepository;
@@ -38,6 +42,10 @@ public class PushNotificationController {
     ChangeCourseRepository changeCourseRepository;
     @Autowired
     HouseRepository houseRepository;
+    @Autowired
+    DetectedRepository dRepository;
+    @Autowired
+    FakeCourseRepository fakeCourseRepository;
 
     public PushNotificationController(PushNotificationService pushNotificationService) {
         this.pushNotificationService = pushNotificationService;
@@ -93,6 +101,143 @@ public class PushNotificationController {
         notificationRepository.save(notificationCondition);
         return ResponseEntity.ok("Success");
     }
+
+    @PostMapping("/add_detect_course")
+    public ResponseEntity<String> addDetectCourse(@RequestBody CourseToBeDetected requestData)throws TesseractException, IOException, InterruptedException{
+        ArrayList<CourseToBeDetected> courses = new ArrayList<CourseToBeDetected>();
+        DetectedCoursesList courseList = new DetectedCoursesList();
+        Boolean isExist = false;
+        System.out.println("course number: " + requestData.getNumber());
+
+        if(dRepository.existsByStudentID(requestData.getStudentID())){
+            courseList = dRepository.findByStudentID(requestData.getStudentID());
+            courses = courseList.getDetectedCourses();
+            for(CourseToBeDetected c : courses){
+                if(c.getNumber().equals(requestData.getNumber())){
+                    isExist = true;
+                    break;
+                }
+            }
+        }
+        else{
+            courseList.setStudentID(requestData.getStudentID());
+        }
+        if(!isExist){
+            courses.add(requestData);
+            courseList.setDetectedCourse(courses);
+            dRepository.save(courseList);
+            return ResponseEntity.ok("Success");
+        }
+        else{
+            System.out.println("Already added.");
+            return ResponseEntity.badRequest().body("Invalid request");
+        }
+    }
+
+    @DeleteMapping("/delete_detect_course")
+    public ResponseEntity<String> deleteDetectCourse(@RequestParam("studentID") String studentID, @RequestParam("number") String number){
+        System.out.println("/delete_detect_course");
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
+        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
+        boolean isFound = false;
+        for(int i = 0; i < courses.size(); i++){
+            if(courses.get(i).getNumber().equals(number)){
+                courses.remove(i);
+                courseList.setDetectedCourse(courses);
+                dRepository.save(courseList);
+                isFound = true;
+            }
+        }
+        if(isFound){
+            System.out.println("Successfully delete!");
+            return ResponseEntity.ok("Success");
+        }
+        else{
+            System.out.println("Not found.");
+            return ResponseEntity.badRequest().body("Invalid request");
+        }
+    }
+
+    @GetMapping("/load_detect_course")
+    public ArrayList<CourseToBeDetected> loadDetectCourse(@RequestParam("studentID") String studentID){
+        System.out.println("/load_detect_course");
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID);
+        return courseList.getDetectedCourses();
+    }
+
+    @PostMapping("/new_fake_course")
+    public ResponseEntity<String> newFakeCourse(@RequestBody FakeCourseData fakeCourse){
+        if(fakeCourseRepository.existsByCourseNumber(fakeCourse.getCourseNumber())){
+            System.out.println("Already added.");
+            return ResponseEntity.badRequest().body("Invalid request");
+        }
+        else{
+            fakeCourseRepository.save(fakeCourse);
+            return ResponseEntity.ok("Succese");
+        }
+    }
+
+@PostMapping("/detect_course")
+    public void detectCourse(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
+        System.out.println("/detect_course");
+        WebPushEntity webPush = webPushRepository.findByStudentID(studentID.get("studentID"));
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID.get("studentID"));
+        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
+        PushNotificationRequest request = new PushNotificationRequest();
+        while(!courses.isEmpty()){
+            Thread.sleep(1500);
+            System.out.println("Start detection.");
+            for(int i = 0; i < courses.size(); i++){
+                if(fakeCourseRepository.existsByCourseNumber(courses.get(i).getNumber())){
+                    FakeCourseData fakeCourseData = fakeCourseRepository.findByCourseNumber(courses.get(i).getNumber());
+                    if(Integer.parseInt(fakeCourseData.getNowPeople()) < Integer.parseInt(fakeCourseData.getMaxPeople())){
+                        System.out.println("Found course.\nRemove [" + courses.get(i).getNumber() + "]");
+                        request.setTitle("您想要的課程 [" + courses.get(i).getName() + "] 已釋出名額！");
+                        request.setMessage("[" + fakeCourseData.getCourseName() + "]\n目前人數/限制人數: " + fakeCourseData.getNowPeople() + "/" + fakeCourseData.getMaxPeople() + "人");
+                        request.setToken(webPush.getToken());
+                        pushNotificationService.sendPushNotificationToToken(request);
+                        ArrayList<PushNotificationRequest> noticications = webPush.getNotifications();
+                        noticications.add(request);
+                        webPush.setNotifications(noticications);
+                        webPushRepository.save(webPush);
+                        courses.remove(i);
+                        courseList.setDetectedCourse(courses);
+                        dRepository.save(courseList);
+                    }
+                    else{
+                        System.out.println("[" + courses.get(i).getNumber() + "] is full, keep detecting.");
+                    }
+                }
+
+            }
+        }
+    }
+
+/* 
+    @PostMapping("/detect_course")
+    public void detectCourse(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
+        System.out.println("/detect_course");
+        System.out.println("student id is " + studentID.get("studentID"));
+        DetectedCoursesList courseList = dRepository.findByStudentID(studentID.get("studentID"));
+        ArrayList<CourseToBeDetected> courses = courseList.getDetectedCourses();
+        while(!courses.isEmpty()){
+            Thread.sleep(1500);
+            System.out.println("Start detection.");
+            crawler.detectCoureses(courses);
+            for(int i = 0; i < courses.size(); i++){
+                if(!courses.get(i).getIsFull()){
+                    System.out.println("Remove [" + courses.get(i).getNumber() + "]");
+                    courses.remove(i);
+                    courseList.setDetectedCourse(courses);
+                    dRepository.save(courseList);
+                }
+                else{
+                    System.out.println("[" + courses.get(i).getNumber() + "] is full, keep detecting.");
+                }
+            }
+        }
+    }
+*/
 
     @PutMapping("/notification_update")
     public ResponseEntity<String> notificationUpdate(@RequestBody String studentID){
