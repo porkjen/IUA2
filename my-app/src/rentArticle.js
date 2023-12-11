@@ -258,6 +258,7 @@ const RentArticle=()=> {
             const queryParams = new URLSearchParams({
               first: userInfo,
               second: data.studentID,
+              postId:data.postId
             });
           
             const url = '/pickRoomApi?' + queryParams.toString();
