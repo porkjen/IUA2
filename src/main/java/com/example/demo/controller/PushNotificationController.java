@@ -94,6 +94,14 @@ public class PushNotificationController {
         return ResponseEntity.ok("Success");
     }
 
+    @PutMapping("/notification_update")
+    public ResponseEntity<String> notificationUpdate(@RequestBody String studentID){
+        WebPushEntity webPush = webPushRepository.findByStudentID(studentID);
+        webPush.setUpdate(false);
+        webPushRepository.save(webPush);
+        return ResponseEntity.ok("Success");
+    }
+
     @PostMapping("/exchange_web_push")
     public void exchangeWebPush(@RequestBody Map<String, String> studentID)throws TesseractException, IOException, InterruptedException{
         System.out.println("/exchange_web_push");
