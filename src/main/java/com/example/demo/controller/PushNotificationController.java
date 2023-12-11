@@ -240,7 +240,7 @@ public class PushNotificationController {
 */
 
     @PutMapping("/notification_update")
-    public ResponseEntity<String> notificationUpdate(@RequestBody String studentID){
+    public ResponseEntity<String> notificationUpdate(@RequestParam("studentID") String studentID){
         WebPushEntity webPush = webPushRepository.findByStudentID(studentID);
         webPush.setUpdate(false);
         webPushRepository.save(webPush);
