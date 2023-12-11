@@ -16,7 +16,7 @@ import { Routes ,Route } from 'react-router-dom';
 const HomePage=()=> {
     const userInfo = loginUser();
     const [data, setData] = useState("");
-    const [newMessage, setNewMessage] = useState(true);
+    const [newMessage, setNewMessage] = useState(false);
     function NotificationText({title, message}){
 
         return(
@@ -42,6 +42,9 @@ const HomePage=()=> {
                 .then(data => {
                   setData(data);
                   console.log(data);
+                  if(data.update==true){
+                    setNewMessage(true);
+                  }
                 })
                 .catch(error => {
                   console.error('Error:', error);
@@ -51,7 +54,6 @@ const HomePage=()=> {
         const handleBtn = (e) =>{
             if(showNotification){
                 setShowNotification(false);
-                setNewMessage(false);
             }
             else{
                 const formData = {
@@ -73,6 +75,7 @@ const HomePage=()=> {
                     console.error(error);
                   });
                 setShowNotification(true);
+                setNewMessage(false);
             }
         }
 
