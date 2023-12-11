@@ -352,6 +352,7 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
           const queryParams = new URLSearchParams({
             first: userInfo,
             second: data.studentID,
+            postId: data.postId
           });
         
           const url = '/pickRoomApi?' + queryParams.toString();
@@ -372,7 +373,7 @@ function IsModal({closeModal, type, postId, comment, alreadyComment, studentID, 
             .then((apidata) => {
               navigate(`/chatroom/${apidata.roomApi}`, { state: { roomApi: apidata.roomApi } });
               localStorage.setItem('nowRoom', apidata.roomApi);
-              localStorage.setItem('nowRoomName', data.title);
+              localStorage.setItem('nowRoomName', data.course);
             })
             .catch((error) => {
               console.error('Error:', error);
